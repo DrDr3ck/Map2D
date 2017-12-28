@@ -1,12 +1,13 @@
 #include "tests.h"
 
+#include "archive.h"
 #include <stdio.h>
 #include <iostream>
 
 #define CHECK(x, y) do { \
   bool retval = (x); \
   if (retval == false) { \
-    fprintf(stderr, "Runtime error: %s returned %d at %s:%d", #x, retval, __FILE__, __LINE__); \
+    fprintf(stderr, "\nRuntime error: %s returned %d at %s:%d", #x, retval, __FILE__, __LINE__); \
     y; \
   } \
 } while (0)
@@ -14,7 +15,7 @@
 #define CHECK_EQUAL(x1, x2, y) do { \
   bool retval = (x1 == x2); \
   if (retval == false) { \
-    fprintf(stderr, "Runtime error: %s(%d) == %s(%d) returned %d at %s:%d", #x1, x1, #x2, x2, retval, __FILE__, __LINE__); \
+    fprintf(stderr, "\nRuntime error: %s(%d) == %s(%d) returned %d at %s:%d", #x1, x1, #x2, x2, retval, __FILE__, __LINE__); \
     y; \
   } \
 } while (0)
@@ -44,6 +45,20 @@ bool MapTest::do_execute() {
     const Tile& const_tile = map_data.tile(3,2);
     CHECK_EQUAL(const_tile.id(), 2, return false;);
     CHECK_EQUAL(const_tile.type(), Tile::DOOR, return false;);
+
+    // save/load
+    MapDataConverter converter;
+    converter.save(&map_data, "test.save");
+    MapData map_data2(1,1);
+    converter.load(&map_data2, "test.save");
+
+    CHECK_EQUAL(map_data.width(), map_data2.width(), return false;);
+    CHECK_EQUAL(map_data.height(), map_data2.height(), return false;);
+
+    const Tile& const_tile2 = map_data2.tile(3,2);
+    CHECK_EQUAL(const_tile2.id(), 2, return false;);
+    CHECK_EQUAL(const_tile2.type(), Tile::DOOR, return false;);
+
     return true;
 }
 

@@ -24,6 +24,8 @@ public:
     const Tile& tile(int x,int y) const;
     Tile& tile(int x,int y);
 
+    void reset(int width, int height);
+
     int width() const { return width_; }
     int height() const { return height_; }
 private:

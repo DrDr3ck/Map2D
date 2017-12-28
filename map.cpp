@@ -27,6 +27,13 @@ MapData::~MapData() {
     delete[] tiles_;
 }
 
+void MapData::reset(int width, int height) {
+    delete[] tiles_;
+    width_ = width;
+    height_ = height;
+    tiles_ = new Tile[width*height];
+}
+
 const Tile& MapData::tile(int x,int y) const {
     return tiles_[x+y*width_];
 }
