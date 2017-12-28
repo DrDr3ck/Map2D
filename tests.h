@@ -8,7 +8,7 @@
 class Test {
 public:
     Test(std::string name) : test_name_(name) {}
-    ~Test() {}
+    virtual ~Test() {}
 
     virtual bool do_execute() = 0;
 

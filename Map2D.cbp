@@ -31,7 +31,13 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="camera.cpp" />
+		<Unit filename="camera.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="map.cpp" />
+		<Unit filename="map.h" />
+		<Unit filename="tests.cpp" />
+		<Unit filename="tests.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
