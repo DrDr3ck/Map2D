@@ -40,10 +40,13 @@ int main(int /*argc*/, char** /*argv*/) {
         SDL_PollEvent(&event);
         if(event.type == SDL_QUIT) {
             terminer = true;
+        } else {
+            camera->handleEvent(event);
+            if( camera->quit() ) {
+                terminer = true;
+            }
         }
         camera->render();
-
-        SDL_Delay(100);
     }
 
     delete camera;
