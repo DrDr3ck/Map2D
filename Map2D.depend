@@ -354,10 +354,11 @@
 	<stdio.h>
 	<iostream>
 
-1514456145 source:d:\games\programs\map2d\camera.cpp
+1514470054 source:d:\games\programs\map2d\camera.cpp
 	"camera.h"
 
-1514456196 d:\games\programs\map2d\camera.h
+1514470005 d:\games\programs\map2d\camera.h
 	"map.h"
+	<SDL2/SDL.h>
 	<list>
 
