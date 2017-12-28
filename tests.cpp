@@ -3,6 +3,7 @@
 #include "archive.h"
 #include <stdio.h>
 #include <iostream>
+#include <chrono>
 
 #define CHECK(x, y) do { \
   bool retval = (x); \
@@ -47,17 +48,25 @@ bool MapTest::do_execute() {
     CHECK_EQUAL(const_tile.type(), Tile::DOOR, return false;);
 
     // save/load
+    std::string filename("test.save");
     MapDataConverter converter;
-    converter.save(&map_data, "test.save");
+    converter.save(&map_data, filename);
     MapData map_data2(1,1);
-    converter.load(&map_data2, "test.save");
+    converter.load(&map_data2, filename);
+
+    remove(filename.c_str());
 
     CHECK_EQUAL(map_data.width(), map_data2.width(), return false;);
     CHECK_EQUAL(map_data.height(), map_data2.height(), return false;);
 
-    const Tile& const_tile2 = map_data2.tile(3,2);
-    CHECK_EQUAL(const_tile2.id(), 2, return false;);
-    CHECK_EQUAL(const_tile2.type(), Tile::DOOR, return false;);
+    for( int i=0; i < map_data.width(); i++ ) {
+        for( int j=0; j < map_data.height(); j++ ) {
+            const Tile& map_tile1 = map_data.tile(i,j);
+            const Tile& map_tile2 = map_data2.tile(i,j);
+            CHECK_EQUAL(map_tile1.id(), map_tile2.id(), return false;);
+            CHECK_EQUAL(map_tile1.type(), map_tile2.type(), return false;);
+        }
+    }
 
     return true;
 }
@@ -72,7 +81,9 @@ TestManager::TestManager() {
 
 bool TestManager::execute() {
     bool result = true;
+    CHECK( tests_.size() > 0, return false;);
     std::cout << "Executing " << tests_.size() << " tests ...\n";
+    auto start = std::chrono::system_clock::now();
     for( auto test : tests_ ) {
         std::cout << "    > " << test->name();
         if( test->do_execute() ) {
@@ -82,6 +93,9 @@ bool TestManager::execute() {
             std::cout << " ... KO\n";
         }
     }
+    auto end = std::chrono::system_clock::now();
+    std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(end-start);
+    std::cout << "Ending tests in " << ms.count() << " ms\n";
     return result;
 }
 
