@@ -17,8 +17,8 @@ bool initSDL() {
 
 int main(int /*argc*/, char** /*argv*/) {
     // Check tests first
-    TestManager manager;
-    if( !manager.execute() ) {
+    TestManager test_manager;
+    if( !test_manager.execute() ) {
         return 1;
     }
 
@@ -38,6 +38,8 @@ int main(int /*argc*/, char** /*argv*/) {
     MapView* map_view = new MapView(&data);
     camera->addView(map_view);
 
+    TileManager* manager = TileManager::instance();
+
     // Main loop
     bool ending = false;
     while(!ending) {
@@ -47,6 +49,8 @@ int main(int /*argc*/, char** /*argv*/) {
         }
         camera->render();
     }
+
+    manager->kill();
 
     delete camera;
 

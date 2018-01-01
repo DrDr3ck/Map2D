@@ -1,6 +1,8 @@
 #ifndef map_h
 #define map_h
 
+#include <SDL2/SDL.h>
+
 class Tile {
 public:
     enum Type { BLOCK, DOOR, EMPTY };
@@ -32,6 +34,23 @@ private:
     int width_;
     int height_;
     Tile* tiles_;
+};
+
+class TileManager {
+private:
+  TileManager();
+  ~TileManager() { }
+
+public:
+    static TileManager* instance();
+    static void kill();
+
+    static SDL_Texture* getTextureFromTileId(int id, SDL_Renderer* renderer);
+
+    SDL_Surface* tiles() { return tiles_; }
+private:
+    static TileManager* singleton_;
+    SDL_Surface* tiles_;
 };
 
 #endif // map_h

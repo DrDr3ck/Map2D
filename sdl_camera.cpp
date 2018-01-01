@@ -13,10 +13,20 @@ void MapView::do_render(Camera* camera) {
         background_ = SDL_CreateTextureFromSurface(main_renderer, bg_surface);
     }
     SDL_RenderCopy(main_renderer, background_, NULL, NULL);
+    SDL_Texture* small = TileManager::instance()->getTextureFromTileId(0, main_renderer);
+
+    SDL_Rect dest;
+    dest.x = 100;
+    dest.y = 100;
+    dest.w = 64;
+    dest.h = 64;
+
+    SDL_RenderCopy(main_renderer, small, NULL, &dest);
 }
 
 void MapView::handleEvent(Camera* camera) {
     if( camera == nullptr ) return;
+    // TODO
 }
 
 /***********************************/
@@ -32,11 +42,15 @@ SDLCamera::~SDLCamera() {
     do_quit();
 }
 
+/*!
+ * \return true if this camera is valid
+ */
 bool SDLCamera::valid() const {
     return window_ != nullptr;
 }
 
 void SDLCamera::render() {
+    // rendering for all View(s)
     Camera::render();
     if( pause_ ) {
         SDL_SetRenderDrawColor( main_renderer_, 222, 50, 50, 255 );
@@ -65,6 +79,8 @@ void SDLCamera::handleEvent() {
             quit_ = true;
         }
     }
+
+    // handle event for all View(s)
     Camera::handleEvent();
 }
 
