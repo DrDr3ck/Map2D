@@ -1,6 +1,7 @@
 #include "map.h"
 
 #include <iostream>
+#include <cmath>
 
 /*************************/
 
@@ -51,8 +52,8 @@ Tile& MapData::tile(int x,int y) {
 /*************************/
 
 TileManager::TileManager() {
-    tiles_ = SDL_LoadBMP("tiles.bmp");
-    if( tiles_ == nullptr ) {
+    tiles_surface_ = SDL_LoadBMP("tiles.bmp");
+    if( tiles_surface_ == nullptr ) {
         std::cout << "cannot initialize TileManager" << std::endl;
     }
 }
@@ -74,10 +75,16 @@ void TileManager::kill () {
 }
 
 SDL_Texture* TileManager::getTextureFromTileId(int id, SDL_Renderer* renderer) {
+    auto map_of_tiles = TileManager::instance()->mapOfTiles();
+    if(map_of_tiles.find(id) != map_of_tiles.end()) {
+        return map_of_tiles[id];
+    }
     static int tileSize = 64;
+    int x = id % 5;
+    int y = floor(id / 5);
     SDL_Rect source;
-    source.x = 1 * tileSize;
-    source.y = 1 * tileSize;
+    source.x = x * tileSize;
+    source.y = y * tileSize;
     source.w = tileSize;
     source.h = tileSize;
 
@@ -96,7 +103,9 @@ SDL_Texture* TileManager::getTextureFromTileId(int id, SDL_Renderer* renderer) {
                     surf_dest,
                     &dest);
 
-    return SDL_CreateTextureFromSurface(renderer, surf_dest);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surf_dest);
+    TileManager::instance()->mapOfTiles()[id] = texture;
+    return texture;
 }
 
 TileManager* TileManager::singleton_ = nullptr;

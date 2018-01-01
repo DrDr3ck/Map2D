@@ -35,6 +35,7 @@ int main(int /*argc*/, char** /*argv*/) {
     }
 
     MapData data(10,6);
+    data.tile(2,2).setTile(8,Tile::BLOCK);
     MapView* map_view = new MapView(&data);
     camera->addView(map_view);
 

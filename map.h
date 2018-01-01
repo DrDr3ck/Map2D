@@ -2,6 +2,7 @@
 #define map_h
 
 #include <SDL2/SDL.h>
+#include <map>
 
 class Tile {
 public:
@@ -47,10 +48,12 @@ public:
 
     static SDL_Texture* getTextureFromTileId(int id, SDL_Renderer* renderer);
 
-    SDL_Surface* tiles() { return tiles_; }
+    SDL_Surface* tiles() { return tiles_surface_; }
+    std::map<int, SDL_Texture*>& mapOfTiles() { return mapOfTiles_; }
 private:
     static TileManager* singleton_;
-    SDL_Surface* tiles_;
+    SDL_Surface* tiles_surface_;
+    std::map<int, SDL_Texture*> mapOfTiles_;
 };
 
 #endif // map_h

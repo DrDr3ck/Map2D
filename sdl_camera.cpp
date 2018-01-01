@@ -13,15 +13,20 @@ void MapView::do_render(Camera* camera) {
         background_ = SDL_CreateTextureFromSurface(main_renderer, bg_surface);
     }
     SDL_RenderCopy(main_renderer, background_, NULL, NULL);
-    SDL_Texture* small = TileManager::instance()->getTextureFromTileId(0, main_renderer);
 
-    SDL_Rect dest;
-    dest.x = 100;
-    dest.y = 100;
-    dest.w = 64;
-    dest.h = 64;
-
-    SDL_RenderCopy(main_renderer, small, NULL, &dest);
+    SDL_Texture* small = nullptr;
+    for( int w = 0 ; w < data_->width(); w++ ) {
+        for( int h = 0 ; h < data_->height(); h++ ) {
+            const Tile& cur = data_->tile(w,h);
+            small = TileManager::instance()->getTextureFromTileId(cur.id(), main_renderer);
+            SDL_Rect dest;
+            dest.x = w*64;
+            dest.y = h*64;
+            dest.w = 64;
+            dest.h = 64;
+            SDL_RenderCopy(main_renderer, small, NULL, &dest);
+        }
+    }
 }
 
 void MapView::handleEvent(Camera* camera) {
