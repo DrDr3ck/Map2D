@@ -3,8 +3,17 @@
 #include <cstdlib>
 
 #include "map.h"
-#include "camera.h"
+#include "sdl_camera.h"
 #include "tests.h"
+
+bool initSDL() {
+    if(SDL_Init(SDL_INIT_VIDEO) < 0) {
+        std::cout << "Cannot initialize SDL : " << SDL_GetError() << std::endl;
+        SDL_Quit();
+        return false;
+    }
+    return true;
+}
 
 int main(int /*argc*/, char** /*argv*/) {
     // Check tests first
@@ -14,18 +23,14 @@ int main(int /*argc*/, char** /*argv*/) {
     }
 
     // Init of SDL
-    if(SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cout << "Cannot initialize SDL : " << SDL_GetError() << std::endl;
-        SDL_Quit();
+    if( !initSDL() ) {
         return -1;
     }
 
     // Create window
-    Camera* camera = new Camera();
-    SDL_Window* window = camera->window();
-    if(window == nullptr) {
-        std::cout << "Cannot create window : " << SDL_GetError() << std::endl;
-        SDL_Quit();
+    SDLCamera* camera = new SDLCamera();
+    if( !camera->valid() ) {
+        delete camera;
         return -1;
     }
 
@@ -34,23 +39,16 @@ int main(int /*argc*/, char** /*argv*/) {
     camera->addView(map_view);
 
     // Main loop
-    SDL_Event event;
-    bool terminer = false;
-    while(!terminer) {
-        SDL_PollEvent(&event);
-        if(event.type == SDL_QUIT) {
-            terminer = true;
-        } else {
-            camera->handleEvent(event);
-            if( camera->quit() ) {
-                terminer = true;
-            }
+    bool ending = false;
+    while(!ending) {
+        camera->handleEvent();
+        if( camera->quit() ) {
+            ending = true;
         }
         camera->render();
     }
 
     delete camera;
-    SDL_Quit();
 
     return 0;
 }

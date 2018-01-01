@@ -1,10 +1,10 @@
 # depslib dependency file v1.0
-1514501370 source:d:\games\programs\map2d\main.cpp
+1514830822 source:d:\games\programs\map2d\main.cpp
 	<SDL2/SDL.h>
 	<iostream>
 	<cstdlib>
 	"map.h"
-	"camera.h"
+	"sdl_camera.h"
 	"tests.h"
 
 1508787066 d:\games\programs\map2d\library\compiler\sdl2\sdl.h
@@ -345,7 +345,7 @@
 
 1514496966 d:\games\programs\map2d\map.h
 
-1514455939 d:\games\programs\map2d\tests.h
+1514830888 d:\games\programs\map2d\tests.h
 	"map.h"
 	<list>
 	<string>
@@ -357,13 +357,12 @@
 	<iostream>
 	<chrono>
 
-1514502113 source:d:\games\programs\map2d\camera.cpp
+1514830583 source:d:\games\programs\map2d\camera.cpp
 	"camera.h"
 	<iostream>
 
-1514501907 d:\games\programs\map2d\camera.h
+1514830589 d:\games\programs\map2d\camera.h
 	"map.h"
-	<SDL2/SDL.h>
 	<list>
 
 1514499778 source:d:\games\programs\map2d\archive.cpp
@@ -375,4 +374,13 @@
 1514499778 d:\games\programs\map2d\archive.h
 	"map.h"
 	<string>
+
+1514830722 source:d:\games\programs\map2d\sdl_camera.cpp
+	"sdl_camera.h"
+	<iostream>
+
+1514830647 d:\games\programs\map2d\sdl_camera.h
+	"map.h"
+	"camera.h"
+	<SDL2/SDL.h>
 

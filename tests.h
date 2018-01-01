@@ -5,6 +5,8 @@
 #include <list>
 #include <string>
 
+/*******************************/
+
 class Test {
 public:
     Test(std::string name) : test_name_(name) {}
@@ -38,6 +40,8 @@ public:
     virtual bool do_execute() override;
 };
 
+/*******************************/
+
 class TestManager {
 public:
     TestManager();
@@ -49,5 +53,7 @@ public:
 private:
     std::list<Test*> tests_;
 };
+
+/*******************************/
 
 #endif // tests_h
