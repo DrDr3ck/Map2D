@@ -3,6 +3,8 @@
 #include <iostream>
 #include <cmath>
 
+#include "SDL2/SDL_image.h"
+
 /*************************/
 
 Tile::Tile(int id, Type type) : id_(id), type_(type) {
@@ -51,22 +53,23 @@ Tile& MapData::tile(int x,int y) {
 
 /*************************/
 
-TileManager::TileManager() {
+TileSet::TileSet() {
     tiles_surface_ = SDL_LoadBMP("tiles.bmp");
+    walls_surface_ = SDL_LoadBMP("walls01.bmp");
     if( tiles_surface_ == nullptr ) {
-        std::cout << "cannot initialize TileManager" << std::endl;
+        std::cout << "cannot initialize TileSet" << std::endl;
     }
 }
 
-TileManager* TileManager::instance() {
+TileSet* TileSet::instance() {
     if( singleton_ == nullptr ) {
         std::cout << "creating singleton" << std::endl;
-        singleton_ =  new TileManager();
+        singleton_ =  new TileSet();
     }
     return singleton_;
 }
 
-void TileManager::kill () {
+void TileSet::kill() {
     if( singleton_ != nullptr ) {
         delete singleton_;
         std::cout << "destroying singleton" << std::endl;
@@ -74,14 +77,25 @@ void TileManager::kill () {
     }
 }
 
-SDL_Texture* TileManager::getTextureFromTileId(int id, SDL_Renderer* renderer) {
-    auto map_of_tiles = TileManager::instance()->mapOfTiles();
-    if(map_of_tiles.find(id) != map_of_tiles.end()) {
-        return map_of_tiles[id];
+SDL_Texture* TileSet::getTextureFromTile(const Tile& tile, SDL_Renderer* renderer) {
+    auto map_of_tiles = TileSet::instance()->mapOfTiles();
+    auto map_of_walls = TileSet::instance()->mapOfWalls();
+    int id = tile.id();
+    int max = 5;
+    if( tile.type() == Tile::WALL ) {
+        if(map_of_walls.find(id) != map_of_walls.end()) {
+            return map_of_walls[id];
+        }
+        max = 4;
+    } else {
+        if(map_of_tiles.find(id) != map_of_tiles.end()) {
+            return map_of_tiles[id];
+        }
     }
+
     static int tileSize = 64;
-    int x = id % 5;
-    int y = floor(id / 5);
+    int x = id % max;
+    int y = floor(id / max);
     SDL_Rect source;
     source.x = x * tileSize;
     source.y = y * tileSize;
@@ -96,7 +110,10 @@ SDL_Texture* TileManager::getTextureFromTileId(int id, SDL_Renderer* renderer) {
     dest.w = tileSize;
     dest.h = tileSize;
 
-    SDL_Surface* surf_source = TileManager::instance()->tiles();
+    SDL_Surface* surf_source = TileSet::instance()->tiles();
+    if( tile.type() == Tile::WALL ) {
+        surf_source = TileSet::instance()->walls();
+    }
 
     SDL_BlitSurface(surf_source,
                     &source,
@@ -104,8 +121,12 @@ SDL_Texture* TileManager::getTextureFromTileId(int id, SDL_Renderer* renderer) {
                     &dest);
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surf_dest);
-    TileManager::instance()->mapOfTiles()[id] = texture;
+    if( tile.type() == Tile::WALL ) {
+        TileSet::instance()->mapOfWalls()[id] = texture;
+    } else {
+        TileSet::instance()->mapOfTiles()[id] = texture;
+    }
     return texture;
 }
 
-TileManager* TileManager::singleton_ = nullptr;
+TileSet* TileSet::singleton_ = nullptr;

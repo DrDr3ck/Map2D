@@ -43,9 +43,16 @@ bool MapTest::do_execute() {
     Tile& tile = map_data.tile(3,2);
     tile.setTile(2,Tile::DOOR);
 
-    const Tile& const_tile = map_data.tile(3,2);
+    Tile& tile2 = map_data.tile(4,2);
+    tile2.setTile(3,Tile::WALL);
+
+    Tile const_tile = map_data.tile(3,2);
     CHECK_EQUAL(const_tile.id(), 2, return false;);
     CHECK_EQUAL(const_tile.type(), Tile::DOOR, return false;);
+
+    const_tile = map_data.tile(4,2);
+    CHECK_EQUAL(const_tile.id(), 3, return false;);
+    CHECK_EQUAL(const_tile.type(), Tile::WALL, return false;);
 
     // save/load
     std::string filename("test.save");

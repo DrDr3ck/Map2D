@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-MapView::MapView(MapData* data) : data_(data) {
+MapView::MapView(MapData* data) : data_(data), background_(nullptr) {
 }
 
 void MapView::do_render(Camera* camera) {
@@ -18,7 +18,7 @@ void MapView::do_render(Camera* camera) {
     for( int w = 0 ; w < data_->width(); w++ ) {
         for( int h = 0 ; h < data_->height(); h++ ) {
             const Tile& cur = data_->tile(w,h);
-            small = TileManager::instance()->getTextureFromTileId(cur.id(), main_renderer);
+            small = TileSet::instance()->getTextureFromTile(cur, main_renderer);
             SDL_Rect dest;
             dest.x = w*64;
             dest.y = h*64;
@@ -36,14 +36,21 @@ void MapView::handleEvent(Camera* camera) {
 
 /***********************************/
 
-SDLCamera::SDLCamera() : Camera() {
-    window_ = SDL_CreateWindow("Tile Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
-    main_renderer_ = SDL_CreateRenderer(window_, -1, 0);
+SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr) {
+    if(SDL_Init(SDL_INIT_VIDEO) >= 0) {
+        window_ = SDL_CreateWindow("Tile Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
+        main_renderer_ = SDL_CreateRenderer(window_, -1, 0);
+    }
 }
 
 SDLCamera::~SDLCamera() {
     // Quit SDL
-    SDL_DestroyWindow(window_);
+    if( main_renderer_ != nullptr ) {
+        SDL_DestroyRenderer(main_renderer_);
+    }
+    if( window_ != nullptr ) {
+        SDL_DestroyWindow(window_);
+    }
     do_quit();
 }
 
@@ -58,8 +65,14 @@ void SDLCamera::render() {
     // rendering for all View(s)
     Camera::render();
     if( pause_ ) {
-        SDL_SetRenderDrawColor( main_renderer_, 222, 50, 50, 255 );
+        SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
         SDL_Rect r;
+        r.x = 360;
+        r.y = 240;
+        r.w = 70;
+        r.h = 70;
+        SDL_RenderFillRect( main_renderer_, &r );
+        SDL_SetRenderDrawColor( main_renderer_, 222, 50, 50, 255 );
         r.x = 370;
         r.y = 250;
         r.w = 20;

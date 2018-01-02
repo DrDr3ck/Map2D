@@ -91,6 +91,7 @@ void MapDataConverter::load(MapData* data, const std::string& filename) {
 std::string MapDataConverter::typeTileToString(Tile::Type type) const {
     if( type == Tile::BLOCK ) return "BLOCK";
     if( type == Tile::DOOR ) return "DOOR";
+    if( type == Tile::WALL ) return "WALL";
     if( type == Tile::EMPTY ) return "EMPTY";
     std::cout << "unable to find string for type: " << type << std::endl;
     return "NONE";
@@ -99,6 +100,7 @@ std::string MapDataConverter::typeTileToString(Tile::Type type) const {
 Tile::Type MapDataConverter::stringTileToType(const std::string& str) const {
     if( str == "BLOCK" ) return Tile::BLOCK;
     if( str == "DOOR" ) return Tile::DOOR;
+    if( str == "WALL" ) return Tile::WALL;
     if( str == "EMPTY" ) return Tile::EMPTY;
     std::cout << "unable to find type for string: " << str << std::endl;
     return Tile::BLOCK;

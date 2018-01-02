@@ -6,7 +6,7 @@
 
 class Tile {
 public:
-    enum Type { BLOCK, DOOR, EMPTY };
+    enum Type { BLOCK, DOOR, EMPTY, WALL };
 public:
     Tile(int id=0, Type type=EMPTY);
     ~Tile();
@@ -37,23 +37,27 @@ private:
     Tile* tiles_;
 };
 
-class TileManager {
+class TileSet {
 private:
-  TileManager();
-  ~TileManager() { }
+  TileSet();
+  ~TileSet() { }
 
 public:
-    static TileManager* instance();
+    static TileSet* instance();
     static void kill();
 
-    static SDL_Texture* getTextureFromTileId(int id, SDL_Renderer* renderer);
+    static SDL_Texture* getTextureFromTile(const Tile& tile, SDL_Renderer* renderer);
 
     SDL_Surface* tiles() { return tiles_surface_; }
+    SDL_Surface* walls() { return walls_surface_; }
     std::map<int, SDL_Texture*>& mapOfTiles() { return mapOfTiles_; }
+    std::map<int, SDL_Texture*>& mapOfWalls() { return mapOfWalls_; }
 private:
-    static TileManager* singleton_;
+    static TileSet* singleton_;
     SDL_Surface* tiles_surface_;
+    SDL_Surface* walls_surface_;
     std::map<int, SDL_Texture*> mapOfTiles_;
+    std::map<int, SDL_Texture*> mapOfWalls_;
 };
 
 #endif // map_h

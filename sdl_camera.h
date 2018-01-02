@@ -15,6 +15,7 @@ public:
 private:
     MapData* data_;
     SDL_Texture* background_;
+    SDL_Texture* wall_;
 };
 
 class SDLCamera : public Camera {
