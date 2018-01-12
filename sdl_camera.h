@@ -4,6 +4,7 @@
 #include "map.h"
 #include "camera.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 class MapView : public View {
 public:
@@ -16,6 +17,10 @@ private:
     MapData* data_;
     SDL_Texture* background_;
     SDL_Texture* wall_;
+    float scale_;
+    float delta_x_;
+    float delta_y_;
+    float delta_speed_;
 };
 
 class SDLCamera : public Camera {
@@ -37,6 +42,7 @@ private:
     SDL_Event event_;
     SDL_Window* window_;
     SDL_Renderer* main_renderer_;
+    TTF_Font* font_;
 
 };
 

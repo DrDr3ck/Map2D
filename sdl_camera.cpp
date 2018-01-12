@@ -2,7 +2,9 @@
 
 #include <iostream>
 
-MapView::MapView(MapData* data) : data_(data), background_(nullptr) {
+MapView::MapView(MapData* data) : data_(data), background_(nullptr),
+    scale_(1.), delta_x_(0.), delta_y_(0.), delta_speed_(0.1)
+{
 }
 
 void MapView::do_render(Camera* camera) {
@@ -14,32 +16,54 @@ void MapView::do_render(Camera* camera) {
     }
     SDL_RenderCopy(main_renderer, background_, NULL, NULL);
 
+    int screen_width,screen_height;
+    SDL_GetRendererOutputSize(main_renderer, &screen_width, &screen_height);
+    int tile_size = 64 * scale_;
+    int map_width = data_->width() * tile_size;
+    int map_height = data_->height() * tile_size;
+    int delta_width = (screen_width - map_width)/2;
+    int delta_height = (screen_height - map_height)/2;
+
     SDL_Texture* small = nullptr;
     for( int w = 0 ; w < data_->width(); w++ ) {
         for( int h = 0 ; h < data_->height(); h++ ) {
             const Tile& cur = data_->tile(w,h);
             small = TileSet::instance()->getTextureFromTile(cur, main_renderer);
             SDL_Rect dest;
-            dest.x = w*64;
-            dest.y = h*64;
-            dest.w = 64;
-            dest.h = 64;
+            dest.x = w*tile_size + delta_width + delta_x_;
+            dest.y = h*tile_size + delta_height + delta_y_;
+            dest.w = tile_size;
+            dest.h = tile_size;
             SDL_RenderCopy(main_renderer, small, NULL, &dest);
         }
     }
 }
 
 void MapView::handleEvent(Camera* camera) {
-    if( camera == nullptr ) return;
-    // TODO
+    SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
+    if( sdl_camera == nullptr ) return;
+    const SDL_Event& e = sdl_camera->event();
+    if( e.type == SDL_KEYDOWN ) {
+        if( e.key.keysym.sym == SDLK_LEFT ) {
+            delta_x_ -= 1 * delta_speed_;
+        } else if( e.key.keysym.sym == SDLK_RIGHT ) {
+            delta_x_ += 1 * delta_speed_;
+        } else if( e.key.keysym.sym == SDLK_UP ) {
+            delta_y_ -= 1 * delta_speed_;
+        } else if( e.key.keysym.sym == SDLK_DOWN ) {
+            delta_y_ += 1 * delta_speed_;
+        }
+    }
 }
 
 /***********************************/
 
-SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr) {
+SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), font_(nullptr) {
     if(SDL_Init(SDL_INIT_VIDEO) >= 0) {
         window_ = SDL_CreateWindow("Tile Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
         main_renderer_ = SDL_CreateRenderer(window_, -1, 0);
+        TTF_Init();
+        font_ = TTF_OpenFont("pixel11.ttf", 60);
     }
 }
 
@@ -51,6 +75,8 @@ SDLCamera::~SDLCamera() {
     if( window_ != nullptr ) {
         SDL_DestroyWindow(window_);
     }
+    TTF_CloseFont(font_);
+    TTF_Quit();
     do_quit();
 }
 
@@ -80,6 +106,16 @@ void SDLCamera::render() {
         SDL_RenderFillRect( main_renderer_, &r );
         r.x = 400;
         SDL_RenderFillRect( main_renderer_, &r );
+
+        SDL_Color black = {0, 0, 0, 0};
+        SDL_Surface* texte = TTF_RenderText_Blended(font_, "Pause", black);
+        SDL_Rect position;
+        position.x = 300;
+        position.y = 200;
+        SDL_Texture* text = SDL_CreateTextureFromSurface(main_renderer_, texte);
+        SDL_RenderCopy(main_renderer_, text, NULL, &position);
+        //SDL_DestroyTexture(text);
+        //SDL_FreeSurface(texte);
     }
     SDL_RenderPresent(main_renderer_);
 }
