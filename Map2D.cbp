@@ -33,6 +33,8 @@
 		</Compiler>
 		<Unit filename="archive.cpp" />
 		<Unit filename="archive.h" />
+		<Unit filename="button.cpp" />
+		<Unit filename="button.h" />
 		<Unit filename="camera.cpp" />
 		<Unit filename="camera.h" />
 		<Unit filename="main.cpp" />
