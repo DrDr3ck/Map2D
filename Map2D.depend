@@ -382,11 +382,11 @@
 	"map.h"
 	<string>
 
-1515855520 source:d:\games\programs\map2d\sdl_camera.cpp
+1515856215 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 
-1515855706 d:\games\programs\map2d\sdl_camera.h
+1515855902 d:\games\programs\map2d\sdl_camera.h
 	"map.h"
 	"camera.h"
 	"button.h"
@@ -398,7 +398,7 @@
 	"button.h"
 	<iostream>
 
-1515855689 d:\games\programs\map2d\button.h
+1515855871 d:\games\programs\map2d\button.h
 	"camera.h"
 	<list>
 

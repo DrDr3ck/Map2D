@@ -69,7 +69,8 @@ SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), fo
         font_ = TTF_OpenFont("pixel11.ttf", 24);
     }
     manager_ = new SDLButtonManager();
-    manager_->addButton( new SDLQuitButton(this, 10,10,32,32) );
+    manager_->addButton( new SDLQuitButton(this, 10,10) );
+    manager_->addButton( new SDLButton("wall.bmp", 10,530) );
 }
 
 SDLCamera::~SDLCamera() {
@@ -124,6 +125,8 @@ void SDLCamera::render() {
         position.h = font_size;
         position.x = 300;
         position.y = 50;
+        SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
+        SDL_RenderFillRect( main_renderer_, &position );
         SDL_RenderCopy(main_renderer_, text, NULL, &position);
         SDL_DestroyTexture(text);
         SDL_FreeSurface(texte);
@@ -216,8 +219,11 @@ void SDLButtonManager::do_render(Camera* camera) {
 
 /********************************************************************/
 
-SDLButton::SDLButton(std::string name, int x, int y, int w, int h) : Button(x,y,w,h) {
+SDLButton::SDLButton(std::string name, int x, int y) : Button(x,y) {
     surface_ = SDL_LoadBMP(name.c_str());
+    int w = surface_->w;
+    int h = surface_->h;
+    setSize(w,h);
     rect_ = {x,y,w,h};
 }
 

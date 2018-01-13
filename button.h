@@ -10,7 +10,7 @@ class Camera;
 
 class Button {
 public:
-    Button(int x,int y, int w, int h);
+    Button(int x,int y, int w=32, int h=32);
     virtual ~Button() {}
 
     bool isActive() { return active_; }
@@ -24,6 +24,9 @@ public:
 
     void hasFocus(bool value) { focus_ = value; }
     bool hasFocus() const { return focus_; }
+
+    void setSize(int w, int h) { w_ = w; h_ = h; }
+    void setPosition(int x,int y) { x_ = x; y_ = y; }
 
 private:
     bool active_;

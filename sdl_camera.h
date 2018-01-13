@@ -69,9 +69,11 @@ public:
     virtual void handleEvent(Camera* camera) override;
 };
 
+/********************************************************************/
+
 class SDLButton : public Button {
 public:
-    SDLButton(std::string name, int x, int y, int w, int h);
+    SDLButton(std::string name, int x, int y);
     virtual ~SDLButton();
 
     virtual void activate() override;
@@ -86,9 +88,11 @@ private:
     SDL_Rect rect_;
 };
 
+/********************************************************************/
+
 class SDLQuitButton : public SDLButton {
 public:
-    SDLQuitButton(SDLCamera* camera, int x, int y, int w, int h) : SDLButton("quit.bmp", x,y,w,h), camera_(camera) {}
+    SDLQuitButton(SDLCamera* camera, int x, int y) : SDLButton("quit.bmp", x,y), camera_(camera) {}
     virtual ~SDLQuitButton() {}
 
     virtual void activate();
