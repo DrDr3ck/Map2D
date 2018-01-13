@@ -4,6 +4,8 @@
 #include "map.h"
 #include <string>
 
+/********************************************************************/
+
 class MapDataConverter {
 public:
     MapDataConverter() {}
@@ -16,5 +18,7 @@ protected:
     std::string typeTileToString(Tile::Type type) const;
     Tile::Type stringTileToType(const std::string& str) const;
 };
+
+/********************************************************************/
 
 #endif // archive_h

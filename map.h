@@ -4,6 +4,8 @@
 #include <SDL2/SDL.h>
 #include <map>
 
+/********************************************************************/
+
 class Tile {
 public:
     enum Type { BLOCK, DOOR, EMPTY, WALL };
@@ -18,6 +20,8 @@ private:
     int id_;
     Type type_;
 };
+
+/********************************************************************/
 
 class MapData {
 public:
@@ -37,10 +41,12 @@ private:
     Tile* tiles_;
 };
 
+/********************************************************************/
+
 class TileSet {
 private:
   TileSet();
-  ~TileSet() { }
+  ~TileSet();
 
 public:
     static TileSet* instance();
@@ -59,5 +65,7 @@ private:
     std::map<int, SDL_Texture*> mapOfTiles_;
     std::map<int, SDL_Texture*> mapOfWalls_;
 };
+
+/********************************************************************/
 
 #endif // map_h

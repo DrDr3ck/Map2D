@@ -6,6 +6,8 @@
 
 class Camera;
 
+/********************************************************************/
+
 class View {
 public:
     View() {}
@@ -15,11 +17,12 @@ public:
     virtual void handleEvent(Camera* camera) = 0;
 };
 
-/********************************/
+/********************************************************************/
 
 class Camera {
 public:
     Camera();
+    virtual ~Camera() {}
 
     virtual bool valid() const = 0;
 
@@ -37,5 +40,20 @@ protected:
     bool pause_;
     bool quit_;
 };
+
+/********************************************************************/
+
+class Tool {
+public:
+    Tool() {}
+    virtual ~Tool() {}
+
+    virtual void handleEvent() = 0;
+    virtual void mousePress() = 0;
+    virtual void mouseMotion() = 0;
+    virtual void mouseRelease() = 0;
+};
+
+/********************************************************************/
 
 #endif // camera_h

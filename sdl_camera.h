@@ -6,6 +6,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+/********************************************************************/
+
 class MapView : public View {
 public:
     MapView(MapData* data);
@@ -16,12 +18,13 @@ public:
 private:
     MapData* data_;
     SDL_Texture* background_;
-    SDL_Texture* wall_;
     float scale_;
     float delta_x_;
     float delta_y_;
     float delta_speed_;
 };
+
+/********************************************************************/
 
 class SDLCamera : public Camera {
 public:
@@ -29,15 +32,16 @@ public:
     virtual ~SDLCamera();
 
     virtual bool valid() const override;
-
     virtual void render() override;
     virtual void handleEvent() override;
-
     virtual void do_quit() const override;
 
+    void displayTexture(SDL_Texture* texture, const SDL_Rect* rect);
+    void getSize(int& screen_width, int& screen_height);
     SDL_Window* window() const { return window_; }
     SDL_Renderer* main_renderer() const { return main_renderer_; }
     const SDL_Event& event() const { return event_; }
+
 private:
     SDL_Event event_;
     SDL_Window* window_;
@@ -45,5 +49,23 @@ private:
     TTF_Font* font_;
 
 };
+
+/********************************************************************/
+
+class SDLTool : public Tool {
+public:
+    SDLTool(SDLCamera* camera) : Tool(), camera_(camera) {}
+    virtual ~SDLTool() {}
+
+    virtual void handleEvent() override;
+    virtual void mousePress() override;
+    virtual void mouseMotion() override;
+    virtual void mouseRelease() override;
+
+private:
+    SDLCamera* camera_;
+};
+
+/********************************************************************/
 
 #endif // camera_h

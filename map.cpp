@@ -5,7 +5,7 @@
 
 #include "SDL2/SDL_image.h"
 
-/*************************/
+/********************************************************************/
 
 Tile::Tile(int id, Type type) : id_(id), type_(type) {
 }
@@ -26,7 +26,7 @@ void Tile::setTile(int id, Type type) {
     type_ = type;
 }
 
-/*************************/
+/********************************************************************/
 
 MapData::MapData(int width, int height) : width_(width), height_(height) {
     tiles_ = new Tile[width*height];
@@ -51,7 +51,7 @@ Tile& MapData::tile(int x,int y) {
     return tiles_[x+y*width_];
 }
 
-/*************************/
+/********************************************************************/
 
 TileSet::TileSet() {
     tiles_surface_ = SDL_LoadBMP("tiles.bmp");
@@ -59,6 +59,11 @@ TileSet::TileSet() {
     if( tiles_surface_ == nullptr ) {
         std::cout << "cannot initialize TileSet" << std::endl;
     }
+}
+
+TileSet::~TileSet() {
+    SDL_FreeSurface(tiles_surface_);
+    SDL_FreeSurface(walls_surface_);
 }
 
 TileSet* TileSet::instance() {
@@ -77,6 +82,9 @@ void TileSet::kill() {
     }
 }
 
+/*!
+ * \return the texture from the given \p tile.
+ */
 SDL_Texture* TileSet::getTextureFromTile(const Tile& tile, SDL_Renderer* renderer) {
     auto map_of_tiles = TileSet::instance()->mapOfTiles();
     auto map_of_walls = TileSet::instance()->mapOfWalls();
@@ -129,4 +137,7 @@ SDL_Texture* TileSet::getTextureFromTile(const Tile& tile, SDL_Renderer* rendere
     return texture;
 }
 
+// Initialize singleton_ to nullptr
 TileSet* TileSet::singleton_ = nullptr;
+
+/********************************************************************/

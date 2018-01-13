@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+/********************************************************************/
+
 MapView::MapView(MapData* data) : data_(data), background_(nullptr),
     scale_(1.), delta_x_(0.), delta_y_(0.), delta_speed_(0.1)
 {
@@ -13,11 +15,12 @@ void MapView::do_render(Camera* camera) {
     if( background_ == nullptr ) {
         SDL_Surface* bg_surface = SDL_LoadBMP("background.bmp");
         background_ = SDL_CreateTextureFromSurface(main_renderer, bg_surface);
+        SDL_FreeSurface(bg_surface);
     }
-    SDL_RenderCopy(main_renderer, background_, NULL, NULL);
+    sdl_camera->displayTexture(background_, NULL);
 
-    int screen_width,screen_height;
-    SDL_GetRendererOutputSize(main_renderer, &screen_width, &screen_height);
+    int screen_width, screen_height;
+    sdl_camera->getSize(screen_width, screen_height);
     int tile_size = 64 * scale_;
     int map_width = data_->width() * tile_size;
     int map_height = data_->height() * tile_size;
@@ -34,7 +37,7 @@ void MapView::do_render(Camera* camera) {
             dest.y = h*tile_size + delta_height + delta_y_;
             dest.w = tile_size;
             dest.h = tile_size;
-            SDL_RenderCopy(main_renderer, small, NULL, &dest);
+            sdl_camera->displayTexture(small, &dest);
         }
     }
 }
@@ -56,14 +59,14 @@ void MapView::handleEvent(Camera* camera) {
     }
 }
 
-/***********************************/
+/********************************************************************/
 
 SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), font_(nullptr) {
     if(SDL_Init(SDL_INIT_VIDEO) >= 0) {
         window_ = SDL_CreateWindow("Tile Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
         main_renderer_ = SDL_CreateRenderer(window_, -1, 0);
         TTF_Init();
-        font_ = TTF_OpenFont("pixel11.ttf", 60);
+        font_ = TTF_OpenFont("pixel11.ttf", 24);
     }
 }
 
@@ -107,17 +110,32 @@ void SDLCamera::render() {
         r.x = 400;
         SDL_RenderFillRect( main_renderer_, &r );
 
-        SDL_Color black = {0, 0, 0, 0};
-        SDL_Surface* texte = TTF_RenderText_Blended(font_, "Pause", black);
-        SDL_Rect position;
-        position.x = 300;
-        position.y = 200;
+        SDL_Color black = {0, 0, 0, 255};
+        std::string pause("Pause (Press SPACE)");
+        int font_size = 20;
+        SDL_Surface* texte = TTF_RenderText_Solid(font_, pause.c_str(), black);
         SDL_Texture* text = SDL_CreateTextureFromSurface(main_renderer_, texte);
+        SDL_Rect position;
+        position.w = pause.size() * font_size/2;
+        position.h = font_size;
+        position.x = 300;
+        position.y = 50;
         SDL_RenderCopy(main_renderer_, text, NULL, &position);
-        //SDL_DestroyTexture(text);
-        //SDL_FreeSurface(texte);
+        SDL_DestroyTexture(text);
+        SDL_FreeSurface(texte);
     }
     SDL_RenderPresent(main_renderer_);
+}
+
+void SDLCamera::displayTexture(SDL_Texture* texture, const SDL_Rect* rect) {
+    SDL_RenderCopy(main_renderer_, texture, NULL, rect);
+}
+
+/*!
+ * Gets screen size in pixel.
+ */
+void SDLCamera::getSize(int& screen_width, int& screen_height) {
+    SDL_GetRendererOutputSize(main_renderer_, &screen_width, &screen_height);
 }
 
 void SDLCamera::handleEvent() {
@@ -144,3 +162,19 @@ void SDLCamera::do_quit() const {
     }
     SDL_Quit();
 }
+
+/********************************************************************/
+
+void SDLTool::handleEvent() {
+}
+
+void SDLTool::mousePress() {
+}
+
+void SDLTool::mouseMotion() {
+}
+
+void SDLTool::mouseRelease() {
+}
+
+/********************************************************************/
