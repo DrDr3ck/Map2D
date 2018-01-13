@@ -61,13 +61,15 @@ void MapView::handleEvent(Camera* camera) {
 
 /********************************************************************/
 
-SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), font_(nullptr) {
+SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), font_(nullptr), tool_(nullptr) {
     if(SDL_Init(SDL_INIT_VIDEO) >= 0) {
         window_ = SDL_CreateWindow("Tile Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
         main_renderer_ = SDL_CreateRenderer(window_, -1, 0);
         TTF_Init();
         font_ = TTF_OpenFont("pixel11.ttf", 24);
     }
+    manager_ = new SDLButtonManager();
+    manager_->addButton( new SDLQuitButton(this, 10,10,32,32) );
 }
 
 SDLCamera::~SDLCamera() {
@@ -80,6 +82,7 @@ SDLCamera::~SDLCamera() {
     }
     TTF_CloseFont(font_);
     TTF_Quit();
+    delete manager_;
     do_quit();
 }
 
@@ -93,6 +96,7 @@ bool SDLCamera::valid() const {
 void SDLCamera::render() {
     // rendering for all View(s)
     Camera::render();
+    manager_->do_render(this);
     if( pause_ ) {
         SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
         SDL_Rect r;
@@ -139,6 +143,8 @@ void SDLCamera::getSize(int& screen_width, int& screen_height) {
 }
 
 void SDLCamera::handleEvent() {
+    SDL_GetMouseState(&mouse_x_, &mouse_y_);
+
     SDL_PollEvent(&event_);
     if(event_.type == SDL_QUIT) {
         quit_ = true;
@@ -152,8 +158,13 @@ void SDLCamera::handleEvent() {
         }
     }
 
+    if( tool_ != nullptr ) {
+        tool_->handleEvent();
+    }
+
     // handle event for all View(s)
     Camera::handleEvent();
+    manager_->handleEvent(this);
 }
 
 void SDLCamera::do_quit() const {
@@ -161,6 +172,81 @@ void SDLCamera::do_quit() const {
         std::cout << "Camera not valid: " << SDL_GetError() << std::endl;
     }
     SDL_Quit();
+}
+
+/********************************************************************/
+
+void SDLButtonManager::handleEvent(Camera* camera) {
+    SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
+    const SDL_Event& e = sdl_camera->event();
+    bool button_pressed = false;
+    if( e.type == SDL_MOUSEBUTTONDOWN ) {
+        button_pressed = true;
+    }
+    for( auto button : buttons_ ) {
+        // get mouse position
+        if( button->mouseOverButton(camera->mouse_x(), camera->mouse_y()) ) {
+            button->hasFocus(true);
+            if( button_pressed ) {
+                button->activate();
+            }
+        } else {
+            button->hasFocus(false);
+        }
+    }
+}
+
+void SDLButtonManager::do_render(Camera* camera) {
+    SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
+    SDL_Renderer* main_renderer = sdl_camera->main_renderer();
+    // iterate over all visible buttons, get texture and display them
+    for( auto b : buttons_ ) {
+        SDLButton* button = dynamic_cast<SDLButton*>(b);
+        if( !button->isVisible() ) {
+            continue;
+        }
+        SDL_Texture* texture = button->getTexture(main_renderer);
+        sdl_camera->displayTexture(texture, &button->rect());
+        if( button->hasFocus() ) {
+            SDL_SetRenderDrawColor( main_renderer, 250, 250, 250, 255 );
+            SDL_RenderDrawRect(main_renderer, &button->rect());
+        }
+    }
+}
+
+/********************************************************************/
+
+SDLButton::SDLButton(std::string name, int x, int y, int w, int h) : Button(x,y,w,h) {
+    surface_ = SDL_LoadBMP(name.c_str());
+    rect_ = {x,y,w,h};
+}
+
+SDLButton::~SDLButton() {
+    SDL_FreeSurface(surface_);
+    if( texture_ != nullptr )  {
+        SDL_DestroyTexture(texture_);
+    }
+}
+
+SDL_Texture* SDLButton::getTexture(SDL_Renderer* renderer) {
+    if( texture_ == nullptr ) {
+        texture_ = SDL_CreateTextureFromSurface(renderer, surface_);
+    }
+    return texture_;
+}
+
+void SDLButton::activate() {
+    Button::activate();
+}
+
+void SDLButton::deactivate() {
+    Button::deactivate();
+}
+
+/********************************************************************/
+
+void SDLQuitButton::activate() {
+    camera_->set_quit();
 }
 
 /********************************************************************/

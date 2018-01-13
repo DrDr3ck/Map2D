@@ -3,6 +3,7 @@
 
 #include "map.h"
 #include "camera.h"
+#include <string>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
@@ -26,6 +27,9 @@ private:
 
 /********************************************************************/
 
+class SDLTool;
+class SDLButtonManager;
+
 class SDLCamera : public Camera {
 public:
     SDLCamera();
@@ -35,6 +39,8 @@ public:
     virtual void render() override;
     virtual void handleEvent() override;
     virtual void do_quit() const override;
+
+    void setTool(SDLTool* tool) { tool_ = tool; }
 
     void displayTexture(SDL_Texture* texture, const SDL_Rect* rect);
     void getSize(int& screen_width, int& screen_height);
@@ -47,7 +53,46 @@ private:
     SDL_Window* window_;
     SDL_Renderer* main_renderer_;
     TTF_Font* font_;
+    SDLTool* tool_;
+    SDLButtonManager* manager_;
+};
 
+/********************************************************************/
+
+class SDLButtonManager : public ButtonManager {
+public:
+    SDLButtonManager() : ButtonManager() {}
+    virtual ~SDLButtonManager() {}
+
+    virtual void do_render(Camera* camera);
+    virtual void handleEvent(Camera* camera) override;
+};
+
+class SDLButton : public Button {
+public:
+    SDLButton(std::string name, int x, int y, int w, int h);
+    virtual ~SDLButton();
+
+    virtual void activate() override;
+    virtual void deactivate() override;
+
+    SDL_Texture* getTexture(SDL_Renderer* renderer);
+    const SDL_Rect& rect() const { return rect_; }
+
+private:
+    SDL_Surface* surface_;
+    SDL_Texture* texture_;
+    SDL_Rect rect_;
+};
+
+class SDLQuitButton : public SDLButton {
+public:
+    SDLQuitButton(SDLCamera* camera, int x, int y, int w, int h) : SDLButton("quit.bmp", x,y,w,h), camera_(camera) {}
+    virtual ~SDLQuitButton() {}
+
+    virtual void activate();
+private:
+    SDLCamera* camera_;
 };
 
 /********************************************************************/
@@ -64,6 +109,8 @@ public:
 
 private:
     SDLCamera* camera_;
+    int position_x_;
+    int position_y_;
 };
 
 /********************************************************************/
