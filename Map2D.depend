@@ -364,11 +364,11 @@
 	<iostream>
 	<chrono>
 
-1515855296 source:d:\games\programs\map2d\camera.cpp
+1515855642 source:d:\games\programs\map2d\camera.cpp
 	"camera.h"
 	<iostream>
 
-1515855343 d:\games\programs\map2d\camera.h
+1515855689 d:\games\programs\map2d\camera.h
 	"map.h"
 	<list>
 
@@ -382,14 +382,23 @@
 	"map.h"
 	<string>
 
-1515854931 source:d:\games\programs\map2d\sdl_camera.cpp
+1515855520 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 
-1515855281 d:\games\programs\map2d\sdl_camera.h
+1515855706 d:\games\programs\map2d\sdl_camera.h
 	"map.h"
 	"camera.h"
+	"button.h"
 	<string>
 	<SDL2/SDL.h>
 	<SDL2/SDL_ttf.h>
+
+1515855689 source:d:\games\programs\map2d\button.cpp
+	"button.h"
+	<iostream>
+
+1515855689 d:\games\programs\map2d\button.h
+	"camera.h"
+	<list>
 
