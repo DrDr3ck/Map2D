@@ -107,6 +107,39 @@ void MapView::handleEvent(Camera* camera) {
 
 /********************************************************************/
 
+SDLText::SDLText(
+    const std::string& text,
+    int font_size,
+    const SDL_Color& color
+) : text_(text), size_(font_size), texture_(nullptr), color_(color) {
+    rect_.w = text.size() * font_size/2;
+    rect_.h = font_size;
+    rect_.x = 0;
+    rect_.y = 0;
+}
+
+SDLText::~SDLText() {
+    if( texture_ != nullptr ) {
+        SDL_DestroyTexture(texture_);
+    }
+}
+
+void SDLText::set_position(int x, int y) {
+    rect_.x = x;
+    rect_.y = y;
+}
+
+SDL_Texture* SDLText::texture(TTF_Font* font, SDL_Renderer* renderer) {
+    if( texture_ == nullptr ) {
+        SDL_Surface* texte = TTF_RenderText_Solid(font, text_.c_str(), color_);
+        texture_ = SDL_CreateTextureFromSurface(renderer, texte);
+        SDL_FreeSurface(texte);
+    }
+    return texture_;
+}
+
+/********************************************************************/
+
 SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), font_(nullptr), tool_(nullptr), map_view_(nullptr) {
     if(SDL_Init(SDL_INIT_VIDEO) >= 0) {
         window_ = SDL_CreateWindow("Tile Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
@@ -162,21 +195,11 @@ void SDLCamera::render() {
         SDL_RenderFillRect( main_renderer_, &r );
 
         // todo: create utility to display text
-        SDL_Color black = {0, 0, 0, 255};
-        std::string pause("Pause (Press SPACE)");
-        int font_size = 20;
-        SDL_Surface* texte = TTF_RenderText_Solid(font_, pause.c_str(), black);
-        SDL_Texture* text = SDL_CreateTextureFromSurface(main_renderer_, texte);
-        SDL_Rect position;
-        position.w = pause.size() * font_size/2;
-        position.h = font_size;
-        position.x = 300;
-        position.y = 50;
+        SDLText text("Pause (Press SPACE)", 20, SDLText::black());
+        text.set_position(300,50);
         SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
-        SDL_RenderFillRect( main_renderer_, &position );
-        SDL_RenderCopy(main_renderer_, text, NULL, &position);
-        SDL_DestroyTexture(text);
-        SDL_FreeSurface(texte);
+        SDL_RenderFillRect( main_renderer_, &text.rect() );
+        displayText(text);
     }
     // ask map_view_ to get the text for the selected tile
     // display text in main_renderer
@@ -185,6 +208,10 @@ void SDLCamera::render() {
 
 void SDLCamera::displayTexture(SDL_Texture* texture, const SDL_Rect* rect) {
     SDL_RenderCopy(main_renderer_, texture, NULL, rect);
+}
+
+void SDLCamera::displayText(SDLText& text) {
+    SDL_RenderCopy(main_renderer_, text.texture(font_, main_renderer_), NULL, &text.rect());
 }
 
 /*!

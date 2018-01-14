@@ -39,6 +39,27 @@ private:
 
 /********************************************************************/
 
+class SDLText {
+public:
+    SDLText(const std::string& text, int font_size, const SDL_Color& color);
+    ~SDLText();
+
+    SDL_Texture* texture(TTF_Font* font, SDL_Renderer* renderer);
+    const SDL_Rect& rect() const { return rect_; }
+    void set_position(int x, int y);
+
+    static SDL_Color& black() { static SDL_Color black = {0, 0, 0, 255}; return black; }
+
+private:
+    std::string text_;
+    int size_; // font size
+    SDL_Texture* texture_;
+    SDL_Color color_;
+    SDL_Rect rect_;
+};
+
+/********************************************************************/
+
 class SDLTool;
 class SDLButtonManager;
 
@@ -59,6 +80,8 @@ public:
     void setMapView(MapView* view);
 
     void displayTexture(SDL_Texture* texture, const SDL_Rect* rect);
+    void displayText(SDLText& text);
+
     void getSize(int& screen_width, int& screen_height);
     SDL_Window* window() const { return window_; }
     SDL_Renderer* main_renderer() const { return main_renderer_; }

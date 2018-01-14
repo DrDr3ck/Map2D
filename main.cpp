@@ -24,7 +24,7 @@ int main(int /*argc*/, char** /*argv*/) {
 
     std::string filename("save01.arc");
     MapDataConverter converter;
-    MapData data(10,6);
+    MapData data(50,30);
 
     // check if save already exists
     std::ifstream f(filename.c_str());

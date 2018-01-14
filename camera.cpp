@@ -50,7 +50,6 @@ void Camera::onMouseWheelScroll(int x, int y) {
     if( y == -1 ) {
         zoom(false);
     }
-    std::cout << "wheel: " << x << " " << y << std::endl;
 }
 
 void Camera::render() {
