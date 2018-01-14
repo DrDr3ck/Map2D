@@ -5,12 +5,13 @@
 /********************************************************************/
 
 MapView::MapView(MapData* data) : data_(data), background_(nullptr),
-    scale_(1.), delta_x_(0.), delta_y_(0.), delta_speed_(0.1)
+    delta_x_(0.), delta_y_(0.), delta_speed_(0.1)
 {
 }
 
 void MapView::do_render(Camera* camera) {
     SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
+    float scale = camera->scale();
     SDL_Renderer* main_renderer = sdl_camera->main_renderer();
     if( background_ == nullptr ) {
         SDL_Surface* bg_surface = SDL_LoadBMP("background.bmp");
@@ -21,7 +22,7 @@ void MapView::do_render(Camera* camera) {
 
     int screen_width, screen_height;
     sdl_camera->getSize(screen_width, screen_height);
-    int tile_size = 64 * scale_;
+    int tile_size = 64 * scale;
     int map_width = data_->width() * tile_size;
     int map_height = data_->height() * tile_size;
     int delta_width = (screen_width - map_width)/2;
@@ -148,17 +149,28 @@ void SDLCamera::getSize(int& screen_width, int& screen_height) {
 void SDLCamera::handleEvent() {
     SDL_GetMouseState(&mouse_x_, &mouse_y_);
 
-    SDL_PollEvent(&event_);
-    if(event_.type == SDL_QUIT) {
-        quit_ = true;
+    if( SDL_PollEvent(&event_) == 0 ) {
         return;
     }
-    if( event_.type == SDL_KEYDOWN ) {
-        if( event_.key.keysym.sym == SDLK_SPACE ) {
-            pause_ = !pause_;
-        } else if( event_.key.keysym.sym == SDLK_ESCAPE ) {
+    switch( event_.type ) {
+        case SDL_QUIT:
             quit_ = true;
-        }
+            return;
+        case SDL_KEYDOWN:
+            if( event_.key.keysym.sym == SDLK_SPACE ) {
+                pause_ = !pause_;
+            } else if( event_.key.keysym.sym == SDLK_ESCAPE ) {
+                quit_ = true;
+            }
+            break;
+        case SDL_MOUSEMOTION:
+            onMouseMove(event_.motion.x, event_.motion.y);
+            break;
+        case SDL_MOUSEWHEEL:
+            onMouseWheelScroll(event_.wheel.x, event_.wheel.y);
+            break;
+        default:
+            break;
     }
 
     if( tool_ != nullptr ) {
@@ -168,6 +180,14 @@ void SDLCamera::handleEvent() {
     // handle event for all View(s)
     Camera::handleEvent();
     manager_->handleEvent(this);
+}
+
+void SDLCamera::onMouseMove(int x, int y) {
+    Camera::onMouseMove(x,y);
+}
+
+void SDLCamera::onMouseWheelScroll(int x, int y) {
+    Camera::onMouseWheelScroll(x,y);
 }
 
 void SDLCamera::do_quit() const {

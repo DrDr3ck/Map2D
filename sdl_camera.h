@@ -40,6 +40,8 @@ public:
     virtual void render() override;
     virtual void handleEvent() override;
     virtual void do_quit() const override;
+    virtual void onMouseMove(int x, int y) override;
+    virtual void onMouseWheelScroll(int x, int y) override;
 
     void setTool(SDLTool* tool) { tool_ = tool; }
 
