@@ -161,6 +161,7 @@ void SDLCamera::render() {
         r.x = 400;
         SDL_RenderFillRect( main_renderer_, &r );
 
+        // todo: create utility to display text
         SDL_Color black = {0, 0, 0, 255};
         std::string pause("Pause (Press SPACE)");
         int font_size = 20;
@@ -177,6 +178,8 @@ void SDLCamera::render() {
         SDL_DestroyTexture(text);
         SDL_FreeSurface(texte);
     }
+    // ask map_view_ to get the text for the selected tile
+    // display text in main_renderer
     SDL_RenderPresent(main_renderer_);
 }
 
@@ -227,14 +230,14 @@ void SDLCamera::handleEvent() {
     manager_->handleEvent(this);
 }
 
-void SDLCamera::onMouseMove(int x, int y) {
-    Camera::onMouseMove(x,y);
+void SDLCamera::onMouseMove(int mouse_x, int mouse_y) {
+    Camera::onMouseMove(mouse_x,mouse_y);
     // check on which 'tile' we are
-    map_view_->onTile(x,y);
+    map_view_->onTile(mouse_x,mouse_y);
 }
 
-void SDLCamera::onMouseWheelScroll(int x, int y) {
-    Camera::onMouseWheelScroll(x,y);
+void SDLCamera::onMouseWheelScroll(int wheel_x, int wheel_y) {
+    Camera::onMouseWheelScroll(wheel_x,wheel_y);
 }
 
 void SDLCamera::setMapView(MapView* view) {
