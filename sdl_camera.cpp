@@ -2,6 +2,19 @@
 
 #include <iostream>
 #include <math.h>
+#include <string>
+#include <sstream>
+
+namespace {
+/*!
+ * Transforms an integer into a string.
+ */
+std::string itos(int i) {
+    std::ostringstream stm;
+    stm << i ;
+    return stm.str();
+}
+}
 
 /********************************************************************/
 
@@ -58,6 +71,8 @@ void MapView::do_render(Camera* camera) {
     scaled_start_x_ = delta_width + translate_x_;
     scaled_start_y_ = delta_height + translate_y_;
 
+    std::string tile_text;
+
     SDL_Texture* small = nullptr;
     for( int w = 0 ; w < data_->width(); w++ ) {
         for( int h = 0 ; h < data_->height(); h++ ) {
@@ -72,9 +87,17 @@ void MapView::do_render(Camera* camera) {
             if( tile_x_ == w && tile_y_ == h ) {
                 SDL_SetRenderDrawColor( main_renderer, 250, 250, 250, 255 );
                 SDL_RenderDrawRect(main_renderer, &dest);
+                tile_text.append(Tile::typeTileToString(cur.type()));
+                tile_text.append(": ");
+                tile_text.append(itos(w));
+                tile_text.append(" ");
+                tile_text.append(itos(h));
             }
         }
     }
+    SDLText text(tile_text, 12, SDLText::black());
+    text.set_position(600,500);
+    sdl_camera->displayText(text);
 }
 
 void MapView::handleEvent(Camera* camera) {
@@ -112,10 +135,12 @@ SDLText::SDLText(
     int font_size,
     const SDL_Color& color
 ) : text_(text), size_(font_size), texture_(nullptr), color_(color) {
-    rect_.w = text.size() * font_size/2;
-    rect_.h = font_size;
+    // TODO need to get TTF_Font according to given font size (need to create a FontManager)
+    rect_.w = 0;
+    rect_.h = 0;
     rect_.x = 0;
     rect_.y = 0;
+    //TTF_SizeText(font,text_.c_str(),&rect_.w,&rect_.h);
 }
 
 SDLText::~SDLText() {
@@ -131,6 +156,7 @@ void SDLText::set_position(int x, int y) {
 
 SDL_Texture* SDLText::texture(TTF_Font* font, SDL_Renderer* renderer) {
     if( texture_ == nullptr ) {
+        TTF_SizeText(font,text_.c_str(),&rect_.w,&rect_.h);
         SDL_Surface* texte = TTF_RenderText_Solid(font, text_.c_str(), color_);
         texture_ = SDL_CreateTextureFromSurface(renderer, texte);
         SDL_FreeSurface(texte);
@@ -145,7 +171,7 @@ SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), fo
         window_ = SDL_CreateWindow("Tile Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
         main_renderer_ = SDL_CreateRenderer(window_, -1, 0);
         TTF_Init();
-        font_ = TTF_OpenFont("pixel11.ttf", 24);
+        font_ = TTF_OpenFont("pixel11.ttf", 16);
     }
     manager_ = new SDLButtonManager();
     manager_->addButton( new SDLQuitButton(this, 10,10) );
@@ -194,15 +220,22 @@ void SDLCamera::render() {
         r.x = 400;
         SDL_RenderFillRect( main_renderer_, &r );
 
-        // todo: create utility to display text
-        SDLText text("Pause (Press SPACE)", 20, SDLText::black());
+        SDLText text("Pause (Press SPACE)", 12, SDLText::black());
         text.set_position(300,50);
         SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
+        text.texture(font_, main_renderer_); // need to create texture in order to get correct text dimension
         SDL_RenderFillRect( main_renderer_, &text.rect() );
         displayText(text);
     }
-    // ask map_view_ to get the text for the selected tile
-    // display text in main_renderer
+    // debug: display mouse position
+    std::string mouse_position;
+    mouse_position.append(itos(mouse_x()));
+    mouse_position.append(" ");
+    mouse_position.append(itos(mouse_y()));
+    SDLText text(mouse_position, 12, SDLText::black());
+    text.set_position(100,10);
+    displayText(text);
+    // end debug
     SDL_RenderPresent(main_renderer_);
 }
 
@@ -211,7 +244,7 @@ void SDLCamera::displayTexture(SDL_Texture* texture, const SDL_Rect* rect) {
 }
 
 void SDLCamera::displayText(SDLText& text) {
-    SDL_RenderCopy(main_renderer_, text.texture(font_, main_renderer_), NULL, &text.rect());
+    displayTexture(text.texture(font_, main_renderer_), &text.rect());
 }
 
 /*!

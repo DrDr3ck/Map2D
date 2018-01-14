@@ -43,11 +43,13 @@ int main(int /*argc*/, char** /*argv*/) {
     // Main loop
     bool ending = false;
     while(!ending) {
+
         camera->handleEvent();
         if( camera->quit() ) {
             ending = true;
         }
         camera->render();
+        //SDL_Delay(25);
     }
 
     converter.save(&data, filename);

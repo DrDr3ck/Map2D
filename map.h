@@ -16,6 +16,8 @@ public:
     int id() const;
     Type type() const;
     void setTile(int id, Type type);
+
+    static std::string typeTileToString(Tile::Type type);
 private:
     int id_;
     Type type_;

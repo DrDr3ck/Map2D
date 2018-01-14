@@ -26,6 +26,15 @@ void Tile::setTile(int id, Type type) {
     type_ = type;
 }
 
+std::string Tile::typeTileToString(Tile::Type type) {
+    if( type == Tile::BLOCK ) return "Block";
+    if( type == Tile::DOOR ) return "Door";
+    if( type == Tile::WALL ) return "Wall";
+    if( type == Tile::EMPTY ) return "Nothing...";
+    std::cout << "unable to find string for type: " << type << std::endl;
+    return "NONE";
+}
+
 /********************************************************************/
 
 MapData::MapData(int width, int height) : width_(width), height_(height) {
