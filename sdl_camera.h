@@ -17,6 +17,8 @@ public:
 
     virtual void do_render(Camera* camera) override;
     virtual void handleEvent(Camera* camera) override;
+
+    bool onTile(int mouse_x, int mouse_y);
 private:
     MapData* data_;
     SDL_Texture* background_;
@@ -24,6 +26,15 @@ private:
     float delta_x_;
     float delta_y_;
     float delta_speed_;
+    float translate_x_;
+    float translate_y_;
+
+    int scaled_start_x_;
+    int scaled_start_y_;
+    int scaled_tile_size_;
+
+    int tile_x_;
+    int tile_y_;
 };
 
 /********************************************************************/
@@ -45,6 +56,8 @@ public:
 
     void setTool(SDLTool* tool) { tool_ = tool; }
 
+    void setMapView(MapView* view);
+
     void displayTexture(SDL_Texture* texture, const SDL_Rect* rect);
     void getSize(int& screen_width, int& screen_height);
     SDL_Window* window() const { return window_; }
@@ -58,6 +71,7 @@ private:
     TTF_Font* font_;
     SDLTool* tool_;
     SDLButtonManager* manager_;
+    MapView* map_view_;
 };
 
 /********************************************************************/

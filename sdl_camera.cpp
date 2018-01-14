@@ -1,15 +1,42 @@
 #include "sdl_camera.h"
 
 #include <iostream>
+#include <math.h>
 
 /********************************************************************/
 
 MapView::MapView(MapData* data) : data_(data), background_(nullptr),
-    delta_x_(0.), delta_y_(0.), delta_speed_(0.1)
+    delta_x_(0.), delta_y_(0.), delta_speed_(0.1), translate_x_(0.), translate_y_(0.)
 {
 }
 
+/*!
+ * \return true and the tile position according to the mouse position
+ * or false if unreached
+ */
+bool MapView::onTile(int mouse_x, int mouse_y) {
+    tile_x_ = -1;
+    tile_y_ = -1;
+    if( mouse_x < scaled_start_x_ ) return false;
+    if( mouse_y < scaled_start_y_ ) return false;
+    int map_width = data_->width() * scaled_tile_size_;
+    int map_height = data_->height() * scaled_tile_size_;
+    if( mouse_x > scaled_start_x_ + map_width ) return false;
+    if( mouse_y > scaled_start_y_ + map_height ) return false;
+    tile_x_ = floor((mouse_x - scaled_start_x_) / scaled_tile_size_);
+    tile_y_ = floor((mouse_y - scaled_start_y_) / scaled_tile_size_);
+    return true;
+}
+
 void MapView::do_render(Camera* camera) {
+    // should it be done here ?
+    if( delta_x_ != 0 ) {
+        translate_x_ += delta_x_ * camera->scale()*1;
+    }
+    if( delta_y_ != 0 ) {
+        translate_y_ += delta_y_ * camera->scale()*1;
+    }
+
     SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
     float scale = camera->scale();
     SDL_Renderer* main_renderer = sdl_camera->main_renderer();
@@ -22,11 +49,14 @@ void MapView::do_render(Camera* camera) {
 
     int screen_width, screen_height;
     sdl_camera->getSize(screen_width, screen_height);
-    int tile_size = 64 * scale;
-    int map_width = data_->width() * tile_size;
-    int map_height = data_->height() * tile_size;
+    scaled_tile_size_ = 64 * scale;
+    int map_width = data_->width() * scaled_tile_size_;
+    int map_height = data_->height() * scaled_tile_size_;
     int delta_width = (screen_width - map_width)/2;
     int delta_height = (screen_height - map_height)/2;
+
+    scaled_start_x_ = delta_width + translate_x_;
+    scaled_start_y_ = delta_height + translate_y_;
 
     SDL_Texture* small = nullptr;
     for( int w = 0 ; w < data_->width(); w++ ) {
@@ -34,11 +64,15 @@ void MapView::do_render(Camera* camera) {
             const Tile& cur = data_->tile(w,h);
             small = TileSet::instance()->getTextureFromTile(cur, main_renderer);
             SDL_Rect dest;
-            dest.x = w*tile_size + delta_width + delta_x_;
-            dest.y = h*tile_size + delta_height + delta_y_;
-            dest.w = tile_size;
-            dest.h = tile_size;
+            dest.x = w*scaled_tile_size_ + scaled_start_x_;
+            dest.y = h*scaled_tile_size_ + scaled_start_y_;
+            dest.w = scaled_tile_size_;
+            dest.h = scaled_tile_size_;
             sdl_camera->displayTexture(small, &dest);
+            if( tile_x_ == w && tile_y_ == h ) {
+                SDL_SetRenderDrawColor( main_renderer, 250, 250, 250, 255 );
+                SDL_RenderDrawRect(main_renderer, &dest);
+            }
         }
     }
 }
@@ -49,20 +83,31 @@ void MapView::handleEvent(Camera* camera) {
     const SDL_Event& e = sdl_camera->event();
     if( e.type == SDL_KEYDOWN ) {
         if( e.key.keysym.sym == SDLK_LEFT ) {
-            delta_x_ -= 1 * delta_speed_;
+            delta_x_ = -1 * delta_speed_;
         } else if( e.key.keysym.sym == SDLK_RIGHT ) {
-            delta_x_ += 1 * delta_speed_;
+            delta_x_ = 1 * delta_speed_;
         } else if( e.key.keysym.sym == SDLK_UP ) {
-            delta_y_ -= 1 * delta_speed_;
+            delta_y_ = -1 * delta_speed_;
         } else if( e.key.keysym.sym == SDLK_DOWN ) {
-            delta_y_ += 1 * delta_speed_;
+            delta_y_ = 1 * delta_speed_;
+        }
+    }
+    if( e.type == SDL_KEYUP ) {
+        if( e.key.keysym.sym == SDLK_LEFT ) {
+            delta_x_ = 0;
+        } else if( e.key.keysym.sym == SDLK_RIGHT ) {
+            delta_x_ = 0;
+        } else if( e.key.keysym.sym == SDLK_UP ) {
+            delta_y_ = 0;
+        } else if( e.key.keysym.sym == SDLK_DOWN ) {
+            delta_y_ = 0;
         }
     }
 }
 
 /********************************************************************/
 
-SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), font_(nullptr), tool_(nullptr) {
+SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), font_(nullptr), tool_(nullptr), map_view_(nullptr) {
     if(SDL_Init(SDL_INIT_VIDEO) >= 0) {
         window_ = SDL_CreateWindow("Tile Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
         main_renderer_ = SDL_CreateRenderer(window_, -1, 0);
@@ -184,10 +229,17 @@ void SDLCamera::handleEvent() {
 
 void SDLCamera::onMouseMove(int x, int y) {
     Camera::onMouseMove(x,y);
+    // check on which 'tile' we are
+    map_view_->onTile(x,y);
 }
 
 void SDLCamera::onMouseWheelScroll(int x, int y) {
     Camera::onMouseWheelScroll(x,y);
+}
+
+void SDLCamera::setMapView(MapView* view) {
+    map_view_ = view;
+    addView(map_view_);
 }
 
 void SDLCamera::do_quit() const {
