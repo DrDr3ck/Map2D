@@ -40,6 +40,13 @@ public:
     virtual bool do_execute() override;
 };
 
+class FontTest : public Test {
+public:
+    FontTest() : Test("FontTest") {}
+
+    virtual bool do_execute() override;
+};
+
 /*******************************/
 
 class TestManager {

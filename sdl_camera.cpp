@@ -3,18 +3,8 @@
 #include <iostream>
 #include <math.h>
 #include <string>
-#include <sstream>
 
-namespace {
-/*!
- * Transforms an integer into a string.
- */
-std::string itos(int i) {
-    std::ostringstream stm;
-    stm << i ;
-    return stm.str();
-}
-}
+#include "font.h"
 
 /********************************************************************/
 
@@ -89,13 +79,13 @@ void MapView::do_render(Camera* camera) {
                 SDL_RenderDrawRect(main_renderer, &dest);
                 tile_text.append(Tile::typeTileToString(cur.type()));
                 tile_text.append(": ");
-                tile_text.append(itos(w));
+                tile_text.append(Utility::itos(w));
                 tile_text.append(" ");
-                tile_text.append(itos(h));
+                tile_text.append(Utility::itos(h));
             }
         }
     }
-    SDLText text(tile_text, 12, SDLText::black());
+    SDLText text(tile_text, "pixel11", 12, SDLText::black());
     text.set_position(600,500);
     sdl_camera->displayText(text);
 }
@@ -132,15 +122,14 @@ void MapView::handleEvent(Camera* camera) {
 
 SDLText::SDLText(
     const std::string& text,
+    const std::string& family,
     int font_size,
     const SDL_Color& color
-) : text_(text), size_(font_size), texture_(nullptr), color_(color) {
-    // TODO need to get TTF_Font according to given font size (need to create a FontManager)
+) : text_(text), family_(family), size_(font_size), texture_(nullptr), color_(color) {
     rect_.w = 0;
     rect_.h = 0;
     rect_.x = 0;
     rect_.y = 0;
-    //TTF_SizeText(font,text_.c_str(),&rect_.w,&rect_.h);
 }
 
 SDLText::~SDLText() {
@@ -154,8 +143,9 @@ void SDLText::set_position(int x, int y) {
     rect_.y = y;
 }
 
-SDL_Texture* SDLText::texture(TTF_Font* font, SDL_Renderer* renderer) {
+SDL_Texture* SDLText::texture(SDL_Renderer* renderer) {
     if( texture_ == nullptr ) {
+        TTF_Font* font = FontManager::instance()->getFont(family_, size_);
         TTF_SizeText(font,text_.c_str(),&rect_.w,&rect_.h);
         SDL_Surface* texte = TTF_RenderText_Solid(font, text_.c_str(), color_);
         texture_ = SDL_CreateTextureFromSurface(renderer, texte);
@@ -166,12 +156,11 @@ SDL_Texture* SDLText::texture(TTF_Font* font, SDL_Renderer* renderer) {
 
 /********************************************************************/
 
-SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), font_(nullptr), tool_(nullptr), map_view_(nullptr) {
+SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), tool_(nullptr), map_view_(nullptr) {
     if(SDL_Init(SDL_INIT_VIDEO) >= 0) {
         window_ = SDL_CreateWindow("Tile Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
         main_renderer_ = SDL_CreateRenderer(window_, -1, 0);
         TTF_Init();
-        font_ = TTF_OpenFont("pixel11.ttf", 16);
     }
     manager_ = new SDLButtonManager();
     manager_->addButton( new SDLQuitButton(this, 10,10) );
@@ -186,7 +175,6 @@ SDLCamera::~SDLCamera() {
     if( window_ != nullptr ) {
         SDL_DestroyWindow(window_);
     }
-    TTF_CloseFont(font_);
     TTF_Quit();
     delete manager_;
     do_quit();
@@ -220,19 +208,19 @@ void SDLCamera::render() {
         r.x = 400;
         SDL_RenderFillRect( main_renderer_, &r );
 
-        SDLText text("Pause (Press SPACE)", 12, SDLText::black());
+        SDLText text("Pause (Press SPACE)", "pixel11", 16, SDLText::black());
         text.set_position(300,50);
         SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
-        text.texture(font_, main_renderer_); // need to create texture in order to get correct text dimension
+        text.texture(main_renderer_); // need to create texture in order to get correct text dimension
         SDL_RenderFillRect( main_renderer_, &text.rect() );
         displayText(text);
     }
     // debug: display mouse position
     std::string mouse_position;
-    mouse_position.append(itos(mouse_x()));
+    mouse_position.append(Utility::itos(mouse_x()));
     mouse_position.append(" ");
-    mouse_position.append(itos(mouse_y()));
-    SDLText text(mouse_position, 12, SDLText::black());
+    mouse_position.append(Utility::itos(mouse_y()));
+    SDLText text(mouse_position, "pixel11", 14, SDLText::red());
     text.set_position(100,10);
     displayText(text);
     // end debug
@@ -244,7 +232,7 @@ void SDLCamera::displayTexture(SDL_Texture* texture, const SDL_Rect* rect) {
 }
 
 void SDLCamera::displayText(SDLText& text) {
-    displayTexture(text.texture(font_, main_renderer_), &text.rect());
+    displayTexture(text.texture(main_renderer_), &text.rect());
 }
 
 /*!

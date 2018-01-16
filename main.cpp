@@ -4,8 +4,10 @@
 #include <cstdlib>
 
 #include "map.h"
+#include "font.h"
 #include "archive.h"
 #include "sdl_camera.h"
+
 #include "tests.h"
 
 int main(int /*argc*/, char** /*argv*/) {
@@ -39,6 +41,7 @@ int main(int /*argc*/, char** /*argv*/) {
     camera->setMapView(map_view);
 
     TileSet* tileset = TileSet::instance();
+    FontManager* font_manager = FontManager::instance();
 
     // Main loop
     bool ending = false;
@@ -55,6 +58,7 @@ int main(int /*argc*/, char** /*argv*/) {
     converter.save(&data, filename);
 
     tileset->kill();
+    font_manager->kill();
 
     delete camera;
 

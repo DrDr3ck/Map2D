@@ -1,10 +1,11 @@
 # depslib dependency file v1.0
-1515964875 source:d:\games\programs\map2d\main.cpp
+1516135035 source:d:\games\programs\map2d\main.cpp
 	<SDL2/SDL.h>
 	<iostream>
 	<fstream>
 	<cstdlib>
 	"map.h"
+	"font.h"
 	"archive.h"
 	"sdl_camera.h"
 	"tests.h"
@@ -342,27 +343,30 @@
 	"begin_code.h"
 	"close_code.h"
 
-1515966031 source:d:\games\programs\map2d\map.cpp
+1516135355 source:d:\games\programs\map2d\map.cpp
 	"map.h"
 	<iostream>
+	<sstream>
 	<cmath>
 	"SDL2/SDL_image.h"
 
-1515965870 d:\games\programs\map2d\map.h
+1516135363 d:\games\programs\map2d\map.h
 	<SDL2/SDL.h>
 	<map>
 
-1514830888 d:\games\programs\map2d\tests.h
+1516136231 d:\games\programs\map2d\tests.h
 	"map.h"
 	<list>
 	<string>
 
-1514892667 source:d:\games\programs\map2d\tests.cpp
+1516136956 source:d:\games\programs\map2d\tests.cpp
 	"tests.h"
 	"archive.h"
+	"font.h"
 	<stdio.h>
 	<iostream>
 	<chrono>
+	<SDL2/SDL_ttf.h>
 
 1515956964 source:d:\games\programs\map2d\camera.cpp
 	"camera.h"
@@ -383,14 +387,14 @@
 	"map.h"
 	<string>
 
-1515965925 source:d:\games\programs\map2d\sdl_camera.cpp
+1516136167 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
 	<string>
-	<sstream>
+	"font.h"
 
-1515962835 d:\games\programs\map2d\sdl_camera.h
+1516137138 d:\games\programs\map2d\sdl_camera.h
 	"map.h"
 	"camera.h"
 	"button.h"
@@ -405,4 +409,13 @@
 1515855871 d:\games\programs\map2d\button.h
 	"camera.h"
 	<list>
+
+1516136926 source:d:\games\programs\map2d\font.cpp
+	"font.h"
+	"map.h"
+	<iostream>
+
+1516135338 d:\games\programs\map2d\font.h
+	<SDL2/SDL_ttf.h>
+	<map>
 

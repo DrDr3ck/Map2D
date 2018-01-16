@@ -1,9 +1,21 @@
 #include "map.h"
 
 #include <iostream>
+#include <sstream>
 #include <cmath>
 
 #include "SDL2/SDL_image.h"
+
+/********************************************************************/
+
+/*!
+ * Transforms an integer into a string.
+ */
+std::string Utility::itos(int i) {
+    std::ostringstream stm;
+    stm << i ;
+    return stm.str();
+}
 
 /********************************************************************/
 
@@ -77,7 +89,7 @@ TileSet::~TileSet() {
 
 TileSet* TileSet::instance() {
     if( singleton_ == nullptr ) {
-        std::cout << "creating singleton" << std::endl;
+        std::cout << "creating TileSet singleton" << std::endl;
         singleton_ =  new TileSet();
     }
     return singleton_;
@@ -86,7 +98,7 @@ TileSet* TileSet::instance() {
 void TileSet::kill() {
     if( singleton_ != nullptr ) {
         delete singleton_;
-        std::cout << "destroying singleton" << std::endl;
+        std::cout << "destroying TileSet singleton" << std::endl;
         singleton_ = nullptr;
     }
 }

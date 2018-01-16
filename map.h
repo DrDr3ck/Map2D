@@ -6,6 +6,13 @@
 
 /********************************************************************/
 
+class Utility {
+public:
+    static std::string itos(int i);
+};
+
+/********************************************************************/
+
 class Tile {
 public:
     enum Type { BLOCK, DOOR, EMPTY, WALL };

@@ -1,12 +1,22 @@
 #include "tests.h"
 
 #include "archive.h"
+#include "font.h"
 #include <stdio.h>
 #include <iostream>
 #include <chrono>
+#include <SDL2/SDL_ttf.h>
 
 #define CHECK(x, y) do { \
   bool retval = (x); \
+  if (retval == false) { \
+    fprintf(stderr, "\nRuntime error: %s returned %d at %s:%d", #x, retval, __FILE__, __LINE__); \
+    y; \
+  } \
+} while (0)
+
+#define CHECK_POINTER(x, y) do { \
+  bool retval = (x != nullptr); \
   if (retval == false) { \
     fprintf(stderr, "\nRuntime error: %s returned %d at %s:%d", #x, retval, __FILE__, __LINE__); \
     y; \
@@ -78,12 +88,28 @@ bool MapTest::do_execute() {
     return true;
 }
 
+bool FontTest::do_execute() {
+    TTF_Init();
+
+    TTF_Font* font16 = FontManager::instance()->getFont("pixel11", 16);
+    CHECK_POINTER(font16, return false;);
+
+    TTF_Font* font12 = FontManager::instance()->getFont("pixel11", 12);
+    CHECK_POINTER(font12, return false;);
+
+    // font16 should be different that font12
+    CHECK_EQUAL( (font16==font12), false, return false; );
+
+    return true;
+}
+
 /*******************************************/
 
 TestManager::TestManager() {
     addTest(new CheckingTest());
     addTest(new TileTest());
     addTest(new MapTest());
+    addTest(new FontTest());
 }
 
 bool TestManager::execute() {

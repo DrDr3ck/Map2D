@@ -1,0 +1,10 @@
+TODO
+
+A. ajouter des infos sur la tile que l'on a selectionne (clic)
+B. clic sur menu button pour ouvrir le menu (class MenuButton(View))
+C. tool pour ajouter des murs / portes
+
+Graphisme:
+vaisseau: mur, portes, robots
+planete: rocher sol minerai
+items: roche / bois / vegetaux
