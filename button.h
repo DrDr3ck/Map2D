@@ -25,8 +25,13 @@ public:
     void hasFocus(bool value) { focus_ = value; }
     bool hasFocus() const { return focus_; }
 
-    void setSize(int w, int h) { w_ = w; h_ = h; }
-    void setPosition(int x,int y) { x_ = x; y_ = y; }
+    virtual void setSize(int w, int h) { w_ = w; h_ = h; }
+    virtual void setPosition(int x,int y) { x_ = x; y_ = y; }
+
+    int x() { return x_; }
+    int y() { return y_; }
+    int w() { return w_; }
+    int h() { return h_; }
 
 private:
     bool active_;
@@ -40,6 +45,34 @@ private:
 
 /********************************************************************/
 
+class MenuButton {
+public:
+    MenuButton(int max_column, int x, int y);
+    virtual ~MenuButton() {}
+
+    bool isVisible() const { return visible_; }
+    void show();
+    void hide();
+
+    void addButton(Button* button);
+
+    int x() { return x_; }
+    int y() { return y_; }
+    int width() { return width_; }
+    int height() { return height_; }
+
+private:
+    int max_column_;
+    int x_;
+    int y_;
+    bool visible_;
+    std::list<Button*> buttons_;
+    int width_;
+    int height_;
+};
+
+/********************************************************************/
+
 class ButtonManager : public View {
 public:
     ButtonManager() {}
@@ -48,8 +81,12 @@ public:
     void addButton(Button* button) { buttons_.push_back(button); }
     void removeButton(Button* button) { buttons_.remove(button); }
 
+    void addMenuButton(MenuButton* menu) { menus_.push_back(menu); }
+    void removeMenuButton(MenuButton* menu) { menus_.remove(menu); }
+
 protected:
     std::list<Button*> buttons_;
+    std::list<MenuButton*> menus_;
 };
 
 /********************************************************************/

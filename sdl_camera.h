@@ -131,6 +131,9 @@ public:
     virtual void activate() override;
     virtual void deactivate() override;
 
+    virtual void setSize(int w, int h) override;
+    virtual void setPosition(int x,int y) override;
+
     SDL_Texture* getTexture(SDL_Renderer* renderer);
     const SDL_Rect& rect() const { return rect_; }
 
@@ -141,6 +144,17 @@ private:
 };
 
 /********************************************************************/
+
+class SDLButtonMenu : public SDLButton {
+public:
+    SDLButtonMenu(MenuButton* menu, std::string name, int x, int y) : SDLButton(name, x,y), menu_(menu) {}
+    virtual ~SDLButtonMenu() {}
+
+    virtual void activate() override;
+    virtual void deactivate() override;
+private:
+    MenuButton* menu_;
+};
 
 class SDLQuitButton : public SDLButton {
 public:

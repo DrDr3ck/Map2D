@@ -163,8 +163,13 @@ SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), to
         TTF_Init();
     }
     manager_ = new SDLButtonManager();
-    manager_->addButton( new SDLQuitButton(this, 10,10) );
-    manager_->addButton( new SDLButton("wall.bmp", 10,530) );
+    manager_->addButton( new SDLQuitButton(this, 750,10) );
+    MenuButton* menu = new MenuButton(4, 10, 75);
+    SDLButton* wall_tool = new SDLButton("wall_tool.bmp", 0, 0);
+    menu->addButton(wall_tool);
+    manager_->addButton( new SDLButtonMenu(menu, "wall.bmp", 10,10) );
+    manager_->addMenuButton( menu );
+    manager_->addButton(wall_tool);
 }
 
 SDLCamera::~SDLCamera() {
@@ -318,6 +323,9 @@ void SDLButtonManager::handleEvent(Camera* camera) {
             }
         } else {
             button->hasFocus(false);
+            if( button_pressed ) {
+                button->deactivate();
+            }
         }
     }
 }
@@ -326,6 +334,16 @@ void SDLButtonManager::do_render(Camera* camera) {
     SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
     SDL_Renderer* main_renderer = sdl_camera->main_renderer();
     // iterate over all visible buttons, get texture and display them
+    for( auto menu : menus_ ) {
+        if( !menu->isVisible() ) {
+            continue;
+        }
+        SDL_Rect rect = {menu->x(), menu->y(), menu->width(), menu->height()};
+        SDL_SetRenderDrawColor( main_renderer, 200, 200, 200, 125 );
+        SDL_RenderFillRect(main_renderer, &rect);
+        SDL_SetRenderDrawColor( main_renderer, 50, 50, 50, 255 );
+        SDL_RenderDrawRect(main_renderer, &rect);
+    }
     for( auto b : buttons_ ) {
         SDLButton* button = dynamic_cast<SDLButton*>(b);
         if( !button->isVisible() ) {
@@ -334,7 +352,7 @@ void SDLButtonManager::do_render(Camera* camera) {
         SDL_Texture* texture = button->getTexture(main_renderer);
         sdl_camera->displayTexture(texture, &button->rect());
         if( button->hasFocus() ) {
-            SDL_SetRenderDrawColor( main_renderer, 250, 250, 250, 255 );
+            SDL_SetRenderDrawColor( main_renderer, 0, 0, 0, 255 );
             SDL_RenderDrawRect(main_renderer, &button->rect());
         }
     }
@@ -372,7 +390,27 @@ void SDLButton::deactivate() {
     Button::deactivate();
 }
 
+void SDLButton::setSize(int w, int h) {
+    Button::setSize(w,h);
+    rect_ = {x(),y(),this->w(),this->h()};
+}
+
+void SDLButton::setPosition(int x,int y) {
+    Button::setPosition(x,y);
+    rect_ = {this->x(),this->y(),w(),h()};
+}
+
 /********************************************************************/
+
+void SDLButtonMenu::activate() {
+    SDLButton::activate();
+    menu_->show();
+}
+
+void SDLButtonMenu::deactivate() {
+    menu_->hide();
+    SDLButton::deactivate();
+}
 
 void SDLQuitButton::activate() {
     camera_->set_quit();
