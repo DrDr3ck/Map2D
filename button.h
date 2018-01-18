@@ -61,6 +61,9 @@ public:
     int width() { return width_; }
     int height() { return height_; }
 
+protected:
+    void resetButtons();
+
 private:
     int max_column_;
     int x_;
