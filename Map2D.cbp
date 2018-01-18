@@ -42,8 +42,12 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="map.cpp" />
 		<Unit filename="map.h" />
+		<Unit filename="sdl_button.cpp" />
+		<Unit filename="sdl_button.h" />
 		<Unit filename="sdl_camera.cpp" />
 		<Unit filename="sdl_camera.h" />
+		<Unit filename="sdl_tool.cpp" />
+		<Unit filename="sdl_tool.h" />
 		<Unit filename="tests.cpp" />
 		<Unit filename="tests.h" />
 		<Extensions>
