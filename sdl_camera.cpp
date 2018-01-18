@@ -44,7 +44,7 @@ void MapView::do_render(Camera* camera) {
     float scale = camera->scale();
     SDL_Renderer* main_renderer = sdl_camera->main_renderer();
     if( background_ == nullptr ) {
-        SDL_Surface* bg_surface = SDL_LoadBMP("background.bmp");
+        SDL_Surface* bg_surface = IMG_Load("background.bmp");
         background_ = SDL_CreateTextureFromSurface(main_renderer, bg_surface);
         SDL_FreeSurface(bg_surface);
     }
@@ -165,9 +165,9 @@ SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), to
     manager_ = new SDLButtonManager();
     manager_->addButton( new SDLQuitButton(this, 750,10) );
     MenuButton* menu = new MenuButton(4, 10, 75);
-    SDLButton* wall_tool = new SDLButton("wall_tool.bmp", 0, 0);
+    SDLButton* wall_tool = new SDLButton("wall_tool.png", 0, 0);
     menu->addButton(wall_tool);
-    manager_->addButton( new SDLButtonMenu(menu, "wall.bmp", 10,10) );
+    manager_->addButton( new SDLButtonMenu(menu, "wall.png", 10,10) );
     manager_->addMenuButton( menu );
     manager_->addButton(wall_tool);
 }
@@ -319,7 +319,11 @@ void SDLButtonManager::handleEvent(Camera* camera) {
         if( button->mouseOverButton(camera->mouse_x(), camera->mouse_y()) ) {
             button->hasFocus(true);
             if( button_pressed ) {
-                button->activate();
+                if( button->isActive() ) {
+                    button->deactivate();
+                } else {
+                    button->activate();
+                }
             }
         } else {
             button->hasFocus(false);
@@ -352,7 +356,7 @@ void SDLButtonManager::do_render(Camera* camera) {
         SDL_Texture* texture = button->getTexture(main_renderer);
         sdl_camera->displayTexture(texture, &button->rect());
         if( button->hasFocus() ) {
-            SDL_SetRenderDrawColor( main_renderer, 0, 0, 0, 255 );
+            SDL_SetRenderDrawColor( main_renderer, 250, 250, 250, 255 );
             SDL_RenderDrawRect(main_renderer, &button->rect());
         }
     }
@@ -361,7 +365,12 @@ void SDLButtonManager::do_render(Camera* camera) {
 /********************************************************************/
 
 SDLButton::SDLButton(std::string name, int x, int y) : Button(x,y) {
-    surface_ = SDL_LoadBMP(name.c_str());
+    std::cout << "load " << name << std::endl;
+    surface_ = IMG_Load(name.c_str());
+    if( surface_ == nullptr ) {
+        std::cout << "IMG_Load: " << IMG_GetError() << std::endl;
+    }
+    std::cout << "done " << surface_ << std::endl;
     int w = surface_->w;
     int h = surface_->h;
     setSize(w,h);

@@ -75,9 +75,9 @@ Tile& MapData::tile(int x,int y) {
 /********************************************************************/
 
 TileSet::TileSet() {
-    tiles_surface_ = SDL_LoadBMP("tiles.bmp");
-    walls_surface_ = SDL_LoadBMP("walls01.bmp");
-    if( tiles_surface_ == nullptr ) {
+    tiles_surface_ = IMG_Load("tiles.png");
+    walls_surface_ = IMG_Load("walls01.png");
+    if( tiles_surface_ == nullptr || walls_surface_ == nullptr ) {
         std::cout << "cannot initialize TileSet" << std::endl;
     }
 }

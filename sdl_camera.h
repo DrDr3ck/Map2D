@@ -7,6 +7,7 @@
 #include <string>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 
 /********************************************************************/
 
@@ -158,7 +159,7 @@ private:
 
 class SDLQuitButton : public SDLButton {
 public:
-    SDLQuitButton(SDLCamera* camera, int x, int y) : SDLButton("quit.bmp", x,y), camera_(camera) {}
+    SDLQuitButton(SDLCamera* camera, int x, int y) : SDLButton("quit.png", x,y), camera_(camera) {}
     virtual ~SDLQuitButton() {}
 
     virtual void activate();

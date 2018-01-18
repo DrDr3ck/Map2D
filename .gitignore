@@ -1,0 +1,5 @@
+
+*.dll
+*.o
+gmon.out
+*.exe

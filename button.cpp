@@ -6,6 +6,8 @@
 
 Button::Button(int x,int y, int w, int h) : x_(x), y_(y), w_(w), h_(h) {
     visible_ = true;
+    active_ = false;
+    focus_ = false;
 }
 
 /*!
@@ -26,6 +28,9 @@ MenuButton::MenuButton(int max_column, int x, int y)
 {
 }
 
+/*!
+ * Shows all buttons of the menu
+ */
 void MenuButton::show() {
     visible_ = true;
     for( auto b : buttons_ ) {
@@ -33,6 +38,9 @@ void MenuButton::show() {
     }
 }
 
+/*!
+ * Hides all buttons of the menu
+ */
 void MenuButton::hide() {
     visible_ = false;
     for( auto b : buttons_ ) {
@@ -43,6 +51,7 @@ void MenuButton::hide() {
 void MenuButton::addButton(Button* button) {
     buttons_.push_back(button);
     button->visible( isVisible() );
+    // TODO
     width_ += button->w();
     height_ += button->h();
     button->setPosition(x_+5, y_+5);
