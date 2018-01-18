@@ -74,31 +74,31 @@ Tile& MapData::tile(int x,int y) {
 
 /********************************************************************/
 
-TileSet::TileSet() {
+TileSetLib::TileSetLib() {
     tiles_surface_ = IMG_Load("tiles.png");
     walls_surface_ = IMG_Load("walls01.png");
     if( tiles_surface_ == nullptr || walls_surface_ == nullptr ) {
-        std::cout << "cannot initialize TileSet" << std::endl;
+        std::cout << "cannot initialize TileSetLib" << std::endl;
     }
 }
 
-TileSet::~TileSet() {
+TileSetLib::~TileSetLib() {
     SDL_FreeSurface(tiles_surface_);
     SDL_FreeSurface(walls_surface_);
 }
 
-TileSet* TileSet::instance() {
+TileSetLib* TileSetLib::instance() {
     if( singleton_ == nullptr ) {
-        std::cout << "creating TileSet singleton" << std::endl;
-        singleton_ =  new TileSet();
+        std::cout << "creating TileSetLib singleton" << std::endl;
+        singleton_ =  new TileSetLib();
     }
     return singleton_;
 }
 
-void TileSet::kill() {
+void TileSetLib::kill() {
     if( singleton_ != nullptr ) {
         delete singleton_;
-        std::cout << "destroying TileSet singleton" << std::endl;
+        std::cout << "destroying TileSetLib singleton" << std::endl;
         singleton_ = nullptr;
     }
 }
@@ -106,9 +106,9 @@ void TileSet::kill() {
 /*!
  * \return the texture from the given \p tile.
  */
-SDL_Texture* TileSet::getTextureFromTile(const Tile& tile, SDL_Renderer* renderer) {
-    auto map_of_tiles = TileSet::instance()->mapOfTiles();
-    auto map_of_walls = TileSet::instance()->mapOfWalls();
+SDL_Texture* TileSetLib::getTextureFromTile(const Tile& tile, SDL_Renderer* renderer) {
+    auto map_of_tiles = TileSetLib::instance()->mapOfTiles();
+    auto map_of_walls = TileSetLib::instance()->mapOfWalls();
     int id = tile.id();
     int max = 5;
     if( tile.type() == Tile::WALL ) {
@@ -139,9 +139,9 @@ SDL_Texture* TileSet::getTextureFromTile(const Tile& tile, SDL_Renderer* rendere
     dest.w = tileSize;
     dest.h = tileSize;
 
-    SDL_Surface* surf_source = TileSet::instance()->tiles();
+    SDL_Surface* surf_source = TileSetLib::instance()->tiles();
     if( tile.type() == Tile::WALL ) {
-        surf_source = TileSet::instance()->walls();
+        surf_source = TileSetLib::instance()->walls();
     }
 
     SDL_BlitSurface(surf_source,
@@ -151,14 +151,14 @@ SDL_Texture* TileSet::getTextureFromTile(const Tile& tile, SDL_Renderer* rendere
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surf_dest);
     if( tile.type() == Tile::WALL ) {
-        TileSet::instance()->mapOfWalls()[id] = texture;
+        TileSetLib::instance()->mapOfWalls()[id] = texture;
     } else {
-        TileSet::instance()->mapOfTiles()[id] = texture;
+        TileSetLib::instance()->mapOfTiles()[id] = texture;
     }
     return texture;
 }
 
 // Initialize singleton_ to nullptr
-TileSet* TileSet::singleton_ = nullptr;
+TileSetLib* TileSetLib::singleton_ = nullptr;
 
 /********************************************************************/

@@ -65,11 +65,12 @@ void MapView::do_render(Camera* camera) {
 
     std::string tile_text;
 
+    ontile_rect_ = {0,0,0,0};
     SDL_Texture* small = nullptr;
     for( int w = 0 ; w < data_->width(); w++ ) {
         for( int h = 0 ; h < data_->height(); h++ ) {
             const Tile& cur = data_->tile(w,h);
-            small = TileSet::instance()->getTextureFromTile(cur, main_renderer);
+            small = TileSetLib::instance()->getTextureFromTile(cur, main_renderer);
             SDL_Rect dest;
             dest.x = w*scaled_tile_size_ + scaled_start_x_;
             dest.y = h*scaled_tile_size_ + scaled_start_y_;
@@ -77,8 +78,10 @@ void MapView::do_render(Camera* camera) {
             dest.h = scaled_tile_size_;
             sdl_camera->displayTexture(small, &dest);
             if( tile_x_ == w && tile_y_ == h ) {
+                // dessine un carre blanc autour de la tuile 'onTile'
                 SDL_SetRenderDrawColor( main_renderer, 250, 250, 250, 255 );
                 SDL_RenderDrawRect(main_renderer, &dest);
+                ontile_rect_ = dest;
                 tile_text.append(Tile::typeTileToString(cur.type()));
                 tile_text.append(": ");
                 tile_text.append(Utility::itos(w));
@@ -147,7 +150,7 @@ void SDLText::set_position(int x, int y) {
 
 SDL_Texture* SDLText::texture(SDL_Renderer* renderer) {
     if( texture_ == nullptr ) {
-        TTF_Font* font = FontManager::instance()->getFont(family_, size_);
+        TTF_Font* font = FontLib::instance()->getFont(family_, size_);
         TTF_SizeText(font,text_.c_str(),&rect_.w,&rect_.h);
         SDL_Surface* texte = TTF_RenderText_Solid(font, text_.c_str(), color_);
         texture_ = SDL_CreateTextureFromSurface(renderer, texte);
@@ -240,7 +243,10 @@ void SDLCamera::render() {
         SDL_Rect rect = tool_->rect();
         rect.w *= scale();
         rect.h *= scale();
-        displayTexture(texture, &rect);
+        rect = map_view_->onTileRect();
+        if( rect.w != 0 ) {
+            displayTexture(texture, &rect);
+        }
     }
 
     SDL_RenderPresent(main_renderer_);

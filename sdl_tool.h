@@ -17,9 +17,10 @@ public:
     void deactivate();
 
     virtual void handleEvent() override;
-    virtual void mousePress() override;
-    virtual void mouseMotion() override;
-    virtual void mouseRelease() override;
+    virtual void mousePressed(int button) override;
+    virtual void keyPressed(const std::string& key) override;
+    virtual void mouseMoved(int mouse_x, int mouse_y) override;
+    virtual void mouseReleased(int button) override;
 
     virtual SDL_Texture* getTexture(SDL_Renderer* renderer) = 0;
     const SDL_Rect& rect() const { return rect_; }
@@ -41,6 +42,8 @@ public:
     virtual ~SDLBuildTool() {}
 
     virtual SDL_Texture* getTexture(SDL_Renderer* renderer) override;
+
+    void addTool();
 private:
     SDL_Surface* surface_;
 };

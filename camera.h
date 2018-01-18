@@ -69,9 +69,10 @@ public:
     virtual ~Tool() {}
 
     virtual void handleEvent() = 0;
-    virtual void mousePress() = 0;
-    virtual void mouseMotion() = 0;
-    virtual void mouseRelease() = 0;
+    virtual void mousePressed(int button) = 0;
+    virtual void keyPressed(const std::string& key) = 0;
+    virtual void mouseMoved(int mouse_x, int mouse_y) = 0;
+    virtual void mouseReleased(int button) = 0;
 };
 
 /********************************************************************/

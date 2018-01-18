@@ -91,10 +91,10 @@ bool MapTest::do_execute() {
 bool FontTest::do_execute() {
     TTF_Init();
 
-    TTF_Font* font16 = FontManager::instance()->getFont("pixel11", 16);
+    TTF_Font* font16 = FontLib::instance()->getFont("pixel11", 16);
     CHECK_POINTER(font16, return false;);
 
-    TTF_Font* font12 = FontManager::instance()->getFont("pixel11", 12);
+    TTF_Font* font12 = FontLib::instance()->getFont("pixel11", 12);
     CHECK_POINTER(font12, return false;);
 
     // font16 should be different that font12

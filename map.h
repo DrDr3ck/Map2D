@@ -52,13 +52,13 @@ private:
 
 /********************************************************************/
 
-class TileSet {
+class TileSetLib {
 private:
-  TileSet();
-  ~TileSet();
+  TileSetLib();
+  ~TileSetLib();
 
 public:
-    static TileSet* instance();
+    static TileSetLib* instance();
     static void kill();
 
     static SDL_Texture* getTextureFromTile(const Tile& tile, SDL_Renderer* renderer);
@@ -68,7 +68,7 @@ public:
     std::map<int, SDL_Texture*>& mapOfTiles() { return mapOfTiles_; }
     std::map<int, SDL_Texture*>& mapOfWalls() { return mapOfWalls_; }
 private:
-    static TileSet* singleton_;
+    static TileSetLib* singleton_;
     SDL_Surface* tiles_surface_;
     SDL_Surface* walls_surface_;
     std::map<int, SDL_Texture*> mapOfTiles_;

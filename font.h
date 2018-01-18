@@ -6,19 +6,19 @@
 
 /********************************************************************/
 
-class FontManager {
+class FontLib {
 private:
-  FontManager();
-  ~FontManager();
+  FontLib();
+  ~FontLib();
 
 public:
-    static FontManager* instance();
+    static FontLib* instance();
     static void kill();
 
     TTF_Font* getFont(std::string family, int font_size);
 
 private:
-    static FontManager* singleton_;
+    static FontLib* singleton_;
     std::map<std::string, TTF_Font*> familyToFont_;
 };
 

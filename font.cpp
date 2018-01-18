@@ -5,33 +5,33 @@
 
 /********************************************************************/
 
-FontManager::FontManager() {
+FontLib::FontLib() {
 }
 
-FontManager::~FontManager() {
+FontLib::~FontLib() {
     for( auto it=familyToFont_.begin(); it!=familyToFont_.end(); it++ ){
         TTF_Font* font = it->second;
         TTF_CloseFont(font);
     }
 }
 
-FontManager* FontManager::instance() {
+FontLib* FontLib::instance() {
     if( singleton_ == nullptr ) {
-        std::cout << "creating FontManager singleton" << std::endl;
-        singleton_ =  new FontManager();
+        std::cout << "creating FontLib singleton" << std::endl;
+        singleton_ =  new FontLib();
     }
     return singleton_;
 }
 
-void FontManager::kill() {
+void FontLib::kill() {
     if( singleton_ != nullptr ) {
         delete singleton_;
-        std::cout << "destroying FontManager singleton" << std::endl;
+        std::cout << "destroying FontLib singleton" << std::endl;
         singleton_ = nullptr;
     }
 }
 
-TTF_Font* FontManager::getFont(std::string family, int font_size) {
+TTF_Font* FontLib::getFont(std::string family, int font_size) {
     std::string key = family;
     key.append(" ");
     key.append(Utility::itos(font_size));
@@ -44,6 +44,6 @@ TTF_Font* FontManager::getFont(std::string family, int font_size) {
 }
 
 // Initialize singleton_ to nullptr
-FontManager* FontManager::singleton_ = nullptr;
+FontLib* FontLib::singleton_ = nullptr;
 
 /********************************************************************/

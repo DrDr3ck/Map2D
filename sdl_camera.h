@@ -20,6 +20,8 @@ public:
     virtual void handleEvent(Camera* camera) override;
 
     bool onTile(int mouse_x, int mouse_y);
+    const SDL_Rect& onTileRect() const { return ontile_rect_; }
+
 private:
     MapData* data_;
     SDL_Texture* background_;
@@ -36,6 +38,7 @@ private:
 
     int tile_x_;
     int tile_y_;
+    SDL_Rect ontile_rect_;
 };
 
 /********************************************************************/

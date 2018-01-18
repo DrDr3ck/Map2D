@@ -40,8 +40,8 @@ int main(int /*argc*/, char** /*argv*/) {
     MapView* map_view = new MapView(&data);
     camera->setMapView(map_view);
 
-    TileSet* tileset = TileSet::instance();
-    FontManager* font_manager = FontManager::instance();
+    TileSetLib* tileset = TileSetLib::instance();
+    FontLib* font_manager = FontLib::instance();
 
     // Main loop
     bool ending = false;
