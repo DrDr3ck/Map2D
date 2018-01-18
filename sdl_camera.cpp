@@ -165,11 +165,12 @@ SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), to
     manager_ = new SDLButtonManager();
     manager_->addButton( new SDLQuitButton(this, 750,10) );
     MenuButton* menu = new MenuButton(4, 10, 75);
-    SDLButton* wall_tool = new SDLButton("wall_tool.png", 0, 0);
+    SDLBuildTool* tool = new SDLBuildTool(this, "wall_tool.png");
+    SDLButton* wall_tool = new SDLToolButton(tool, "wall_tool.png", 0, 0);
+    manager_->addButton(wall_tool);
     menu->addButton(wall_tool);
     manager_->addButton( new SDLButtonMenu(menu, "wall.png", 10,10) );
     manager_->addMenuButton( menu );
-    manager_->addButton(wall_tool);
 }
 
 SDLCamera::~SDLCamera() {
@@ -220,6 +221,7 @@ void SDLCamera::render() {
         SDL_RenderFillRect( main_renderer_, &text.rect() );
         displayText(text);
     }
+
     // debug: display mouse position
     std::string mouse_position;
     mouse_position.append(Utility::itos(mouse_x()));
@@ -229,6 +231,16 @@ void SDLCamera::render() {
     text.set_position(100,10);
     displayText(text);
     // end debug
+
+    // render tool
+    if( tool_ != nullptr ) {
+        SDL_Texture* texture = tool_->getTexture(main_renderer_);
+        SDL_Rect rect = tool_->rect();
+        rect.w *= scale();
+        rect.h *= scale();
+        displayTexture(texture, &rect);
+    }
+
     SDL_RenderPresent(main_renderer_);
 }
 
@@ -427,6 +439,25 @@ void SDLQuitButton::activate() {
 
 /********************************************************************/
 
+SDLTool::SDLTool(
+    SDLCamera* camera
+) : Tool(), camera_(camera), texture_(nullptr) {
+}
+
+SDLTool::~SDLTool() {
+    if( texture_ != nullptr ) {
+        SDL_DestroyTexture(texture_);
+    }
+}
+
+void SDLTool::activate() {
+    camera_->setTool(this);
+}
+
+void SDLTool::deactivate() {
+    camera_->setTool(nullptr);
+}
+
 void SDLTool::handleEvent() {
 }
 
@@ -437,6 +468,40 @@ void SDLTool::mouseMotion() {
 }
 
 void SDLTool::mouseRelease() {
+}
+
+/********************************************************************/
+
+SDLBuildTool::SDLBuildTool(SDLCamera* camera, const std::string& icon_name) : SDLTool(camera) {
+    surface_ = IMG_Load(icon_name.c_str());
+}
+
+SDL_Texture* SDLBuildTool::getTexture(SDL_Renderer* renderer) {
+    if( texture_ == nullptr ) {
+        texture_ = SDL_CreateTextureFromSurface(renderer, surface_);
+        SDL_FreeSurface(surface_);
+        rect_ = {100,100,64,64}; // debug
+    }
+    return texture_;
+}
+
+/********************************************************************/
+
+SDLToolButton::SDLToolButton(
+    SDLTool* tool, std::string icon_name, int x, int y
+) : SDLButton(icon_name, x, y), tool_(tool){
+}
+
+SDLToolButton::~SDLToolButton() {
+    delete tool_;
+}
+
+void SDLToolButton::activate() {
+    tool_->activate();
+}
+
+void SDLToolButton::deactivate() {
+    tool_->deactivate();
 }
 
 /********************************************************************/

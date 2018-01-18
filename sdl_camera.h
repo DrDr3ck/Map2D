@@ -126,7 +126,7 @@ public:
 
 class SDLButton : public Button {
 public:
-    SDLButton(std::string name, int x, int y);
+    SDLButton(std::string icon_name, int x, int y);
     virtual ~SDLButton();
 
     virtual void activate() override;
@@ -171,18 +171,53 @@ private:
 
 class SDLTool : public Tool {
 public:
-    SDLTool(SDLCamera* camera) : Tool(), camera_(camera) {}
-    virtual ~SDLTool() {}
+    SDLTool(SDLCamera* camera);
+    virtual ~SDLTool();
+
+    void activate();
+    void deactivate();
 
     virtual void handleEvent() override;
     virtual void mousePress() override;
     virtual void mouseMotion() override;
     virtual void mouseRelease() override;
 
-private:
+    virtual SDL_Texture* getTexture(SDL_Renderer* renderer) = 0;
+    const SDL_Rect& rect() const { return rect_; }
+
+protected:
     SDLCamera* camera_;
-    int position_x_;
-    int position_y_;
+    //int position_x_;
+    //int position_y_;
+    SDL_Texture* texture_;
+    SDL_Rect rect_;
+
+};
+
+/********************************************************************/
+
+class SDLBuildTool : public SDLTool {
+public:
+    SDLBuildTool(SDLCamera* camera, const std::string& icon_name);
+    virtual ~SDLBuildTool() {}
+
+    virtual SDL_Texture* getTexture(SDL_Renderer* renderer) override;
+private:
+    SDL_Surface* surface_;
+};
+
+/********************************************************************/
+
+class SDLToolButton : public SDLButton {
+public:
+    SDLToolButton(SDLTool* tool, std::string icon_name, int x, int y);
+    virtual ~SDLToolButton();
+
+    virtual void activate() override;
+    virtual void deactivate() override;
+
+private:
+    SDLTool* tool_;
 };
 
 /********************************************************************/
