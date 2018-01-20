@@ -123,6 +123,12 @@ void MapView::handleEvent(Camera* camera) {
     }
 }
 
+bool MapView::curTile(int& tile_x, int& tile_y) {
+    tile_x = tile_x_;
+    tile_y = tile_y_;
+    return tile_x_ >= 0;
+}
+
 /********************************************************************/
 
 SDLText::SDLText(
@@ -170,10 +176,17 @@ SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), to
     manager_ = new SDLButtonManager();
     manager_->addButton( new SDLQuitButton(this, 750,10) );
     MenuButton* menu = new MenuButton(4, 10, 75);
-    SDLBuildTool* tool = new SDLBuildTool(this, "wall_tool.png");
-    SDLButton* wall_tool = new SDLToolButton(tool, "wall_tool.png", 0, 0);
-    manager_->addButton(wall_tool);
-    menu->addButton(wall_tool);
+
+    SDLBuildTool* wall_tool = new SDLBuildTool(this, "wall_tool.png");
+    SDLButton* wall_button_tool = new SDLToolButton(wall_tool, "wall_tool.png", 0, 0);
+    manager_->addButton(wall_button_tool);
+    menu->addButton(wall_button_tool);
+
+    SDLUnbuildTool* demolish_tool = new SDLUnbuildTool(this, "demolish_tool.png");
+    SDLButton* demolish_button_tool = new SDLToolButton(demolish_tool, "demolish_tool.png", 0, 0);
+    manager_->addButton(demolish_button_tool);
+    menu->addButton(demolish_button_tool);
+
     manager_->addButton( new SDLButtonMenu(menu, "wall.png", 10,10) );
     manager_->addMenuButton( menu );
 }

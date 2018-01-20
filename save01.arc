@@ -28,8 +28,8 @@
     <type value="EMPTY" />
   </tile>
   <tile x="7" y="0">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="2" />
+    <type value="WALL" />
   </tile>
   <tile x="8" y="0">
     <id value="0" />
@@ -68,8 +68,8 @@
     <type value="EMPTY" />
   </tile>
   <tile x="7" y="1">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="10" />
+    <type value="WALL" />
   </tile>
   <tile x="8" y="1">
     <id value="0" />
@@ -108,8 +108,8 @@
     <type value="EMPTY" />
   </tile>
   <tile x="7" y="2">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="10" />
+    <type value="WALL" />
   </tile>
   <tile x="8" y="2">
     <id value="0" />
@@ -148,8 +148,8 @@
     <type value="EMPTY" />
   </tile>
   <tile x="7" y="3">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="10" />
+    <type value="WALL" />
   </tile>
   <tile x="8" y="3">
     <id value="0" />
@@ -188,8 +188,8 @@
     <type value="EMPTY" />
   </tile>
   <tile x="7" y="4">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="8" />
+    <type value="WALL" />
   </tile>
   <tile x="8" y="4">
     <id value="0" />

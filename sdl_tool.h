@@ -25,6 +25,8 @@ public:
     virtual SDL_Texture* getTexture(SDL_Renderer* renderer) = 0;
     const SDL_Rect& rect() const { return rect_; }
 
+    SDLCamera* camera() const { return camera_; }
+
 protected:
     SDLCamera* camera_;
     //int position_x_;
@@ -39,13 +41,22 @@ protected:
 class SDLBuildTool : public SDLTool {
 public:
     SDLBuildTool(SDLCamera* camera, const std::string& icon_name);
-    virtual ~SDLBuildTool() {}
+    virtual ~SDLBuildTool();
 
     virtual SDL_Texture* getTexture(SDL_Renderer* renderer) override;
 
-    void addTool();
+    virtual void mousePressed(int button) override;
+
 private:
     SDL_Surface* surface_;
+};
+
+class SDLUnbuildTool : public SDLBuildTool {
+public:
+    SDLUnbuildTool(SDLCamera* camera, const std::string& icon_name);
+    virtual ~SDLUnbuildTool() {}
+
+    virtual void mousePressed(int button) override;
 };
 
 /********************************************************************/

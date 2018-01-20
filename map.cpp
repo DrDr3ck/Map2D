@@ -64,6 +64,69 @@ void MapData::reset(int width, int height) {
     tiles_ = new Tile[width*height];
 }
 
+void MapData::addWall(int x, int y) {
+    // take a look to the tile around the position
+    // Tile(int id=0, Type type=EMPTY);
+    int id = 0;
+    if( x > 0 ) {
+        if( tile(x-1,y).type() == Tile::WALL ) {
+            id += 1;
+            Tile& tile_x_1 = tile(x-1,y);
+            tile_x_1.setTile( tile_x_1.id() + 4, Tile::WALL);
+        }
+    }
+    if( x < width_-1 ) {
+        if( tile(x+1,y).type() == Tile::WALL ) {
+            id += 4;
+            Tile& tile_x_1 = tile(x+1,y);
+            tile_x_1.setTile( tile_x_1.id() + 1, Tile::WALL);
+        }
+    }
+    if( y < height_-1 ) {
+        if( tile(x,y+1).type() == Tile::WALL ) {
+            id += 2;
+            Tile& tile_y_1 = tile(x,y+1);
+            tile_y_1.setTile( tile_y_1.id() + 8, Tile::WALL);
+        }
+    }
+    if( y > 0 ) {
+        if( tile(x,y-1).type() == Tile::WALL ) {
+            id += 8;
+            Tile& tile_y_1 = tile(x,y-1);
+            tile_y_1.setTile( tile_y_1.id() + 2, Tile::WALL);
+        }
+    }
+    tile(x,y).setTile(id, Tile::WALL);
+}
+
+void MapData::removeWall(int x, int y) {
+    tile(x,y).setTile(0, Tile::EMPTY);
+    if( x > 0 ) {
+        if( tile(x-1,y).type() == Tile::WALL ) {
+            Tile& tile_x_1 = tile(x-1,y);
+            tile_x_1.setTile( tile_x_1.id() - 4, Tile::WALL);
+        }
+    }
+    if( x < width_-1 ) {
+        if( tile(x+1,y).type() == Tile::WALL ) {
+            Tile& tile_x_1 = tile(x+1,y);
+            tile_x_1.setTile( tile_x_1.id() - 1, Tile::WALL);
+        }
+    }
+    if( y < height_-1 ) {
+        if( tile(x,y+1).type() == Tile::WALL ) {
+            Tile& tile_y_1 = tile(x,y+1);
+            tile_y_1.setTile( tile_y_1.id() - 8, Tile::WALL);
+        }
+    }
+    if( y > 0 ) {
+        if( tile(x,y-1).type() == Tile::WALL ) {
+            Tile& tile_y_1 = tile(x,y-1);
+            tile_y_1.setTile( tile_y_1.id() - 2, Tile::WALL);
+        }
+    }
+}
+
 const Tile& MapData::tile(int x,int y) const {
     return tiles_[x+y*width_];
 }

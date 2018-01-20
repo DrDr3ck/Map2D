@@ -70,17 +70,41 @@ SDLBuildTool::SDLBuildTool(SDLCamera* camera, const std::string& icon_name) : SD
     surface_ = IMG_Load(icon_name.c_str());
 }
 
+SDLBuildTool::~SDLBuildTool() {
+    if( surface_ != nullptr ) {
+        SDL_FreeSurface(surface_);
+    }
+}
+
 SDL_Texture* SDLBuildTool::getTexture(SDL_Renderer* renderer) {
     if( texture_ == nullptr ) {
         texture_ = SDL_CreateTextureFromSurface(renderer, surface_);
         SDL_FreeSurface(surface_);
+        surface_ = nullptr;
         rect_ = {100,100,64,64}; // debug
     }
     return texture_;
 }
 
-void SDLBuildTool::addTool() {
-    //camera->addTool( tool_type ); // adding tool ontile_rect if any...
+void SDLBuildTool::mousePressed(int button) {
+    SDLTool::mousePressed(button);
+    int x,y;
+    if( camera()->mapView()->curTile(x,y) ) {
+        camera()->mapView()->data()->addWall(x,y);
+    }
+}
+
+/********************************************************************/
+
+SDLUnbuildTool::SDLUnbuildTool(SDLCamera* camera, const std::string& icon_name) : SDLBuildTool(camera, icon_name) {
+}
+
+void SDLUnbuildTool::mousePressed(int button) {
+    SDLTool::mousePressed(button);
+    int x,y;
+    if( camera()->mapView()->curTile(x,y) ) {
+        camera()->mapView()->data()->removeWall(x,y);
+    }
 }
 
 /********************************************************************/

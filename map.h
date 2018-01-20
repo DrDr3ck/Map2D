@@ -13,6 +13,16 @@ public:
 
 /********************************************************************/
 
+class Item {
+public:
+    Item() {}
+    virtual ~Item() {}
+
+protected:
+};
+
+/********************************************************************/
+
 class Tile {
 public:
     enum Type { BLOCK, DOOR, EMPTY, WALL };
@@ -39,9 +49,10 @@ public:
 
     const Tile& tile(int x,int y) const;
     Tile& tile(int x,int y);
+    void addWall(int x, int y);
+    void removeWall(int x, int y);
 
     void reset(int width, int height);
-
     int width() const { return width_; }
     int height() const { return height_; }
 private:

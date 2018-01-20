@@ -19,8 +19,12 @@ public:
     virtual void do_render(Camera* camera) override;
     virtual void handleEvent(Camera* camera) override;
 
+    MapData* data() const { return data_; }
+
     bool onTile(int mouse_x, int mouse_y);
     const SDL_Rect& onTileRect() const { return ontile_rect_; }
+
+    bool curTile(int& tile_x, int& tile_y);
 
 private:
     MapData* data_;
@@ -96,6 +100,8 @@ public:
     void setTool(SDLTool* tool) { tool_ = tool; }
 
     void setMapView(MapView* view);
+
+    MapView* mapView() const { return map_view_; }
 
     void displayTexture(SDL_Texture* texture, const SDL_Rect* rect);
     void displayText(SDLText& text);
