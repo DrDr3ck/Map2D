@@ -10,7 +10,7 @@ class Camera;
 
 class Button {
 public:
-    Button(int x,int y, int w=32, int h=32);
+    Button(std::string button_name, int x,int y, int w=32, int h=32);
     virtual ~Button() {}
 
     bool isActive() { return active_; }
@@ -28,15 +28,18 @@ public:
     virtual void setSize(int w, int h) { w_ = w; h_ = h; }
     virtual void setPosition(int x,int y) { x_ = x; y_ = y; }
 
-    int x() { return x_; }
-    int y() { return y_; }
-    int w() { return w_; }
-    int h() { return h_; }
+    int x() const { return x_; }
+    int y() const { return y_; }
+    int w() const { return w_; }
+    int h() const { return h_; }
+
+    const std::string& button_name() const { return button_name_; }
 
 private:
     bool active_;
     bool visible_;
     bool focus_;
+    std::string button_name_;
     int x_; // position x
     int y_; // position y
     int w_; // width

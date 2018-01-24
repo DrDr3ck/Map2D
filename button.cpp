@@ -4,7 +4,7 @@
 
 /***********************************/
 
-Button::Button(int x,int y, int w, int h) : x_(x), y_(y), w_(w), h_(h) {
+Button::Button(std::string button_name, int x,int y, int w, int h) : button_name_(button_name), x_(x), y_(y), w_(w), h_(h) {
     visible_ = true;
     active_ = false;
     focus_ = false;

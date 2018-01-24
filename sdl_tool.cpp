@@ -26,7 +26,9 @@ void SDLTool::activate() {
 }
 
 void SDLTool::deactivate() {
-    camera_->setTool(nullptr);
+    if( camera_->tool() == this ) {
+        camera_->setTool(nullptr);
+    }
 }
 
 void SDLTool::handleEvent() {
@@ -36,10 +38,10 @@ void SDLTool::handleEvent() {
         mouseMoved(event.motion.x, event.motion.y);
         break;
     case SDL_MOUSEBUTTONDOWN:
-        mousePressed(event.button.which);
+        mousePressed(event.button.button);
         break;
     case SDL_MOUSEBUTTONUP:
-        mouseReleased(event.button.which);
+        mouseReleased(event.button.button);
         break;
     case SDL_KEYDOWN:
         std::string str(SDL_GetKeyName( event.key.keysym.sym ));
@@ -48,8 +50,7 @@ void SDLTool::handleEvent() {
     }
 }
 
-void SDLTool::mousePressed(int button) {
-    std::cout << "SDLTool::mousePressed " << button << std::endl;
+void SDLTool::mousePressed(int) {
 }
 
 void SDLTool::mouseMoved(int, int) {
@@ -57,11 +58,10 @@ void SDLTool::mouseMoved(int, int) {
 }
 
 void SDLTool::keyPressed(const std::string& key) {
-    std::cout << key << std::endl;
+    std::cout << "KeyPressed: " << key << std::endl;
 }
 
-void SDLTool::mouseReleased(int button) {
-    std::cout << "SDLTool::mouseReleased " << button << std::endl;
+void SDLTool::mouseReleased(int) {
 }
 
 /********************************************************************/

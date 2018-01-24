@@ -97,7 +97,8 @@ public:
     virtual void onMouseMove(int x, int y) override;
     virtual void onMouseWheelScroll(int x, int y) override;
 
-    void setTool(SDLTool* tool) { tool_ = tool; }
+    SDLTool* tool() { return tool_; }
+    void setTool(SDLTool* tool);
 
     void setMapView(MapView* view);
 

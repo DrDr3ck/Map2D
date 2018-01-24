@@ -303,6 +303,11 @@ void SDLCamera::handleEvent() {
         case SDL_MOUSEWHEEL:
             onMouseWheelScroll(event_.wheel.x, event_.wheel.y);
             break;
+        case SDL_MOUSEBUTTONDOWN:
+            if( event_.button.button == SDL_BUTTON_RIGHT ) {
+                setTool(nullptr);
+            }
+            break;
         default:
             break;
     }
@@ -324,6 +329,10 @@ void SDLCamera::onMouseMove(int mouse_x, int mouse_y) {
 
 void SDLCamera::onMouseWheelScroll(int wheel_x, int wheel_y) {
     Camera::onMouseWheelScroll(wheel_x,wheel_y);
+}
+
+void SDLCamera::setTool(SDLTool* tool) {
+    tool_ = tool;
 }
 
 void SDLCamera::setMapView(MapView* view) {

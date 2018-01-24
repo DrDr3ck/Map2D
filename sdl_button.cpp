@@ -18,6 +18,9 @@ void SDLButtonManager::handleEvent(Camera* camera) {
     }
     for( auto button : buttons_ ) {
         // get mouse position
+        if( !button->isVisible() ) {
+            continue;
+        }
         if( button->mouseOverButton(camera->mouse_x(), camera->mouse_y()) ) {
             button->hasFocus(true);
             if( button_pressed ) {
@@ -51,10 +54,10 @@ void SDLButtonManager::do_render(Camera* camera) {
         SDL_RenderDrawRect(main_renderer, &rect);
     }
     for( auto b : buttons_ ) {
-        SDLButton* button = dynamic_cast<SDLButton*>(b);
-        if( !button->isVisible() ) {
+        if( !b->isVisible() ) {
             continue;
         }
+        SDLButton* button = dynamic_cast<SDLButton*>(b);
         SDL_Texture* texture = button->getTexture(main_renderer);
         sdl_camera->displayTexture(texture, &button->rect());
         if( button->hasFocus() ) {
@@ -66,13 +69,11 @@ void SDLButtonManager::do_render(Camera* camera) {
 
 /********************************************************************/
 
-SDLButton::SDLButton(std::string name, int x, int y) : Button(x,y) {
-    std::cout << "load " << name << std::endl;
+SDLButton::SDLButton(std::string name, int x, int y) : Button(name,x,y) {
     surface_ = IMG_Load(name.c_str());
     if( surface_ == nullptr ) {
-        std::cout << "IMG_Load: " << IMG_GetError() << std::endl;
+        std::cout << "Error when loading image " << name << ": " << IMG_GetError() << std::endl;
     }
-    std::cout << "done " << surface_ << std::endl;
     int w = surface_->w;
     int h = surface_->h;
     setSize(w,h);
