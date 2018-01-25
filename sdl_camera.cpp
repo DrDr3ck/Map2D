@@ -7,6 +7,7 @@
 #include "font.h"
 #include "sdl_button.h"
 #include "sdl_tool.h"
+#include "sdl_background.h"
 
 /********************************************************************/
 
@@ -315,6 +316,9 @@ void SDLCamera::handleEvent() {
                 pause_ = !pause_;
             } else if( event_.key.keysym.sym == SDLK_ESCAPE ) {
                 quit_ = true;
+            } else if( event_.key.keysym.sym == SDLK_b ) {
+                BackGroundGenerator generator(6,4);
+                generator.execute("out.png");
             }
             break;
         case SDL_MOUSEMOTION:
