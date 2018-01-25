@@ -67,6 +67,10 @@ void MapData::reset(int width, int height) {
 void MapData::addWall(int x, int y) {
     // take a look to the tile around the position
     // Tile(int id=0, Type type=EMPTY);
+    if( tile(x,y).type() == Tile::WALL ) {
+        // already a wall
+        return;
+    }
     int id = 0;
     if( x > 0 ) {
         if( tile(x-1,y).type() == Tile::WALL ) {
@@ -100,6 +104,10 @@ void MapData::addWall(int x, int y) {
 }
 
 void MapData::removeWall(int x, int y) {
+    if( tile(x,y).type() != Tile::WALL ) {
+        // not a wall
+        return;
+    }
     tile(x,y).setTile(0, Tile::EMPTY);
     if( x > 0 ) {
         if( tile(x-1,y).type() == Tile::WALL ) {

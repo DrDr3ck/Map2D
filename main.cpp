@@ -14,10 +14,11 @@
 
 int main(int /*argc*/, char** /*argv*/) {
     // Check tests first
-    TestManager test_manager;
-    if( !test_manager.execute() ) {
+    TestManager* test_manager = TestManager::instance();
+    if( !test_manager->execute() ) {
         return 1;
     }
+    test_manager->kill();
 
     // Create window
     SDLCamera* camera = new SDLCamera();

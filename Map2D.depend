@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1516862385 source:d:\games\programs\map2d\main.cpp
+1516866103 source:d:\games\programs\map2d\main.cpp
 	<SDL2/SDL.h>
 	<iostream>
 	<fstream>
@@ -356,12 +356,12 @@
 	<SDL2/SDL.h>
 	<map>
 
-1516136231 d:\games\programs\map2d\tests.h
+1516866176 d:\games\programs\map2d\tests.h
 	"map.h"
 	<list>
 	<string>
 
-1516310654 source:d:\games\programs\map2d\tests.cpp
+1516867712 source:d:\games\programs\map2d\tests.cpp
 	"tests.h"
 	"archive.h"
 	"font.h"
@@ -389,7 +389,7 @@
 	"map.h"
 	<string>
 
-1516862205 source:d:\games\programs\map2d\sdl_camera.cpp
+1516865715 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>

@@ -37,10 +37,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     // should it be done here ?
     float scale_speed = camera->scale()*camera->scale();
     if( camera->scale() < 1 ) {
-        scale_speed = 2;
-        if( camera->scale() < 0.8 ) {
-            scale_speed = 3;
-        }
+        scale_speed = 1./camera->scale() * 1./camera->scale();
     }
     if( delta_x_ != 0 ) {
         translate_x_ += delta_x_ * scale_speed * (delay_in_ms / 1000.);

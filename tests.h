@@ -21,7 +21,7 @@ private:
 
 class CheckingTest : public Test {
 public:
-    CheckingTest() : Test("CheckingTest") {}
+    CheckingTest();
 
     virtual bool do_execute() override;
 };
@@ -50,15 +50,20 @@ public:
 /*******************************/
 
 class TestManager {
-public:
+private:
     TestManager();
     ~TestManager() {}
+
+public:
+    static TestManager* instance();
+    static void kill();
 
     bool execute();
     void addTest(Test* test);
 
 private:
     std::list<Test*> tests_;
+    static TestManager* singleton_;
 };
 
 /*******************************/

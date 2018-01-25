@@ -33,6 +33,9 @@
 
 /*******************************************/
 
+CheckingTest::CheckingTest() : Test("CheckingTest") {
+}
+
 bool CheckingTest::do_execute() {
     return true;
 }
@@ -112,11 +115,27 @@ TestManager::TestManager() {
     addTest(new FontTest());
 }
 
+TestManager* TestManager::instance() {
+    if( singleton_ == nullptr ) {
+        std::cout << "creating TestManager singleton" << std::endl;
+        singleton_ =  new TestManager();
+    }
+    return singleton_;
+}
+
+void TestManager::kill() {
+    if( singleton_ != nullptr ) {
+        delete singleton_;
+        std::cout << "destroying TestManager singleton" << std::endl;
+        singleton_ = nullptr;
+    }
+}
+
 bool TestManager::execute() {
     bool result = true;
     CHECK( tests_.size() > 0, return false;);
     std::cout << "Executing " << tests_.size() << " tests ...\n";
-    auto start = std::chrono::system_clock::now();
+    auto chrono_start = std::chrono::system_clock::now();
     for( auto test : tests_ ) {
         std::cout << "    > " << test->name();
         if( test->do_execute() ) {
@@ -126,8 +145,8 @@ bool TestManager::execute() {
             std::cout << " ... KO\n";
         }
     }
-    auto end = std::chrono::system_clock::now();
-    std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(end-start);
+    auto chrono_end = std::chrono::system_clock::now();
+    std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(chrono_end-chrono_start);
     std::cout << "Ending tests in " << ms.count() << " ms\n";
     return result;
 }
@@ -135,3 +154,6 @@ bool TestManager::execute() {
 void TestManager::addTest(Test* test) {
     tests_.push_back(test);
 }
+
+// Initialize singleton_ to nullptr
+TestManager* TestManager::singleton_ = nullptr;
