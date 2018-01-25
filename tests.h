@@ -61,6 +61,9 @@ public:
     bool execute();
     void addTest(Test* test);
 
+protected:
+    bool countTestsInFile(const std::string& filename, int& count) const;
+
 private:
     std::list<Test*> tests_;
     static TestManager* singleton_;

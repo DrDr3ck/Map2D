@@ -4,7 +4,9 @@
 #include "font.h"
 #include <stdio.h>
 #include <iostream>
+#include <fstream>
 #include <chrono>
+#include <string>
 #include <SDL2/SDL_ttf.h>
 
 #define CHECK(x, y) do { \
@@ -53,18 +55,18 @@ bool MapTest::do_execute() {
     CHECK_EQUAL(map_data.width(), 10, return false;);
     CHECK_EQUAL(map_data.height(), 6, return false;);
 
-    Tile& tile = map_data.tile(3,2);
-    tile.setTile(2,Tile::DOOR);
-
-    Tile& tile2 = map_data.tile(4,2);
-    tile2.setTile(3,Tile::WALL);
+    map_data.addWall(3,2);
+    map_data.addWall(4,2);
+    // check that we can add several time the same wall
+    // without breaking data tile ids
+    map_data.addWall(4,2);
 
     Tile const_tile = map_data.tile(3,2);
-    CHECK_EQUAL(const_tile.id(), 2, return false;);
-    CHECK_EQUAL(const_tile.type(), Tile::DOOR, return false;);
+    CHECK_EQUAL(const_tile.id(), 4, return false;);
+    CHECK_EQUAL(const_tile.type(), Tile::WALL, return false;);
 
     const_tile = map_data.tile(4,2);
-    CHECK_EQUAL(const_tile.id(), 3, return false;);
+    CHECK_EQUAL(const_tile.id(), 1, return false;);
     CHECK_EQUAL(const_tile.type(), Tile::WALL, return false;);
 
     // save/load
@@ -133,7 +135,12 @@ void TestManager::kill() {
 
 bool TestManager::execute() {
     bool result = true;
-    CHECK( tests_.size() > 0, return false;);
+    int nb_tests = 0;
+    if( countTestsInFile("tests.h", nb_tests) ) {
+        CHECK( int(tests_.size()) == nb_tests, return false;);
+    } else {
+        CHECK( tests_.size() > 0, return false;);
+    }
     std::cout << "Executing " << tests_.size() << " tests ...\n";
     auto chrono_start = std::chrono::system_clock::now();
     for( auto test : tests_ ) {
@@ -149,6 +156,21 @@ bool TestManager::execute() {
     std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(chrono_end-chrono_start);
     std::cout << "Ending tests in " << ms.count() << " ms\n";
     return result;
+}
+
+bool TestManager::countTestsInFile(const std::string& filename, int& count) const {
+    std::ifstream ifs( filename );
+    if( !ifs.good() ) {
+        return false;
+    }
+    std::string line;
+    count = 0;
+    while (std::getline(ifs, line)) {
+        if( line.find("public Test") != std::string::npos ) {
+            count++;
+        }
+    }
+    return true;
 }
 
 void TestManager::addTest(Test* test) {

@@ -20,7 +20,7 @@
     <type value="WALL" />
   </tile>
   <tile x="5" y="0">
-    <id value="3" />
+    <id value="1" />
     <type value="WALL" />
   </tile>
   <tile x="6" y="0">
@@ -60,8 +60,8 @@
     <type value="EMPTY" />
   </tile>
   <tile x="5" y="1">
-    <id value="10" />
-    <type value="WALL" />
+    <id value="0" />
+    <type value="EMPTY" />
   </tile>
   <tile x="6" y="1">
     <id value="0" />
@@ -100,7 +100,7 @@
     <type value="DOOR" />
   </tile>
   <tile x="5" y="2">
-    <id value="10" />
+    <id value="2" />
     <type value="WALL" />
   </tile>
   <tile x="6" y="2">
