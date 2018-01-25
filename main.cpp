@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <ctime>
+#include <chrono>
 
 #include "map.h"
 #include "font.h"
@@ -24,7 +26,7 @@ int main(int /*argc*/, char** /*argv*/) {
         return -1;
     }
 
-    std::string filename("save01.arc");
+    std::string filename("save02.arc");
     MapDataConverter converter;
     MapData data(50,30);
 
@@ -44,6 +46,7 @@ int main(int /*argc*/, char** /*argv*/) {
     FontLib* font_manager = FontLib::instance();
 
     // Main loop
+    std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
     bool ending = false;
     while(!ending) {
 
@@ -51,7 +54,10 @@ int main(int /*argc*/, char** /*argv*/) {
         if( camera->quit() ) {
             ending = true;
         }
-        camera->render();
+        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+        double delay = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+        camera->render(delay);
+        start = end;
         //SDL_Delay(25);
     }
 

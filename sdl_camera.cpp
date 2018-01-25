@@ -33,13 +33,13 @@ bool MapView::onTile(int mouse_x, int mouse_y) {
     return true;
 }
 
-void MapView::do_render(Camera* camera) {
+void MapView::do_render(Camera* camera, double delay_in_ms) {
     // should it be done here ?
     if( delta_x_ != 0 ) {
-        translate_x_ += delta_x_ * camera->scale()*1;
+        translate_x_ += delta_x_ * camera->scale()*1 * (delay_in_ms / 1000.);
     }
     if( delta_y_ != 0 ) {
-        translate_y_ += delta_y_ * camera->scale()*1;
+        translate_y_ += delta_y_ * camera->scale()*1 * (delay_in_ms / 1000.);
     }
 
     SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
@@ -211,10 +211,10 @@ bool SDLCamera::valid() const {
     return window_ != nullptr;
 }
 
-void SDLCamera::render() {
+void SDLCamera::render(double delay_in_ms) {
     // rendering for all View(s)
-    Camera::render();
-    manager_->do_render(this);
+    Camera::render(delay_in_ms);
+    manager_->do_render(this, delay_in_ms);
     if( pause_ ) {
         SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
         SDL_Rect r;

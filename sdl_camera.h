@@ -16,7 +16,7 @@ public:
     MapView(MapData* data);
     ~MapView() { data_ = nullptr; }
 
-    virtual void do_render(Camera* camera) override;
+    virtual void do_render(Camera* camera, double delay_in_ms) override;
     virtual void handleEvent(Camera* camera) override;
 
     MapData* data() const { return data_; }
@@ -91,7 +91,7 @@ public:
     virtual ~SDLCamera();
 
     virtual bool valid() const override;
-    virtual void render() override;
+    virtual void render(double delay_in_ms) override;
     virtual void handleEvent() override;
     virtual void do_quit() const override;
     virtual void onMouseMove(int x, int y) override;

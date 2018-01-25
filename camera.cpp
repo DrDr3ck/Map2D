@@ -52,9 +52,9 @@ void Camera::onMouseWheelScroll(int x, int y) {
     }
 }
 
-void Camera::render() {
+void Camera::render(double delay_in_ms) {
     for( auto view : views_ ) {
-        view->do_render(this);
+        view->do_render(this, delay_in_ms);
     }
 }
 

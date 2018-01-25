@@ -15,7 +15,7 @@ public:
     SDLButtonManager() : ButtonManager() {}
     virtual ~SDLButtonManager() {}
 
-    virtual void do_render(Camera* camera);
+    virtual void do_render(Camera* camera, double delay_in_ms);
     virtual void handleEvent(Camera* camera) override;
 };
 

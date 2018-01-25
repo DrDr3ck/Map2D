@@ -14,7 +14,7 @@ public:
     View() {}
     virtual ~View() {}
 
-    virtual void do_render(Camera* camera) = 0;
+    virtual void do_render(Camera* camera, double delay_in_ms) = 0;
     virtual void handleEvent(Camera* camera) = 0;
 };
 
@@ -30,7 +30,7 @@ public:
     void addView(View* view);
     void removeView(View* view);
 
-    virtual void render();
+    virtual void render(double delay_in_ms);
     virtual void handleEvent();
 
     float scale() const { return scales_[scale_idx_]; }

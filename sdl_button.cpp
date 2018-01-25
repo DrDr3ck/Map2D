@@ -39,7 +39,8 @@ void SDLButtonManager::handleEvent(Camera* camera) {
     }
 }
 
-void SDLButtonManager::do_render(Camera* camera) {
+// remark: the delay_in_ms may be use to display animated buttons
+void SDLButtonManager::do_render(Camera* camera, double /*delay_in_ms*/) {
     SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
     SDL_Renderer* main_renderer = sdl_camera->main_renderer();
     // iterate over all visible buttons, get texture and display them
