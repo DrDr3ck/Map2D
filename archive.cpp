@@ -44,6 +44,7 @@ void MapDataConverter::load(MapData* data, const std::string& filename) {
     int y = 0;
     int tile_id = 0;
     Tile::Type tile_type = Tile::BLOCK;
+    Tile::BType tile_btype = Tile::NONE;
     bool inTile = false;
     while (std::getline(file, str)) {
         if( isTag(str, "mapdata") ) {
@@ -71,9 +72,13 @@ void MapDataConverter::load(MapData* data, const std::string& filename) {
                 std::string value_str = getAttribute(str, "value");
                 tile_type = stringTileToType(value_str);
             }
+            if( isTag(str, "btype") ) {
+                std::string value_str = getAttribute(str, "value");
+                tile_btype = stringTileToBType(value_str);
+            }
             if( isEndTag(str, "tile") ) {
                 Tile& cur_tile = data->tile(x,y);
-                cur_tile.setTile(tile_id, tile_type);
+                cur_tile.setTile(tile_id, tile_type, tile_btype);
                 inTile = false;
             }
         }
@@ -97,6 +102,15 @@ std::string MapDataConverter::typeTileToString(Tile::Type type) const {
     return "NONE";
 }
 
+std::string MapDataConverter::btypeTileToString(Tile::BType type) const {
+    if( type == Tile::NONE ) return "NONE";
+    if( type == Tile::GRASS ) return "GRASS";
+    if( type == Tile::EARTH ) return "EARTH";
+    if( type == Tile::ROCK ) return "ROCK";
+    std::cout << "unable to find string for background type: " << type << std::endl;
+    return "NONE";
+}
+
 Tile::Type MapDataConverter::stringTileToType(const std::string& str) const {
     if( str == "BLOCK" ) return Tile::BLOCK;
     if( str == "DOOR" ) return Tile::DOOR;
@@ -104,6 +118,15 @@ Tile::Type MapDataConverter::stringTileToType(const std::string& str) const {
     if( str == "EMPTY" ) return Tile::EMPTY;
     std::cout << "unable to find type for string: " << str << std::endl;
     return Tile::BLOCK;
+}
+
+Tile::BType MapDataConverter::stringTileToBType(const std::string& str) const {
+    if( str == "NONE" ) return Tile::NONE;
+    if( str == "GRASS" ) return Tile::GRASS;
+    if( str == "EARTH" ) return Tile::EARTH;
+    if( str == "ROCK" ) return Tile::ROCK;
+    std::cout << "unable to find background type for string: " << str << std::endl;
+    return Tile::NONE;
 }
 
 void MapDataConverter::save(MapData* data, const std::string& filename) {
@@ -120,6 +143,7 @@ void MapDataConverter::save(MapData* data, const std::string& filename) {
             file << "  <tile x=\"" << i << "\" y=\"" << j << "\">" << std::endl;
             file << "    <id value=\"" << cur.id() << "\" />" << std::endl;
             file << "    <type value=\"" << typeTileToString(cur.type()) << "\" />" << std::endl;
+            file << "    <btype value=\"" << btypeTileToString(cur.background_type()) << "\" />" << std::endl;
             file << "  </tile>" << std::endl;
         }
     }

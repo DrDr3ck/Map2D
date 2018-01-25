@@ -19,7 +19,7 @@ std::string Utility::itos(int i) {
 
 /********************************************************************/
 
-Tile::Tile(int id, Type type) : id_(id), type_(type) {
+Tile::Tile(int id, Type type, BType background_type) : id_(id), type_(type), background_type_(background_type) {
 }
 
 Tile::~Tile() {
@@ -33,9 +33,14 @@ Tile::Type Tile::type() const {
     return type_;
 }
 
-void Tile::setTile(int id, Type type) {
+Tile::BType Tile::background_type() const {
+    return background_type_;
+}
+
+void Tile::setTile(int id, Type type, BType background_type) {
     id_ = id;
     type_ = type;
+    background_type_ = background_type;
 }
 
 std::string Tile::typeTileToString(Tile::Type type) {
@@ -76,31 +81,31 @@ void MapData::addWall(int x, int y) {
         if( tile(x-1,y).type() == Tile::WALL ) {
             id += 1;
             Tile& tile_x_1 = tile(x-1,y);
-            tile_x_1.setTile( tile_x_1.id() + 4, Tile::WALL);
+            tile_x_1.setTile( tile_x_1.id() + 4, Tile::WALL, tile_x_1.background_type());
         }
     }
     if( x < width_-1 ) {
         if( tile(x+1,y).type() == Tile::WALL ) {
             id += 4;
             Tile& tile_x_1 = tile(x+1,y);
-            tile_x_1.setTile( tile_x_1.id() + 1, Tile::WALL);
+            tile_x_1.setTile( tile_x_1.id() + 1, Tile::WALL, tile_x_1.background_type());
         }
     }
     if( y < height_-1 ) {
         if( tile(x,y+1).type() == Tile::WALL ) {
             id += 2;
             Tile& tile_y_1 = tile(x,y+1);
-            tile_y_1.setTile( tile_y_1.id() + 8, Tile::WALL);
+            tile_y_1.setTile( tile_y_1.id() + 8, Tile::WALL, tile_y_1.background_type());
         }
     }
     if( y > 0 ) {
         if( tile(x,y-1).type() == Tile::WALL ) {
             id += 8;
             Tile& tile_y_1 = tile(x,y-1);
-            tile_y_1.setTile( tile_y_1.id() + 2, Tile::WALL);
+            tile_y_1.setTile( tile_y_1.id() + 2, Tile::WALL, tile_y_1.background_type());
         }
     }
-    tile(x,y).setTile(id, Tile::WALL);
+    tile(x,y).setTile(id, Tile::WALL, tile(x,y).background_type());
 }
 
 void MapData::removeWall(int x, int y) {
@@ -108,29 +113,29 @@ void MapData::removeWall(int x, int y) {
         // not a wall
         return;
     }
-    tile(x,y).setTile(0, Tile::EMPTY);
+    tile(x,y).setTile(0, Tile::EMPTY, tile(x,y).background_type());
     if( x > 0 ) {
         if( tile(x-1,y).type() == Tile::WALL ) {
             Tile& tile_x_1 = tile(x-1,y);
-            tile_x_1.setTile( tile_x_1.id() - 4, Tile::WALL);
+            tile_x_1.setTile( tile_x_1.id() - 4, Tile::WALL, tile_x_1.background_type());
         }
     }
     if( x < width_-1 ) {
         if( tile(x+1,y).type() == Tile::WALL ) {
             Tile& tile_x_1 = tile(x+1,y);
-            tile_x_1.setTile( tile_x_1.id() - 1, Tile::WALL);
+            tile_x_1.setTile( tile_x_1.id() - 1, Tile::WALL, tile_x_1.background_type());
         }
     }
     if( y < height_-1 ) {
         if( tile(x,y+1).type() == Tile::WALL ) {
             Tile& tile_y_1 = tile(x,y+1);
-            tile_y_1.setTile( tile_y_1.id() - 8, Tile::WALL);
+            tile_y_1.setTile( tile_y_1.id() - 8, Tile::WALL, tile_y_1.background_type());
         }
     }
     if( y > 0 ) {
         if( tile(x,y-1).type() == Tile::WALL ) {
             Tile& tile_y_1 = tile(x,y-1);
-            tile_y_1.setTile( tile_y_1.id() - 2, Tile::WALL);
+            tile_y_1.setTile( tile_y_1.id() - 2, Tile::WALL, tile_y_1.background_type());
         }
     }
 }
@@ -148,6 +153,7 @@ Tile& MapData::tile(int x,int y) {
 TileSetLib::TileSetLib() {
     tiles_surface_ = IMG_Load("tiles.png");
     walls_surface_ = IMG_Load("walls01.png");
+    grounds_surface_ = IMG_Load("grounds01.png");
     if( tiles_surface_ == nullptr || walls_surface_ == nullptr ) {
         std::cout << "cannot initialize TileSetLib" << std::endl;
     }
@@ -156,6 +162,7 @@ TileSetLib::TileSetLib() {
 TileSetLib::~TileSetLib() {
     SDL_FreeSurface(tiles_surface_);
     SDL_FreeSurface(walls_surface_);
+    SDL_FreeSurface(grounds_surface_);
 }
 
 TileSetLib* TileSetLib::instance() {
@@ -180,9 +187,16 @@ void TileSetLib::kill() {
 SDL_Texture* TileSetLib::getTextureFromTile(const Tile& tile, SDL_Renderer* renderer) {
     auto map_of_tiles = TileSetLib::instance()->mapOfTiles();
     auto map_of_walls = TileSetLib::instance()->mapOfWalls();
+    auto map_of_grounds = TileSetLib::instance()->mapOfGrounds();
     int id = tile.id();
     int max = 5;
-    if( tile.type() == Tile::WALL ) {
+    bool background = (tile.type() == Tile::EMPTY);
+    if( background ) {
+        id = int(tile.background_type());
+        if( map_of_grounds.find(id) != map_of_grounds.end()) {
+            return map_of_grounds[id];
+        }
+    } else if( tile.type() == Tile::WALL ) {
         if(map_of_walls.find(id) != map_of_walls.end()) {
             return map_of_walls[id];
         }
@@ -214,6 +228,9 @@ SDL_Texture* TileSetLib::getTextureFromTile(const Tile& tile, SDL_Renderer* rend
     if( tile.type() == Tile::WALL ) {
         surf_source = TileSetLib::instance()->walls();
     }
+    if( background ) {
+        surf_source = TileSetLib::instance()->grounds();
+    }
 
     SDL_BlitSurface(surf_source,
                     &source,
@@ -221,7 +238,9 @@ SDL_Texture* TileSetLib::getTextureFromTile(const Tile& tile, SDL_Renderer* rend
                     &dest);
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surf_dest);
-    if( tile.type() == Tile::WALL ) {
+    if( background ) {
+        TileSetLib::instance()->mapOfGrounds()[id] = texture;
+    } else if( tile.type() == Tile::WALL ) {
         TileSetLib::instance()->mapOfWalls()[id] = texture;
     } else {
         TileSetLib::instance()->mapOfTiles()[id] = texture;

@@ -17,6 +17,9 @@ public:
 protected:
     std::string typeTileToString(Tile::Type type) const;
     Tile::Type stringTileToType(const std::string& str) const;
+
+    std::string btypeTileToString(Tile::BType type) const;
+    Tile::BType stringTileToBType(const std::string& str) const;
 };
 
 /********************************************************************/

@@ -13,6 +13,8 @@
 MapView::MapView(MapData* data) : data_(data), background_(nullptr),
     delta_x_(0.), delta_y_(0.), delta_speed_(0.1), translate_x_(0.), translate_y_(0.)
 {
+    tile_x_ = -1;
+    tile_y_ = -1;
 }
 
 /*!
@@ -94,9 +96,11 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
             }
         }
     }
-    SDLText text(tile_text, "pixel11", 12, SDLText::black());
-    text.set_position(600,500);
-    sdl_camera->displayText(text);
+    if( !tile_text.empty() ) {
+        SDLText text(tile_text, "pixel11", 14, SDLText::black());
+        text.set_position(camera->mouse_x()+30,camera->mouse_y()+10);
+        sdl_camera->displayText(text, true);
+    }
 }
 
 void MapView::handleEvent(Camera* camera) {
@@ -237,7 +241,7 @@ void SDLCamera::render(double delay_in_ms) {
         SDL_RenderFillRect( main_renderer_, &r );
 
         SDLText text("Pause (Press SPACE)", "pixel11", 16, SDLText::black());
-        text.set_position(300,50);
+        text.set_position(300,70);
         SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
         text.texture(main_renderer_); // need to create texture in order to get correct text dimension
         SDL_RenderFillRect( main_renderer_, &text.rect() );
@@ -250,7 +254,7 @@ void SDLCamera::render(double delay_in_ms) {
     mouse_position.append(" ");
     mouse_position.append(Utility::itos(mouse_y()));
     SDLText text(mouse_position, "pixel11", 14, SDLText::red());
-    text.set_position(100,10);
+    text.set_position(10,580);
     displayText(text);
     // end debug
 
@@ -273,8 +277,20 @@ void SDLCamera::displayTexture(SDL_Texture* texture, const SDL_Rect* rect) {
     SDL_RenderCopy(main_renderer_, texture, NULL, rect);
 }
 
-void SDLCamera::displayText(SDLText& text) {
-    displayTexture(text.texture(main_renderer_), &text.rect());
+void SDLCamera::displayText(SDLText& text, bool background) {
+    SDL_Texture* texture = text.texture(main_renderer_);
+    if( background ) {
+        SDL_Rect rect = text.rect();
+        rect.x = rect.x - 5;
+        rect.w = rect.w + 10;
+        rect.y = rect.y - 2;
+        rect.h = rect.h + 4;
+        SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
+        SDL_RenderFillRect( main_renderer_, &rect );
+        SDL_SetRenderDrawColor( main_renderer_, 50, 50, 50, 255 );
+        SDL_RenderDrawRect(main_renderer_, &rect);
+    }
+    displayTexture(texture, &text.rect());
 }
 
 /*!

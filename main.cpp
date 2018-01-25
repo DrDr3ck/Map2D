@@ -38,7 +38,7 @@ int main(int /*argc*/, char** /*argv*/) {
         converter.load(&data, filename);
     } else {
         // otherwise, create a random map (TODO)
-        data.tile(2,2).setTile(8,Tile::BLOCK);
+        data.tile(2,2).setTile(8,Tile::BLOCK,Tile::NONE);
     }
     MapView* map_view = new MapView(&data);
     camera->setMapView(map_view);

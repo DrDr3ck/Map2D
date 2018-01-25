@@ -7,6 +7,7 @@
 #include <fstream>
 #include <chrono>
 #include <string>
+#include <random>
 #include <SDL2/SDL_ttf.h>
 
 #define CHECK(x, y) do { \
@@ -39,7 +40,7 @@ CheckingTest::CheckingTest() : Test("CheckingTest") {
 }
 
 bool CheckingTest::do_execute() {
-    return true;
+   return true;
 }
 
 bool TileTest::do_execute() {

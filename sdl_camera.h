@@ -105,7 +105,7 @@ public:
     MapView* mapView() const { return map_view_; }
 
     void displayTexture(SDL_Texture* texture, const SDL_Rect* rect);
-    void displayText(SDLText& text);
+    void displayText(SDLText& text, bool background=false);
 
     void getSize(int& screen_width, int& screen_height);
     SDL_Window* window() const { return window_; }

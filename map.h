@@ -26,18 +26,21 @@ protected:
 class Tile {
 public:
     enum Type { BLOCK, DOOR, EMPTY, WALL };
+    enum BType { NONE, GRASS, EARTH, ROCK };
 public:
-    Tile(int id=0, Type type=EMPTY);
+    Tile(int id=0, Type type=EMPTY, BType background_type=NONE);
     ~Tile();
 
     int id() const;
     Type type() const;
-    void setTile(int id, Type type);
+    BType background_type() const;
+    void setTile(int id, Type type, BType background_type);
 
     static std::string typeTileToString(Tile::Type type);
 private:
     int id_;
     Type type_;
+    BType background_type_;
 };
 
 /********************************************************************/
@@ -76,14 +79,18 @@ public:
 
     SDL_Surface* tiles() { return tiles_surface_; }
     SDL_Surface* walls() { return walls_surface_; }
+    SDL_Surface* grounds() { return grounds_surface_; }
     std::map<int, SDL_Texture*>& mapOfTiles() { return mapOfTiles_; }
     std::map<int, SDL_Texture*>& mapOfWalls() { return mapOfWalls_; }
+    std::map<int, SDL_Texture*>& mapOfGrounds() { return mapOfGrounds_; }
 private:
     static TileSetLib* singleton_;
     SDL_Surface* tiles_surface_;
     SDL_Surface* walls_surface_;
+    SDL_Surface* grounds_surface_;
     std::map<int, SDL_Texture*> mapOfTiles_;
     std::map<int, SDL_Texture*> mapOfWalls_;
+    std::map<int, SDL_Texture*> mapOfGrounds_;
 };
 
 /********************************************************************/
