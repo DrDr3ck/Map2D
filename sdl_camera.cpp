@@ -35,11 +35,18 @@ bool MapView::onTile(int mouse_x, int mouse_y) {
 
 void MapView::do_render(Camera* camera, double delay_in_ms) {
     // should it be done here ?
+    float scale_speed = camera->scale()*camera->scale();
+    if( camera->scale() < 1 ) {
+        scale_speed = 2;
+        if( camera->scale() < 0.8 ) {
+            scale_speed = 3;
+        }
+    }
     if( delta_x_ != 0 ) {
-        translate_x_ += delta_x_ * camera->scale()*1 * (delay_in_ms / 1000.);
+        translate_x_ += delta_x_ * scale_speed * (delay_in_ms / 1000.);
     }
     if( delta_y_ != 0 ) {
-        translate_y_ += delta_y_ * camera->scale()*1 * (delay_in_ms / 1000.);
+        translate_y_ += delta_y_ * scale_speed * (delay_in_ms / 1000.);
     }
 
     SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);

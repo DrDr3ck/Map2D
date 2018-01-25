@@ -26,7 +26,7 @@ int main(int /*argc*/, char** /*argv*/) {
         return -1;
     }
 
-    std::string filename("save02.arc");
+    std::string filename("save01.arc");
     MapDataConverter converter;
     MapData data(50,30);
 
