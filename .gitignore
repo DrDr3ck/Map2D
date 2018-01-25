@@ -2,4 +2,6 @@
 *.dll
 *.o
 gmon.out
-*.exe
+bin/Debug/*
+dist/*
+dist.zip
