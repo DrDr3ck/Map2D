@@ -60,14 +60,28 @@ bool MapTest::do_execute() {
     // check that we can add several time the same wall
     // without breaking data tile ids
     map_data.addWall(4,2);
+    // add and remove wall
+    map_data.addWall(5,2);
+    Tile const_tile = map_data.tile(5,2);
+    CHECK_EQUAL(const_tile.id(), 1, return false;);
+    CHECK_EQUAL(const_tile.type(), Tile::WALL, return false;);
+    map_data.removeWall(5,2);
+    // check that we can add several time the same wall
+    // without breaking data tile ids
+    map_data.removeWall(5,2);
+    map_data.removeWall(6,2);
 
-    Tile const_tile = map_data.tile(3,2);
+    const_tile = map_data.tile(3,2);
     CHECK_EQUAL(const_tile.id(), 4, return false;);
     CHECK_EQUAL(const_tile.type(), Tile::WALL, return false;);
 
     const_tile = map_data.tile(4,2);
     CHECK_EQUAL(const_tile.id(), 1, return false;);
     CHECK_EQUAL(const_tile.type(), Tile::WALL, return false;);
+
+    const_tile = map_data.tile(5,2);
+    CHECK_EQUAL(const_tile.id(), 0, return false;);
+    CHECK_EQUAL(const_tile.type(), Tile::EMPTY, return false;);
 
     // save/load
     std::string filename("test.save");
