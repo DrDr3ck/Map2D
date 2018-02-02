@@ -183,21 +183,37 @@ SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), to
         TTF_Init();
     }
     manager_ = new SDLButtonManager();
-    manager_->addButton( new SDLQuitButton(this, 750,10) );
-    MenuButton* menu = new MenuButton(4, 10, 75);
 
-    SDLBuildTool* wall_tool = new SDLBuildTool(this, "wall_tool.png");
+    // Add Quit Button
+    manager_->addButton( new SDLQuitButton(this, 750,10) );
+
+    // Add Wall menu
+    int max_column = 4;
+    MenuButton* wall_menu = new MenuButton(max_column, 10, 75);
+
+    SDLBuildTool* wall_tool = new SDLBuildTool(this, "wall_tool.png", 0);
     SDLButton* wall_button_tool = new SDLToolButton(wall_tool, "wall_tool.png", 0, 0);
     manager_->addButton(wall_button_tool);
-    menu->addButton(wall_button_tool);
+    wall_menu->addButton(wall_button_tool);
 
-    SDLUnbuildTool* demolish_tool = new SDLUnbuildTool(this, "demolish_tool.png");
+    SDLUnbuildTool* demolish_tool = new SDLUnbuildTool(this, "demolish_tool.png", 0);
     SDLButton* demolish_button_tool = new SDLToolButton(demolish_tool, "demolish_tool.png", 0, 0);
     manager_->addButton(demolish_button_tool);
-    menu->addButton(demolish_button_tool);
+    wall_menu->addButton(demolish_button_tool);
 
-    manager_->addButton( new SDLButtonMenu(menu, "wall.png", 10,10) );
-    manager_->addMenuButton( menu );
+    manager_->addButton( new SDLButtonMenu(wall_menu, "wall.png", 10,10) );
+    manager_->addMenuButton( wall_menu );
+
+    // Add Floor menu
+    MenuButton* floor_menu = new MenuButton(4, 70, 75);
+
+    SDLBuildTool* grass_tool = new SDLBuildTool(this, "grass_tool.png", 1);
+    SDLButton* grass_button_tool = new SDLToolButton(grass_tool, "grass_tool.png", 0, 0);
+    manager_->addButton(grass_button_tool);
+    floor_menu->addButton(grass_button_tool);
+
+    manager_->addButton( new SDLButtonMenu(floor_menu, "floor.png", 70,10) );
+    manager_->addMenuButton( floor_menu );
 }
 
 SDLCamera::~SDLCamera() {

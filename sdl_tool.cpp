@@ -66,8 +66,9 @@ void SDLTool::mouseReleased(int) {
 
 /********************************************************************/
 
-SDLBuildTool::SDLBuildTool(SDLCamera* camera, const std::string& icon_name) : SDLTool(camera) {
+SDLBuildTool::SDLBuildTool(SDLCamera* camera, const std::string& icon_name, int type) : SDLTool(camera) {
     surface_ = IMG_Load(icon_name.c_str());
+    type_ = type;
 }
 
 SDLBuildTool::~SDLBuildTool() {
@@ -90,20 +91,28 @@ void SDLBuildTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
     if( camera()->mapView()->curTile(x,y) ) {
-        camera()->mapView()->data()->addWall(x,y);
+        if( type_ == 0 ) {
+            camera()->mapView()->data()->addWall(x,y);
+        } else if( type_ == 1 ) {
+            camera()->mapView()->data()->addFloor(x,y);
+        }
     }
 }
 
 /********************************************************************/
 
-SDLUnbuildTool::SDLUnbuildTool(SDLCamera* camera, const std::string& icon_name) : SDLBuildTool(camera, icon_name) {
+SDLUnbuildTool::SDLUnbuildTool(SDLCamera* camera, const std::string& icon_name, int type) : SDLBuildTool(camera, icon_name, type) {
 }
 
 void SDLUnbuildTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
     if( camera()->mapView()->curTile(x,y) ) {
-        camera()->mapView()->data()->removeWall(x,y);
+        if( type() == 0 ) {
+            camera()->mapView()->data()->removeWall(x,y);
+        } else if( type() == 1 ) {
+            camera()->mapView()->data()->removeFloor(x,y);
+        }
     }
 }
 

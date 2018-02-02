@@ -40,20 +40,23 @@ protected:
 
 class SDLBuildTool : public SDLTool {
 public:
-    SDLBuildTool(SDLCamera* camera, const std::string& icon_name);
+    SDLBuildTool(SDLCamera* camera, const std::string& icon_name, int type);
     virtual ~SDLBuildTool();
 
     virtual SDL_Texture* getTexture(SDL_Renderer* renderer) override;
 
     virtual void mousePressed(int button) override;
 
+    int type() const { return type_; }
+
 private:
     SDL_Surface* surface_;
+    int type_;
 };
 
 class SDLUnbuildTool : public SDLBuildTool {
 public:
-    SDLUnbuildTool(SDLCamera* camera, const std::string& icon_name);
+    SDLUnbuildTool(SDLCamera* camera, const std::string& icon_name, int type);
     virtual ~SDLUnbuildTool() {}
 
     virtual void mousePressed(int button) override;

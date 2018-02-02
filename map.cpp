@@ -140,6 +140,24 @@ void MapData::removeWall(int x, int y) {
     }
 }
 
+void MapData::addFloor(int x, int y) {
+    if( tile(x,y).background_type() != Tile::NONE ) {
+        // already a floor
+        return;
+    }
+    Tile& cur = tile(x,y);
+    cur.setTile(cur.id(), cur.type(), Tile::GRASS);
+}
+
+void MapData::removeFloor(int x, int y) {
+    if( tile(x,y).background_type() == Tile::NONE ) {
+        // already empty
+        return;
+    }
+    Tile& cur = tile(x,y);
+    cur.setTile(cur.id(), cur.type(), Tile::NONE);
+}
+
 const Tile& MapData::tile(int x,int y) const {
     return tiles_[x+y*width_];
 }

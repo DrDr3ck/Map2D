@@ -55,6 +55,9 @@ public:
     void addWall(int x, int y);
     void removeWall(int x, int y);
 
+    void addFloor(int x, int y);
+    void removeFloor(int x, int y);
+
     void reset(int width, int height);
     int width() const { return width_; }
     int height() const { return height_; }
