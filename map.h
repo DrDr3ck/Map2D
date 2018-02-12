@@ -25,8 +25,9 @@ protected:
 
 class Tile {
 public:
-    enum Type { BLOCK, DOOR, EMPTY, WALL };
+    enum Type { BLOCK, DOOR, FLOOR, EMPTY, WALL };
     enum BType { NONE, GRASS, EARTH, ROCK };
+    enum FType { METAL, PLASTIC };
 public:
     Tile(int id=0, Type type=EMPTY, BType background_type=NONE);
     ~Tile();
@@ -34,13 +35,15 @@ public:
     int id() const;
     Type type() const;
     BType background_type() const;
-    void setTile(int id, Type type, BType background_type);
+    FType floor_type() const;
+    void setTile(int id, Type type, BType background_type, FType floor_type);
 
     static std::string typeTileToString(Tile::Type type);
 private:
     int id_;
     Type type_;
     BType background_type_;
+    FType floor_type_;
 };
 
 /********************************************************************/
@@ -57,6 +60,9 @@ public:
 
     void addFloor(int x, int y);
     void removeFloor(int x, int y);
+
+    void addGround(int x, int y);
+    void removeGround(int x, int y);
 
     void reset(int width, int height);
     int width() const { return width_; }

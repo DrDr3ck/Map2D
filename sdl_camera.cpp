@@ -11,7 +11,8 @@
 
 /********************************************************************/
 
-MapView::MapView(MapData* data) : data_(data), background_(nullptr),
+MapView::MapView(MapData* data) : data_(data),
+    map_background_(nullptr), window_background_(nullptr),
     delta_x_(0.), delta_y_(0.), delta_speed_(0.1), translate_x_(0.), translate_y_(0.)
 {
     tile_x_ = -1;
@@ -52,12 +53,17 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
     float scale = camera->scale();
     SDL_Renderer* main_renderer = sdl_camera->main_renderer();
-    if( background_ == nullptr ) {
+    if( window_background_ == nullptr ) {
         SDL_Surface* bg_surface = IMG_Load("background.bmp");
-        background_ = SDL_CreateTextureFromSurface(main_renderer, bg_surface);
+        window_background_ = SDL_CreateTextureFromSurface(main_renderer, bg_surface);
         SDL_FreeSurface(bg_surface);
     }
-    sdl_camera->displayTexture(background_, NULL);
+    if( map_background_ == nullptr ) {
+        SDL_Surface* bg_surface = IMG_Load("out.png");
+        map_background_ = SDL_CreateTextureFromSurface(main_renderer, bg_surface);
+        SDL_FreeSurface(bg_surface);
+    }
+    sdl_camera->displayTexture(window_background_, NULL);
 
     int screen_width, screen_height;
     sdl_camera->getSize(screen_width, screen_height);
@@ -70,20 +76,30 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     scaled_start_x_ = delta_width + translate_x_;
     scaled_start_y_ = delta_height + translate_y_;
 
-    std::string tile_text;
+    {
+        SDL_Rect dest;
+        dest.x = scaled_start_x_;
+        dest.y = scaled_start_y_;
+        dest.w = scaled_tile_size_*data_->width();
+        dest.h = scaled_tile_size_*data_->height();
+        sdl_camera->displayTexture(map_background_, &dest);
+    }
 
+    std::string tile_text;
     ontile_rect_ = {0,0,0,0};
     SDL_Texture* small = nullptr;
     for( int w = 0 ; w < data_->width(); w++ ) {
         for( int h = 0 ; h < data_->height(); h++ ) {
             const Tile& cur = data_->tile(w,h);
-            small = TileSetLib::instance()->getTextureFromTile(cur, main_renderer);
             SDL_Rect dest;
             dest.x = w*scaled_tile_size_ + scaled_start_x_;
             dest.y = h*scaled_tile_size_ + scaled_start_y_;
             dest.w = scaled_tile_size_;
             dest.h = scaled_tile_size_;
-            sdl_camera->displayTexture(small, &dest);
+            small = TileSetLib::instance()->getTextureFromTile(cur, main_renderer);
+            if( small != nullptr ) {
+                sdl_camera->displayTexture(small, &dest);
+            }
             if( tile_x_ == w && tile_y_ == h ) {
                 // dessine un carre blanc autour de la tuile 'onTile'
                 SDL_SetRenderDrawColor( main_renderer, 250, 250, 250, 255 );
@@ -184,9 +200,6 @@ SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), to
     }
     manager_ = new SDLButtonManager();
 
-    // Add Quit Button
-    manager_->addButton( new SDLQuitButton(this, 750,10) );
-
     // Add Wall menu
     int max_column = 4;
     MenuButton* wall_menu = new MenuButton(max_column, 10, 75);
@@ -214,6 +227,9 @@ SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), to
 
     manager_->addButton( new SDLButtonMenu(floor_menu, "floor.png", 70,10) );
     manager_->addMenuButton( floor_menu );
+
+    // Add Quit Button
+    manager_->addButton( new SDLQuitButton(this, 750,10) );
 }
 
 SDLCamera::~SDLCamera() {
@@ -333,7 +349,7 @@ void SDLCamera::handleEvent() {
             } else if( event_.key.keysym.sym == SDLK_ESCAPE ) {
                 quit_ = true;
             } else if( event_.key.keysym.sym == SDLK_b ) {
-                BackGroundGenerator generator(6,4);
+                BackGroundGenerator generator(10,6);
                 generator.execute("out.png");
             }
             break;

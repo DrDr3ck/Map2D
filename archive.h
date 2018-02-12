@@ -20,6 +20,9 @@ protected:
 
     std::string btypeTileToString(Tile::BType type) const;
     Tile::BType stringTileToBType(const std::string& str) const;
+
+    std::string ftypeTileToString(Tile::FType type) const;
+    Tile::FType stringTileToFType(const std::string& str) const;
 };
 
 /********************************************************************/

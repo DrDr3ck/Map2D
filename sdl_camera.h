@@ -28,7 +28,8 @@ public:
 
 private:
     MapData* data_;
-    SDL_Texture* background_;
+    SDL_Texture* map_background_;
+    SDL_Texture* window_background_;
     float scale_;
     float delta_x_;
     float delta_y_;

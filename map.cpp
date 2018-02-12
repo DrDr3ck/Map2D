@@ -37,15 +37,21 @@ Tile::BType Tile::background_type() const {
     return background_type_;
 }
 
-void Tile::setTile(int id, Type type, BType background_type) {
+Tile::FType Tile::floor_type() const {
+    return floor_type_;
+}
+
+void Tile::setTile(int id, Type type, BType background_type, FType floor_type) {
     id_ = id;
     type_ = type;
     background_type_ = background_type;
+    floor_type_ = floor_type;
 }
 
 std::string Tile::typeTileToString(Tile::Type type) {
     if( type == Tile::BLOCK ) return "Block";
     if( type == Tile::DOOR ) return "Door";
+    if( type == Tile::FLOOR ) return "Floor";
     if( type == Tile::WALL ) return "Wall";
     if( type == Tile::EMPTY ) return "Nothing...";
     std::cout << "unable to find string for type: " << type << std::endl;
@@ -81,31 +87,31 @@ void MapData::addWall(int x, int y) {
         if( tile(x-1,y).type() == Tile::WALL ) {
             id += 1;
             Tile& tile_x_1 = tile(x-1,y);
-            tile_x_1.setTile( tile_x_1.id() + 4, Tile::WALL, tile_x_1.background_type());
+            tile_x_1.setTile( tile_x_1.id() + 4, Tile::WALL, tile_x_1.background_type(), tile_x_1.floor_type());
         }
     }
     if( x < width_-1 ) {
         if( tile(x+1,y).type() == Tile::WALL ) {
             id += 4;
             Tile& tile_x_1 = tile(x+1,y);
-            tile_x_1.setTile( tile_x_1.id() + 1, Tile::WALL, tile_x_1.background_type());
+            tile_x_1.setTile( tile_x_1.id() + 1, Tile::WALL, tile_x_1.background_type(), tile_x_1.floor_type());
         }
     }
     if( y < height_-1 ) {
         if( tile(x,y+1).type() == Tile::WALL ) {
             id += 2;
             Tile& tile_y_1 = tile(x,y+1);
-            tile_y_1.setTile( tile_y_1.id() + 8, Tile::WALL, tile_y_1.background_type());
+            tile_y_1.setTile( tile_y_1.id() + 8, Tile::WALL, tile_y_1.background_type(), tile_y_1.floor_type());
         }
     }
     if( y > 0 ) {
         if( tile(x,y-1).type() == Tile::WALL ) {
             id += 8;
             Tile& tile_y_1 = tile(x,y-1);
-            tile_y_1.setTile( tile_y_1.id() + 2, Tile::WALL, tile_y_1.background_type());
+            tile_y_1.setTile( tile_y_1.id() + 2, Tile::WALL, tile_y_1.background_type(), tile_y_1.floor_type());
         }
     }
-    tile(x,y).setTile(id, Tile::WALL, tile(x,y).background_type());
+    tile(x,y).setTile(id, Tile::WALL, tile(x,y).background_type(), tile(x,y).floor_type());
 }
 
 void MapData::removeWall(int x, int y) {
@@ -113,49 +119,67 @@ void MapData::removeWall(int x, int y) {
         // not a wall
         return;
     }
-    tile(x,y).setTile(0, Tile::EMPTY, tile(x,y).background_type());
+    tile(x,y).setTile(0, Tile::EMPTY, tile(x,y).background_type(), tile(x,y).floor_type());
     if( x > 0 ) {
         if( tile(x-1,y).type() == Tile::WALL ) {
             Tile& tile_x_1 = tile(x-1,y);
-            tile_x_1.setTile( tile_x_1.id() - 4, Tile::WALL, tile_x_1.background_type());
+            tile_x_1.setTile( tile_x_1.id() - 4, Tile::WALL, tile_x_1.background_type(), tile_x_1.floor_type());
         }
     }
     if( x < width_-1 ) {
         if( tile(x+1,y).type() == Tile::WALL ) {
             Tile& tile_x_1 = tile(x+1,y);
-            tile_x_1.setTile( tile_x_1.id() - 1, Tile::WALL, tile_x_1.background_type());
+            tile_x_1.setTile( tile_x_1.id() - 1, Tile::WALL, tile_x_1.background_type(), tile_x_1.floor_type());
         }
     }
     if( y < height_-1 ) {
         if( tile(x,y+1).type() == Tile::WALL ) {
             Tile& tile_y_1 = tile(x,y+1);
-            tile_y_1.setTile( tile_y_1.id() - 8, Tile::WALL, tile_y_1.background_type());
+            tile_y_1.setTile( tile_y_1.id() - 8, Tile::WALL, tile_y_1.background_type(), tile_y_1.floor_type());
         }
     }
     if( y > 0 ) {
         if( tile(x,y-1).type() == Tile::WALL ) {
             Tile& tile_y_1 = tile(x,y-1);
-            tile_y_1.setTile( tile_y_1.id() - 2, Tile::WALL, tile_y_1.background_type());
+            tile_y_1.setTile( tile_y_1.id() - 2, Tile::WALL, tile_y_1.background_type(), tile_y_1.floor_type());
         }
     }
 }
 
 void MapData::addFloor(int x, int y) {
+    if( tile(x,y).type() != Tile::FLOOR ) {
+        // already a floor
+        return;
+    }
+    Tile& cur = tile(x,y);
+    cur.setTile(cur.id(), cur.type(), Tile::NONE, Tile::METAL);
+}
+
+void MapData::removeFloor(int x, int y) {
+    if( tile(x,y).type() == Tile::FLOOR ) {
+        // already empty
+        return;
+    }
+    Tile& cur = tile(x,y);
+    cur.setTile(cur.id(), cur.type(), Tile::NONE, Tile::METAL);
+}
+
+void MapData::addGround(int x, int y) {
     if( tile(x,y).background_type() != Tile::NONE ) {
         // already a floor
         return;
     }
     Tile& cur = tile(x,y);
-    cur.setTile(cur.id(), cur.type(), Tile::GRASS);
+    cur.setTile(cur.id(), cur.type(), Tile::GRASS, Tile::METAL);
 }
 
-void MapData::removeFloor(int x, int y) {
+void MapData::removeGround(int x, int y) {
     if( tile(x,y).background_type() == Tile::NONE ) {
         // already empty
         return;
     }
     Tile& cur = tile(x,y);
-    cur.setTile(cur.id(), cur.type(), Tile::NONE);
+    cur.setTile(cur.id(), cur.type(), Tile::NONE, Tile::METAL);
 }
 
 const Tile& MapData::tile(int x,int y) const {
@@ -208,9 +232,13 @@ SDL_Texture* TileSetLib::getTextureFromTile(const Tile& tile, SDL_Renderer* rend
     auto map_of_grounds = TileSetLib::instance()->mapOfGrounds();
     int id = tile.id();
     int max = 5;
+
     bool background = (tile.type() == Tile::EMPTY);
-    if( background ) {
-        id = int(tile.background_type());
+
+    if( tile.type() == Tile::EMPTY ) {
+        return nullptr;
+    } else if( tile.type() == Tile::FLOOR ) {
+        id = int(tile.floor_type());
         if( map_of_grounds.find(id) != map_of_grounds.end()) {
             return map_of_grounds[id];
         }
