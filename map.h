@@ -29,7 +29,7 @@ public:
     enum BType { NONE, GRASS, EARTH, ROCK };
     enum FType { METAL, PLASTIC };
 public:
-    Tile(int id=0, Type type=EMPTY, BType background_type=NONE);
+    Tile(int id=0, Type type=EMPTY, BType background_type=NONE, FType floor_type=METAL);
     ~Tile();
 
     int id() const;

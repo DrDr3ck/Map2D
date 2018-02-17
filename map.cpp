@@ -19,7 +19,9 @@ std::string Utility::itos(int i) {
 
 /********************************************************************/
 
-Tile::Tile(int id, Type type, BType background_type) : id_(id), type_(type), background_type_(background_type) {
+Tile::Tile(
+    int id, Type type, BType background_type, FType floor_type
+) : id_(id), type_(type), background_type_(background_type), floor_type_(floor_type) {
 }
 
 Tile::~Tile() {
@@ -239,6 +241,7 @@ SDL_Texture* TileSetLib::getTextureFromTile(const Tile& tile, SDL_Renderer* rend
         return nullptr;
     } else if( tile.type() == Tile::FLOOR ) {
         id = int(tile.floor_type());
+        background = true;
         if( map_of_grounds.find(id) != map_of_grounds.end()) {
             return map_of_grounds[id];
         }
