@@ -48,19 +48,29 @@ Character::Character(
 ) : DynamicItem(name, tile_position, image_id) {
 }
 
-void Character::render(SDLCamera* camera) {
+void Character::render(SDLCamera* camera, const SDL_Rect& rect) {
     if( direction_.y == 1 ) { // up, up left or up right
-        SDL_Rect rect = {64,64,0,0}; // TODO: from position
         camera->displayTexture( images_[1], &rect);
     } else if( direction_.x == -1) { // left or down left
-        SDL_Rect rect = {64,64,0,0}; // TODO: from position
         camera->displayTexture( images_[2], &rect);
     } else if( direction_.x == 1) { // right or down right
-        SDL_Rect rect = {64,64,0,0}; // TODO: from position
         camera->displayTexture( images_[3], &rect);
     } else { // down
-        SDL_Rect rect = {0,0,64,64}; // TODO: from position
         camera->displayTexture( images_[0], &rect);
+    }
+
+    if( activity_percent_ > 0 ) {
+        static int offset = 3;
+        SDL_Rect activity_rect = {rect.x+offset,rect.y+offset,0,0};
+        SDL_SetRenderDrawColor( camera->main_renderer(), 0, 250, 0, 255 );
+        int width = activity_percent_ / 100.0 * (64-2*offset);
+        activity_rect.w = width;
+        activity_rect.h = 9;
+        SDL_RenderFillRect( camera->main_renderer(), &activity_rect );
+        SDL_SetRenderDrawColor( camera->main_renderer(), 0, 255, 128, 255 );
+        activity_rect.w = 64-2*offset;
+        activity_rect.h = 9;
+        SDL_RenderDrawRect( camera->main_renderer(), &activity_rect );
     }
 }
 

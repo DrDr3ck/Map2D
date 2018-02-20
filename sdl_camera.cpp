@@ -17,8 +17,12 @@ MapView::MapView(MapData* data) : data_(data),
 {
     tile_x_ = -1;
     tile_y_ = -1;
-    Position position = {0,0};
+
+    // test
+    Position position = {2,1};
     people_ = new Character("Bob", position, 0);
+    people_->setDirection(1,0);
+    // end test
 }
 
 /*!
@@ -116,7 +120,14 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         }
     }
 
-    people_->render(sdl_camera);
+    SDL_Rect dest;
+    int people_x = people_->tilePosition().x;
+    int people_y = people_->tilePosition().y;
+    dest.x = people_x*scaled_tile_size_ + scaled_start_x_;
+    dest.y = people_y*scaled_tile_size_ + scaled_start_y_;
+    dest.w = scaled_tile_size_;
+    dest.h = scaled_tile_size_;
+    people_->render(sdl_camera, dest);
 
     if( !tile_text.empty() ) {
         SDLText text(tile_text, "pixel11", 14, SDLText::black());

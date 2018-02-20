@@ -17,7 +17,7 @@ public:
     DynamicItem(std::string name, Position position, int image_id);
     ~DynamicItem() {}
 
-    virtual void render(SDLCamera* camera) = 0;
+    virtual void render(SDLCamera* camera, const SDL_Rect& rect) = 0;
     // render(surface, position)
     // if self.images.size() > 0:
     //     surface.blit(self.images[0], position)
@@ -51,12 +51,13 @@ public:
     Character(std::string name, Position tile_position, int image_id);
     virtual ~Character() {}
 
-    virtual void render(SDLCamera* camera) override;
+    virtual void render(SDLCamera* camera, const SDL_Rect& rect) override;
 
     void setDirection(int x, int y);
 
 protected:
     Direction direction_;
+    int activity_percent_ = 0; // 0 to 100
 };
 
 /********************************************************************/
