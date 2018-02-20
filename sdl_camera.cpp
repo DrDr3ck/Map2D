@@ -17,6 +17,8 @@ MapView::MapView(MapData* data) : data_(data),
 {
     tile_x_ = -1;
     tile_y_ = -1;
+    Position position = {0,0};
+    people_ = new Character("Bob", position, 0);
 }
 
 /*!
@@ -113,6 +115,9 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
             }
         }
     }
+
+    people_->render(sdl_camera);
+
     if( !tile_text.empty() ) {
         SDLText text(tile_text, "pixel11", 14, SDLText::black());
         text.set_position(camera->mouse_x()+30,camera->mouse_y()+10);

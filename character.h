@@ -1,11 +1,14 @@
 #ifndef character_h
 #define character_h
 
-#include <SDL2/SDL.h>
-#include <map>
 #include "map.h"
 
+#include <SDL2/SDL.h>
+#include <map>
+#include <vector>
+
 class ActionBase;
+class SDLCamera;
 
 /********************************************************************/
 
@@ -14,7 +17,7 @@ public:
     DynamicItem(std::string name, Position position, int image_id);
     ~DynamicItem() {}
 
-    virtual void render() {} // TODO
+    virtual void render(SDLCamera* camera) = 0;
     // render(surface, position)
     // if self.images.size() > 0:
     //     surface.blit(self.images[0], position)
@@ -32,6 +35,7 @@ public:
 
 protected:
     std::string name_;
+    std::vector<SDL_Texture*> images_;
     Position tile_position_;
     Position pixel_position_;
     double time_spent_ = 0;
@@ -40,16 +44,22 @@ protected:
     std::string action_description_;
 };
 
+/********************************************************************/
+
 class Character : public DynamicItem {
 public:
     Character(std::string name, Position tile_position, int image_id);
     virtual ~Character() {}
+
+    virtual void render(SDLCamera* camera) override;
 
     void setDirection(int x, int y);
 
 protected:
     Direction direction_;
 };
+
+/********************************************************************/
 
 class ActionBase {
 public:
@@ -64,6 +74,7 @@ protected:
     ActionBase* next_action_ = nullptr;
 };
 
+/********************************************************************/
 //_no_action_descs = [
 //    tr("Looking around, just for fun..."),
 //    tr("Need a job"),
@@ -99,10 +110,11 @@ public:
     static CharacterSetLib* instance();
     static void kill();
 
-    static SDL_Texture* getTextureFromCharacter(const Character& character, SDL_Renderer* renderer);
+    static SDL_Texture* getTextureFromCharacter(int character_id);
 
     SDL_Surface* characters() { return characters_surface_; }
     std::map<int, SDL_Texture*>& mapOfCharacters() { return mapOfCharacters_; }
+    void init(SDL_Renderer* renderer);
 private:
     static CharacterSetLib* singleton_;
     SDL_Surface* characters_surface_;

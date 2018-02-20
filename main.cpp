@@ -6,6 +6,7 @@
 #include <chrono>
 
 #include "map.h"
+#include "character.h"
 #include "font.h"
 #include "archive.h"
 #include "sdl_camera.h"
@@ -27,6 +28,9 @@ int main(int /*argc*/, char** /*argv*/) {
         return -1;
     }
 
+    TileSetLib* tileset = TileSetLib::instance();
+    CharacterSetLib::instance()->init( camera->main_renderer() );
+
     std::string filename("save01.arc");
     MapDataConverter converter;
     MapData data(50,30);
@@ -43,7 +47,6 @@ int main(int /*argc*/, char** /*argv*/) {
     MapView* map_view = new MapView(&data);
     camera->setMapView(map_view);
 
-    TileSetLib* tileset = TileSetLib::instance();
     FontLib* font_manager = FontLib::instance();
 
     // Main loop

@@ -1,6 +1,7 @@
 #ifndef sdl_camera_h
 #define sdl_camera_h
 
+#include "character.h"
 #include "map.h"
 #include "camera.h"
 #include "button.h"
@@ -40,6 +41,8 @@ private:
     int scaled_start_x_;
     int scaled_start_y_;
     int scaled_tile_size_;
+
+    Character* people_;
 
     int tile_x_;
     int tile_y_;

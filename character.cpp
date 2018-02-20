@@ -1,4 +1,5 @@
 #include "character.h"
+#include "sdl_camera.h"
 
 #include <iostream>
 #include <sstream>
@@ -14,7 +15,9 @@ DynamicItem::DynamicItem(std::string name, Position tile_position, int image_id)
     pixel_position_.x = 0;
     pixel_position_.y = 0;
 
-    // TODO self.images = ImagesMgr.Instance().init_images(images_step, step)
+    for( int i=0; i < 4; i++ ) {
+        images_.push_back(CharacterSetLib::instance()->getTextureFromCharacter(image_id+i));
+    }
 
     time_spent_ = 0;
     action_ = nullptr;
@@ -45,6 +48,22 @@ Character::Character(
 ) : DynamicItem(name, tile_position, image_id) {
 }
 
+void Character::render(SDLCamera* camera) {
+    if( direction_.y == 1 ) { // up, up left or up right
+        SDL_Rect rect = {64,64,0,0}; // TODO: from position
+        camera->displayTexture( images_[1], &rect);
+    } else if( direction_.x == -1) { // left or down left
+        SDL_Rect rect = {64,64,0,0}; // TODO: from position
+        camera->displayTexture( images_[2], &rect);
+    } else if( direction_.x == 1) { // right or down right
+        SDL_Rect rect = {64,64,0,0}; // TODO: from position
+        camera->displayTexture( images_[3], &rect);
+    } else { // down
+        SDL_Rect rect = {0,0,64,64}; // TODO: from position
+        camera->displayTexture( images_[0], &rect);
+    }
+}
+
 void Character::setDirection(int x, int y) {
     direction_.x = x;
     direction_.y = y;
@@ -64,7 +83,7 @@ bool NoAction::spentTime(double time_spent) {
 /********************************************************************/
 
 CharacterSetLib::CharacterSetLib() {
-    characters_surface_ = IMG_Load("characters.png");
+    characters_surface_ = IMG_Load("robots.png");
     if( characters_surface_ == nullptr ) {
         std::cout << "cannot initialize CharacterSetLib" << std::endl;
     }
@@ -90,46 +109,50 @@ void CharacterSetLib::kill() {
     }
 }
 
+void CharacterSetLib::init(SDL_Renderer* renderer) {
+    static int tileSize = 64;
+
+    for( int x=0; x<4; x++ ) {
+        for( int y=0; y<4; y++ ) {
+            int id = x+y*4;
+            SDL_Rect source;
+            source.x = x * tileSize;
+            source.y = y * tileSize;
+            source.w = tileSize;
+            source.h = tileSize;
+
+            SDL_Surface* surf_dest = SDL_CreateRGBSurface(0, tileSize, tileSize, 32, 0, 0, 0, 0);
+
+            SDL_Rect dest;
+            dest.x = 0;
+            dest.y = 0;
+            dest.w = tileSize;
+            dest.h = tileSize;
+
+            SDL_Surface* surf_source = CharacterSetLib::instance()->characters();
+
+            SDL_BlitSurface(surf_source,
+                            &source,
+                            surf_dest,
+                            &dest);
+
+            SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surf_dest);
+            CharacterSetLib::instance()->mapOfCharacters()[id] = texture;
+        }
+    }
+}
+
 /*!
  * \return the texture from the given \p tile.
  */
-SDL_Texture* CharacterSetLib::getTextureFromCharacter(const Character& character, SDL_Renderer* renderer) {
+SDL_Texture* CharacterSetLib::getTextureFromCharacter(int id) {
     auto map_of_tiles = CharacterSetLib::instance()->mapOfCharacters();
-    int id = 0; // TODO: id of character
 
     if( map_of_tiles.find(id) != map_of_tiles.end()) {
         return map_of_tiles[id];
     }
 
-    int max = 5;
-
-    static int tileSize = 64;
-    int x = id % max;
-    int y = floor(id / max);
-    SDL_Rect source;
-    source.x = x * tileSize;
-    source.y = y * tileSize;
-    source.w = tileSize;
-    source.h = tileSize;
-
-    SDL_Surface* surf_dest = SDL_CreateRGBSurface(0, tileSize, tileSize, 32, 0, 0, 0, 0);
-
-    SDL_Rect dest;
-    dest.x = 0;
-    dest.y = 0;
-    dest.w = tileSize;
-    dest.h = tileSize;
-
-    SDL_Surface* surf_source = CharacterSetLib::instance()->characters();
-
-    SDL_BlitSurface(surf_source,
-                    &source,
-                    surf_dest,
-                    &dest);
-
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surf_dest);
-    CharacterSetLib::instance()->mapOfCharacters()[id] = texture;
-    return texture;
+    return nullptr;
 }
 
 // Initialize singleton_ to nullptr

@@ -1,21 +1,8 @@
 #include "map.h"
 
-#include <iostream>
-#include <sstream>
 #include <cmath>
 
 #include "SDL2/SDL_image.h"
-
-/********************************************************************/
-
-/*!
- * Transforms an integer into a string.
- */
-std::string Utility::itos(int i) {
-    std::ostringstream stm;
-    stm << i ;
-    return stm.str();
-}
 
 /********************************************************************/
 

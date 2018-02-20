@@ -4,12 +4,25 @@
 #include <SDL2/SDL.h>
 #include <map>
 #include <cstdlib>
+#include <iostream>
+#include <sstream>
 
 /********************************************************************/
 
 class Utility {
 public:
-    static std::string itos(int i);
+    /*!
+     * Transforms an integer into a string.
+     */
+    static std::string itos(int i) {
+        std::ostringstream stm;
+        stm << i ;
+        return stm.str();
+    }
+
+    /*!
+     * Returns a random number between min and max.
+     */
     static int randint(int min, int max) {
         int r = std::rand() % (max+1-min);
         r += min;
