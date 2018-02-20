@@ -2,6 +2,7 @@
 #define tests_h
 
 #include "map.h"
+#include "character.h"
 #include <list>
 #include <string>
 
@@ -43,6 +44,20 @@ public:
 class FontTest : public Test {
 public:
     FontTest() : Test("FontTest") {}
+
+    virtual bool do_execute() override;
+};
+
+class CharacterTest : public Test {
+public:
+    CharacterTest() : Test("CharacterTest") {}
+
+    virtual bool do_execute() override;
+};
+
+class ActionTest : public Test {
+public:
+    ActionTest() : Test("ActionTest") {}
 
     virtual bool do_execute() override;
 };

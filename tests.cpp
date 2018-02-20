@@ -123,6 +123,24 @@ bool FontTest::do_execute() {
     return true;
 }
 
+bool CharacterTest::do_execute() {
+    Position position = {10,5};
+    Character people("Bob", position, 0);
+
+    CHECK_EQUAL( people.tilePosition().x, 10, return false; );
+    CHECK_EQUAL( people.tilePosition().y, 5, return false; );
+    return true;
+}
+
+bool ActionTest::do_execute() {
+    Position position = {0,0};
+    Character people("Bob", position, 0);
+    CHECK_EQUAL( people.actionDescription().empty(), true, return false; );
+    NoAction action(&people);
+    CHECK_EQUAL( people.actionDescription().empty(), false, return false; );
+    return true;
+}
+
 /*******************************************/
 
 TestManager::TestManager() {
@@ -130,6 +148,8 @@ TestManager::TestManager() {
     addTest(new TileTest());
     addTest(new MapTest());
     addTest(new FontTest());
+    addTest(new ActionTest());
+    addTest(new CharacterTest());
 }
 
 TestManager* TestManager::instance() {

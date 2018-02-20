@@ -3,12 +3,28 @@
 
 #include <SDL2/SDL.h>
 #include <map>
+#include <cstdlib>
 
 /********************************************************************/
 
 class Utility {
 public:
     static std::string itos(int i);
+    static int randint(int min, int max) {
+        int r = std::rand() % (max+1-min);
+        r += min;
+        return r;
+    }
+};
+
+struct Direction {
+    int x;
+    int y;
+};
+
+struct Position {
+    int x;
+    int y;
 };
 
 /********************************************************************/
