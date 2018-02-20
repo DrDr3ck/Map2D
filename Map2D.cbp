@@ -37,6 +37,8 @@
 		<Unit filename="button.h" />
 		<Unit filename="camera.cpp" />
 		<Unit filename="camera.h" />
+		<Unit filename="character.cpp" />
+		<Unit filename="character.h" />
 		<Unit filename="font.cpp" />
 		<Unit filename="font.h" />
 		<Unit filename="main.cpp" />
