@@ -28,6 +28,10 @@ public:
         return tile_position_;
     }
 
+    const std::string& name() const {
+        return name_;
+    }
+
     void setAction(ActionBase* action, std::string description);
     const std::string& actionDescription() const {
         return action_description_;

@@ -351,7 +351,7 @@
 	<cmath>
 	"SDL2/SDL_image.h"
 
-1519128002 d:\games\programs\map2d\map.h
+1519467604 d:\games\programs\map2d\map.h
 	<SDL2/SDL.h>
 	<map>
 	<cstdlib>
@@ -405,7 +405,7 @@
 	"sdl_tool.h"
 	"sdl_background.h"
 
-1519135436 d:\games\programs\map2d\sdl_camera.h
+1519467277 d:\games\programs\map2d\sdl_camera.h
 	"character.h"
 	"map.h"
 	"camera.h"
@@ -477,7 +477,7 @@
 	<cmath>
 	"SDL2/SDL_image.h"
 
-1519135807 d:\games\programs\map2d\character.h
+1519468285 d:\games\programs\map2d\character.h
 	"map.h"
 	<SDL2/SDL.h>
 	<map>

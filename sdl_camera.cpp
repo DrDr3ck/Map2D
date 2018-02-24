@@ -11,6 +11,36 @@
 
 /********************************************************************/
 
+void SDL_RenderDrawCircle(SDL_Renderer* renderer, const SDL_Rect& dest) {
+    if( renderer == nullptr ) {
+       return;
+    }
+    int rayon = dest.w/2;
+    int x_centre = dest.x + rayon;
+    int y_centre = dest.y + rayon;
+    int x = 0 ;
+    int y = rayon ;             // on se place en haut du cercle
+    int m = 5 - 4*rayon ;       // initialisation
+    while( x <= y ) {
+        SDL_RenderDrawPoint( renderer, x+x_centre, y+y_centre ) ;
+        SDL_RenderDrawPoint( renderer, y+x_centre, x+y_centre ) ;
+        SDL_RenderDrawPoint( renderer, -x+x_centre, y+y_centre ) ;
+        SDL_RenderDrawPoint( renderer, -y+x_centre, x+y_centre ) ;
+        SDL_RenderDrawPoint( renderer, x+x_centre, -y+y_centre ) ;
+        SDL_RenderDrawPoint( renderer, y+x_centre, -x+y_centre ) ;
+        SDL_RenderDrawPoint( renderer, -x+x_centre, -y+y_centre ) ;
+        SDL_RenderDrawPoint( renderer, -y+x_centre, -x+y_centre ) ;
+        if( m > 0 ) {       //choix du point F
+            y = y - 1 ;
+            m = m - 8*y ;
+        }
+        x = x + 1 ;
+        m = m + 8*x + 4 ;
+    }
+}
+
+/********************************************************************/
+
 MapView::MapView(MapData* data) : data_(data),
     map_background_(nullptr), window_background_(nullptr),
     delta_x_(0.), delta_y_(0.), delta_speed_(0.1), translate_x_(0.), translate_y_(0.)
@@ -20,9 +50,17 @@ MapView::MapView(MapData* data) : data_(data),
 
     // test
     Position position = {2,1};
-    people_ = new Character("Bob", position, 0);
-    people_->setDirection(1,0);
+    Character* people = new Character("Bob", position, 0);
+    people->setDirection(1,0);
+    group_people_.push_back(people);
     // end test
+
+    selected_people_ = people;
+}
+
+MapView::~MapView() {
+    group_people_.clear();
+    data_ = nullptr;
 }
 
 /*!
@@ -41,6 +79,17 @@ bool MapView::onTile(int mouse_x, int mouse_y) {
     tile_x_ = floor((mouse_x - scaled_start_x_) / scaled_tile_size_);
     tile_y_ = floor((mouse_y - scaled_start_y_) / scaled_tile_size_);
     return true;
+}
+
+SDL_Rect MapView::getPeopleRect(Character* people) const {
+    SDL_Rect dest;
+    int people_x = people->tilePosition().x;
+    int people_y = people->tilePosition().y;
+    dest.x = people_x*scaled_tile_size_ + scaled_start_x_;
+    dest.y = people_y*scaled_tile_size_ + scaled_start_y_;
+    dest.w = scaled_tile_size_;
+    dest.h = scaled_tile_size_;
+    return dest;
 }
 
 void MapView::do_render(Camera* camera, double delay_in_ms) {
@@ -120,14 +169,22 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         }
     }
 
-    SDL_Rect dest;
-    int people_x = people_->tilePosition().x;
-    int people_y = people_->tilePosition().y;
-    dest.x = people_x*scaled_tile_size_ + scaled_start_x_;
-    dest.y = people_y*scaled_tile_size_ + scaled_start_y_;
-    dest.w = scaled_tile_size_;
-    dest.h = scaled_tile_size_;
-    people_->render(sdl_camera, dest);
+    // display people
+    for( Character* people : group_people_ ) {
+        SDL_Rect dest = getPeopleRect(people);
+        people->render(sdl_camera, dest);
+    }
+
+    if( selected_people_ != nullptr ) {
+        // display a circle
+        SDL_SetRenderDrawColor( main_renderer, 250, 250, 250, 255 );
+        SDL_Rect dest = getPeopleRect(selected_people_);
+        SDL_RenderDrawCircle(main_renderer, dest);
+        if( tile_x_ == selected_people_->tilePosition().x && tile_y_ == selected_people_->tilePosition().y ) {
+            tile_text.append("People: ");
+            tile_text.append(selected_people_->name());
+        }
+    }
 
     if( !tile_text.empty() ) {
         SDLText text(tile_text, "pixel11", 14, SDLText::black());
@@ -196,6 +253,7 @@ void SDLText::set_position(int x, int y) {
 }
 
 SDL_Texture* SDLText::texture(SDL_Renderer* renderer) {
+    // TODO: gerer le charactere \n
     if( texture_ == nullptr ) {
         TTF_Font* font = FontLib::instance()->getFont(family_, size_);
         TTF_SizeText(font,text_.c_str(),&rect_.w,&rect_.h);

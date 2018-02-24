@@ -15,7 +15,7 @@
 class MapView : public View {
 public:
     MapView(MapData* data);
-    ~MapView() { data_ = nullptr; }
+    virtual ~MapView();
 
     virtual void do_render(Camera* camera, double delay_in_ms) override;
     virtual void handleEvent(Camera* camera) override;
@@ -26,6 +26,9 @@ public:
     const SDL_Rect& onTileRect() const { return ontile_rect_; }
 
     bool curTile(int& tile_x, int& tile_y);
+
+protected:
+    SDL_Rect getPeopleRect(Character* people) const;
 
 private:
     MapData* data_;
@@ -42,7 +45,8 @@ private:
     int scaled_start_y_;
     int scaled_tile_size_;
 
-    Character* people_;
+    std::vector<Character*> group_people_;
+    Character* selected_people_ = nullptr;
 
     int tile_x_;
     int tile_y_;
