@@ -181,7 +181,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         SDL_Rect dest = getPeopleRect(selected_people_);
         SDL_RenderDrawCircle(main_renderer, dest);
         if( tile_x_ == selected_people_->tilePosition().x && tile_y_ == selected_people_->tilePosition().y ) {
-            tile_text.append("People: ");
+            tile_text.append("\nPeople: ");
             tile_text.append(selected_people_->name());
         }
     }
@@ -219,6 +219,23 @@ void MapView::handleEvent(Camera* camera) {
             delta_y_ = 0;
         }
     }
+
+    if( e.type == SDL_MOUSEBUTTONDOWN ) {
+        if( e.button.button == SDL_BUTTON_RIGHT ) {
+            if( selected_people_ != nullptr ) {
+                std::cout << "TODO: Move selected robot at " << tile_x_ << " " << tile_y_ << std::endl;
+            }
+        } else if( e.button.button == SDL_BUTTON_LEFT ) {
+            selected_people_ = nullptr;
+            // select a people if any
+            for( auto people : group_people_ ) {
+                if( people->tilePosition().x == tile_x_ && people->tilePosition().y == tile_y_ ) {
+                    selected_people_ = people;
+                    break;
+                }
+            }
+        }
+    }
 }
 
 bool MapView::curTile(int& tile_x, int& tile_y) {
@@ -252,14 +269,56 @@ void SDLText::set_position(int x, int y) {
     rect_.y = y;
 }
 
+namespace {
+    std::vector<std::string> split(const std::string& s, char delimiter) {
+       std::vector<std::string> tokens;
+       std::string token;
+       std::istringstream tokenStream(s);
+       while (std::getline(tokenStream, token, delimiter))
+       {
+          tokens.push_back(token);
+       }
+       return tokens;
+    }
+}
+
 SDL_Texture* SDLText::texture(SDL_Renderer* renderer) {
-    // TODO: gerer le charactere \n
+    SDL_Rect final_rect = {0,0,0,0};
     if( texture_ == nullptr ) {
-        TTF_Font* font = FontLib::instance()->getFont(family_, size_);
-        TTF_SizeText(font,text_.c_str(),&rect_.w,&rect_.h);
-        SDL_Surface* texte = TTF_RenderText_Solid(font, text_.c_str(), color_);
-        texture_ = SDL_CreateTextureFromSurface(renderer, texte);
-        SDL_FreeSurface(texte);
+        // split text according to \n
+        std::vector<std::string> texts = split(text_, '\n');
+        std::vector<SDL_Surface*> surfaces;
+        for( auto text : texts ) {
+            TTF_Font* font = FontLib::instance()->getFont(family_, size_);
+            TTF_SizeText(font,text.c_str(),&rect_.w,&rect_.h);
+            SDL_Surface* texte = TTF_RenderText_Solid(font, text.c_str(), color_);
+            surfaces.push_back(texte);
+            final_rect.w = std::max<int>(final_rect.w, rect_.w);
+            if( final_rect.h > 0 ) {
+                final_rect.h += 2;
+            }
+            final_rect.h += rect_.h;
+        }
+        SDL_Surface* final_dst = SDL_CreateRGBSurface(0, final_rect.w, final_rect.h, 32, 0, 0, 0, 0);
+        SDL_FillRect(final_dst, NULL, SDL_MapRGB(final_dst->format, 255, 255, 255));
+        // create SDL_Surface of size: final_rect
+        SDL_Rect cur_rect = {0,0,0,0};
+        for( auto surface : surfaces ) {
+            cur_rect.w = surface->w;
+            cur_rect.h = surface->h;
+            SDL_Rect source_rect = {0,0,surface->w,surface->h};
+            SDL_BlitSurface(
+                surface,
+                &source_rect,
+                final_dst,
+                &cur_rect
+            );
+            cur_rect.y = cur_rect.y + 2 + cur_rect.h;
+            SDL_FreeSurface(surface);
+        }
+        texture_ = SDL_CreateTextureFromSurface(renderer, final_dst);
+        rect_.w = final_rect.w;
+        rect_.h = final_rect.h;
     }
     return texture_;
 }
@@ -347,7 +406,7 @@ void SDLCamera::render(double delay_in_ms) {
         r.x = 400;
         SDL_RenderFillRect( main_renderer_, &r );
 
-        SDLText text("Pause (Press SPACE)", "pixel11", 16, SDLText::black());
+        SDLText text("Pause (Press SPACE)\nLeft click to select a robot\nRight click to move it", "pixel11", 16, SDLText::black());
         text.set_position(300,70);
         SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
         text.texture(main_renderer_); // need to create texture in order to get correct text dimension
