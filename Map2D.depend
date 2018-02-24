@@ -395,12 +395,13 @@
 	"map.h"
 	<string>
 
-1519475864 source:d:\games\programs\map2d\sdl_camera.cpp
+1519491005 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
 	<string>
 	"font.h"
+	"path_finding.h"
 	"sdl_button.h"
 	"sdl_tool.h"
 	"sdl_background.h"
@@ -481,5 +482,12 @@
 	"map.h"
 	<SDL2/SDL.h>
 	<map>
+	<vector>
+
+1519490751 source:d:\games\programs\map2d\path_finding.cpp
+	"path_finding.h"
+
+1519489889 d:\games\programs\map2d\path_finding.h
+	"map.h"
 	<vector>
 

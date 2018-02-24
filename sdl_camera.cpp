@@ -5,6 +5,7 @@
 #include <string>
 
 #include "font.h"
+#include "path_finding.h"
 #include "sdl_button.h"
 #include "sdl_tool.h"
 #include "sdl_background.h"
@@ -224,6 +225,14 @@ void MapView::handleEvent(Camera* camera) {
         if( e.button.button == SDL_BUTTON_RIGHT ) {
             if( selected_people_ != nullptr ) {
                 std::cout << "TODO: Move selected robot at " << tile_x_ << " " << tile_y_ << std::endl;
+                PathFinding path(data_);
+                Position end_position = {tile_x_, tile_y_};
+                std::vector<Position> positions = path.findPath(selected_people_->tilePosition(), end_position);
+                std::vector<Position>::reverse_iterator rit = positions.rbegin();
+                for (; rit!= positions.rend(); ++rit) {
+                    Position position = *rit;
+                    std::cout << position.x << " " << position.y << std::endl;
+                }
             }
         } else if( e.button.button == SDL_BUTTON_LEFT ) {
             selected_people_ = nullptr;
@@ -238,6 +247,11 @@ void MapView::handleEvent(Camera* camera) {
     }
 }
 
+/*!
+ * param[out] tile_x current x tile if valid
+ * param[out] tile_y current y tile if valid
+ * \return True if current tile is valid, false otherwise
+ */
 bool MapView::curTile(int& tile_x, int& tile_y) {
     tile_x = tile_x_;
     tile_y = tile_y_;

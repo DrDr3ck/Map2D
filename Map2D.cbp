@@ -44,6 +44,8 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="map.cpp" />
 		<Unit filename="map.h" />
+		<Unit filename="path_finding.cpp" />
+		<Unit filename="path_finding.h" />
 		<Unit filename="sdl_background.cpp" />
 		<Unit filename="sdl_background.h" />
 		<Unit filename="sdl_button.cpp" />
