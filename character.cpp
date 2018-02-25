@@ -145,8 +145,15 @@ void MoveAction::create_animation_path(std::vector<Position>& path_in_tile, int 
     if( character_->validPixelPosition() ) {
         path_in_pixel_.push_back( character_->pixelPosition() );
     }
+    unsigned int i=0;
     for( auto position : path_in_tile ) {
-        Position cur = { position.x*tile_size, position.y*tile_size }; // TODO: randomize a little bit by adding some pixels in the move
+        i++;
+        Position cur = { position.x*tile_size, position.y*tile_size };
+        if( i < path_in_tile.size() ) {
+            // randomize a little bit by adding some pixels in the move
+            cur.x = cur.x + Utility::randint(-2,8);
+            cur.y = cur.y + Utility::randint(-2,8);
+        }
         path_in_pixel_.push_back( cur );
     }
 }

@@ -75,12 +75,20 @@ bool MapView::onTile(int mouse_x, int mouse_y) {
     return true;
 }
 
+/*!
+ * \return the rectangle of the \p people depending of its position.
+ */
 SDL_Rect MapView::getPeopleRect(Character* people) const {
     SDL_Rect dest;
     int people_x = people->tilePosition().x;
     int people_y = people->tilePosition().y;
-    dest.x = people_x*scaled_tile_size_ + scaled_start_x_;
-    dest.y = people_y*scaled_tile_size_ + scaled_start_y_;
+    if( people->validPixelPosition() ) {
+        dest.x = people->pixelPosition().x*scaled_tile_size_/64. + scaled_start_x_;
+        dest.y = people->pixelPosition().y*scaled_tile_size_/64. + scaled_start_y_;
+    } else {
+        dest.x = people_x*scaled_tile_size_ + scaled_start_x_;
+        dest.y = people_y*scaled_tile_size_ + scaled_start_y_;
+    }
     dest.w = scaled_tile_size_;
     dest.h = scaled_tile_size_;
     return dest;
@@ -217,13 +225,9 @@ void MapView::handleEvent(Camera* camera) {
     if( e.type == SDL_MOUSEBUTTONDOWN ) {
         if( e.button.button == SDL_BUTTON_RIGHT ) {
             if( selected_people_ != nullptr ) {
-                std::cout << "TODO: Move selected robot at " << tile_x_ << " " << tile_y_ << std::endl;
                 PathFinding path(data_);
                 Position end_position = {tile_x_, tile_y_};
                 std::vector<Position> positions = path.findPath(selected_people_->tilePosition(), end_position);
-                for( auto position : positions ) {
-                    std::cout << position.x << " " << position.y << std::endl;
-                }
                 if( positions.size() > 0 ) {
                     new MoveAction(selected_people_, positions, 64);
                 }
