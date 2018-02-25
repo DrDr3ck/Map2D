@@ -12,8 +12,8 @@
 DynamicItem::DynamicItem(std::string name, Position tile_position, int image_id) {
     name_ = name;
     tile_position_ = tile_position;
-    pixel_position_.x = 0;
-    pixel_position_.y = 0;
+    pixel_position_.x = -1;
+    pixel_position_.y = -1;
 
     for( int i=0; i < 4; i++ ) {
         images_.push_back(CharacterSetLib::instance()->getTextureFromCharacter(image_id+i));
@@ -29,6 +29,7 @@ void DynamicItem::animate(double delta) {
     if( action_ == nullptr ) {
         return;
     }
+    //std::cout << "Animate " << name_ << std::endl;
     if( !action_->spentTime(time_spent_) ) {
         action_->postAction();
         action_ = nullptr;
@@ -89,6 +90,93 @@ bool NoAction::spentTime(double time_spent) {
     }
     return true;
 }
+
+/********************************************************************/
+
+MoveAction::MoveAction(Character* character, std::vector<Position>& path_in_tile, int tile_size) {
+    character_ = character;
+    character_->setAction( this, "Move to new location");
+    origin_ = character_->tilePosition();
+    if( !character_->validPixelPosition() ) {
+        character_->setPixelPosition(origin_.x*tile_size, origin_.y*tile_size);
+    }
+    character_->setTimeSpent(0);
+    create_animation_path(path_in_tile, tile_size);
+    start_time_ = std::chrono::steady_clock::now();
+    speed_ = 1;
+    activity_percent_ = 0;
+    destination_ = path_in_tile.at( path_in_tile.size()-1 );
+    is_finished_ = false;
+}
+
+bool MoveAction::spentTime(double time_spent) {
+    Position new_pixel_pos = get_position_in_pixel();
+    Position old_pixel_pos = character_->pixelPosition();
+    if( new_pixel_pos.x == old_pixel_pos.x ) {
+        character_->setDirection(0, character_->direction().y );
+    } else if( new_pixel_pos.x < old_pixel_pos.x ) {
+        character_->setDirection(-1, character_->direction().y );
+    } else if( new_pixel_pos.x > old_pixel_pos.x ) {
+        character_->setDirection(1, character_->direction().y );
+    }
+    if( new_pixel_pos.y == old_pixel_pos.y ) {
+        character_->setDirection(character_->direction().x, 0 );
+    } else if( new_pixel_pos.y < old_pixel_pos.y ) {
+        character_->setDirection(character_->direction().x, 1 );
+    } else if( new_pixel_pos.y > old_pixel_pos.y ) {
+        character_->setDirection(character_->direction().x, -1 );
+    }
+    character_->setPixelPosition(new_pixel_pos.x, new_pixel_pos.y);
+    if( is_finished_ ) {
+        return false;
+    }
+    return true;
+}
+
+void MoveAction::postAction() {
+    character_->setTilePosition( destination_ );
+    character_->setPixelPosition(-1,-1); // invalidate pixel position
+    character_->setTimeSpent(0);
+}
+
+void MoveAction::create_animation_path(std::vector<Position>& path_in_tile, int tile_size) {
+    path_in_pixel_.clear();
+    path_in_tile.erase(path_in_tile.begin());
+    if( character_->validPixelPosition() ) {
+        path_in_pixel_.push_back( character_->pixelPosition() );
+    }
+    for( auto position : path_in_tile ) {
+        Position cur = { position.x*tile_size, position.y*tile_size }; // TODO: randomize a little bit by adding some pixels in the move
+        path_in_pixel_.push_back( cur );
+    }
+}
+
+Position MoveAction::get_position_in_pixel() {
+    std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+    double cur_time = std::chrono::duration_cast<std::chrono::microseconds>(now - start_time_).count();
+    cur_time *= speed_;
+    cur_time = cur_time / 1000000.; // time spent in seconds
+    activity_percent_ = int(100.0*cur_time/(path_in_pixel_.size()-1));
+    if( cur_time >= (path_in_pixel_.size()-1) ) {
+        is_finished_ = true;
+        return path_in_pixel_.back();
+    }
+    int base = int(cur_time);
+    Position prev = path_in_pixel_.at(base);
+    int x1 = prev.x;
+    int y1 = prev.y;
+    Position cur_position = { int(x1/64), int(y1/64) };
+    character_->setTilePosition( cur_position );
+    Position next = path_in_pixel_.at(base+1);
+    int x2 = next.x;
+    int y2 = next.y;
+    double factor = cur_time - base;
+    Position cur_in_pixel;
+    cur_in_pixel.x = int(x1 + (x2-x1)*factor);
+    cur_in_pixel.y = int(y1 + (y2-y1)*factor);
+    return cur_in_pixel;
+}
+
 
 /********************************************************************/
 
@@ -167,5 +255,30 @@ SDL_Texture* CharacterSetLib::getTextureFromCharacter(int id) {
 
 // Initialize singleton_ to nullptr
 CharacterSetLib* CharacterSetLib::singleton_ = nullptr;
+
+/********************************************************************/
+
+PeopleGroup::PeopleGroup() {
+    // test
+    Position position = {2,1};
+    Character* people = new Character("Bob", position, 0);
+    people->setDirection(1,0);
+    group_.push_back(people);
+    // end test
+}
+
+PeopleGroup::~PeopleGroup() {
+    group_.clear();
+}
+
+void PeopleGroup::animate(double delta_ms) {
+    for( auto people : group_ ) {
+        people->animate(delta_ms);
+    }
+}
+
+std::vector<Character*>& PeopleGroup::group() {
+    return group_;
+}
 
 /********************************************************************/

@@ -42,18 +42,24 @@ std::vector<Position> PathFinding::findPath(Position start, Position end) {
         has_new_step = findWithStep(cur_step);
     }
 
-    std::vector<Position> positions;
+    std::vector<Position> build_positions;
     // no way to reach destination. returns empty vector.
     if( !found_position_ ) {
-        return positions;
+        return build_positions;
     }
     //dump();
 
-    positions.push_back( found_ );
+    build_positions.push_back( found_ );
     for( int i = cur_step; i > 0; i-- ) {
-        positions.push_back( get_prev_pos(positions.back(), i) );
+        build_positions.push_back( get_prev_pos(build_positions.back(), i) );
     }
-    //std::reverse(std::begin(positions), std::end(positions));
+    // reverse
+    std::vector<Position>::reverse_iterator rit = build_positions.rbegin();
+    std::vector<Position> positions;
+    for (; rit!= build_positions.rend(); ++rit) {
+        Position position = *rit;
+        positions.push_back(position);
+    }
 
     return positions;
 }

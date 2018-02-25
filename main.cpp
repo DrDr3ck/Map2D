@@ -13,6 +13,21 @@
 
 #include "tests.h"
 
+class GameBoard {
+public:
+    GameBoard(PeopleGroup* group, MapData* data) : group_(group), data_(data) {}
+    ~GameBoard() {}
+
+    void animate(double delay_ms) {
+        group_->animate(delay_ms);
+        //data_->animate(delay_ms);
+    }
+
+protected:
+    PeopleGroup* group_;
+    MapData* data_;
+};
+
 int main(int /*argc*/, char** /*argv*/) {
     // Check tests first
     TestManager* test_manager = TestManager::instance();
@@ -31,9 +46,13 @@ int main(int /*argc*/, char** /*argv*/) {
     TileSetLib* tileset = TileSetLib::instance();
     CharacterSetLib::instance()->init( camera->main_renderer() );
 
+    PeopleGroup group;
+
     std::string filename("save01.arc");
     MapDataConverter converter;
     MapData data(50,30);
+
+    GameBoard board(&group, &data);
 
     // check if save already exists
     std::ifstream f(filename.c_str());
@@ -44,13 +63,14 @@ int main(int /*argc*/, char** /*argv*/) {
         // otherwise, create a random map (TODO)
         data.tile(2,2).setTile(8,Tile::BLOCK,Tile::NONE,Tile::METAL);
     }
-    MapView* map_view = new MapView(&data);
+    MapView* map_view = new MapView(&data, &group);
     camera->setMapView(map_view);
 
     FontLib* font_manager = FontLib::instance();
 
     // Main loop
-    std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point start_draw = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point start_anim = std::chrono::steady_clock::now();
     bool ending = false;
     while(!ending) {
 
@@ -58,10 +78,18 @@ int main(int /*argc*/, char** /*argv*/) {
         if( camera->quit() ) {
             ending = true;
         }
-        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-        double delay = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
-        camera->render(delay);
-        start = end;
+        std::chrono::steady_clock::time_point end_draw = std::chrono::steady_clock::now();
+        std::chrono::steady_clock::time_point end_anim = std::chrono::steady_clock::now();
+        double delay_draw_us = std::chrono::duration_cast<std::chrono::microseconds>(end_draw - start_draw).count();
+        double delay_anim_us = std::chrono::duration_cast<std::chrono::microseconds>(end_anim - start_anim).count();
+        if( delay_draw_us > 25000 ) {
+            camera->render(delay_draw_us);
+            start_draw = end_draw;
+        }
+        if( delay_anim_us > 100000 ) {
+            board.animate(delay_anim_us/1000.);
+            start_anim = end_anim;
+        }
         //SDL_Delay(25);
     }
 

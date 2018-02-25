@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1519128578 source:d:\games\programs\map2d\main.cpp
+1519574398 source:d:\games\programs\map2d\main.cpp
 	<SDL2/SDL.h>
 	<iostream>
 	<fstream>
@@ -395,7 +395,7 @@
 	"map.h"
 	<string>
 
-1519491005 source:d:\games\programs\map2d\sdl_camera.cpp
+1519576989 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -406,7 +406,7 @@
 	"sdl_tool.h"
 	"sdl_background.h"
 
-1519467277 d:\games\programs\map2d\sdl_camera.h
+1519574056 d:\games\programs\map2d\sdl_camera.h
 	"character.h"
 	"map.h"
 	"camera.h"
@@ -470,7 +470,7 @@
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 
-1519135861 source:d:\games\programs\map2d\character.cpp
+1519576897 source:d:\games\programs\map2d\character.cpp
 	"character.h"
 	"sdl_camera.h"
 	<iostream>
@@ -478,13 +478,15 @@
 	<cmath>
 	"SDL2/SDL_image.h"
 
-1519468285 d:\games\programs\map2d\character.h
+1519577894 d:\games\programs\map2d\character.h
 	"map.h"
 	<SDL2/SDL.h>
 	<map>
 	<vector>
+	<ctime>
+	<chrono>
 
-1519490751 source:d:\games\programs\map2d\path_finding.cpp
+1519576989 source:d:\games\programs\map2d\path_finding.cpp
 	"path_finding.h"
 
 1519489889 d:\games\programs\map2d\path_finding.h

@@ -14,7 +14,7 @@
 
 class MapView : public View {
 public:
-    MapView(MapData* data);
+    MapView(MapData* data, PeopleGroup* group);
     virtual ~MapView();
 
     virtual void do_render(Camera* camera, double delay_in_ms) override;
@@ -32,6 +32,7 @@ protected:
 
 private:
     MapData* data_;
+    PeopleGroup* group_;
     SDL_Texture* map_background_;
     SDL_Texture* window_background_;
     float scale_;
@@ -45,7 +46,6 @@ private:
     int scaled_start_y_;
     int scaled_tile_size_;
 
-    std::vector<Character*> group_people_;
     Character* selected_people_ = nullptr;
 
     int tile_x_;

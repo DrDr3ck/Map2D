@@ -6,6 +6,8 @@
 #include <SDL2/SDL.h>
 #include <map>
 #include <vector>
+#include <ctime>
+#include <chrono>
 
 class ActionBase;
 class SDLCamera;
@@ -22,10 +24,27 @@ public:
     // if self.images.size() > 0:
     //     surface.blit(self.images[0], position)
 
-    virtual void animate(double delta);
+    virtual void animate(double delta_ms);
 
+    void setTilePosition(Position position) {
+        tile_position_ = position;
+    }
     Position tilePosition() const {
         return tile_position_;
+    }
+
+    void setTimeSpent(double value) {
+        time_spent_ = value;
+    }
+
+    bool validPixelPosition() const {
+        return pixel_position_.x != -1;
+    }
+    Position pixelPosition() const {
+        return pixel_position_;
+    }
+    void setPixelPosition(int x, int y) {
+        pixel_position_ = {x,y};
     }
 
     const std::string& name() const {
@@ -57,6 +76,9 @@ public:
 
     virtual void render(SDLCamera* camera, const SDL_Rect& rect) override;
 
+    Direction direction() const {
+        return direction_;
+    }
     void setDirection(int x, int y);
 
 protected:
@@ -101,7 +123,33 @@ public:
 
 protected:
     Character* character_;
+    Position origin_;
     double max_time_spent_;
+};
+
+/********************************************************************/
+
+class MoveAction : public ActionBase {
+public:
+    MoveAction(Character* character, std::vector<Position>& path_in_tile, int tile_size);
+    ~MoveAction() {}
+
+    virtual bool spentTime(double time_spent) override;
+    virtual void postAction() override;
+
+protected:
+    void create_animation_path(std::vector<Position>& path_in_tile, int tile_size);
+    Position get_position_in_pixel();
+
+private:
+    Character* character_;
+    Position origin_;
+    std::vector<Position> path_in_pixel_;
+    std::chrono::steady_clock::time_point start_time_;
+    float speed_;
+    float activity_percent_;
+    Position destination_;
+    bool is_finished_;
 };
 
 /********************************************************************/
@@ -124,6 +172,19 @@ private:
     static CharacterSetLib* singleton_;
     SDL_Surface* characters_surface_;
     std::map<int, SDL_Texture*> mapOfCharacters_;
+};
+
+class PeopleGroup {
+public:
+    PeopleGroup();
+    ~PeopleGroup();
+
+    void animate(double delay_ms);
+
+    std::vector<Character*>& group();
+
+protected:
+    std::vector<Character*> group_;
 };
 
 /********************************************************************/

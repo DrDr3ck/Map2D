@@ -42,25 +42,18 @@ void SDL_RenderDrawCircle(SDL_Renderer* renderer, const SDL_Rect& dest) {
 
 /********************************************************************/
 
-MapView::MapView(MapData* data) : data_(data),
+MapView::MapView(MapData* data, PeopleGroup* group) : data_(data), group_(group),
     map_background_(nullptr), window_background_(nullptr),
     delta_x_(0.), delta_y_(0.), delta_speed_(0.1), translate_x_(0.), translate_y_(0.)
 {
     tile_x_ = -1;
     tile_y_ = -1;
 
-    // test
-    Position position = {2,1};
-    Character* people = new Character("Bob", position, 0);
-    people->setDirection(1,0);
-    group_people_.push_back(people);
-    // end test
-
-    selected_people_ = people;
+    selected_people_ = nullptr;
 }
 
 MapView::~MapView() {
-    group_people_.clear();
+    group_ = nullptr;
     data_ = nullptr;
 }
 
@@ -171,7 +164,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     }
 
     // display people
-    for( Character* people : group_people_ ) {
+    for( Character* people : group_->group() ) {
         SDL_Rect dest = getPeopleRect(people);
         people->render(sdl_camera, dest);
     }
@@ -228,16 +221,17 @@ void MapView::handleEvent(Camera* camera) {
                 PathFinding path(data_);
                 Position end_position = {tile_x_, tile_y_};
                 std::vector<Position> positions = path.findPath(selected_people_->tilePosition(), end_position);
-                std::vector<Position>::reverse_iterator rit = positions.rbegin();
-                for (; rit!= positions.rend(); ++rit) {
-                    Position position = *rit;
+                for( auto position : positions ) {
                     std::cout << position.x << " " << position.y << std::endl;
+                }
+                if( positions.size() > 0 ) {
+                    new MoveAction(selected_people_, positions, 64);
                 }
             }
         } else if( e.button.button == SDL_BUTTON_LEFT ) {
             selected_people_ = nullptr;
             // select a people if any
-            for( auto people : group_people_ ) {
+            for( auto people : group_->group() ) {
                 if( people->tilePosition().x == tile_x_ && people->tilePosition().y == tile_y_ ) {
                     selected_people_ = people;
                     break;
