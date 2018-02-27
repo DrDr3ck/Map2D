@@ -150,6 +150,9 @@ private:
     float activity_percent_;
     Position destination_;
     bool is_finished_;
+
+    Position prev_position_;
+    Position next_position_;
 };
 
 /********************************************************************/

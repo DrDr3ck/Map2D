@@ -109,9 +109,9 @@ MoveAction::MoveAction(Character* character, std::vector<Position>& path_in_tile
     is_finished_ = false;
 }
 
-bool MoveAction::spentTime(double time_spent) {
-    Position new_pixel_pos = get_position_in_pixel();
-    Position old_pixel_pos = character_->pixelPosition();
+bool MoveAction::spentTime(double /*time_spent*/) {
+    Position new_pixel_pos = next_position_;
+    Position old_pixel_pos = prev_position_;
     if( new_pixel_pos.x == old_pixel_pos.x ) {
         character_->setDirection(0, character_->direction().y );
     } else if( new_pixel_pos.x < old_pixel_pos.x ) {
@@ -126,6 +126,7 @@ bool MoveAction::spentTime(double time_spent) {
     } else if( new_pixel_pos.y > old_pixel_pos.y ) {
         character_->setDirection(character_->direction().x, -1 );
     }
+    new_pixel_pos = get_position_in_pixel();
     character_->setPixelPosition(new_pixel_pos.x, new_pixel_pos.y);
     if( is_finished_ ) {
         return false;
@@ -172,11 +173,15 @@ Position MoveAction::get_position_in_pixel() {
     Position prev = path_in_pixel_.at(base);
     int x1 = prev.x;
     int y1 = prev.y;
-    Position cur_position = { int(x1/64), int(y1/64) };
+    Position cur_position = {
+        int(std::round(x1/64.)),
+        int(std::round(y1/64.)) };
     character_->setTilePosition( cur_position );
+    prev_position_ = cur_position;
     Position next = path_in_pixel_.at(base+1);
     int x2 = next.x;
     int y2 = next.y;
+    next_position_ = { int(std::round(x2/64.)), int(std::round(y2/64.))  };
     double factor = cur_time - base;
     Position cur_in_pixel;
     cur_in_pixel.x = int(x1 + (x2-x1)*factor);
