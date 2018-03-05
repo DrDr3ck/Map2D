@@ -92,7 +92,8 @@ void SDLBuildTool::mousePressed(int button) {
     int x,y;
     if( camera()->mapView()->curTile(x,y) ) {
         if( type_ == 0 ) {
-            camera()->mapView()->data()->addWall(x,y);
+            //camera()->mapView()->data()->addWall(x,y);
+            camera()->mapView()->addWall(x,y);
         } else if( type_ == 1 ) {
             camera()->mapView()->data()->addFloor(x,y);
         }

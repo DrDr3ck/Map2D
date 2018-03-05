@@ -3,6 +3,7 @@
 
 #include "character.h"
 #include "map.h"
+#include "job.h"
 #include "camera.h"
 #include "button.h"
 #include <string>
@@ -22,6 +23,8 @@ public:
 
     MapData* data() const { return data_; }
 
+    void addWall(int x, int y);
+
     bool onTile(int mouse_x, int mouse_y);
     const SDL_Rect& onTileRect() const { return ontile_rect_; }
 
@@ -29,10 +32,12 @@ public:
 
 protected:
     SDL_Rect getPeopleRect(Character* people) const;
+    SDL_Rect getJobRect(Job* job) const;
 
 private:
     MapData* data_;
     PeopleGroup* group_;
+    JobMgr job_manager_;
     SDL_Texture* map_background_;
     SDL_Texture* window_background_;
     float scale_;

@@ -2,6 +2,7 @@
 
 #include "archive.h"
 #include "font.h"
+#include "job.h"
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -141,6 +142,37 @@ bool ActionTest::do_execute() {
     return true;
 }
 
+bool JobTest::do_execute() {
+    JobMgr mgr;
+    int count = mgr.size();
+    // no job
+    CHECK_EQUAL( count, 0, return false; );
+
+    // add a job
+    Job job("test", {0,0}, "none", 1000);
+    mgr.addJob(&job);
+    count = mgr.size();
+    CHECK_EQUAL( count, 1, return false; );
+
+    // adding twice: should not adding it
+    mgr.addJob(&job);
+    count = mgr.size();
+    CHECK_EQUAL( count, 1, return false; );
+
+    // assign job to people
+    Position position = {10,5};
+    Character people("Bob", position, 0);
+    Job* available_job = mgr.getFirstAvailableJob();
+    CHECK_POINTER( available_job, return false; );
+    available_job->takeJob(&people);
+
+    available_job = mgr.getFirstAvailableJob();
+    // no more available job
+    CHECK_EQUAL( (available_job == nullptr), true, return false; );
+
+    return true;
+}
+
 /*******************************************/
 
 TestManager::TestManager() {
@@ -150,6 +182,7 @@ TestManager::TestManager() {
     addTest(new FontTest());
     addTest(new ActionTest());
     addTest(new CharacterTest());
+    addTest(new JobTest());
 }
 
 TestManager* TestManager::instance() {

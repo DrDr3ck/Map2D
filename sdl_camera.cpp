@@ -58,6 +58,15 @@ MapView::~MapView() {
 }
 
 /*!
+ * Adds a wall in the queue of the job manager at (x,y) if possible.
+ */
+void MapView::addWall(int x, int y) {
+    Position tile_position = {x,y};
+    BuildJob* job = new BuildJob(tile_position, "wall", 2500);
+    job_manager_.addJob(job);
+}
+
+/*!
  * \return true and the tile position according to the mouse position
  * or false if unreached
  */
@@ -89,6 +98,20 @@ SDL_Rect MapView::getPeopleRect(Character* people) const {
         dest.x = people_x*scaled_tile_size_ + scaled_start_x_;
         dest.y = people_y*scaled_tile_size_ + scaled_start_y_;
     }
+    dest.w = scaled_tile_size_;
+    dest.h = scaled_tile_size_;
+    return dest;
+}
+
+/*!
+ * \return the rectangle of the \p job depending of its position.
+ */
+SDL_Rect MapView::getJobRect(Job* job) const {
+    SDL_Rect dest;
+    int job_x = job->tilePosition().x;
+    int job_y = job->tilePosition().y;
+    dest.x = job_x*scaled_tile_size_ + scaled_start_x_;
+    dest.y = job_y*scaled_tile_size_ + scaled_start_y_;
     dest.w = scaled_tile_size_;
     dest.h = scaled_tile_size_;
     return dest;
@@ -169,6 +192,11 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
                 tile_text.append(Utility::itos(h));
             }
         }
+    }
+
+    for( auto job : job_manager_.jobs() ) {
+        SDL_Rect dest = getJobRect(job);
+        job->render(sdl_camera, dest);
     }
 
     // display people

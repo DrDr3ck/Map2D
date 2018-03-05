@@ -62,6 +62,13 @@ public:
     virtual bool do_execute() override;
 };
 
+class JobTest : public Test {
+public:
+    JobTest() : Test("JobTest") {}
+
+    virtual bool do_execute() override;
+};
+
 /*******************************/
 
 class TestManager {
