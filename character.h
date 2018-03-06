@@ -81,6 +81,13 @@ public:
     }
     void setDirection(int x, int y);
 
+    int activityPercent() const {
+        return activity_percent_;
+    }
+    void setActivityPercent(int value) {
+        activity_percent_ = value;
+    }
+
 protected:
     Direction direction_;
     int activity_percent_ = 0; // 0 to 100
@@ -185,6 +192,8 @@ public:
     void animate(double delay_ms);
 
     std::vector<Character*>& group();
+
+    void add(Character* people);
 
 protected:
     std::vector<Character*> group_;

@@ -360,3 +360,10 @@
     <ftype value="METAL" />
   </tile>
 </mapdata>
+<group>
+  <people name="Bob">
+    <position x="3" y="1" />
+    <direction x="1" y="0" />
+    <activity value="0" />
+  </people>
+</group>

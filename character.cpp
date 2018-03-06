@@ -271,12 +271,6 @@ CharacterSetLib* CharacterSetLib::singleton_ = nullptr;
 /********************************************************************/
 
 PeopleGroup::PeopleGroup() {
-    // test
-    Position position = {2,1};
-    Character* people = new Character("Bob", position, 0);
-    people->setDirection(1,0);
-    group_.push_back(people);
-    // end test
 }
 
 PeopleGroup::~PeopleGroup() {
@@ -291,6 +285,10 @@ void PeopleGroup::animate(double delta_ms) {
 
 std::vector<Character*>& PeopleGroup::group() {
     return group_;
+}
+
+void PeopleGroup::add(Character* people) {
+    group_.push_back(people);
 }
 
 /********************************************************************/

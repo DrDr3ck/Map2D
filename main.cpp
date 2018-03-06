@@ -44,9 +44,24 @@ int main(int /*argc*/, char** /*argv*/) {
     if( f.good() ) {
         // if save exists, load it
         converter.load(&board, filename);
+
+        // test
+        if( group.group().size() == 0 ) {
+            Position position = {2,1};
+            Character* people = new Character("Bob", position, 0);
+            people->setDirection(1,0);
+            group.add(people);
+        }
+        // end test
     } else {
         // otherwise, create a random map (TODO)
         data.tile(2,2).setTile(8,Tile::BLOCK,Tile::NONE,Tile::METAL);
+
+        // with a robot
+        Position position = {2,1};
+        Character* people = new Character("Bob", position, 0);
+        people->setDirection(1,0);
+        group.add(people);
     }
     MapView mapview(camera, &data, &group);
 

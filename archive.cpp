@@ -1,4 +1,6 @@
 #include "archive.h"
+
+#include "character.h"
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
@@ -56,6 +58,15 @@ void ArchiveConverter::load(GameBoard* board, const std::string& filename) {
             delete converter;
             converter = nullptr;
         }
+
+        if( isTag(str, "group") ) {
+            converter = new CharacterConverter(board->group());
+        }
+        if( isTag(str, "group", true) ) {
+            delete converter;
+            converter = nullptr;
+        }
+
         if( converter != nullptr ) {
             converter->load(str);
         }
@@ -71,8 +82,11 @@ void ArchiveConverter::save(GameBoard* board, const std::string& filename) {
         return;
     }
 
-    MapDataConverter converter(board->data());
-    converter.save(file);
+    MapDataConverter mconverter(board->data());
+    mconverter.save(file);
+
+    CharacterConverter cconverter(board->group());
+    cconverter.save(file);
 
     file.close();
 }
@@ -188,3 +202,55 @@ void MapDataConverter::save(std::ofstream& file) {
     }
     file << "</mapdata>" << std::endl;
 }
+
+void CharacterConverter::load(const std::string& str) {
+    if( !inPeople ) {
+        if( isTag(str, "people") ) {
+            name = getAttribute(str, "name");
+            inPeople = true;
+        }
+    }
+
+    if( inPeople ) {
+        if( isTag(str, "direction") ) {
+            std::string x_str = getAttribute(str, "x");
+            int x = atoi(x_str.c_str());
+            std::string y_str = getAttribute(str, "y");
+            int y = atoi(y_str.c_str());
+            dir = {x,y};
+        }
+        if( isTag(str, "position") ) {
+            std::string x_str = getAttribute(str, "x");
+            int x = atoi(x_str.c_str());
+            std::string y_str = getAttribute(str, "y");
+            int y = atoi(y_str.c_str());
+            pos = {x,y};
+        }
+        if( isTag(str, "activity") ) {
+            std::string str = getAttribute(str, "value");
+            activity_percentage = atoi(str.c_str());
+        }
+        if( isEndTag(str, "people") ) {
+            Character* people = new Character(name, pos, 0);
+            people->setDirection(dir.x, dir.y);
+            group_->add(people);
+            inPeople = false;
+        }
+    }
+}
+
+void CharacterConverter::save(std::ofstream& file) {
+    file << "<group>" << std::endl;
+    for( auto people : group_->group() ) {
+        file << "  <people name=\"" << people->name() << "\">" << std::endl;
+        Position pos = people->tilePosition();
+        file << "    <position x=\"" << pos.x << "\" y=\"" << pos.y << "\" />" << std::endl;
+        Direction dir = people->direction();
+        file << "    <direction x=\"" << dir.x << "\" y=\"" << dir.y << "\" />" << std::endl;
+        file << "    <activity value=\"" << people->activityPercent() << "\" />" << std::endl;
+        file << "  </people>" << std::endl;
+    }
+
+    file << "</group>" << std::endl;
+}
+

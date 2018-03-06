@@ -53,10 +53,22 @@ private:
     bool inTile = false;
 };
 
-class CharacterConverter {
+class CharacterConverter : public DataConverter {
 public:
-    CharacterConverter() {}
+    CharacterConverter(PeopleGroup* group) : group_(group) {}
     ~CharacterConverter() {}
+
+    virtual void load(const std::string& str) override;
+    virtual void save(std::ofstream& file) override;
+
+private:
+    PeopleGroup* group_;
+
+    std::string name;
+    Direction dir = {0,0};
+    Position pos = {0,0};
+    int activity_percentage = 0;
+    bool inPeople = false;
 };
 
 class JobsConverter {
