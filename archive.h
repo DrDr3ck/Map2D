@@ -68,6 +68,7 @@ private:
     Direction dir = {0,0};
     Position pos = {0,0};
     int activity_percentage = 0;
+    int image_id = 0;
     bool inPeople = false;
 };
 

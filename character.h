@@ -56,8 +56,11 @@ public:
         return action_description_;
     }
 
+    int imageIdForArchive() const { return image_id_; }
+
 protected:
     std::string name_;
+    const int image_id_; // for archive
     std::vector<SDL_Texture*> images_;
     Position tile_position_;
     Position pixel_position_;

@@ -54,7 +54,7 @@ void ArchiveConverter::load(GameBoard* board, const std::string& filename) {
         if( isTag(str, "mapdata") ) {
             converter = new MapDataConverter(board->data());
         }
-        if( isTag(str, "mapdata", true) ) {
+        if( isEndTag(str, "mapdata") ) {
             delete converter;
             converter = nullptr;
         }
@@ -62,13 +62,14 @@ void ArchiveConverter::load(GameBoard* board, const std::string& filename) {
         if( isTag(str, "group") ) {
             converter = new CharacterConverter(board->group());
         }
-        if( isTag(str, "group", true) ) {
+        if( isEndTag(str, "group") ) {
             delete converter;
             converter = nullptr;
         }
-
         if( converter != nullptr ) {
+            std::cout << str << std::endl;
             converter->load(str);
+            std::cout << str << std::endl;
         }
     }
 
@@ -226,12 +227,17 @@ void CharacterConverter::load(const std::string& str) {
             int y = atoi(y_str.c_str());
             pos = {x,y};
         }
-        if( isTag(str, "activity") ) {
-            std::string str = getAttribute(str, "value");
-            activity_percentage = atoi(str.c_str());
+        if( isTag(str, "image_id") ) {
+            std::string str_value = getAttribute(str, "value");
+            image_id = atoi(str_value.c_str());
         }
+        if( isTag(str, "activity") ) {
+            std::string str_value = getAttribute(str, "value");
+            activity_percentage = atoi(str_value.c_str());
+        }
+
         if( isEndTag(str, "people") ) {
-            Character* people = new Character(name, pos, 0);
+            Character* people = new Character(name, pos, image_id);
             people->setDirection(dir.x, dir.y);
             group_->add(people);
             inPeople = false;
@@ -248,6 +254,7 @@ void CharacterConverter::save(std::ofstream& file) {
         Direction dir = people->direction();
         file << "    <direction x=\"" << dir.x << "\" y=\"" << dir.y << "\" />" << std::endl;
         file << "    <activity value=\"" << people->activityPercent() << "\" />" << std::endl;
+        file << "    <image_id value=\"" << people->imageIdForArchive() << "\" />" << std::endl;
         file << "  </people>" << std::endl;
     }
 
