@@ -136,12 +136,12 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     float scale = camera->scale();
     SDL_Renderer* main_renderer = sdl_camera->main_renderer();
     if( window_background_ == nullptr ) {
-        SDL_Surface* bg_surface = IMG_Load("background.bmp");
+        SDL_Surface* bg_surface = Utility::IMGLoad("background.bmp");
         window_background_ = SDL_CreateTextureFromSurface(main_renderer, bg_surface);
         SDL_FreeSurface(bg_surface);
     }
     if( map_background_ == nullptr ) {
-        SDL_Surface* bg_surface = IMG_Load("out.png");
+        SDL_Surface* bg_surface = Utility::IMGLoad("out.png");
         map_background_ = SDL_CreateTextureFromSurface(main_renderer, bg_surface);
         SDL_FreeSurface(bg_surface);
     }

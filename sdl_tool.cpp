@@ -67,7 +67,7 @@ void SDLTool::mouseReleased(int) {
 /********************************************************************/
 
 SDLBuildTool::SDLBuildTool(SDLCamera* camera, const std::string& icon_name, int type) : SDLTool(camera) {
-    surface_ = IMG_Load(icon_name.c_str());
+    surface_ = Utility::IMGLoad(icon_name.c_str());
     type_ = type;
 }
 

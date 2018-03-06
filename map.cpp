@@ -182,9 +182,9 @@ Tile& MapData::tile(int x,int y) {
 /********************************************************************/
 
 TileSetLib::TileSetLib() {
-    tiles_surface_ = IMG_Load("tiles.png");
-    walls_surface_ = IMG_Load("walls01.png");
-    grounds_surface_ = IMG_Load("grounds01.png");
+    tiles_surface_ = Utility::IMGLoad("tiles.png");
+    walls_surface_ = Utility::IMGLoad("walls01.png");
+    grounds_surface_ = Utility::IMGLoad("grounds01.png");
     if( tiles_surface_ == nullptr || walls_surface_ == nullptr ) {
         std::cout << "cannot initialize TileSetLib" << std::endl;
     }

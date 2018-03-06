@@ -193,7 +193,8 @@ Position MoveAction::get_position_in_pixel() {
 /********************************************************************/
 
 CharacterSetLib::CharacterSetLib() {
-    characters_surface_ = IMG_Load("robots.png");
+    std::cout << "CharacterSetLib" << std::endl;
+    characters_surface_ = Utility::IMGLoad("robots.png");
     if( characters_surface_ == nullptr ) {
         std::cout << "cannot initialize CharacterSetLib" << std::endl;
     }

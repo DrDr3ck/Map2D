@@ -346,13 +346,14 @@
 	"begin_code.h"
 	"close_code.h"
 
-1519128003 source:d:\games\programs\map2d\map.cpp
+1520326848 source:d:\games\programs\map2d\map.cpp
 	"map.h"
 	<cmath>
 	"SDL2/SDL_image.h"
 
-1519467604 d:\games\programs\map2d\map.h
+1520326909 d:\games\programs\map2d\map.h
 	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
 	<map>
 	<cstdlib>
 	<iostream>
@@ -396,7 +397,7 @@
 	"map.h"
 	<string>
 
-1520325704 source:d:\games\programs\map2d\sdl_camera.cpp
+1520326848 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -435,7 +436,7 @@
 	<SDL2/SDL_ttf.h>
 	<map>
 
-1516862044 source:d:\games\programs\map2d\sdl_button.cpp
+1520326848 source:d:\games\programs\map2d\sdl_button.cpp
 	"sdl_button.h"
 	<iostream>
 	<math.h>
@@ -452,7 +453,7 @@
 	<SDL2/SDL.h>
 	"camera.h"
 
-1520325135 source:d:\games\programs\map2d\sdl_tool.cpp
+1520326848 source:d:\games\programs\map2d\sdl_tool.cpp
 	"sdl_tool.h"
 	<iostream>
 	<math.h>
@@ -461,7 +462,7 @@
 	"sdl_camera.h"
 	"sdl_button.h"
 
-1518386692 source:d:\games\programs\map2d\sdl_background.cpp
+1520326687 source:d:\games\programs\map2d\sdl_background.cpp
 	"sdl_background.h"
 	<iostream>
 	<sstream>
@@ -472,7 +473,7 @@
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 
-1520324694 source:d:\games\programs\map2d\character.cpp
+1520326848 source:d:\games\programs\map2d\character.cpp
 	"character.h"
 	"sdl_camera.h"
 	<iostream>
@@ -495,7 +496,7 @@
 	"map.h"
 	<vector>
 
-1520325768 source:d:\games\programs\map2d\job.cpp
+1520326848 source:d:\games\programs\map2d\job.cpp
 	"job.h"
 	"sdl_camera.h"
 

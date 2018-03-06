@@ -71,7 +71,7 @@ void SDLButtonManager::do_render(Camera* camera, double /*delay_in_ms*/) {
 /********************************************************************/
 
 SDLButton::SDLButton(std::string name, int x, int y) : Button(name,x,y) {
-    surface_ = IMG_Load(name.c_str());
+    surface_ = Utility::IMGLoad(name.c_str());
     if( surface_ == nullptr ) {
         std::cout << "Error when loading image " << name << ": " << IMG_GetError() << std::endl;
     }

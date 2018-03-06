@@ -2,6 +2,7 @@
 #define map_h
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <map>
 #include <cstdlib>
 #include <iostream>
@@ -27,6 +28,12 @@ public:
         int r = std::rand() % (max+1-min);
         r += min;
         return r;
+    }
+
+    static SDL_Surface* IMGLoad(const std::string& filename) {
+        std::cout << "Load image " << filename << std::endl;
+        SDL_Surface* bg_surface = IMG_Load(filename.c_str());
+        return bg_surface;
     }
 };
 

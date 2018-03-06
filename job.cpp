@@ -19,7 +19,7 @@ Job::Job(
 
 JobMgr::JobMgr(SDL_Renderer* renderer) : renderer_(renderer) {
     if( renderer != nullptr ) {
-        SDL_Surface* icon_surface = IMG_Load("none.png");
+        SDL_Surface* icon_surface = Utility::IMGLoad("none.png");
         SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, icon_surface);
         map_of_jobs_["none"] = texture;
         SDL_FreeSurface(icon_surface);
@@ -68,7 +68,7 @@ SDL_Texture* JobMgr::getTexture(const std::string& icon_type) {
     // new icon: add it in the map
     std::string filename = icon_type;
     filename += ".png";
-    SDL_Surface* icon_surface = IMG_Load(filename.c_str());
+    SDL_Surface* icon_surface = Utility::IMGLoad(filename.c_str());
     if( icon_surface == nullptr ) {
         std::cout << "Cannot find icon for " << filename << std::endl;
         SDL_Texture* texture = map_of_jobs_["none"]; // return the 'none' icon texture
