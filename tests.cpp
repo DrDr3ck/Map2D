@@ -85,6 +85,7 @@ bool MapTest::do_execute() {
     CHECK_EQUAL(const_tile.id(), 0, return false;);
     CHECK_EQUAL(const_tile.type(), Tile::EMPTY, return false;);
 
+    /*
     // save/load
     std::string filename("test.save");
     MapDataConverter converter;
@@ -105,7 +106,7 @@ bool MapTest::do_execute() {
             CHECK_EQUAL(map_tile1.type(), map_tile2.type(), return false;);
         }
     }
-
+    */
     return true;
 }
 

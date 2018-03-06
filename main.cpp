@@ -13,21 +13,6 @@
 
 #include "tests.h"
 
-class GameBoard {
-public:
-    GameBoard(PeopleGroup* group, MapData* data) : group_(group), data_(data) {}
-    ~GameBoard() {}
-
-    void animate(double delay_ms) {
-        group_->animate(delay_ms);
-        //data_->animate(delay_ms);
-    }
-
-protected:
-    PeopleGroup* group_;
-    MapData* data_;
-};
-
 int main(int /*argc*/, char** /*argv*/) {
     // Check tests first
     TestManager* test_manager = TestManager::instance();
@@ -49,7 +34,7 @@ int main(int /*argc*/, char** /*argv*/) {
     PeopleGroup group;
 
     std::string filename("save01.arc");
-    MapDataConverter converter;
+    ArchiveConverter converter;
     MapData data(50,30);
 
     GameBoard board(&group, &data);
@@ -58,7 +43,7 @@ int main(int /*argc*/, char** /*argv*/) {
     std::ifstream f(filename.c_str());
     if( f.good() ) {
         // if save exists, load it
-        converter.load(&data, filename);
+        converter.load(&board, filename);
     } else {
         // otherwise, create a random map (TODO)
         data.tile(2,2).setTile(8,Tile::BLOCK,Tile::NONE,Tile::METAL);
@@ -92,7 +77,7 @@ int main(int /*argc*/, char** /*argv*/) {
         //SDL_Delay(25);
     }
 
-    converter.save(&data, filename);
+    converter.save(&board, filename);
 
     tileset->kill();
     font_manager->kill();

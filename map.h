@@ -138,6 +138,23 @@ private:
     std::map<int, SDL_Texture*> mapOfGrounds_;
 };
 
+class PeopleGroup;
+
+class GameBoard {
+public:
+    GameBoard(PeopleGroup* group, MapData* data);
+    ~GameBoard();
+
+    void animate(double delay_ms);
+
+    MapData* data() const { return data_; }
+    PeopleGroup* group() const { return group_; }
+
+protected:
+    PeopleGroup* group_;
+    MapData* data_;
+};
+
 /********************************************************************/
 
 #endif // map_h

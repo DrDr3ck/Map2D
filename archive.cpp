@@ -3,9 +3,11 @@
 #include <iostream>
 #include <fstream>
 
-bool startsWith(const std::string& str, const std::string& prefix) {
-    return str.rfind(prefix, 0) == 0;
-}
+namespace { // anonymous namespace
+
+//bool startsWith(const std::string& str, const std::string& prefix) {
+//    return str.rfind(prefix, 0) == 0;
+//}
 
 bool isTag(const std::string& str, const std::string& tag_origin, bool is_end=false) {
     std::string tag("<");
@@ -33,69 +35,90 @@ std::string getAttribute(const std::string& str, const std::string& attr_origin)
     return "";
 }
 
-void MapDataConverter::load(MapData* data, const std::string& filename) {
+} // anonymous namespace
+
+/********************************************************************/
+
+void ArchiveConverter::load(GameBoard* board, const std::string& filename) {
     std::ifstream file(filename);
     if (!file) {
         std::cout << "unable to open file for load: " << filename << "\n";
         return;
     }
+
+    DataConverter* converter = nullptr;
     std::string str;
-    int x = 0;
-    int y = 0;
-    int tile_id = 0;
-    Tile::Type tile_type = Tile::BLOCK;
-    Tile::BType tile_btype = Tile::NONE;
-    Tile::FType tile_ftype = Tile::METAL;
-    bool inTile = false;
     while (std::getline(file, str)) {
         if( isTag(str, "mapdata") ) {
-            std::string width_str = getAttribute(str, "width");
-            int width = atoi(width_str.c_str());
-            std::string height_str = getAttribute(str, "height");
-            int height = atoi(height_str.c_str());
-            data->reset(width,height);
+            converter = new MapDataConverter(board->data());
         }
-        if( !inTile ) {
-            if( isTag(str, "tile") ) {
-                std::string x_str = getAttribute(str, "x");
-                x = atoi(x_str.c_str());
-                std::string y_str = getAttribute(str, "y");
-                y = atoi(y_str.c_str());
-                inTile = true;
-            }
+        if( isTag(str, "mapdata", true) ) {
+            delete converter;
+            converter = nullptr;
         }
-        if( inTile ) {
-            if( isTag(str, "id") ) {
-                std::string value_str = getAttribute(str, "value");
-                tile_id = atoi(value_str.c_str());
-            }
-            if( isTag(str, "type") ) {
-                std::string value_str = getAttribute(str, "value");
-                tile_type = stringTileToType(value_str);
-            }
-            if( isTag(str, "btype") ) {
-                std::string value_str = getAttribute(str, "value");
-                tile_btype = stringTileToBType(value_str);
-            }
-            if( isTag(str, "ftype") ) {
-                std::string value_str = getAttribute(str, "value");
-                tile_ftype = stringTileToFType(value_str);
-            }
-            if( isEndTag(str, "tile") ) {
-                Tile& cur_tile = data->tile(x,y);
-                cur_tile.setTile(tile_id, tile_type, tile_btype, tile_ftype);
-                inTile = false;
-            }
+        if( converter != nullptr ) {
+            converter->load(str);
         }
     }
 
-    //for( int i=0; i < width_; i++ ) {
-    //    for( int j=0; j < height_; j++ ) {
-    //        Tile& cur = tile(i,j);
-    //    }
-    //}
+    file.close();
+}
+
+void ArchiveConverter::save(GameBoard* board, const std::string& filename) {
+    std::ofstream file(filename);
+    if (!file) {
+        std::cout << "unable to open file for save: " << filename << std::endl;
+        return;
+    }
+
+    MapDataConverter converter(board->data());
+    converter.save(file);
 
     file.close();
+}
+
+/********************************************************************/
+
+void MapDataConverter::load(const std::string& str) {
+    if( isTag(str, "mapdata") ) {
+        std::string width_str = getAttribute(str, "width");
+        int width = atoi(width_str.c_str());
+        std::string height_str = getAttribute(str, "height");
+        int height = atoi(height_str.c_str());
+        data_->reset(width,height);
+    }
+    if( !inTile ) {
+        if( isTag(str, "tile") ) {
+            std::string x_str = getAttribute(str, "x");
+            x = atoi(x_str.c_str());
+            std::string y_str = getAttribute(str, "y");
+            y = atoi(y_str.c_str());
+            inTile = true;
+        }
+    }
+    if( inTile ) {
+        if( isTag(str, "id") ) {
+            std::string value_str = getAttribute(str, "value");
+            tile_id = atoi(value_str.c_str());
+        }
+        if( isTag(str, "type") ) {
+            std::string value_str = getAttribute(str, "value");
+            tile_type = stringTileToType(value_str);
+        }
+        if( isTag(str, "btype") ) {
+            std::string value_str = getAttribute(str, "value");
+            tile_btype = stringTileToBType(value_str);
+        }
+        if( isTag(str, "ftype") ) {
+            std::string value_str = getAttribute(str, "value");
+            tile_ftype = stringTileToFType(value_str);
+        }
+        if( isEndTag(str, "tile") ) {
+            Tile& cur_tile = data_->tile(x,y);
+            cur_tile.setTile(tile_id, tile_type, tile_btype, tile_ftype);
+            inTile = false;
+        }
+    }
 }
 
 std::string MapDataConverter::typeTileToString(Tile::Type type) const {
@@ -150,17 +173,11 @@ Tile::FType MapDataConverter::stringTileToFType(const std::string& str) const {
     return Tile::METAL;
 }
 
-void MapDataConverter::save(MapData* data, const std::string& filename) {
-    std::ofstream file(filename);
-    if (!file) {
-        std::cout << "unable to open file for save: " << filename << std::endl;
-        return;
-    }
-
-    file << "<mapdata width=\"" << data->width() << "\" height=\"" << data->height() << "\">" << std::endl;
-    for( int j = 0 ; j < data->height(); j++ ) {
-        for( int i = 0 ; i < data->width(); i++ ) {
-            const Tile& cur = data->tile(i,j);
+void MapDataConverter::save(std::ofstream& file) {
+    file << "<mapdata width=\"" << data_->width() << "\" height=\"" << data_->height() << "\">" << std::endl;
+    for( int j = 0 ; j < data_->height(); j++ ) {
+        for( int i = 0 ; i < data_->width(); i++ ) {
+            const Tile& cur = data_->tile(i,j);
             file << "  <tile x=\"" << i << "\" y=\"" << j << "\">" << std::endl;
             file << "    <id value=\"" << cur.id() << "\" />" << std::endl;
             file << "    <type value=\"" << typeTileToString(cur.type()) << "\" />" << std::endl;
@@ -170,6 +187,4 @@ void MapDataConverter::save(MapData* data, const std::string& filename) {
         }
     }
     file << "</mapdata>" << std::endl;
-
-    file.close();
 }

@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include "SDL2/SDL_image.h"
+#include "character.h"
 
 /********************************************************************/
 
@@ -286,5 +287,15 @@ SDL_Texture* TileSetLib::getTextureFromTile(const Tile& tile, SDL_Renderer* rend
 
 // Initialize singleton_ to nullptr
 TileSetLib* TileSetLib::singleton_ = nullptr;
+
+/********************************************************************/
+
+GameBoard::GameBoard(PeopleGroup* group, MapData* data) : group_(group), data_(data) {}
+GameBoard::~GameBoard() {}
+
+void GameBoard::animate(double delay_ms) {
+    group_->animate(delay_ms);
+    //data_->animate(delay_ms);
+}
 
 /********************************************************************/
