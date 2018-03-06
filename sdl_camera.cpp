@@ -42,7 +42,7 @@ void SDL_RenderDrawCircle(SDL_Renderer* renderer, const SDL_Rect& dest) {
 
 /********************************************************************/
 
-MapView::MapView(SDLCamera* camera, MapData* data, PeopleGroup* group) : data_(data), group_(group), job_manager_(camera->main_renderer()),
+MapView::MapView(SDLCamera* camera, MapData* data, PeopleGroup* group, JobMgr* manager) : data_(data), group_(group), job_manager_(manager),
     map_background_(nullptr), window_background_(nullptr),
     delta_x_(0.), delta_y_(0.), delta_speed_(0.1), translate_x_(0.), translate_y_(0.)
 {
@@ -65,7 +65,7 @@ MapView::~MapView() {
 void MapView::addWall(int x, int y) {
     Position tile_position = {x,y};
     BuildJob* job = new BuildJob(tile_position, "wall_tool", 2500);
-    job_manager_.addJob(job);
+    job_manager_->addJob(job);
 }
 
 /*!
@@ -196,9 +196,9 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         }
     }
 
-    for( auto job : job_manager_.jobs() ) {
+    for( auto job : job_manager_->jobs() ) {
         SDL_Rect dest = getJobRect(job);
-        job_manager_.render(*job, sdl_camera, dest);
+        job_manager_->render(*job, sdl_camera, dest);
     }
 
     // display people
@@ -259,7 +259,8 @@ void MapView::handleEvent(Camera* camera) {
                 Position end_position = {tile_x_, tile_y_};
                 std::vector<Position> positions = path.findPath(selected_people_->tilePosition(), end_position);
                 if( positions.size() > 0 ) {
-                    new MoveAction(selected_people_, positions, 64);
+                    ActionBase* action = new MoveAction(selected_people_, positions, 64);
+                    selected_people_->setAction( action, "Move to new location");
                 }
             }
         } else if( e.button.button == SDL_BUTTON_LEFT ) {

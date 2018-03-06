@@ -290,11 +290,11 @@ TileSetLib* TileSetLib::singleton_ = nullptr;
 
 /********************************************************************/
 
-GameBoard::GameBoard(PeopleGroup* group, MapData* data) : group_(group), data_(data) {}
+GameBoard::GameBoard(PeopleGroup* group, MapData* data, JobMgr* manager) : group_(group), data_(data), job_mgr_(manager) {}
 GameBoard::~GameBoard() {}
 
 void GameBoard::animate(double delay_ms) {
-    group_->animate(delay_ms);
+    group_->animate(this, delay_ms);
     //data_->animate(delay_ms);
 }
 

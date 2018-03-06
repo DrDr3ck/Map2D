@@ -1,5 +1,6 @@
 #include "character.h"
 #include "sdl_camera.h"
+#include "path_finding.h"
 
 #include <iostream>
 #include <sstream>
@@ -32,6 +33,7 @@ void DynamicItem::animate(double delta) {
     //std::cout << "Animate " << name_ << std::endl;
     if( !action_->spentTime(time_spent_) ) {
         action_->postAction();
+        delete action_;
         action_ = nullptr;
         time_spent_ = 0;
     }
@@ -84,7 +86,7 @@ void Character::setDirection(int x, int y) {
 
 bool NoAction::spentTime(double time_spent) {
     // no action: just do a random direction change around initial position
-    if( time_spent > max_time_spent_ ) {
+    if( time_spent/1000. > max_time_spent_ ) {
         character_->setDirection(Utility::randint(0,2)-1, Utility::randint(0,1));
         return false;
     }
@@ -95,7 +97,6 @@ bool NoAction::spentTime(double time_spent) {
 
 MoveAction::MoveAction(Character* character, std::vector<Position>& path_in_tile, int tile_size) {
     character_ = character;
-    character_->setAction( this, "Move to new location");
     origin_ = character_->tilePosition();
     if( !character_->validPixelPosition() ) {
         character_->setPixelPosition(origin_.x*tile_size, origin_.y*tile_size);
@@ -189,6 +190,79 @@ Position MoveAction::get_position_in_pixel() {
     return cur_in_pixel;
 }
 
+/********************************************************************/
+
+BuildAction::BuildAction(
+    GameBoard* game_board, Character* people, Job* job, int tile_size
+) {
+    game_board_ = game_board;
+    people_ = people;
+    job_ = job;
+    tile_size_ = tile_size;
+    action_ = nullptr;
+    isValid_ = true;
+}
+
+BuildAction::~BuildAction() {
+}
+
+void BuildAction::preAction() {
+    if( people_->tilePosition().x == job_->tilePosition().x && people_->tilePosition().y == job_->tilePosition().y ) {
+        return;
+    }
+    PathFinding path(game_board_->data());
+    Position end_position = job_->tilePosition();
+    std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
+
+    if( positions.size() == 0 ) {
+        isValid_ = false;
+        job_->reset();
+    } else {
+        action_ = new MoveAction(people_, positions, tile_size_);
+    }
+}
+
+bool BuildAction::spentTime(double time_spent) {
+    if( !isValid_ ) return false;
+    if( action_ != nullptr ) {
+        if( !action_->spentTime(time_spent) ) {
+            action_->postAction();
+            delete action_;
+            action_ = nullptr;
+            start_time_ = std::chrono::steady_clock::now();
+            if( !game_board_->jobManager()->findJobAt(job_->tilePosition() ) ) {
+                std::cout << "Job cancel" << std::endl;
+                return false; // job has been cancel
+            }
+            // set direction so that people can 'work'
+            people_->setDirection(people_->direction().x, 1);
+        }
+    } else {
+        // spent time on construction...
+        std::chrono::steady_clock::time_point cur_time = std::chrono::steady_clock::now();
+        double delay_anim_us = std::chrono::duration_cast<std::chrono::microseconds>(cur_time - start_time_).count();
+        double delta_time = delay_anim_us/1000.;
+        people_->setActivityPercent( std::min(100,int(100.0*delta_time/job_->buildTime())) );
+        if( delta_time > job_->buildTime() ) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void BuildAction::postAction() {
+    people_->setActivityPercent(0);
+    if( !isValid_ ) return;
+    Position position = job_->tilePosition();
+    if( game_board_->jobManager()->findJobAt(position) ) {
+        game_board_->jobManager()->cancelJob(position);
+        if( job_->name() == "demolish" ) {
+            game_board_->data()->removeWall(position.x,position.y);
+        } else {
+            game_board_->data()->addWall(position.x,position.y);
+        }
+    }
+}
 
 /********************************************************************/
 
@@ -277,8 +351,26 @@ PeopleGroup::~PeopleGroup() {
     group_.clear();
 }
 
-void PeopleGroup::animate(double delta_ms) {
+void PeopleGroup::animate(GameBoard* board, double delta_ms) {
     for( auto people : group_ ) {
+        if( people->action() == nullptr ) {
+            Job* job = board->jobManager()->getFirstAvailableJob();
+            if( job != nullptr ) {
+                if( job->name() == "build" ) {
+                    job->takeJob(people);
+                    people->setAction( new BuildAction(board, people, job, 64), "building a wall" );
+                    people->action()->preAction();
+                } else if( job->name() == "build_object" ) {
+                    // TODO
+                    //job.dynamic_item = people
+                    //people.action = BuildObjectAction(self, people, job, self.tile_size)
+                    //people.action.preAction()
+                }
+            }
+        }
+        if( people->action() == nullptr ) {
+            new NoAction(people); // set action on people is done in constructor of NoAction
+        }
         people->animate(delta_ms);
     }
 }

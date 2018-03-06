@@ -36,8 +36,9 @@ int main(int /*argc*/, char** /*argv*/) {
     std::string filename("save01.arc");
     ArchiveConverter converter;
     MapData data(50,30);
+    JobMgr job_mgr(camera->main_renderer());
 
-    GameBoard board(&group, &data);
+    GameBoard board(&group, &data, &job_mgr);
 
     // check if save already exists
     std::ifstream f(filename.c_str());
@@ -63,7 +64,7 @@ int main(int /*argc*/, char** /*argv*/) {
         people->setDirection(1,0);
         group.add(people);
     }
-    MapView mapview(camera, &data, &group);
+    MapView mapview(camera, &data, &group, &job_mgr);
 
     FontLib* font_manager = FontLib::instance();
 

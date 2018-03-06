@@ -8,6 +8,8 @@
 #include <iostream>
 #include <sstream>
 
+class JobMgr;
+
 /********************************************************************/
 
 class Utility {
@@ -142,17 +144,19 @@ class PeopleGroup;
 
 class GameBoard {
 public:
-    GameBoard(PeopleGroup* group, MapData* data);
+    GameBoard(PeopleGroup* group, MapData* data, JobMgr* manager);
     ~GameBoard();
 
     void animate(double delay_ms);
 
     MapData* data() const { return data_; }
     PeopleGroup* group() const { return group_; }
+    JobMgr* jobManager() const { return job_mgr_; }
 
 protected:
     PeopleGroup* group_;
     MapData* data_;
+    JobMgr* job_mgr_;
 };
 
 /********************************************************************/

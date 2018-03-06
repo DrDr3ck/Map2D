@@ -16,8 +16,12 @@ public:
     const std::string& name() const { return name_; }
     Position tilePosition() const { return tile_position_; }
     const std::string& iconType() const { return icon_type_; }
-    int build_time() const { return build_time_ms_; }
+    int buildTime() const { return build_time_ms_; }
     Character* people() const { return people_; }
+
+    void reset() {
+        people_ = nullptr;
+    }
 
     void takeJob(Character* people) {
         people_ = people;

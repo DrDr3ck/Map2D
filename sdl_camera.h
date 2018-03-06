@@ -15,7 +15,7 @@
 
 class MapView : public View {
 public:
-    MapView(SDLCamera* camera, MapData* data, PeopleGroup* group);
+    MapView(SDLCamera* camera, MapData* data, PeopleGroup* group, JobMgr* manager);
     virtual ~MapView();
 
     virtual void do_render(Camera* camera, double delay_in_ms) override;
@@ -37,7 +37,7 @@ protected:
 private:
     MapData* data_;
     PeopleGroup* group_;
-    JobMgr job_manager_;
+    JobMgr* job_manager_;
     SDL_Texture* map_background_;
     SDL_Texture* window_background_;
     float scale_;

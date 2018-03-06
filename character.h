@@ -11,6 +11,7 @@
 
 class ActionBase;
 class SDLCamera;
+class Job;
 
 /********************************************************************/
 
@@ -52,6 +53,7 @@ public:
     }
 
     void setAction(ActionBase* action, std::string description);
+    ActionBase* action() const { return action_; }
     const std::string& actionDescription() const {
         return action_description_;
     }
@@ -167,6 +169,27 @@ private:
 
 /********************************************************************/
 
+class BuildAction : public ActionBase {
+public:
+    BuildAction(GameBoard* game_board, Character* people, Job* job, int tile_size);
+    virtual ~BuildAction();
+
+    virtual void preAction() override;
+    virtual bool spentTime(double time_spent) override;
+    virtual void postAction() override;
+
+private:
+    GameBoard* game_board_;
+    Character* people_;
+    Job* job_;
+    int tile_size_;
+    ActionBase* action_;
+    bool isValid_;
+    std::chrono::steady_clock::time_point start_time_;
+};
+
+/********************************************************************/
+
 class CharacterSetLib {
 private:
   CharacterSetLib();
@@ -192,7 +215,7 @@ public:
     PeopleGroup();
     ~PeopleGroup();
 
-    void animate(double delay_ms);
+    void animate(GameBoard* board, double delay_ms);
 
     std::vector<Character*>& group();
 
