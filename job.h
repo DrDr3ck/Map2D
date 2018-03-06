@@ -27,8 +27,6 @@ public:
         return people_ == nullptr;
     }
 
-    virtual void render(SDLCamera* camera, const SDL_Rect& rect);
-
 private:
     std::string name_;
     Position tile_position_;
@@ -54,7 +52,7 @@ public:
 
 class JobMgr {
 public:
-    JobMgr() {}
+    JobMgr(SDL_Renderer* renderer);
     ~JobMgr() {}
 
     int size() const {
@@ -69,8 +67,13 @@ public:
         return jobs_;
     }
 
+    SDL_Texture* getTexture(const std::string& icon_type);
+    void render(const Job& job, SDLCamera* camera, const SDL_Rect& rect);
+
 private:
+    SDL_Renderer* renderer_;
     std::list<Job*> jobs_;
+    std::map<std::string, SDL_Texture*> map_of_jobs_;
 };
 
 /********************************************************************/

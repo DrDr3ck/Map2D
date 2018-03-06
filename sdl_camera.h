@@ -15,7 +15,7 @@
 
 class MapView : public View {
 public:
-    MapView(MapData* data, PeopleGroup* group);
+    MapView(SDLCamera* camera, MapData* data, PeopleGroup* group);
     virtual ~MapView();
 
     virtual void do_render(Camera* camera, double delay_in_ms) override;

@@ -42,7 +42,7 @@ void SDL_RenderDrawCircle(SDL_Renderer* renderer, const SDL_Rect& dest) {
 
 /********************************************************************/
 
-MapView::MapView(MapData* data, PeopleGroup* group) : data_(data), group_(group),
+MapView::MapView(SDLCamera* camera, MapData* data, PeopleGroup* group) : data_(data), group_(group), job_manager_(camera->main_renderer()),
     map_background_(nullptr), window_background_(nullptr),
     delta_x_(0.), delta_y_(0.), delta_speed_(0.1), translate_x_(0.), translate_y_(0.)
 {
@@ -50,6 +50,8 @@ MapView::MapView(MapData* data, PeopleGroup* group) : data_(data), group_(group)
     tile_y_ = -1;
 
     selected_people_ = nullptr;
+
+    camera->setMapView(this);
 }
 
 MapView::~MapView() {
@@ -62,7 +64,7 @@ MapView::~MapView() {
  */
 void MapView::addWall(int x, int y) {
     Position tile_position = {x,y};
-    BuildJob* job = new BuildJob(tile_position, "wall", 2500);
+    BuildJob* job = new BuildJob(tile_position, "wall_tool", 2500);
     job_manager_.addJob(job);
 }
 
@@ -196,7 +198,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
 
     for( auto job : job_manager_.jobs() ) {
         SDL_Rect dest = getJobRect(job);
-        job->render(sdl_camera, dest);
+        job_manager_.render(*job, sdl_camera, dest);
     }
 
     // display people

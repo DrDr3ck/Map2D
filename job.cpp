@@ -15,12 +15,16 @@ Job::Job(
 {
 }
 
-void Job::render(SDLCamera* camera, const SDL_Rect& rect) {
-    SDL_SetRenderDrawColor( camera->main_renderer(), 0, 250, 0, 255 );
-    SDL_RenderFillRect( camera->main_renderer(), &rect );
-}
-
 /**************************************/
+
+JobMgr::JobMgr(SDL_Renderer* renderer) : renderer_(renderer) {
+    if( renderer != nullptr ) {
+        SDL_Surface* icon_surface = IMG_Load("none.png");
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, icon_surface);
+        map_of_jobs_["none"] = texture;
+        SDL_FreeSurface(icon_surface);
+    }
+}
 
 Job* JobMgr::getFirstAvailableJob() const {
     for( auto job : jobs_) {
@@ -56,5 +60,31 @@ void JobMgr::cancelJob(Position tile_position) {
         }
     }
 }
+
+SDL_Texture* JobMgr::getTexture(const std::string& icon_type) {
+    if( map_of_jobs_.find(icon_type) != map_of_jobs_.end()) {
+        return map_of_jobs_[icon_type];
+    }
+    // new icon: add it in the map
+    std::string filename = icon_type;
+    filename += ".png";
+    SDL_Surface* icon_surface = IMG_Load(filename.c_str());
+    if( icon_surface == nullptr ) {
+        std::cout << "Cannot find icon for " << filename << std::endl;
+        SDL_Texture* texture = map_of_jobs_["none"]; // return the 'none' icon texture
+        map_of_jobs_[icon_type] = texture;
+        return texture;
+    }
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer_, icon_surface);
+    map_of_jobs_[icon_type] = texture;
+    SDL_FreeSurface(icon_surface);
+    return texture;
+}
+
+void JobMgr::render(const Job& job, SDLCamera* camera, const SDL_Rect& rect) {
+    SDL_Texture* texture = getTexture(job.iconType());
+    camera->displayTexture(texture, &rect);
+}
+
 
 /**************************************/

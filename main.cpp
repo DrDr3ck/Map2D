@@ -63,8 +63,7 @@ int main(int /*argc*/, char** /*argv*/) {
         // otherwise, create a random map (TODO)
         data.tile(2,2).setTile(8,Tile::BLOCK,Tile::NONE,Tile::METAL);
     }
-    MapView* map_view = new MapView(&data, &group);
-    camera->setMapView(map_view);
+    MapView mapview(camera, &data, &group);
 
     FontLib* font_manager = FontLib::instance();
 

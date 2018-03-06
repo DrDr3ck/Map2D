@@ -143,7 +143,7 @@ bool ActionTest::do_execute() {
 }
 
 bool JobTest::do_execute() {
-    JobMgr mgr;
+    JobMgr mgr(nullptr);
     int count = mgr.size();
     // no job
     CHECK_EQUAL( count, 0, return false; );
@@ -169,6 +169,10 @@ bool JobTest::do_execute() {
     available_job = mgr.getFirstAvailableJob();
     // no more available job
     CHECK_EQUAL( (available_job == nullptr), true, return false; );
+
+    // check presence of "none.png"
+    std::ifstream f("none.png");
+    CHECK_EQUAL( f.good(), true, return false; );
 
     return true;
 }
