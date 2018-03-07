@@ -67,9 +67,7 @@ void ArchiveConverter::load(GameBoard* board, const std::string& filename) {
             converter = nullptr;
         }
         if( converter != nullptr ) {
-            std::cout << str << std::endl;
             converter->load(str);
-            std::cout << str << std::endl;
         }
     }
 

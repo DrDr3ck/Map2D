@@ -15,6 +15,9 @@ class JobMgr;
 #define BUILD "build"
 #define DEMOLISH "demolish"
 
+#define WALLTOOL 0
+#define FLOORTOOL 1
+
 class Utility {
 public:
     /*!

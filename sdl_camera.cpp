@@ -380,7 +380,7 @@ SDL_Texture* SDLText::texture(SDL_Renderer* renderer) {
 SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), tool_(nullptr), map_view_(nullptr) {
     if(SDL_Init(SDL_INIT_VIDEO) >= 0) {
         window_ = SDL_CreateWindow("Tile Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
-        main_renderer_ = SDL_CreateRenderer(window_, -1, 0);
+        main_renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
         TTF_Init();
     }
     manager_ = new SDLButtonManager();
@@ -389,12 +389,12 @@ SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), to
     int max_column = 4;
     MenuButton* wall_menu = new MenuButton(max_column, 10, 75);
 
-    SDLBuildTool* wall_tool = new SDLBuildTool(this, "wall_tool.png", 0);
+    SDLBuildTool* wall_tool = new SDLBuildTool(this, "wall_tool.png", WALLTOOL);
     SDLButton* wall_button_tool = new SDLToolButton(wall_tool, "wall_tool.png", 0, 0);
     manager_->addButton(wall_button_tool);
     wall_menu->addButton(wall_button_tool);
 
-    SDLUnbuildTool* demolish_tool = new SDLUnbuildTool(this, "demolish_tool.png", 0);
+    SDLUnbuildTool* demolish_tool = new SDLUnbuildTool(this, "demolish_tool.png", WALLTOOL);
     SDLButton* demolish_button_tool = new SDLToolButton(demolish_tool, "demolish_tool.png", 0, 0);
     manager_->addButton(demolish_button_tool);
     wall_menu->addButton(demolish_button_tool);
@@ -405,7 +405,7 @@ SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), to
     // Add Floor menu
     MenuButton* floor_menu = new MenuButton(4, 70, 75);
 
-    SDLBuildTool* grass_tool = new SDLBuildTool(this, "grass_tool.png", 1);
+    SDLBuildTool* grass_tool = new SDLBuildTool(this, "grass_tool.png", FLOORTOOL);
     SDLButton* grass_button_tool = new SDLToolButton(grass_tool, "grass_tool.png", 0, 0);
     manager_->addButton(grass_button_tool);
     floor_menu->addButton(grass_button_tool);

@@ -83,7 +83,7 @@ bool MapTest::do_execute() {
 
     const_tile = map_data.tile(5,2);
     CHECK_EQUAL(const_tile.id(), 0, return false;);
-    CHECK_EQUAL(const_tile.type(), Tile::EMPTY, return false;);
+    CHECK_EQUAL(const_tile.type(), Tile::FLOOR, return false;);
 
     /*
     // save/load

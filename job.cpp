@@ -76,6 +76,7 @@ SDL_Texture* JobMgr::getTexture(const std::string& icon_type) {
         return texture;
     }
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer_, icon_surface);
+    SDL_SetTextureAlphaMod( texture, 192 );
     map_of_jobs_[icon_type] = texture;
     SDL_FreeSurface(icon_surface);
     return texture;

@@ -80,6 +80,7 @@ SDLBuildTool::~SDLBuildTool() {
 SDL_Texture* SDLBuildTool::getTexture(SDL_Renderer* renderer) {
     if( texture_ == nullptr ) {
         texture_ = SDL_CreateTextureFromSurface(renderer, surface_);
+        SDL_SetTextureAlphaMod( texture_, 192 );
         SDL_FreeSurface(surface_);
         surface_ = nullptr;
         rect_ = {100,100,64,64}; // debug
@@ -92,7 +93,6 @@ void SDLBuildTool::mousePressed(int button) {
     int x,y;
     if( camera()->mapView()->curTile(x,y) ) {
         if( type_ == 0 ) {
-            //camera()->mapView()->data()->addWall(x,y);
             camera()->mapView()->addWall(x,y);
         } else if( type_ == 1 ) {
             camera()->mapView()->data()->addFloor(x,y);
@@ -109,9 +109,9 @@ void SDLUnbuildTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
     if( camera()->mapView()->curTile(x,y) ) {
-        if( type() == 0 ) {
+        if( type() == WALLTOOL ) {
             camera()->mapView()->removeWall(x,y);
-        } else if( type() == 1 ) {
+        } else if( type() == FLOORTOOL ) {
             camera()->mapView()->data()->removeFloor(x,y);
         }
     }
