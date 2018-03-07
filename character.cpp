@@ -256,9 +256,9 @@ void BuildAction::postAction() {
     Position position = job_->tilePosition();
     if( game_board_->jobManager()->findJobAt(position) ) {
         game_board_->jobManager()->cancelJob(position);
-        if( job_->name() == "demolish" ) {
+        if( job_->name() == DEMOLISH ) {
             game_board_->data()->removeWall(position.x,position.y);
-        } else {
+        } else if( job_->name() == BUILD ) {
             game_board_->data()->addWall(position.x,position.y);
         }
     }
@@ -269,6 +269,10 @@ void BuildAction::postAction() {
 CharacterSetLib::CharacterSetLib() {
     std::cout << "CharacterSetLib" << std::endl;
     characters_surface_ = Utility::IMGLoad("robots.png");
+
+    Uint32 key = SDL_MapRGB(characters_surface_->format, 0, 255, 0);
+    SDL_SetColorKey(characters_surface_, SDL_TRUE, key);
+
     if( characters_surface_ == nullptr ) {
         std::cout << "cannot initialize CharacterSetLib" << std::endl;
     }
@@ -356,9 +360,14 @@ void PeopleGroup::animate(GameBoard* board, double delta_ms) {
         if( people->action() == nullptr ) {
             Job* job = board->jobManager()->getFirstAvailableJob();
             if( job != nullptr ) {
-                if( job->name() == "build" ) {
+                std::cout << job->name() << std::endl;
+                if( job->name() == BUILD ) {
                     job->takeJob(people);
                     people->setAction( new BuildAction(board, people, job, 64), "building a wall" );
+                    people->action()->preAction();
+                } else if( job->name() == DEMOLISH ) {
+                    job->takeJob(people);
+                    people->setAction( new BuildAction(board, people, job, 64), "demolishing a wall" );
                     people->action()->preAction();
                 } else if( job->name() == "build_object" ) {
                     // TODO
