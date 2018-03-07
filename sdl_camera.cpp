@@ -69,6 +69,15 @@ void MapView::addWall(int x, int y) {
 }
 
 /*!
+ * Adds a wall destruction in the queue of the job manager at (x,y) if possible.
+ */
+void MapView::removeWall(int x, int y) {
+    Position tile_position = {x,y};
+    DemolishJob* job = new DemolishJob(tile_position, "demolish_tool", 2500);
+    job_manager_->addJob(job);
+}
+
+/*!
  * \return true and the tile position according to the mouse position
  * or false if unreached
  */

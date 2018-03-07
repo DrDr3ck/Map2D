@@ -12,6 +12,9 @@ class JobMgr;
 
 /********************************************************************/
 
+#define BUILD "build"
+#define DEMOLISH "demolish"
+
 class Utility {
 public:
     /*!
@@ -37,6 +40,7 @@ public:
         SDL_Surface* bg_surface = IMG_Load(filename.c_str());
         return bg_surface;
     }
+
 };
 
 struct Direction {

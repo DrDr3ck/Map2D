@@ -110,7 +110,7 @@ void SDLUnbuildTool::mousePressed(int button) {
     int x,y;
     if( camera()->mapView()->curTile(x,y) ) {
         if( type() == 0 ) {
-            camera()->mapView()->data()->removeWall(x,y);
+            camera()->mapView()->removeWall(x,y);
         } else if( type() == 1 ) {
             camera()->mapView()->data()->removeFloor(x,y);
         }

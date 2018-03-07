@@ -47,7 +47,16 @@ class BuildJob : public Job {
 public:
     BuildJob(
         Position tile_position, const std::string& icon_type, int build_time_ms
-    ) : Job("build", tile_position, icon_type, build_time_ms)
+    ) : Job(BUILD, tile_position, icon_type, build_time_ms)
+    {
+    }
+};
+
+class DemolishJob : public Job {
+public:
+    DemolishJob(
+        Position tile_position, const std::string& icon_type, int build_time_ms
+    ) : Job(DEMOLISH, tile_position, icon_type, build_time_ms)
     {
     }
 };

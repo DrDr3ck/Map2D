@@ -109,7 +109,7 @@ void MapData::removeWall(int x, int y) {
         // not a wall
         return;
     }
-    tile(x,y).setTile(0, Tile::EMPTY, tile(x,y).background_type(), tile(x,y).floor_type());
+    tile(x,y).setTile(0, Tile::FLOOR, tile(x,y).background_type(), tile(x,y).floor_type());
     if( x > 0 ) {
         if( tile(x-1,y).type() == Tile::WALL ) {
             Tile& tile_x_1 = tile(x-1,y);

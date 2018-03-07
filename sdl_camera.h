@@ -24,6 +24,7 @@ public:
     MapData* data() const { return data_; }
 
     void addWall(int x, int y);
+    void removeWall(int x, int y);
 
     bool onTile(int mouse_x, int mouse_y);
     const SDL_Rect& onTileRect() const { return ontile_rect_; }
