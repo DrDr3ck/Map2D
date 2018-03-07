@@ -6,7 +6,7 @@
     <ftype value="METAL" />
   </tile>
   <tile x="1" y="0">
-    <id value="4" />
+    <id value="6" />
     <type value="WALL" />
     <btype value="GRASS" />
     <ftype value="METAL" />
@@ -62,12 +62,12 @@
   <tile x="0" y="1">
     <id value="0" />
     <type value="EMPTY" />
-    <btype value="GRASS" />
+    <btype value="NONE" />
     <ftype value="METAL" />
   </tile>
   <tile x="1" y="1">
-    <id value="0" />
-    <type value="FLOOR" />
+    <id value="10" />
+    <type value="WALL" />
     <btype value="NONE" />
     <ftype value="METAL" />
   </tile>
@@ -97,15 +97,15 @@
   </tile>
   <tile x="6" y="1">
     <id value="0" />
-    <type value="EMPTY" />
-    <btype value="GRASS" />
-    <ftype value="METAL" />
+    <type value="FLOOR" />
+    <btype value="NONE" />
+    <ftype value="PLASTIC" />
   </tile>
   <tile x="7" y="1">
     <id value="0" />
-    <type value="EMPTY" />
-    <btype value="GRASS" />
-    <ftype value="METAL" />
+    <type value="FLOOR" />
+    <btype value="NONE" />
+    <ftype value="PLASTIC" />
   </tile>
   <tile x="8" y="1">
     <id value="0" />
@@ -122,11 +122,11 @@
   <tile x="0" y="2">
     <id value="0" />
     <type value="EMPTY" />
-    <btype value="GRASS" />
+    <btype value="NONE" />
     <ftype value="METAL" />
   </tile>
   <tile x="1" y="2">
-    <id value="6" />
+    <id value="14" />
     <type value="WALL" />
     <btype value="NONE" />
     <ftype value="METAL" />
@@ -157,15 +157,15 @@
   </tile>
   <tile x="6" y="2">
     <id value="0" />
-    <type value="EMPTY" />
-    <btype value="GRASS" />
-    <ftype value="METAL" />
+    <type value="FLOOR" />
+    <btype value="NONE" />
+    <ftype value="PLASTIC" />
   </tile>
   <tile x="7" y="2">
     <id value="0" />
-    <type value="EMPTY" />
-    <btype value="GRASS" />
-    <ftype value="METAL" />
+    <type value="FLOOR" />
+    <btype value="NONE" />
+    <ftype value="PLASTIC" />
   </tile>
   <tile x="8" y="2">
     <id value="0" />
@@ -182,7 +182,7 @@
   <tile x="0" y="3">
     <id value="0" />
     <type value="EMPTY" />
-    <btype value="GRASS" />
+    <btype value="NONE" />
     <ftype value="METAL" />
   </tile>
   <tile x="1" y="3">
@@ -210,7 +210,7 @@
     <ftype value="METAL" />
   </tile>
   <tile x="5" y="3">
-    <id value="8" />
+    <id value="10" />
     <type value="WALL" />
     <btype value="NONE" />
     <ftype value="METAL" />
@@ -242,7 +242,7 @@
   <tile x="0" y="4">
     <id value="0" />
     <type value="EMPTY" />
-    <btype value="GRASS" />
+    <btype value="NONE" />
     <ftype value="METAL" />
   </tile>
   <tile x="1" y="4">
@@ -270,8 +270,8 @@
     <ftype value="METAL" />
   </tile>
   <tile x="5" y="4">
-    <id value="0" />
-    <type value="FLOOR" />
+    <id value="10" />
+    <type value="WALL" />
     <btype value="NONE" />
     <ftype value="METAL" />
   </tile>
@@ -330,7 +330,7 @@
     <ftype value="METAL" />
   </tile>
   <tile x="5" y="5">
-    <id value="1" />
+    <id value="9" />
     <type value="WALL" />
     <btype value="NONE" />
     <ftype value="METAL" />
@@ -362,8 +362,8 @@
 </mapdata>
 <group>
   <people name="Bob">
-    <position x="3" y="1" />
-    <direction x="-1" y="0" />
+    <position x="3" y="4" />
+    <direction x="-1" y="1" />
     <activity value="0" />
     <image_id value="0" />
   </people>
