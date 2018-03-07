@@ -256,10 +256,14 @@ void BuildAction::postAction() {
     Position position = job_->tilePosition();
     if( game_board_->jobManager()->findJobAt(position) ) {
         game_board_->jobManager()->cancelJob(position);
-        if( job_->name() == DEMOLISH ) {
+        if( job_->name() == DEMOLISHWALL ) {
             game_board_->data()->removeWall(position.x,position.y);
-        } else if( job_->name() == BUILD ) {
+        } else if( job_->name() == BUILDWALL ) {
             game_board_->data()->addWall(position.x,position.y);
+        } else if( job_->name() == BUILDFLOOR ) {
+            game_board_->data()->addFloor(position.x,position.y);
+        } else if( job_->name() == DEMOLISHFLOOR ) {
+            game_board_->data()->removeFloor(position.x,position.y);
         }
     }
 }
@@ -361,13 +365,21 @@ void PeopleGroup::animate(GameBoard* board, double delta_ms) {
             Job* job = board->jobManager()->getFirstAvailableJob();
             if( job != nullptr ) {
                 std::cout << job->name() << std::endl;
-                if( job->name() == BUILD ) {
+                if( job->name() == BUILDWALL ) {
                     job->takeJob(people);
                     people->setAction( new BuildAction(board, people, job, 64), "building a wall" );
                     people->action()->preAction();
-                } else if( job->name() == DEMOLISH ) {
+                } else if( job->name() == DEMOLISHWALL ) {
                     job->takeJob(people);
                     people->setAction( new BuildAction(board, people, job, 64), "demolishing a wall" );
+                    people->action()->preAction();
+                } else if( job->name() == BUILDFLOOR ) {
+                    job->takeJob(people);
+                    people->setAction( new BuildAction(board, people, job, 64), "building a foundation" );
+                    people->action()->preAction();
+                } else if( job->name() == DEMOLISHFLOOR ) {
+                    job->takeJob(people);
+                    people->setAction( new BuildAction(board, people, job, 64), "demolishing a foundation" );
                     people->action()->preAction();
                 } else if( job->name() == "build_object" ) {
                     // TODO

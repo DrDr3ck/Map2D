@@ -64,7 +64,7 @@ MapView::~MapView() {
  */
 void MapView::addWall(int x, int y) {
     Position tile_position = {x,y};
-    BuildJob* job = new BuildJob(tile_position, "wall_tool", 2500);
+    Job* job = new BuildJob(tile_position, "wall_tool", 3500);
     job_manager_->addJob(job);
 }
 
@@ -73,7 +73,25 @@ void MapView::addWall(int x, int y) {
  */
 void MapView::removeWall(int x, int y) {
     Position tile_position = {x,y};
-    DemolishJob* job = new DemolishJob(tile_position, "demolish_tool", 2500);
+    Job* job = new DemolishJob(tile_position, "demolish_tool", 2500);
+    job_manager_->addJob(job);
+}
+
+/*!
+ * Adds a floor in the queue of the job manager at (x,y) if possible.
+ */
+void MapView::addFloor(int x, int y) {
+    Position tile_position = {x,y};
+    Job* job = new BuildFloorJob(tile_position, "foundation_tool", 1500);
+    job_manager_->addJob(job);
+}
+
+/*!
+ * Adds a floor destruction in the queue of the job manager at (x,y) if possible.
+ */
+void MapView::removeFloor(int x, int y) {
+    Position tile_position = {x,y};
+    Job* job = new DemolishFloorJob(tile_position, "demolish_foundation_tool", 1000);
     job_manager_->addJob(job);
 }
 
@@ -405,10 +423,15 @@ SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), to
     // Add Floor menu
     MenuButton* floor_menu = new MenuButton(4, 70, 75);
 
-    SDLBuildTool* grass_tool = new SDLBuildTool(this, "grass_tool.png", FLOORTOOL);
-    SDLButton* grass_button_tool = new SDLToolButton(grass_tool, "grass_tool.png", 0, 0);
-    manager_->addButton(grass_button_tool);
-    floor_menu->addButton(grass_button_tool);
+    SDLBuildTool* foundation_tool = new SDLBuildTool(this, "foundation_tool.png", FLOORTOOL);
+    SDLButton* foundation_button_tool = new SDLToolButton(foundation_tool, "foundation_tool.png", 0, 0);
+    manager_->addButton(foundation_button_tool);
+    floor_menu->addButton(foundation_button_tool);
+
+    SDLBuildTool* demolish_foundation_tool = new SDLUnbuildTool(this, "demolish_foundation_tool.png", FLOORTOOL);
+    SDLButton* demolish_foundation_button_tool = new SDLToolButton(demolish_foundation_tool, "demolish_foundation_tool.png", 0, 0);
+    manager_->addButton(demolish_foundation_button_tool);
+    floor_menu->addButton(demolish_foundation_button_tool);
 
     manager_->addButton( new SDLButtonMenu(floor_menu, "floor.png", 70,10) );
     manager_->addMenuButton( floor_menu );

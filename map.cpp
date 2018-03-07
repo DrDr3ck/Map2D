@@ -137,21 +137,21 @@ void MapData::removeWall(int x, int y) {
 }
 
 void MapData::addFloor(int x, int y) {
-    if( tile(x,y).type() != Tile::FLOOR ) {
+    if( tile(x,y).type() == Tile::FLOOR || tile(x,y).type() == Tile::WALL ) { // cannot build floor on a wall
         // already a floor
         return;
     }
     Tile& cur = tile(x,y);
-    cur.setTile(cur.id(), cur.type(), Tile::NONE, Tile::METAL);
+    cur.setTile(cur.id(), Tile::FLOOR, Tile::NONE, Tile::METAL);
 }
 
 void MapData::removeFloor(int x, int y) {
-    if( tile(x,y).type() == Tile::FLOOR ) {
+    if( tile(x,y).type() != Tile::FLOOR ) {
         // already empty
         return;
     }
     Tile& cur = tile(x,y);
-    cur.setTile(cur.id(), cur.type(), Tile::NONE, Tile::METAL);
+    cur.setTile(cur.id(), Tile::EMPTY, Tile::NONE, Tile::METAL);
 }
 
 void MapData::addGround(int x, int y) {

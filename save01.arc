@@ -1,8 +1,8 @@
 <mapdata width="10" height="6">
   <tile x="0" y="0">
     <id value="0" />
-    <type value="FLOOR" />
-    <btype value="GRASS" />
+    <type value="EMPTY" />
+    <btype value="NONE" />
     <ftype value="METAL" />
   </tile>
   <tile x="1" y="0">
@@ -186,7 +186,7 @@
     <ftype value="METAL" />
   </tile>
   <tile x="1" y="3">
-    <id value="10" />
+    <id value="8" />
     <type value="WALL" />
     <btype value="NONE" />
     <ftype value="METAL" />
@@ -210,7 +210,7 @@
     <ftype value="METAL" />
   </tile>
   <tile x="5" y="3">
-    <id value="10" />
+    <id value="8" />
     <type value="WALL" />
     <btype value="NONE" />
     <ftype value="METAL" />
@@ -246,8 +246,8 @@
     <ftype value="METAL" />
   </tile>
   <tile x="1" y="4">
-    <id value="10" />
-    <type value="WALL" />
+    <id value="0" />
+    <type value="FLOOR" />
     <btype value="NONE" />
     <ftype value="METAL" />
   </tile>
@@ -270,8 +270,8 @@
     <ftype value="METAL" />
   </tile>
   <tile x="5" y="4">
-    <id value="10" />
-    <type value="WALL" />
+    <id value="0" />
+    <type value="FLOOR" />
     <btype value="NONE" />
     <ftype value="METAL" />
   </tile>
@@ -306,7 +306,7 @@
     <ftype value="METAL" />
   </tile>
   <tile x="1" y="5">
-    <id value="12" />
+    <id value="4" />
     <type value="WALL" />
     <btype value="NONE" />
     <ftype value="METAL" />
@@ -330,7 +330,7 @@
     <ftype value="METAL" />
   </tile>
   <tile x="5" y="5">
-    <id value="9" />
+    <id value="1" />
     <type value="WALL" />
     <btype value="NONE" />
     <ftype value="METAL" />
@@ -362,8 +362,8 @@
 </mapdata>
 <group>
   <people name="Bob">
-    <position x="4" y="2" />
-    <direction x="0" y="1" />
+    <position x="3" y="1" />
+    <direction x="-1" y="0" />
     <activity value="0" />
     <image_id value="0" />
   </people>

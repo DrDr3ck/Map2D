@@ -12,8 +12,10 @@ class JobMgr;
 
 /********************************************************************/
 
-#define BUILD "build"
-#define DEMOLISH "demolish"
+#define BUILDWALL "build"
+#define DEMOLISHWALL "demolish"
+#define BUILDFLOOR "build_floor"
+#define DEMOLISHFLOOR "demolish_floor"
 
 #define WALLTOOL 0
 #define FLOORTOOL 1

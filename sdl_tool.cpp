@@ -92,10 +92,10 @@ void SDLBuildTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
     if( camera()->mapView()->curTile(x,y) ) {
-        if( type_ == 0 ) {
+        if( type_ == WALLTOOL ) {
             camera()->mapView()->addWall(x,y);
-        } else if( type_ == 1 ) {
-            camera()->mapView()->data()->addFloor(x,y);
+        } else if( type_ == FLOORTOOL ) {
+            camera()->mapView()->addFloor(x,y);
         }
     }
 }
@@ -112,7 +112,7 @@ void SDLUnbuildTool::mousePressed(int button) {
         if( type() == WALLTOOL ) {
             camera()->mapView()->removeWall(x,y);
         } else if( type() == FLOORTOOL ) {
-            camera()->mapView()->data()->removeFloor(x,y);
+            camera()->mapView()->removeFloor(x,y);
         }
     }
 }
