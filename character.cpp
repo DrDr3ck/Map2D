@@ -274,9 +274,6 @@ CharacterSetLib::CharacterSetLib() {
     std::cout << "CharacterSetLib" << std::endl;
     characters_surface_ = Utility::IMGLoad("robots.png");
 
-    Uint32 key = SDL_MapRGB(characters_surface_->format, 0, 255, 0);
-    SDL_SetColorKey(characters_surface_, SDL_TRUE, key);
-
     if( characters_surface_ == nullptr ) {
         std::cout << "cannot initialize CharacterSetLib" << std::endl;
     }
@@ -327,6 +324,10 @@ void CharacterSetLib::init(SDL_Renderer* renderer) {
                             &source,
                             surf_dest,
                             &dest);
+
+            // Transparency with green color
+            Uint32 key = SDL_MapRGB(surf_dest->format, 0, 255, 0);
+            SDL_SetColorKey(surf_dest , SDL_TRUE, key);
 
             SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surf_dest);
             CharacterSetLib::instance()->mapOfCharacters()[id] = texture;

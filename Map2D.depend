@@ -399,7 +399,7 @@
 	"map.h"
 	<string>
 
-1521362559 source:d:\games\programs\map2d\sdl_camera.cpp
+1521392353 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -475,7 +475,7 @@
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 
-1520448718 source:d:\games\programs\map2d\character.cpp
+1521368244 source:d:\games\programs\map2d\character.cpp
 	"character.h"
 	"sdl_camera.h"
 	"path_finding.h"
