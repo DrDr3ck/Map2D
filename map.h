@@ -73,7 +73,7 @@ protected:
 class Tile {
 public:
     enum Type { BLOCK, DOOR, FLOOR, EMPTY, WALL };
-    enum BType { NONE, GRASS, EARTH, ROCK };
+    enum BType { NONE, GRASS, DIRT, ROCK };
     enum FType { METAL, PLASTIC };
 public:
     Tile(int id=0, Type type=EMPTY, BType background_type=NONE, FType floor_type=METAL);

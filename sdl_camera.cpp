@@ -219,6 +219,12 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
                 tile_text.append(Utility::itos(w));
                 tile_text.append(" ");
                 tile_text.append(Utility::itos(h));
+                // debug
+                if( cur.type() == Tile::WALL ) {
+                    tile_text.append(" - id: ");
+                    tile_text.append(Utility::itos(cur.id()));
+                }
+                // end debug
             }
         }
     }
@@ -245,6 +251,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         }
     }
 
+    // Display the tooltip of the tile
     if( !tile_text.empty() ) {
         SDLText text(tile_text, "pixel11", 14, SDLText::black());
         text.set_position(camera->mouse_x()+30,camera->mouse_y()+10);
@@ -258,13 +265,13 @@ void MapView::handleEvent(Camera* camera) {
     const SDL_Event& e = sdl_camera->event();
     if( e.type == SDL_KEYDOWN ) {
         if( e.key.keysym.sym == SDLK_LEFT ) {
-            delta_x_ = -1 * delta_speed_;
-        } else if( e.key.keysym.sym == SDLK_RIGHT ) {
             delta_x_ = 1 * delta_speed_;
+        } else if( e.key.keysym.sym == SDLK_RIGHT ) {
+            delta_x_ = -1 * delta_speed_;
         } else if( e.key.keysym.sym == SDLK_UP ) {
-            delta_y_ = -1 * delta_speed_;
-        } else if( e.key.keysym.sym == SDLK_DOWN ) {
             delta_y_ = 1 * delta_speed_;
+        } else if( e.key.keysym.sym == SDLK_DOWN ) {
+            delta_y_ = -1 * delta_speed_;
         }
     }
     if( e.type == SDL_KEYUP ) {
