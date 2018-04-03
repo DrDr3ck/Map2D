@@ -446,7 +446,7 @@ SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), to
     // Add Object menu
     MenuButton* object_menu = new MenuButton(max_column, 130, 75);
 
-    SDLBuildTool* chest_tool = new SDLBuildTool(this, "chest.png", FLOORTOOL);
+    SDLBuildTool* chest_tool = new SDLBuildTool(this, "chest.png", OBJECTTOOL);
     SDLButton* chest_button_tool = new SDLToolButton(chest_tool, "chest.png", 0, 0);
     manager_->addButton(chest_button_tool);
     object_menu->addButton(chest_button_tool);
@@ -523,8 +523,11 @@ void SDLCamera::render(double delay_in_ms) {
         SDL_Rect rect = tool_->rect();
         rect.w *= scale();
         rect.h *= scale();
-        rect = map_view_->onTileRect();
-        if( rect.w != 0 ) {
+        SDL_Rect tilerect = map_view_->onTileRect();
+        rect.x = tilerect.x;
+        rect.y = tilerect.y;
+        rect.y = rect.y + 64*scale() - rect.h;
+        if( tilerect.w != 0 ) {
             displayTexture(texture, &rect);
         }
     }

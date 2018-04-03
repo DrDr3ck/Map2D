@@ -83,7 +83,6 @@ SDL_Texture* SDLBuildTool::getTexture(SDL_Renderer* renderer) {
         SDL_SetTextureAlphaMod( texture_, 192 );
         SDL_FreeSurface(surface_);
         surface_ = nullptr;
-        rect_ = {100,100,64,64}; // debug
     }
     return texture_;
 }
@@ -96,6 +95,9 @@ void SDLBuildTool::mousePressed(int button) {
             camera()->mapView()->addWall(x,y);
         } else if( type_ == FLOORTOOL ) {
             camera()->mapView()->addFloor(x,y);
+        } else if( type_ == OBJECTTOOL ) {
+            std::cout << "add object " << type_ << std::endl;
+            //camera()->mapView()->addFloor(x,y);
         }
     }
 }

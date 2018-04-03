@@ -134,6 +134,11 @@ void SDLQuitButton::activate() {
 SDLToolButton::SDLToolButton(
     SDLTool* tool, std::string icon_name, int x, int y
 ) : SDLButton(icon_name, x, y), tool_(tool){
+    int old_w = std::max(w(),64);
+    int old_h = std::max(h(),64);
+    setSize(64,64); // size of the button in the menu
+    rect_ = {x,y,old_w,old_h}; // size of the tool on the map
+    tool_->setRect( rect_ );
 }
 
 SDLToolButton::~SDLToolButton() {

@@ -24,6 +24,7 @@ public:
 
     virtual SDL_Texture* getTexture(SDL_Renderer* renderer) = 0;
     const SDL_Rect& rect() const { return rect_; }
+    void setRect(SDL_Rect rect) { rect_ = rect; }
 
     SDLCamera* camera() const { return camera_; }
 

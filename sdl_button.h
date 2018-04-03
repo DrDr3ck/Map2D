@@ -35,7 +35,7 @@ public:
     SDL_Texture* getTexture(SDL_Renderer* renderer);
     const SDL_Rect& rect() const { return rect_; }
 
-private:
+protected:
     SDL_Surface* surface_;
     SDL_Texture* texture_;
     SDL_Rect rect_;
