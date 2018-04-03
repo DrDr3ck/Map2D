@@ -39,6 +39,8 @@
 		<Unit filename="camera.h" />
 		<Unit filename="character.cpp" />
 		<Unit filename="character.h" />
+		<Unit filename="chest.cpp" />
+		<Unit filename="chest.h" />
 		<Unit filename="font.cpp" />
 		<Unit filename="font.h" />
 		<Unit filename="job.cpp" />
@@ -58,6 +60,7 @@
 		<Unit filename="sdl_tool.h" />
 		<Unit filename="tests.cpp" />
 		<Unit filename="tests.h" />
+		<Unit filename="utility.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

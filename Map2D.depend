@@ -346,13 +346,14 @@
 	"begin_code.h"
 	"close_code.h"
 
-1520452876 source:d:\games\programs\map2d\map.cpp
+1522770233 source:d:\games\programs\map2d\map.cpp
 	"map.h"
 	<cmath>
 	"SDL2/SDL_image.h"
 	"character.h"
 
-1522754528 d:\games\programs\map2d\map.h
+1522770233 d:\games\programs\map2d\map.h
+	"chest.h"
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 	<map>
@@ -384,8 +385,8 @@
 	"camera.h"
 	<iostream>
 
-1522744806 d:\games\programs\map2d\camera.h
-	"map.h"
+1522769842 d:\games\programs\map2d\camera.h
+	"utility.h"
 	<list>
 	<vector>
 
@@ -400,7 +401,7 @@
 	"map.h"
 	<string>
 
-1522758323 source:d:\games\programs\map2d\sdl_camera.cpp
+1522770254 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -411,7 +412,7 @@
 	"sdl_tool.h"
 	"sdl_background.h"
 
-1520451873 d:\games\programs\map2d\sdl_camera.h
+1522769799 d:\games\programs\map2d\sdl_camera.h
 	"character.h"
 	"map.h"
 	"job.h"
@@ -426,7 +427,7 @@
 	"button.h"
 	<iostream>
 
-1516827931 d:\games\programs\map2d\button.h
+1522769999 d:\games\programs\map2d\button.h
 	"camera.h"
 	<list>
 
@@ -435,11 +436,11 @@
 	"map.h"
 	<iostream>
 
-1516314254 d:\games\programs\map2d\font.h
+1522769998 d:\games\programs\map2d\font.h
 	<SDL2/SDL_ttf.h>
 	<map>
 
-1522758276 source:d:\games\programs\map2d\sdl_button.cpp
+1522758415 source:d:\games\programs\map2d\sdl_button.cpp
 	"sdl_button.h"
 	<iostream>
 	<math.h>
@@ -456,7 +457,7 @@
 	<SDL2/SDL.h>
 	"camera.h"
 
-1522756727 source:d:\games\programs\map2d\sdl_tool.cpp
+1522758434 source:d:\games\programs\map2d\sdl_tool.cpp
 	"sdl_tool.h"
 	<iostream>
 	<math.h>
@@ -485,8 +486,8 @@
 	<cmath>
 	"SDL2/SDL_image.h"
 
-1522753770 d:\games\programs\map2d\character.h
-	"map.h"
+1522769873 d:\games\programs\map2d\character.h
+	"utility.h"
 	<SDL2/SDL.h>
 	<map>
 	<vector>
@@ -510,11 +511,21 @@
 	<string>
 	<list>
 
-1522749603 source:d:\games\programs\map2d\chest.cpp
+1522770107 source:d:\games\programs\map2d\chest.cpp
 	"chest.h"
 	<iostream>
+	"sdl_camera.h"
 
-1522749724 d:\games\programs\map2d\chest.h
+1522770437 d:\games\programs\map2d\chest.h
 	<vector>
 	<string>
+	"utility.h"
+
+1522769763 d:\games\programs\map2d\utility.h
+	<string>
+	<iostream>
+	<sstream>
+	<cstdlib>
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
 

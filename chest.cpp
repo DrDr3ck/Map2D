@@ -1,6 +1,7 @@
 #include "chest.h"
 
 #include <iostream>
+#include "sdl_camera.h"
 
 /********************************************************************/
 
@@ -41,7 +42,33 @@ int CountedItem::removeItem(int count) {
 
 /********************************************************************/
 
-Chest::Chest(int size) : max_size_(size) {
+Object::Object(const std::string& icon_name) : icon_name_(icon_name) {
+}
+
+SDL_Texture* Object::getTexture(SDLCamera* camera, int index) {
+    if( images_.size() == 0 ) {
+        SDL_Surface* surface = Utility::IMGLoad(icon_name_);
+        width_ = surface->w;
+        height_ = surface->h;
+        SDL_Renderer* main_renderer = camera->main_renderer();
+        images_.push_back( SDL_CreateTextureFromSurface(main_renderer, surface) );
+        SDL_FreeSurface(surface);
+    }
+    return images_[0]; // TODO
+}
+
+void Object::render(SDLCamera* camera, const SDL_Rect& original_rect) {
+    SDL_Rect rect(original_rect);
+    SDL_Texture* texture = getTexture(camera);
+    rect.w = pixel_width();
+    rect.h = pixel_height();
+    rect.y = rect.y + 64*camera->scale() - rect.h;
+    camera->displayTexture( texture, &rect);
+}
+
+/********************************************************************/
+
+Chest::Chest(int size) : Object("chest.png"), max_size_(size) {
 }
 
 // return the number of items not added in this Chest

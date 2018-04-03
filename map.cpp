@@ -172,6 +172,14 @@ void MapData::removeGround(int x, int y) {
     cur.setTile(cur.id(), cur.type(), Tile::NONE, Tile::METAL);
 }
 
+void MapData::addObject(Object* object, int x, int y) {
+    PositionObject position_object;
+    position_object.x = x;
+    position_object.y = y;
+    position_object.object = object;
+    objects_.push_back( position_object );
+}
+
 const Tile& MapData::tile(int x,int y) const {
     return tiles_[x+y*width_];
 }
@@ -290,8 +298,15 @@ TileSetLib* TileSetLib::singleton_ = nullptr;
 
 /********************************************************************/
 
-GameBoard::GameBoard(PeopleGroup* group, MapData* data, JobMgr* manager) : group_(group), data_(data), job_mgr_(manager) {}
-GameBoard::~GameBoard() {}
+GameBoard::GameBoard(PeopleGroup* group, MapData* data, JobMgr* manager) : group_(group), data_(data), job_mgr_(manager) {
+    // debug
+    // add chest for fun :)
+    data->addObject(new Chest(), 2, 3);
+    // end debug
+}
+
+GameBoard::~GameBoard() {
+}
 
 void GameBoard::animate(double delay_ms) {
     group_->animate(this, delay_ms);

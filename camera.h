@@ -1,7 +1,7 @@
 #ifndef camera_h
 #define camera_h
 
-#include "map.h"
+#include "utility.h"
 #include <list>
 #include <vector>
 

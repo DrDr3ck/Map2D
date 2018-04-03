@@ -133,14 +133,12 @@ SDL_Rect MapView::getPeopleRect(Character* people) const {
 }
 
 /*!
- * \return the rectangle of the \p job depending of its position.
+ * \return the rectangle of the given tile position.
  */
-SDL_Rect MapView::getJobRect(Job* job) const {
+SDL_Rect MapView::getTileRect(int tile_x, int tile_y) const {
     SDL_Rect dest;
-    int job_x = job->tilePosition().x;
-    int job_y = job->tilePosition().y;
-    dest.x = job_x*scaled_tile_size_ + scaled_start_x_;
-    dest.y = job_y*scaled_tile_size_ + scaled_start_y_;
+    dest.x = tile_x*scaled_tile_size_ + scaled_start_x_;
+    dest.y = tile_y*scaled_tile_size_ + scaled_start_y_;
     dest.w = scaled_tile_size_;
     dest.h = scaled_tile_size_;
     return dest;
@@ -229,8 +227,15 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         }
     }
 
+    for( auto position_object : data_->objects() ) {
+        SDL_Rect dest = getTileRect(position_object.x,position_object.y);
+        position_object.object->render(sdl_camera, dest);
+    }
+
     for( auto job : job_manager_->jobs() ) {
-        SDL_Rect dest = getJobRect(job);
+        int job_x = job->tilePosition().x;
+        int job_y = job->tilePosition().y;
+        SDL_Rect dest = getTileRect(job_x, job_y);
         job_manager_->render(*job, sdl_camera, dest);
     }
 

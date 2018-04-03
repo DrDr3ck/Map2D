@@ -13,6 +13,9 @@
 
 /********************************************************************/
 
+class MapData;
+class Camera;
+
 class MapView : public View {
 public:
     MapView(SDLCamera* camera, MapData* data, PeopleGroup* group, JobMgr* manager);
@@ -35,7 +38,7 @@ public:
 
 protected:
     SDL_Rect getPeopleRect(Character* people) const;
-    SDL_Rect getJobRect(Job* job) const;
+    SDL_Rect getTileRect(int tile_x, int tile_y) const;
 
 private:
     MapData* data_;

@@ -4,6 +4,10 @@
 #include <vector>
 #include <string>
 
+#include "utility.h"
+
+class SDL_Texture;
+
 /********************************************************************/
 
 class BasicItem {
@@ -43,7 +47,27 @@ protected:
 
 /********************************************************************/
 
-class Chest {
+class SDLCamera;
+
+class Object {
+public:
+    Object(const std::string& icon_name);
+    ~Object() {}
+
+    SDL_Texture* getTexture(SDLCamera* camera, int index = 0);
+    void render(SDLCamera* camera, const SDL_Rect& rect);
+
+    int pixel_width() const  { return width_; }
+    int pixel_height() const  { return height_; }
+
+protected:
+    std::string icon_name_;
+    std::vector<SDL_Texture*> images_;
+    int width_;
+    int height_;
+};
+
+class Chest : public Object {
 public:
     Chest(int size = 16);
     virtual ~Chest() {}
@@ -62,6 +86,14 @@ public:
 protected:
     int max_size_;
     std::vector<CountedItem> items_;
+};
+
+/********************************************************************/
+
+struct PositionObject {
+    int x;
+    int y;
+    Object* object;
 };
 
 /********************************************************************/

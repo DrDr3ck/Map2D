@@ -1,7 +1,7 @@
 #ifndef character_h
 #define character_h
 
-#include "map.h"
+#include "utility.h"
 
 #include <SDL2/SDL.h>
 #include <map>
@@ -39,6 +39,8 @@ protected:
     std::vector<SDL_Texture*> images_;
     Position tile_position_;
 };
+
+/********************************************************************/
 
 class DynamicItem : public Item {
 public:
@@ -176,6 +178,8 @@ private:
 };
 
 /********************************************************************/
+
+class GameBoard;
 
 class BuildAction : public ActionBase {
 public:
