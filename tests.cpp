@@ -178,6 +178,34 @@ bool JobTest::do_execute() {
     return true;
 }
 
+bool ChestTest::do_execute() {
+    Chest chest(16);
+    BasicItem stone("stone");
+    int result = chest.addItem(stone, 3);
+    result = chest.addItem(stone, 2);
+    CHECK_EQUAL( result, 0, return false; );
+    CHECK_EQUAL( chest.sizeAvailable(), 15, return false; );
+    result = chest.removeItem(stone, 3);
+    CHECK_EQUAL( result, 0, return false; );
+    CHECK_EQUAL( chest.item(0).count(), 2, return false; );
+    result = chest.removeItem(stone, 2);
+    CHECK_EQUAL( result, 0, return false; );
+    CHECK_EQUAL( chest.sizeAvailable(), 16, return false; );
+
+    BasicItem sand("sand");
+    chest.addItem(stone, 150);
+    chest.addItem(sand, 50);
+    CHECK_EQUAL( chest.item(0).count(), 99, return false; );
+    CHECK_EQUAL( chest.item(1).count(), 51, return false; );
+    CHECK_EQUAL( chest.item(2).count(), 50, return false; );
+    CHECK_EQUAL( chest.sizeAvailable(), 13, return false; );
+
+    result = chest.removeItem(sand, 60);
+    CHECK_EQUAL( result, 10, return false; );
+    CHECK_EQUAL( chest.sizeAvailable(), 14, return false; );
+    return true;
+}
+
 /*******************************************/
 
 TestManager::TestManager() {
@@ -188,6 +216,7 @@ TestManager::TestManager() {
     addTest(new ActionTest());
     addTest(new CharacterTest());
     addTest(new JobTest());
+    addTest(new ChestTest());
 }
 
 TestManager* TestManager::instance() {

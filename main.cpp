@@ -90,7 +90,6 @@ int main(int /*argc*/, char** /*argv*/) {
             board.animate(delay_anim_us/1000.);
             start_anim = end_anim;
         }
-        //SDL_Delay(25);
     }
 
     converter.save(&board, filename);

@@ -3,6 +3,7 @@
 
 #include "map.h"
 #include "character.h"
+#include "chest.h"
 #include <list>
 #include <string>
 
@@ -65,6 +66,13 @@ public:
 class JobTest : public Test {
 public:
     JobTest() : Test("JobTest") {}
+
+    virtual bool do_execute() override;
+};
+
+class ChestTest : public Test {
+public:
+    ChestTest() : Test("ChestTest") {}
 
     virtual bool do_execute() override;
 };

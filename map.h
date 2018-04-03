@@ -43,6 +43,10 @@ public:
     static SDL_Surface* IMGLoad(const std::string& filename) {
         std::cout << "Load image " << filename << std::endl;
         SDL_Surface* bg_surface = IMG_Load(filename.c_str());
+        if(!bg_surface) {
+            // handle error
+            std::cout << "IMG_Load: " << IMG_GetError() << std::endl;
+        }
         return bg_surface;
     }
 

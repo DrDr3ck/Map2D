@@ -43,6 +43,8 @@ public:
     bool quit() const { return quit_; }
     void set_quit() { quit_ = true; }
 
+    bool isInPause() const { return pause_; }
+
     int mouse_x() const { return mouse_x_; }
     int mouse_y() const { return mouse_y_; }
 
