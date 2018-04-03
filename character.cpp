@@ -10,15 +10,20 @@
 
 /********************************************************************/
 
-DynamicItem::DynamicItem(std::string name, Position tile_position, int image_id) : image_id_(image_id) {
+Item::Item(std::string name, Position tile_position, int image_id) : image_id_(image_id) {
     name_ = name;
     tile_position_ = tile_position;
-    pixel_position_.x = -1;
-    pixel_position_.y = -1;
 
     for( int i=0; i < 4; i++ ) {
         images_.push_back(CharacterSetLib::instance()->getTextureFromCharacter(image_id+i));
     }
+}
+
+/********************************************************************/
+
+DynamicItem::DynamicItem(std::string name, Position tile_position, int image_id) : Item(name, tile_position, image_id) {
+    pixel_position_.x = -1;
+    pixel_position_.y = -1;
 
     time_spent_ = 0;
     action_ = nullptr;

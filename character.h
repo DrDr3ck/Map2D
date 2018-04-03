@@ -15,7 +15,32 @@ class Job;
 
 /********************************************************************/
 
-class DynamicItem {
+class Item {
+public:
+    Item(std::string name, Position position, int image_id);
+    ~Item() {}
+
+    void setTilePosition(Position position) {
+        tile_position_ = position;
+    }
+    Position tilePosition() const {
+        return tile_position_;
+    }
+
+    const std::string& name() const {
+        return name_;
+    }
+
+    int imageIdForArchive() const { return image_id_; }
+
+protected:
+    std::string name_;
+    const int image_id_; // for archive
+    std::vector<SDL_Texture*> images_;
+    Position tile_position_;
+};
+
+class DynamicItem : public Item {
 public:
     DynamicItem(std::string name, Position position, int image_id);
     ~DynamicItem() {}
@@ -26,13 +51,6 @@ public:
     //     surface.blit(self.images[0], position)
 
     virtual void animate(double delta_ms);
-
-    void setTilePosition(Position position) {
-        tile_position_ = position;
-    }
-    Position tilePosition() const {
-        return tile_position_;
-    }
 
     void setTimeSpent(double value) {
         time_spent_ = value;
@@ -48,23 +66,13 @@ public:
         pixel_position_ = {x,y};
     }
 
-    const std::string& name() const {
-        return name_;
-    }
-
     void setAction(ActionBase* action, std::string description);
     ActionBase* action() const { return action_; }
     const std::string& actionDescription() const {
         return action_description_;
     }
 
-    int imageIdForArchive() const { return image_id_; }
-
 protected:
-    std::string name_;
-    const int image_id_; // for archive
-    std::vector<SDL_Texture*> images_;
-    Position tile_position_;
     Position pixel_position_;
     double time_spent_ = 0;
 

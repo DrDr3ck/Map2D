@@ -428,7 +428,7 @@ SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), to
     manager_->addMenuButton( wall_menu );
 
     // Add Floor menu
-    MenuButton* floor_menu = new MenuButton(4, 70, 75);
+    MenuButton* floor_menu = new MenuButton(max_column, 70, 75);
 
     SDLBuildTool* foundation_tool = new SDLBuildTool(this, "foundation_tool.png", FLOORTOOL);
     SDLButton* foundation_button_tool = new SDLToolButton(foundation_tool, "foundation_tool.png", 0, 0);
@@ -442,6 +442,17 @@ SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), to
 
     manager_->addButton( new SDLButtonMenu(floor_menu, "floor.png", 70,10) );
     manager_->addMenuButton( floor_menu );
+
+    // Add Object menu
+    MenuButton* object_menu = new MenuButton(max_column, 130, 75);
+
+    SDLBuildTool* chest_tool = new SDLBuildTool(this, "chest.png", FLOORTOOL);
+    SDLButton* chest_button_tool = new SDLToolButton(chest_tool, "chest.png", 0, 0);
+    manager_->addButton(chest_button_tool);
+    object_menu->addButton(chest_button_tool);
+
+    manager_->addButton( new SDLButtonMenu(object_menu, "object.png", object_menu->x(), 10) );
+    manager_->addMenuButton( object_menu );
 
     // Add Quit Button
     manager_->addButton( new SDLQuitButton(this, 750,10) );

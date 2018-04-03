@@ -19,6 +19,7 @@ class JobMgr;
 
 #define WALLTOOL 0
 #define FLOORTOOL 1
+#define OBJECTTOOL 2
 
 class Utility {
 public:
@@ -60,16 +61,6 @@ struct Direction {
 struct Position {
     int x;
     int y;
-};
-
-/********************************************************************/
-
-class Item {
-public:
-    Item() {}
-    virtual ~Item() {}
-
-protected:
 };
 
 /********************************************************************/
