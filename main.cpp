@@ -43,6 +43,7 @@ int main(int /*argc*/, char** /*argv*/) {
     // check if save already exists
     std::ifstream f(filename.c_str());
     if( f.good() ) {
+        std::cout << "loading existing save" << std::endl;
         // if save exists, load it
         converter.load(&board, filename);
 
@@ -55,6 +56,7 @@ int main(int /*argc*/, char** /*argv*/) {
         }
         // end test
     } else {
+        std::cout << "cannot find save named " << filename << std::endl;
         // otherwise, create a random map (TODO)
         data.tile(2,2).setTile(8,Tile::BLOCK,Tile::NONE,Tile::METAL);
 

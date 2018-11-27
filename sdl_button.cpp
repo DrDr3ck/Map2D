@@ -72,9 +72,6 @@ void SDLButtonManager::do_render(Camera* camera, double /*delay_in_ms*/) {
 
 SDLButton::SDLButton(std::string name, int x, int y) : Button(name,x,y) {
     surface_ = Utility::IMGLoad(name.c_str());
-    if( surface_ == nullptr ) {
-        std::cout << "Error when loading image " << name << ": " << IMG_GetError() << std::endl;
-    }
     int w = surface_->w;
     int h = surface_->h;
     setSize(w,h);
@@ -91,6 +88,9 @@ SDLButton::~SDLButton() {
 SDL_Texture* SDLButton::getTexture(SDL_Renderer* renderer) {
     if( texture_ == nullptr ) {
         texture_ = SDL_CreateTextureFromSurface(renderer, surface_);
+        if( texture_ == nullptr ) {
+            std::cout << "CreateRGBSurface failed: " << SDL_GetError() << std::endl;
+        }
     }
     return texture_;
 }

@@ -145,7 +145,6 @@ SDL_Rect MapView::getTileRect(int tile_x, int tile_y) const {
 }
 
 void MapView::do_render(Camera* camera, double delay_in_ms) {
-    // should it be done here ?
     float scale_speed = camera->scale()*camera->scale();
     if( camera->scale() < 1 ) {
         scale_speed = 1./camera->scale() * 1./camera->scale();
@@ -440,8 +439,8 @@ SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), to
     manager_->addButton(foundation_button_tool);
     floor_menu->addButton(foundation_button_tool);
 
-    SDLBuildTool* demolish_foundation_tool = new SDLUnbuildTool(this, "demolish_foundation_tool.png", FLOORTOOL);
-    SDLButton* demolish_foundation_button_tool = new SDLToolButton(demolish_foundation_tool, "demolish_foundation_tool.png", 0, 0);
+    SDLUnbuildTool* demolish_foundation_tool = new SDLUnbuildTool(this, "foundation_tool.png", FLOORTOOL); // demolish_foundation_tool.png
+    SDLButton* demolish_foundation_button_tool = new SDLToolButton(demolish_foundation_tool, "foundation_tool.png", 0, 0); // demolish_foundation_tool.png
     manager_->addButton(demolish_foundation_button_tool);
     floor_menu->addButton(demolish_foundation_button_tool);
 
@@ -541,7 +540,10 @@ void SDLCamera::render(double delay_in_ms) {
 }
 
 void SDLCamera::displayTexture(SDL_Texture* texture, const SDL_Rect* rect) {
-    SDL_RenderCopy(main_renderer_, texture, NULL, rect);
+    int check = SDL_RenderCopy(main_renderer_, texture, NULL, rect);
+    if( check != 0 ) {
+        std::cout << "Check = " << check << "  " << SDL_GetError() << std::endl;
+    }
 }
 
 void SDLCamera::displayText(SDLText& text, bool background) {

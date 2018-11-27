@@ -1,3 +1,8 @@
 Dev:
 
 double click the Map2D file to open Code::Blocks
+
+Use GitHub Desktop to save the work
+- select changed files
+- commit
+- push fetch

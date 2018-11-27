@@ -80,6 +80,9 @@ SDLBuildTool::~SDLBuildTool() {
 SDL_Texture* SDLBuildTool::getTexture(SDL_Renderer* renderer) {
     if( texture_ == nullptr ) {
         texture_ = SDL_CreateTextureFromSurface(renderer, surface_);
+        if( texture_ == nullptr ) {
+            std::cout << "CreateRGBSurface failed: " << SDL_GetError() << std::endl;
+        }
         SDL_SetTextureAlphaMod( texture_, 192 );
         SDL_FreeSurface(surface_);
         surface_ = nullptr;
