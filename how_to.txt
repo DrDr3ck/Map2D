@@ -1,0 +1,3 @@
+Dev:
+
+double click the Map2D file to open Code::Blocks
