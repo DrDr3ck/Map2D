@@ -45,7 +45,7 @@ int CountedItem::removeItem(int count) {
 Object::Object(const std::string& icon_name) : icon_name_(icon_name) {
 }
 
-SDL_Texture* Object::getTexture(SDLCamera* camera, int index) {
+SDL_Texture* Object::getTexture(SDLCamera* camera, int /*index*/) {
     if( images_.size() == 0 ) {
         SDL_Surface* surface = Utility::IMGLoad(icon_name_);
         width_ = surface->w;

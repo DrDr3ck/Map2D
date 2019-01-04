@@ -14,6 +14,20 @@ class JobMgr;
 
 /********************************************************************/
 
+struct TerrainType {
+    int red;
+    int green;
+    int blue;
+    int height;
+    std::string label;
+};
+
+class MapUtility {
+public:
+    static TerrainType* readColorMap(const std::string& filename);
+    static bool saveColorMap(const std::string& filename, TerrainType* regions, int regionCount);
+};
+
 class Tile {
 public:
     enum Type { BLOCK, DOOR, FLOOR, EMPTY, WALL };

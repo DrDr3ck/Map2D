@@ -4,6 +4,46 @@
 
 #include "SDL2/SDL_image.h"
 #include "character.h"
+#include <iostream>
+#include <fstream>
+
+/********************************************************************/
+
+TerrainType* MapUtility::readColorMap(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file) {
+        std::cout << "unable to open file for load: " << filename << "\n";
+        return nullptr;
+    }
+    int size = 6;
+    TerrainType* terrain = new TerrainType[size];
+    return terrain;
+}
+
+bool MapUtility::saveColorMap(const std::string& filename, TerrainType* regions, int regionCount) {
+    std::ofstream file(filename);
+    if (!file) {
+        std::cout << "Unable to open file for colormap: " << filename << std::endl;
+        return false;
+    }
+    file << "{" << std::endl;
+    for( int region = 0; region < regionCount; region++) {
+        file << "    \"" << regions[region].label.data() << "\" : {" << std::endl;
+        int r = regions[region].red;
+        int g = regions[region].green;
+        int b = regions[region].blue;
+        int h = regions[region].height;
+        file << "        \"height\": " << h << "," << std::endl;
+        file << "        \"red\": " << r << "," << std::endl;
+        file << "        \"green\": " << g << "," << std::endl;
+        file << "        \"blue\": " << b << "," << std::endl;
+        file << "    }," << std::endl;
+    }
+    file << "}" << std::endl;
+
+    file.close();
+    return true;
+}
 
 /********************************************************************/
 

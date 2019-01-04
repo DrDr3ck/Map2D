@@ -3,6 +3,7 @@
 #include "archive.h"
 #include "font.h"
 #include "job.h"
+#include "perlin_noise.h"
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -206,6 +207,100 @@ bool ChestTest::do_execute() {
     return true;
 }
 
+namespace {
+    // create and export surface
+    void create_export_surface(unsigned int seed, float scale, int octaves, float persistance, float lacunarity, const std::string& filename, TerrainType* regions, int regionCount) {
+        int size = 256;
+        float** noise_map = Noise::generateNoiseMap(size, size, seed, scale, octaves, persistance, lacunarity);
+        SDL_Surface* surface = SDL_CreateRGBSurface(0, size, size, 32, 0, 0, 0, 0);
+        SDL_LockSurface(surface);
+        Uint32* pixels = (Uint32*)surface->pixels;
+        for( int y = 0; y < size; y++ ) {
+            for( int x = 0; x < size; x++ ) {
+                float value = noise_map[x][y];
+                //std::cout << value << " ";
+                int color = value * 255;
+                int r = color;
+                int g = color;
+                int b = color;
+                for( int region = 0; region < regionCount; region++ ) {
+                    if( color < regions[region].height ) {
+                        r = regions[region].red;
+                        g = regions[region].green;
+                        b = regions[region].blue;
+                        break;
+                    }
+                }
+                Uint32 couleur = SDL_MapRGB(surface->format, r, g, b);
+                pixels[y * surface->w + x] = couleur;
+            }
+            //std::cout << std::endl;
+        }
+        SDL_UnlockSurface(surface);
+        SDL_SaveBMP(surface, filename.data());
+    }
+}
+
+bool PerlinTest::do_execute() {
+    TerrainType terrain[6];
+    terrain[0].label = "Sea";
+    terrain[0].red = 30;
+    terrain[0].green = 144;
+    terrain[0].blue = 205;
+    terrain[0].height = 50;
+    terrain[1].label = "Sand";
+    terrain[1].red = 238;
+    terrain[1].green = 232;
+    terrain[1].blue = 170;
+    terrain[1].height = 55;
+    terrain[2].label = "Light Forest";
+    terrain[2].red = 0;
+    terrain[2].green = 250;
+    terrain[2].blue = 34;
+    terrain[2].height = 100;
+    terrain[3].label = "Forest";
+    terrain[3].red = 34;
+    terrain[3].green = 139;
+    terrain[3].blue = 34;
+    terrain[3].height = 150;
+    terrain[4].label = "dark Forest";
+    terrain[4].red = 0;
+    terrain[4].green = 100;
+    terrain[4].blue = 0;
+    terrain[4].height = 200;
+    terrain[5].label = "Snow";
+    terrain[5].red = 200;
+    terrain[5].green = 200;
+    terrain[5].blue = 200;
+    terrain[5].height = 220;
+
+    unsigned int seed = 0;
+    create_export_surface(seed, /*scale*/100,/*octaves*/4, /*persistance*/0.5, /*lacunarity*/2, "perlin_scale_100.bmp", terrain, 6);
+    create_export_surface(seed, /*scale*/150,/*octaves*/4, /*persistance*/0.5, /*lacunarity*/2, "perlin_scale_150.bmp", terrain, 6);
+    create_export_surface(seed, /*scale*/200,/*octaves*/4, /*persistance*/0.5, /*lacunarity*/2, "perlin_scale_200.bmp", terrain, 6);
+    create_export_surface(seed, /*scale*/350,/*octaves*/4, /*persistance*/0.5, /*lacunarity*/2, "perlin_scale_350.bmp", terrain, 6);
+
+    float scale = 150;
+    create_export_surface(seed, scale,/*octaves*/3, /*persistance*/0.5, /*lacunarity*/2, "perlin_octave_3.bmp", terrain, 6);
+    create_export_surface(seed, scale,/*octaves*/4, /*persistance*/0.5, /*lacunarity*/2, "perlin_octave_4.bmp", terrain, 6);
+    create_export_surface(seed, scale,/*octaves*/5, /*persistance*/0.5, /*lacunarity*/2, "perlin_octave_5.bmp", terrain, 6);
+    create_export_surface(seed, scale,/*octaves*/6, /*persistance*/0.5, /*lacunarity*/2, "perlin_octave_6.bmp", terrain, 6);
+
+    int octaves = 4;
+    create_export_surface(seed, scale, octaves, /*persistance*/0.3, /*lacunarity*/2, "perlin_persistance_3.bmp", terrain, 6);
+    create_export_surface(seed, scale, octaves, /*persistance*/0.4, /*lacunarity*/2, "perlin_persistance_4.bmp", terrain, 6);
+    create_export_surface(seed, scale, octaves, /*persistance*/0.5, /*lacunarity*/2, "perlin_persistance_5.bmp", terrain, 6);
+    create_export_surface(seed, scale, octaves, /*persistance*/0.8, /*lacunarity*/2, "perlin_persistance_8.bmp", terrain, 6);
+
+    float persistance = 0.5;
+    create_export_surface(seed, scale, octaves, persistance, /*lacunarity*/1, "perlin_lacunarity_1.bmp", terrain, 6);
+    create_export_surface(seed, scale, octaves, persistance, /*lacunarity*/2, "perlin_lacunarity_2.bmp", terrain, 6);
+    create_export_surface(seed, scale, octaves, persistance, /*lacunarity*/3, "perlin_lacunarity_3.bmp", terrain, 6);
+    create_export_surface(seed, scale, octaves, persistance, /*lacunarity*/4, "perlin_lacunarity_4.bmp", terrain, 6);
+
+    return true;
+}
+
 /*******************************************/
 
 TestManager::TestManager() {
@@ -217,6 +312,7 @@ TestManager::TestManager() {
     addTest(new CharacterTest());
     addTest(new JobTest());
     addTest(new ChestTest());
+    addTest(new PerlinTest());
 }
 
 TestManager* TestManager::instance() {
