@@ -50,6 +50,8 @@
 		<Unit filename="map.h" />
 		<Unit filename="path_finding.cpp" />
 		<Unit filename="path_finding.h" />
+		<Unit filename="perlin_noise.cpp" />
+		<Unit filename="perlin_noise.h" />
 		<Unit filename="sdl_background.cpp" />
 		<Unit filename="sdl_background.h" />
 		<Unit filename="sdl_button.cpp" />
@@ -61,6 +63,8 @@
 		<Unit filename="tests.cpp" />
 		<Unit filename="tests.h" />
 		<Unit filename="utility.h" />
+		<Unit filename="xml_document.cpp" />
+		<Unit filename="xml_document.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

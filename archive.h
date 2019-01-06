@@ -8,11 +8,8 @@
 
 class ArchiveConverter {
 public:
-    ArchiveConverter() {}
-    ~ArchiveConverter() {}
-
-    void load(GameBoard* board, const std::string& filename);
-    void save(GameBoard* board, const std::string& filename);
+    static void load(GameBoard* board, const std::string& filename);
+    static void save(GameBoard* board, const std::string& filename);
 };
 
 class DataConverter {

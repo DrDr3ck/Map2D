@@ -34,7 +34,6 @@ int main(int /*argc*/, char** /*argv*/) {
     PeopleGroup group;
 
     std::string filename("save01.arc");
-    ArchiveConverter converter;
     MapData data(50,30);
     JobMgr job_mgr(camera->main_renderer());
 
@@ -45,7 +44,7 @@ int main(int /*argc*/, char** /*argv*/) {
     if( f.good() ) {
         std::cout << "loading existing save" << std::endl;
         // if save exists, load it
-        converter.load(&board, filename);
+        ArchiveConverter::load(&board, filename);
 
         // test
         if( group.group().size() == 0 ) {
@@ -94,7 +93,7 @@ int main(int /*argc*/, char** /*argv*/) {
         }
     }
 
-    converter.save(&board, filename);
+    ArchiveConverter::save(&board, filename);
 
     tileset->kill();
     font_manager->kill();

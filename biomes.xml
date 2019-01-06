@@ -1,0 +1,6 @@
+<biomes>
+  <biome name="Sea">
+    <water min="35%" max="85%"/>
+    <rock min="0%" max="5%"/>
+  </biome>
+</biomes>

@@ -11,7 +11,7 @@
 
 class Test {
 public:
-    Test(std::string name) : test_name_(name) {}
+    Test(std::string name);
     virtual ~Test() {}
 
     virtual bool do_execute() = 0;
@@ -80,6 +80,13 @@ public:
 class PerlinTest : public Test {
 public:
     PerlinTest() : Test("PerlinTest") {}
+
+    virtual bool do_execute() override;
+};
+
+class XMLTest : public Test {
+public:
+    XMLTest() : Test("XMLTest") {}
 
     virtual bool do_execute() override;
 };

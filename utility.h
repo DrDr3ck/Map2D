@@ -32,6 +32,17 @@ public:
         return stm.str();
     }
 
+    static std::string trim(const std::string& str, const char c=' ')
+    {
+        size_t first = str.find_first_not_of(c);
+        if (std::string::npos == first)
+        {
+            return str;
+        }
+        size_t last = str.find_last_not_of(c);
+        return str.substr(first, (last - first + 1));
+    }
+
     /*!
      * Returns a random number between min and max.
      */
@@ -39,6 +50,17 @@ public:
         int r = std::rand() % (max+1-min);
         r += min;
         return r;
+    }
+
+    /*!
+     * \return true if \p original_str starts with \p prefix. spaces are trimmed if strict is false.
+     */
+    static bool startsWith(const std::string& original_str, const std::string& prefix, bool strict = false) {
+        std::string str = original_str;
+        if( !strict ) {
+            str = trim(str);
+        }
+        return str.find(prefix) == 0;
     }
 
     static SDL_Surface* IMGLoad(const std::string& filename) {

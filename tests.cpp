@@ -4,7 +4,9 @@
 #include "font.h"
 #include "job.h"
 #include "perlin_noise.h"
+#include "xml_document.h"
 #include <stdio.h>
+#include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <chrono>
@@ -35,6 +37,19 @@
     y; \
   } \
 } while (0)
+
+#define CHECK_STR_EQUAL(str1, str2, y) do { \
+  bool retval = (str1.compare(str2) == 0); \
+  if (retval == false) { \
+    fprintf(stderr, "\nRuntime error: %s(%s) == %s(%s) returned %d at %s:%d", #str1, str1.data(), #str2, str2.data(), retval, __FILE__, __LINE__); \
+    y; \
+  } \
+} while (0)
+
+/*******************************************/
+
+Test::Test(std::string name) : test_name_(name) {
+}
 
 /*******************************************/
 
@@ -242,6 +257,7 @@ namespace {
 }
 
 bool PerlinTest::do_execute() {
+    return true;
     TerrainType terrain[6];
     terrain[0].label = "Sea";
     terrain[0].red = 30;
@@ -275,28 +291,84 @@ bool PerlinTest::do_execute() {
     terrain[5].height = 220;
 
     unsigned int seed = 0;
-    create_export_surface(seed, /*scale*/100,/*octaves*/4, /*persistance*/0.5, /*lacunarity*/2, "perlin_scale_100.bmp", terrain, 6);
-    create_export_surface(seed, /*scale*/150,/*octaves*/4, /*persistance*/0.5, /*lacunarity*/2, "perlin_scale_150.bmp", terrain, 6);
-    create_export_surface(seed, /*scale*/200,/*octaves*/4, /*persistance*/0.5, /*lacunarity*/2, "perlin_scale_200.bmp", terrain, 6);
-    create_export_surface(seed, /*scale*/350,/*octaves*/4, /*persistance*/0.5, /*lacunarity*/2, "perlin_scale_350.bmp", terrain, 6);
+    int octaves = 4;
+    float persistance = 0.5f;
+    float lacunarity = 2.f;
+    create_export_surface(seed, /*scale*/100, octaves, persistance, lacunarity, "perlin_scale_100.bmp", terrain, 6);
+    create_export_surface(seed, /*scale*/150, octaves, persistance, lacunarity, "perlin_scale_150.bmp", terrain, 6);
+    create_export_surface(seed, /*scale*/200, octaves, persistance, lacunarity, "perlin_scale_200.bmp", terrain, 6);
+    create_export_surface(seed, /*scale*/350, octaves, persistance, lacunarity, "perlin_scale_350.bmp", terrain, 6);
 
     float scale = 150;
-    create_export_surface(seed, scale,/*octaves*/3, /*persistance*/0.5, /*lacunarity*/2, "perlin_octave_3.bmp", terrain, 6);
-    create_export_surface(seed, scale,/*octaves*/4, /*persistance*/0.5, /*lacunarity*/2, "perlin_octave_4.bmp", terrain, 6);
-    create_export_surface(seed, scale,/*octaves*/5, /*persistance*/0.5, /*lacunarity*/2, "perlin_octave_5.bmp", terrain, 6);
-    create_export_surface(seed, scale,/*octaves*/6, /*persistance*/0.5, /*lacunarity*/2, "perlin_octave_6.bmp", terrain, 6);
+    create_export_surface(seed, scale,/*octaves*/3, persistance, lacunarity, "perlin_octave_3.bmp", terrain, 6);
+    create_export_surface(seed, scale,/*octaves*/4, persistance, lacunarity, "perlin_octave_4.bmp", terrain, 6);
+    create_export_surface(seed, scale,/*octaves*/5, persistance, lacunarity, "perlin_octave_5.bmp", terrain, 6);
+    create_export_surface(seed, scale,/*octaves*/6, persistance, lacunarity, "perlin_octave_6.bmp", terrain, 6);
 
-    int octaves = 4;
-    create_export_surface(seed, scale, octaves, /*persistance*/0.3, /*lacunarity*/2, "perlin_persistance_3.bmp", terrain, 6);
-    create_export_surface(seed, scale, octaves, /*persistance*/0.4, /*lacunarity*/2, "perlin_persistance_4.bmp", terrain, 6);
-    create_export_surface(seed, scale, octaves, /*persistance*/0.5, /*lacunarity*/2, "perlin_persistance_5.bmp", terrain, 6);
-    create_export_surface(seed, scale, octaves, /*persistance*/0.8, /*lacunarity*/2, "perlin_persistance_8.bmp", terrain, 6);
+    create_export_surface(seed, scale, octaves, /*persistance*/0.3, lacunarity, "perlin_persistance_3.bmp", terrain, 6);
+    create_export_surface(seed, scale, octaves, /*persistance*/0.4, lacunarity, "perlin_persistance_4.bmp", terrain, 6);
+    create_export_surface(seed, scale, octaves, /*persistance*/0.5, lacunarity, "perlin_persistance_5.bmp", terrain, 6);
+    create_export_surface(seed, scale, octaves, /*persistance*/0.8, lacunarity, "perlin_persistance_8.bmp", terrain, 6);
 
-    float persistance = 0.5;
     create_export_surface(seed, scale, octaves, persistance, /*lacunarity*/1, "perlin_lacunarity_1.bmp", terrain, 6);
     create_export_surface(seed, scale, octaves, persistance, /*lacunarity*/2, "perlin_lacunarity_2.bmp", terrain, 6);
     create_export_surface(seed, scale, octaves, persistance, /*lacunarity*/3, "perlin_lacunarity_3.bmp", terrain, 6);
     create_export_surface(seed, scale, octaves, persistance, /*lacunarity*/4, "perlin_lacunarity_4.bmp", terrain, 6);
+
+    seed = rand();
+    std::string filename = "perlin_random_";
+    filename.append(Utility::itos(seed));
+    filename.append(".bmp");
+    create_export_surface(seed, scale, octaves, persistance, lacunarity, filename, terrain, 6);
+
+    return true;
+}
+
+bool XMLTest::do_execute() {
+    XMLNode* parent = new XMLNode("biomes");
+    XMLNode* sea_biome = new XMLNode("biome", parent);
+    sea_biome->addAttr(new XMLAttr("name", "Sea"));
+    XMLNode* water_node = new XMLNode("water", sea_biome);
+    water_node->addValuedAttr("min", "35%");
+    water_node->addValuedAttr("max", "85%");
+    XMLNode* rock_node = new XMLNode("rock", sea_biome);
+    rock_node->addValuedAttr("min", "0%");
+    rock_node->addValuedAttr("max", "5%");
+    XMLDocument::write_doc(parent, "biomes.xml");
+
+    XMLNode* result = XMLDocument::read_doc("biomes.xml");
+    CHECK_POINTER(result, return false;);
+    CHECK_STR_EQUAL( result->name(), std::string("biomes"), return false; );
+    CHECK_EQUAL( result->attrCount(), 0, return false;);
+    CHECK_EQUAL( result->nodeCount(), 1, return false;);
+
+    sea_biome = result->node(0);
+    CHECK_POINTER(sea_biome, return false;);
+    CHECK_STR_EQUAL( sea_biome->name(), std::string("biome"), return false; );
+    CHECK_EQUAL( sea_biome->attrCount(), 1, return false;);
+    CHECK_EQUAL( sea_biome->nodeCount(), 2, return false;);
+    CHECK_STR_EQUAL( sea_biome->attr(0)->label(), std::string("name"), return false; );
+    CHECK_STR_EQUAL( sea_biome->attr(0)->value(), std::string("Sea"), return false; );
+
+    water_node = sea_biome->node(0);
+    CHECK_POINTER(water_node, return false;);
+    CHECK_EQUAL( water_node->attrCount(), 2, return false;);
+    CHECK_STR_EQUAL( water_node->name(), std::string("water"), return false; );
+    CHECK_STR_EQUAL( water_node->attr(0)->label(), std::string("min"), return false; );
+    CHECK_STR_EQUAL( water_node->attr(0)->value(), std::string("35%"), return false; );
+    CHECK_STR_EQUAL( water_node->attr(1)->label(), std::string("max"), return false; );
+    CHECK_STR_EQUAL( water_node->attr(1)->value(), std::string("85%"), return false; );
+    CHECK_EQUAL( water_node->nodeCount(), 0, return false;);
+
+    rock_node = sea_biome->node(1);
+    CHECK_POINTER(rock_node, return false;);
+    CHECK_EQUAL( rock_node->attrCount(), 2, return false;);
+    CHECK_STR_EQUAL( rock_node->name(), std::string("rock"), return false; );
+    CHECK_STR_EQUAL( rock_node->attr(0)->label(), std::string("min"), return false; );
+    CHECK_STR_EQUAL( rock_node->attr(0)->value(), std::string("0%"), return false; );
+    CHECK_STR_EQUAL( rock_node->attr(1)->label(), std::string("max"), return false; );
+    CHECK_STR_EQUAL( rock_node->attr(1)->value(), std::string("5%"), return false; );
+    CHECK_EQUAL( rock_node->nodeCount(), 0, return false;);
 
     return true;
 }
@@ -313,6 +385,7 @@ TestManager::TestManager() {
     addTest(new JobTest());
     addTest(new ChestTest());
     addTest(new PerlinTest());
+    addTest(new XMLTest());
 }
 
 TestManager* TestManager::instance() {
@@ -335,6 +408,7 @@ bool TestManager::execute() {
     bool result = true;
     int nb_tests = 0;
     if( countTestsInFile("tests.h", nb_tests) ) {
+        // if false, may be you forget to add a test in TestManager constructor ?
         CHECK( int(tests_.size()) == nb_tests, return false;);
     } else {
         CHECK( tests_.size() > 0, return false;);
@@ -356,6 +430,9 @@ bool TestManager::execute() {
     return result;
 }
 
+/*!
+ * Counts the number of classes in \p filename that derives from Test.
+ */
 bool TestManager::countTestsInFile(const std::string& filename, int& count) const {
     std::ifstream ifs( filename );
     if( !ifs.good() ) {
@@ -372,6 +449,7 @@ bool TestManager::countTestsInFile(const std::string& filename, int& count) cons
 }
 
 void TestManager::addTest(Test* test) {
+    std::cout << "add test " << test->name() << std::endl;
     tests_.push_back(test);
 }
 
