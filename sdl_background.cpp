@@ -6,19 +6,36 @@
 
 /********************************************************************/
 
-BackGroundGenerator::BackGroundGenerator(int width, int height) : width_(width), height_(height) {
+BackGroundGenerator::BackGroundGenerator(int width, int height) : width_(width), height_(height), window_(nullptr), renderer_(nullptr) {
     //int tilesize = 64;
     if(SDL_Init(SDL_INIT_VIDEO) >= 0) {
         //window_ = SDL_CreateWindow("Tile Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width_*tilesize, height_*tilesize, SDL_WINDOW_SHOWN);
         //renderer_ = SDL_CreateRenderer(window_, -1, 0);
-        surface_ = IMG_Load("GrassGenerator72_01.png");
+        SDL_Surface* water_surface = IMG_Load("WaterGenerator72_01.png");
+        if( water_surface != nullptr ) {
+            surfaces_.push_back(water_surface);
+        }
+        SDL_Surface* sand_surface = IMG_Load("SandGenerator72_01.png");
+        if( sand_surface != nullptr ) {
+            surfaces_.push_back(sand_surface);
+        }
+        SDL_Surface* grass_surface = IMG_Load("GrassGenerator72_01.png");
+        if( grass_surface != nullptr ) {
+            surfaces_.push_back(grass_surface);
+        }
+        SDL_Surface* rock_surface = IMG_Load("RockGenerator72_01.png");
+        if( rock_surface != nullptr ) {
+            surfaces_.push_back(rock_surface);
+        }
         //texture_ = SDL_CreateTextureFromSurface(renderer_, tiles_surface);
     }
 }
 
 BackGroundGenerator::~BackGroundGenerator() {
-    if( surface_ != nullptr ) {
-        SDL_FreeSurface(surface_);
+    for( auto surf : surfaces_ ) {
+        if( surf != nullptr ) {
+            SDL_FreeSurface(surf);
+        }
     }
     if( renderer_ != nullptr ) {
         SDL_DestroyRenderer(renderer_);
@@ -35,9 +52,18 @@ std::string itos(int i){
 }
 
 void BackGroundGenerator::execute(const std::string& filename) const {
-    if( surface_ == nullptr ) {
+    if( surfaces_.size() == 0 ) {
         std::cout << "Error: Cannot generate background without pictures" << std::endl;
         return;
+    }
+    int enlargedtilesize = 72;
+    std::vector<int> columns;
+    std::vector<int> rows;
+    for( auto surf : surfaces_ ) {
+        int column = surf->w / enlargedtilesize;
+        int row = surf->h / enlargedtilesize;
+        columns.push_back(column);
+        rows.push_back(row);
     }
 
     int tilesize = 64;
@@ -45,11 +71,15 @@ void BackGroundGenerator::execute(const std::string& filename) const {
     SDL_Surface* image = SDL_CreateRGBSurface(0, width_*tilesize, height_*tilesize, 32, 0, 0, 0, amask);
     int offset = 4; // left, right, top, bottom
     int fullsize = tilesize + offset*2;
+
+    //int type = 2; // TODO : terrain type (depend of the value in the perlin noise generated map)
+
     for( int col=0; col < width_; col++ ) {
         std::string str_row = "";
         for( int row=0; row < height_; row++ ) {
-            int idx = std::rand() % 8;
-            int idy = std::rand() % 2;
+            int type = std::rand() % surfaces_.size();
+            int idx = std::rand() % columns[type];
+            int idy = std::rand() % rows[type];
             SDL_Rect source;
             source.x = idx * fullsize;
             source.y = idy * fullsize;
@@ -64,7 +94,7 @@ void BackGroundGenerator::execute(const std::string& filename) const {
             dest.w = fullsize;
             dest.h = fullsize;
             SDL_BlitSurface(
-                    surface_,
+                    surfaces_[type],
                     &source,
                     image,
                     &dest

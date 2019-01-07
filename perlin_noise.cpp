@@ -102,9 +102,9 @@ double PerlinNoise::grad(int hash, double x, double y, double z) {
 /*****************************************************************/
 
 float** Noise::generateNoiseMap(int maxWidth, int maxHeight, unsigned int seed, float scale, int octaves, float persistance, float lacunarity) {
-    auto noiseMap = new float*[maxHeight];
-    for (int h = 0; h < maxHeight; h++) {
-        noiseMap[h] = new float[maxWidth];
+    auto noiseMap = new float*[maxWidth];
+    for (int h = 0; h < maxWidth; h++) {
+        noiseMap[h] = new float[maxHeight];
     }
 
     if( scale <= 0.f ) {

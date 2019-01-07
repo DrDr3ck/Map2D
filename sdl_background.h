@@ -2,6 +2,7 @@
 #define sdl_background_h
 
 #include <string>
+#include <vector>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -21,7 +22,8 @@ private:
     int height_;
     SDL_Window* window_;
     SDL_Renderer* renderer_;
-    SDL_Surface* surface_;
+
+    std::vector<SDL_Surface*> surfaces_;
 };
 
 /********************************************************************/

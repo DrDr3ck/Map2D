@@ -182,7 +182,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     scaled_start_x_ = delta_width + translate_x_;
     scaled_start_y_ = delta_height + translate_y_;
 
-    {
+    if( map_background_ != nullptr ) {
         SDL_Rect dest;
         dest.x = scaled_start_x_;
         dest.y = scaled_start_y_;
@@ -439,8 +439,8 @@ SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), to
     manager_->addButton(foundation_button_tool);
     floor_menu->addButton(foundation_button_tool);
 
-    SDLUnbuildTool* demolish_foundation_tool = new SDLUnbuildTool(this, "foundation_tool.png", FLOORTOOL); // demolish_foundation_tool.png
-    SDLButton* demolish_foundation_button_tool = new SDLToolButton(demolish_foundation_tool, "foundation_tool.png", 0, 0); // demolish_foundation_tool.png
+    SDLUnbuildTool* demolish_foundation_tool = new SDLUnbuildTool(this, "demolish_foundation_tool.png", FLOORTOOL); // demolish_foundation_tool.png
+    SDLButton* demolish_foundation_button_tool = new SDLToolButton(demolish_foundation_tool, "demolish_foundation_tool.png", 0, 0); // demolish_foundation_tool.png
     manager_->addButton(demolish_foundation_button_tool);
     floor_menu->addButton(demolish_foundation_button_tool);
 
@@ -586,7 +586,7 @@ void SDLCamera::handleEvent() {
                 quit_ = true;
             } else if( event_.key.keysym.sym == SDLK_b ) {
                 BackGroundGenerator generator(10,6);
-                generator.execute("out.png");
+                generator.execute("new_out.png");
             }
             break;
         case SDL_MOUSEMOTION:

@@ -5,3 +5,4 @@ gmon.out
 bin/Debug/*
 dist/*
 dist.zip
+*.bmp

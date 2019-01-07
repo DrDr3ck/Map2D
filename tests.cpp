@@ -224,14 +224,18 @@ bool ChestTest::do_execute() {
 
 namespace {
     // create and export surface
-    void create_export_surface(unsigned int seed, float scale, int octaves, float persistance, float lacunarity, const std::string& filename, TerrainType* regions, int regionCount) {
-        int size = 256;
-        float** noise_map = Noise::generateNoiseMap(size, size, seed, scale, octaves, persistance, lacunarity);
-        SDL_Surface* surface = SDL_CreateRGBSurface(0, size, size, 32, 0, 0, 0, 0);
+    void create_export_surface(
+        unsigned int seed, float scale, int octaves, float persistance, float lacunarity,
+        const std::string& filename, TerrainType* regions, int regionCount
+    ) {
+        int sizeX = 50;
+        int sizeY = 30;
+        float** noise_map = Noise::generateNoiseMap(sizeX, sizeY, seed, scale, octaves, persistance, lacunarity);
+        SDL_Surface* surface = SDL_CreateRGBSurface(0, sizeX, sizeY, 32, 0, 0, 0, 0);
         SDL_LockSurface(surface);
         Uint32* pixels = (Uint32*)surface->pixels;
-        for( int y = 0; y < size; y++ ) {
-            for( int x = 0; x < size; x++ ) {
+        for( int y = 0; y < sizeY; y++ ) {
+            for( int x = 0; x < sizeX; x++ ) {
                 float value = noise_map[x][y];
                 //std::cout << value << " ";
                 int color = value * 255;
@@ -257,7 +261,7 @@ namespace {
 }
 
 bool PerlinTest::do_execute() {
-    return true;
+    //return true;
     TerrainType terrain[6];
     terrain[0].label = "Sea";
     terrain[0].red = 30;

@@ -17,6 +17,7 @@ TerrainType* MapUtility::readColorMap(const std::string& filename) {
     }
     int size = 6;
     TerrainType* terrain = new TerrainType[size];
+    // TODO
     return terrain;
 }
 
