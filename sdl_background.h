@@ -17,6 +17,9 @@ public:
 
     virtual void execute(const std::string& filename) const;
 
+protected:
+    int getType(float value) const;
+
 private:
     int width_;
     int height_;
@@ -24,6 +27,7 @@ private:
     SDL_Renderer* renderer_;
 
     std::vector<SDL_Surface*> surfaces_;
+    std::vector<int> heights_;
 };
 
 /********************************************************************/

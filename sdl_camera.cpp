@@ -585,7 +585,7 @@ void SDLCamera::handleEvent() {
             } else if( event_.key.keysym.sym == SDLK_ESCAPE ) {
                 quit_ = true;
             } else if( event_.key.keysym.sym == SDLK_b ) {
-                BackGroundGenerator generator(10,6);
+                BackGroundGenerator generator(100,60); //10,6);
                 generator.execute("new_out.png");
             }
             break;

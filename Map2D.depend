@@ -406,7 +406,7 @@
 	"map.h"
 	<string>
 
-1546894677 source:d:\games\programs\map2d\sdl_camera.cpp
+1547152376 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -471,13 +471,14 @@
 	"sdl_camera.h"
 	"sdl_button.h"
 
-1546894645 source:d:\games\programs\map2d\sdl_background.cpp
+1547152132 source:d:\games\programs\map2d\sdl_background.cpp
 	"sdl_background.h"
+	"perlin_noise.h"
 	<iostream>
 	<sstream>
 	<random>
 
-1546894456 d:\games\programs\map2d\sdl_background.h
+1547152072 d:\games\programs\map2d\sdl_background.h
 	<string>
 	<vector>
 	<SDL2/SDL.h>

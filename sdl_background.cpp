@@ -1,4 +1,5 @@
 #include "sdl_background.h"
+#include "perlin_noise.h"
 
 #include <iostream>
 #include <sstream>
@@ -14,18 +15,22 @@ BackGroundGenerator::BackGroundGenerator(int width, int height) : width_(width),
         SDL_Surface* water_surface = IMG_Load("WaterGenerator72_01.png");
         if( water_surface != nullptr ) {
             surfaces_.push_back(water_surface);
+            heights_.push_back(20);
         }
         SDL_Surface* sand_surface = IMG_Load("SandGenerator72_01.png");
         if( sand_surface != nullptr ) {
             surfaces_.push_back(sand_surface);
+            heights_.push_back(50);
         }
-        SDL_Surface* grass_surface = IMG_Load("GrassGenerator72_01.png");
+        SDL_Surface* grass_surface = IMG_Load("GrassGenerator72_02.png");
         if( grass_surface != nullptr ) {
             surfaces_.push_back(grass_surface);
+            heights_.push_back(220);
         }
         SDL_Surface* rock_surface = IMG_Load("RockGenerator72_01.png");
         if( rock_surface != nullptr ) {
             surfaces_.push_back(rock_surface);
+            heights_.push_back(260);
         }
         //texture_ = SDL_CreateTextureFromSurface(renderer_, tiles_surface);
     }
@@ -51,6 +56,15 @@ std::string itos(int i){
     return ss.str();
 }
 
+int BackGroundGenerator::getType(float value) const {
+    for( int region = 0; region < int(heights_.size()); region++ ) {
+        if( value <= heights_[region] ) {
+            return region;
+        }
+    }
+    return heights_.size()-1;
+}
+
 void BackGroundGenerator::execute(const std::string& filename) const {
     if( surfaces_.size() == 0 ) {
         std::cout << "Error: Cannot generate background without pictures" << std::endl;
@@ -73,11 +87,12 @@ void BackGroundGenerator::execute(const std::string& filename) const {
     int fullsize = tilesize + offset*2;
 
     //int type = 2; // TODO : terrain type (depend of the value in the perlin noise generated map)
+    float** noise_map = Noise::generateNoiseMap(width_, height_, rand(), 150, 4, 0.5f, 2.f);
 
     for( int col=0; col < width_; col++ ) {
         std::string str_row = "";
         for( int row=0; row < height_; row++ ) {
-            int type = std::rand() % surfaces_.size();
+            int type = getType(noise_map[col][row]* 255);
             int idx = std::rand() % columns[type];
             int idy = std::rand() % rows[type];
             SDL_Rect source;
@@ -102,7 +117,7 @@ void BackGroundGenerator::execute(const std::string& filename) const {
 
 
         }
-        std::cout << str_row << std::endl;
+        //std::cout << str_row << std::endl;
     }
 
     IMG_SavePNG(image, filename.c_str());
