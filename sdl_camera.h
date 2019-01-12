@@ -31,10 +31,16 @@ public:
     void addFloor(int x, int y);
     void removeFloor(int x, int y);
 
-    bool onTile(int mouse_x, int mouse_y);
+    Position onTile(int mouse_x, int mouse_y) const;
+    void setTile(int tile_x, int tile_y);
     const SDL_Rect& onTileRect() const { return ontile_rect_; }
 
     bool curTile(int& tile_x, int& tile_y);
+
+    Position getCenterTile() const;
+    void restoreCenterTile(Position position);
+
+    PeopleGroup* group() const;
 
 protected:
     SDL_Rect getPeopleRect(Character* people) const;
@@ -46,12 +52,16 @@ private:
     JobMgr* job_manager_;
     SDL_Texture* map_background_;
     SDL_Texture* window_background_;
+    SDLCamera* camera_;
     float scale_;
     float delta_x_;
     float delta_y_;
     float delta_speed_;
     float translate_x_;
     float translate_y_;
+
+    int center_x_;
+    int center_y_;
 
     int scaled_start_x_;
     int scaled_start_y_;

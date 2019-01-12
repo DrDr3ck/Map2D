@@ -43,7 +43,7 @@ void SDL_RenderDrawCircle(SDL_Renderer* renderer, const SDL_Rect& dest) {
 /********************************************************************/
 
 MapView::MapView(SDLCamera* camera, MapData* data, PeopleGroup* group, JobMgr* manager) : data_(data), group_(group), job_manager_(manager),
-    map_background_(nullptr), window_background_(nullptr),
+    map_background_(nullptr), window_background_(nullptr), camera_(camera),
     delta_x_(0.), delta_y_(0.), delta_speed_(0.1), translate_x_(0.), translate_y_(0.)
 {
     tile_x_ = -1;
@@ -52,11 +52,15 @@ MapView::MapView(SDLCamera* camera, MapData* data, PeopleGroup* group, JobMgr* m
     selected_people_ = nullptr;
 
     camera->setMapView(this);
+    camera->getSize(center_x_, center_y_);
+    center_x_ /= 2;
+    center_y_ /= 2;
 }
 
 MapView::~MapView() {
     group_ = nullptr;
     data_ = nullptr;
+    camera_ = nullptr;
 }
 
 /*!
@@ -99,18 +103,24 @@ void MapView::removeFloor(int x, int y) {
  * \return true and the tile position according to the mouse position
  * or false if unreached
  */
-bool MapView::onTile(int mouse_x, int mouse_y) {
-    tile_x_ = -1;
-    tile_y_ = -1;
-    if( mouse_x < scaled_start_x_ ) return false;
-    if( mouse_y < scaled_start_y_ ) return false;
+Position MapView::onTile(int mouse_x, int mouse_y) const {
+    Position pos;
+    pos.x = -1;
+    pos.y = -1;
+    if( mouse_x < scaled_start_x_ ) return pos;
+    if( mouse_y < scaled_start_y_ ) return pos;
     int map_width = data_->width() * scaled_tile_size_;
     int map_height = data_->height() * scaled_tile_size_;
-    if( mouse_x > scaled_start_x_ + map_width ) return false;
-    if( mouse_y > scaled_start_y_ + map_height ) return false;
-    tile_x_ = floor((mouse_x - scaled_start_x_) / scaled_tile_size_);
-    tile_y_ = floor((mouse_y - scaled_start_y_) / scaled_tile_size_);
-    return true;
+    if( mouse_x > scaled_start_x_ + map_width ) return pos;
+    if( mouse_y > scaled_start_y_ + map_height ) return pos;
+    pos.x = floor((mouse_x - scaled_start_x_) / scaled_tile_size_);
+    pos.y = floor((mouse_y - scaled_start_y_) / scaled_tile_size_);
+    return pos;
+}
+
+void MapView::setTile(int tile_x, int tile_y) {
+    tile_x_ = tile_x;
+    tile_y_ = tile_y;
 }
 
 /*!
@@ -325,6 +335,28 @@ bool MapView::curTile(int& tile_x, int& tile_y) {
     tile_x = tile_x_;
     tile_y = tile_y_;
     return tile_x_ >= 0;
+}
+
+Position MapView::getCenterTile() const {
+    Position pos = onTile(center_x_, center_y_);
+    return pos;
+}
+
+void MapView::restoreCenterTile(Position pos) {
+    std::cout << "TODO: need to restore center tile " << pos.x << " " << pos.y << std::endl;
+    int mid_x = data()->width() / 2;
+    mid_x = mid_x - pos.x;
+    float translate_x = (mid_x * 64 * camera_->scale());
+    translate_x_ = translate_x - 32*camera_->scale();
+
+    int mid_y = data()->height() / 2;
+    mid_y = mid_y - pos.y;
+    float translate_y = (mid_y * 64 * camera_->scale());
+    translate_y_ = translate_y - 32*camera_->scale();
+}
+
+PeopleGroup* MapView::group() const {
+    return group_;
 }
 
 /********************************************************************/
@@ -586,6 +618,13 @@ void SDLCamera::handleEvent() {
                 pause_ = !pause_;
             } else if( event_.key.keysym.sym == SDLK_ESCAPE ) {
                 quit_ = true;
+            } else if( event_.key.keysym.sym == SDLK_c ) {
+                // TODO: center view to next robot
+                PeopleGroup* g = map_view_->group();
+                if( g->group().size() > 0 ) {
+                    Character* p = g->group().at(0);
+                    map_view_->restoreCenterTile( p->tilePosition() );
+                }
             } else if( event_.key.keysym.sym == SDLK_b ) {
                 BackGroundGenerator generator(100,60); //10,6);
                 generator.execute("new_out.png");
@@ -618,11 +657,14 @@ void SDLCamera::handleEvent() {
 void SDLCamera::onMouseMove(int mouse_x, int mouse_y) {
     Camera::onMouseMove(mouse_x,mouse_y);
     // check on which 'tile' we are
-    map_view_->onTile(mouse_x,mouse_y);
+    Position tile_pos = map_view_->onTile(mouse_x,mouse_y);
+    map_view_->setTile(tile_pos.x, tile_pos.y);
 }
 
 void SDLCamera::onMouseWheelScroll(int wheel_x, int wheel_y) {
+    Position position = map_view_->getCenterTile();
     Camera::onMouseWheelScroll(wheel_x,wheel_y);
+    map_view_->restoreCenterTile(position);
 }
 
 void SDLCamera::setTool(SDLTool* tool) {

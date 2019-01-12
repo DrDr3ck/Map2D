@@ -36002,7 +36002,7 @@
 </mapdata>
 <group>
   <people name="Bob">
-    <position x="45" y="29" />
+    <position x="31" y="24" />
     <direction x="-1" y="0" />
     <activity value="0" />
     <image_id value="0" />
