@@ -193,7 +193,7 @@ void MapDataConverter::save(std::ofstream& file) {
             const Tile& cur = data_->tile(i,j);
             file << "  <tile x=\"" << i << "\" y=\"" << j << "\">" << std::endl;
             file << "    <id value=\"" << cur.id() << "\" />" << std::endl;
-            file << "    <type value=\"" << typeTileToString(cur.type()) << "\" />" << std::endl;
+            file << "    <type value=\"" << typeTileToString(cur.cell_type()) << "\" />" << std::endl;
             file << "    <btype value=\"" << btypeTileToString(cur.background_type()) << "\" />" << std::endl;
             file << "    <ftype value=\"" << ftypeTileToString(cur.floor_type()) << "\" />" << std::endl;
             file << "  </tile>" << std::endl;

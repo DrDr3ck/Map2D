@@ -34,7 +34,7 @@ int main(int /*argc*/, char** /*argv*/) {
     PeopleGroup group;
 
     std::string filename("save01.arc");
-    MapData data(50,30);
+    MapData data(100,60);
     JobMgr job_mgr(camera->main_renderer());
 
     GameBoard board(&group, &data, &job_mgr);
@@ -56,7 +56,8 @@ int main(int /*argc*/, char** /*argv*/) {
         // end test
     } else {
         std::cout << "cannot find save named " << filename << std::endl;
-        // otherwise, create a random map (TODO)
+        // otherwise, create a random map
+        //MapUtility::createMap()
         data.tile(2,2).setTile(8,Tile::BLOCK,Tile::NONE,Tile::METAL);
 
         // with a robot

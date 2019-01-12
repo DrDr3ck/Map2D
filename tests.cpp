@@ -63,7 +63,7 @@ bool CheckingTest::do_execute() {
 bool TileTest::do_execute() {
     Tile tile(10, Tile::BLOCK);
     CHECK_EQUAL(tile.id(), 10, return false;);
-    CHECK_EQUAL(tile.type(), Tile::BLOCK, return false;);
+    CHECK_EQUAL(tile.cell_type(), Tile::BLOCK, return false;);
     return true;
 }
 
@@ -82,7 +82,7 @@ bool MapTest::do_execute() {
     map_data.addWall(5,2);
     Tile const_tile = map_data.tile(5,2);
     CHECK_EQUAL(const_tile.id(), 1, return false;);
-    CHECK_EQUAL(const_tile.type(), Tile::WALL, return false;);
+    CHECK_EQUAL(const_tile.cell_type(), Tile::WALL, return false;);
     map_data.removeWall(5,2);
     // check that we can add several time the same wall
     // without breaking data tile ids
@@ -91,15 +91,15 @@ bool MapTest::do_execute() {
 
     const_tile = map_data.tile(3,2);
     CHECK_EQUAL(const_tile.id(), 4, return false;);
-    CHECK_EQUAL(const_tile.type(), Tile::WALL, return false;);
+    CHECK_EQUAL(const_tile.cell_type(), Tile::WALL, return false;);
 
     const_tile = map_data.tile(4,2);
     CHECK_EQUAL(const_tile.id(), 1, return false;);
-    CHECK_EQUAL(const_tile.type(), Tile::WALL, return false;);
+    CHECK_EQUAL(const_tile.cell_type(), Tile::WALL, return false;);
 
     const_tile = map_data.tile(5,2);
     CHECK_EQUAL(const_tile.id(), 0, return false;);
-    CHECK_EQUAL(const_tile.type(), Tile::FLOOR, return false;);
+    CHECK_EQUAL(const_tile.cell_type(), Tile::FLOOR, return false;);
 
     /*
     // save/load
@@ -119,7 +119,7 @@ bool MapTest::do_execute() {
             const Tile& map_tile1 = map_data.tile(i,j);
             const Tile& map_tile2 = map_data2.tile(i,j);
             CHECK_EQUAL(map_tile1.id(), map_tile2.id(), return false;);
-            CHECK_EQUAL(map_tile1.type(), map_tile2.type(), return false;);
+            CHECK_EQUAL(map_tile1.cell_type(), map_tile2.cell_type(), return false;);
         }
     }
     */

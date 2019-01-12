@@ -49,8 +49,8 @@ bool MapUtility::saveColorMap(const std::string& filename, TerrainType* regions,
 /********************************************************************/
 
 Tile::Tile(
-    int id, Type type, BType background_type, FType floor_type
-) : id_(id), type_(type), background_type_(background_type), floor_type_(floor_type) {
+    int id, Type cell_type, BType background_type, FType floor_type
+) : id_(id), cell_type_(cell_type), background_type_(background_type), floor_type_(floor_type) {
 }
 
 Tile::~Tile() {
@@ -60,8 +60,15 @@ int Tile::id() const {
     return id_;
 }
 
-Tile::Type Tile::type() const {
-    return type_;
+bool Tile::isWall(const Tile& tile) {
+    return tile.cell_type() == Tile::WALL;
+}
+bool Tile::isFloor(const Tile& tile) {
+    return tile.cell_type() == Tile::FLOOR;
+}
+
+Tile::Type Tile::cell_type() const {
+    return cell_type_;
 }
 
 Tile::BType Tile::background_type() const {
@@ -72,10 +79,25 @@ Tile::FType Tile::floor_type() const {
     return floor_type_;
 }
 
-void Tile::setTile(int id, Type type, BType background_type, FType floor_type) {
+void Tile::setTile(int id, Type cell_type, BType background_type, FType floor_type) {
     id_ = id;
-    type_ = type;
+    cell_type_ = cell_type;
     background_type_ = background_type;
+    floor_type_ = floor_type;
+}
+
+void Tile::setCellTile(int id, Type cell_type) {
+    id_ = id;
+    cell_type_ = cell_type;
+}
+
+void Tile::setBackgroundTile(int id, BType background_type) {
+    id_ = id;
+    background_type_ = background_type;
+}
+
+void Tile::setFloorTile(int id, FType floor_type) {
+    id_ = id;
     floor_type_ = floor_type;
 }
 
@@ -109,90 +131,90 @@ void MapData::reset(int width, int height) {
 void MapData::addWall(int x, int y) {
     // take a look to the tile around the position
     // Tile(int id=0, Type type=EMPTY);
-    if( tile(x,y).type() == Tile::WALL ) {
+    if( Tile::isWall(tile(x,y)) ) {
         // already a wall
         return;
     }
     int id = 0;
     if( x > 0 ) {
-        if( tile(x-1,y).type() == Tile::WALL ) {
+        if( Tile::isWall(tile(x-1,y)) ) {
             id += 1;
             Tile& tile_x_1 = tile(x-1,y);
-            tile_x_1.setTile( tile_x_1.id() + 4, Tile::WALL, tile_x_1.background_type(), tile_x_1.floor_type());
+            tile_x_1.setCellTile( tile_x_1.id() + 4, Tile::WALL);
         }
     }
     if( x < width_-1 ) {
-        if( tile(x+1,y).type() == Tile::WALL ) {
+        if( Tile::isWall(tile(x+1,y)) ) {
             id += 4;
             Tile& tile_x_1 = tile(x+1,y);
-            tile_x_1.setTile( tile_x_1.id() + 1, Tile::WALL, tile_x_1.background_type(), tile_x_1.floor_type());
+            tile_x_1.setCellTile( tile_x_1.id() + 1, Tile::WALL);
         }
     }
     if( y < height_-1 ) {
-        if( tile(x,y+1).type() == Tile::WALL ) {
+        if( Tile::isWall(tile(x,y+1)) ) {
             id += 2;
             Tile& tile_y_1 = tile(x,y+1);
-            tile_y_1.setTile( tile_y_1.id() + 8, Tile::WALL, tile_y_1.background_type(), tile_y_1.floor_type());
+            tile_y_1.setCellTile( tile_y_1.id() + 8, Tile::WALL);
         }
     }
     if( y > 0 ) {
-        if( tile(x,y-1).type() == Tile::WALL ) {
+        if( Tile::isWall(tile(x,y-1)) ) {
             id += 8;
             Tile& tile_y_1 = tile(x,y-1);
-            tile_y_1.setTile( tile_y_1.id() + 2, Tile::WALL, tile_y_1.background_type(), tile_y_1.floor_type());
+            tile_y_1.setCellTile( tile_y_1.id() + 2, Tile::WALL);
         }
     }
-    tile(x,y).setTile(id, Tile::WALL, tile(x,y).background_type(), tile(x,y).floor_type());
+    tile(x,y).setCellTile(id, Tile::WALL);
 }
 
 void MapData::removeWall(int x, int y) {
-    if( tile(x,y).type() != Tile::WALL ) {
+    if( !Tile::isWall(tile(x,y)) ) {
         // not a wall
         return;
     }
-    tile(x,y).setTile(0, Tile::FLOOR, tile(x,y).background_type(), tile(x,y).floor_type());
+    tile(x,y).setCellTile(0, Tile::FLOOR);
     if( x > 0 ) {
-        if( tile(x-1,y).type() == Tile::WALL ) {
+        if( Tile::isWall(tile(x-1,y)) ) {
             Tile& tile_x_1 = tile(x-1,y);
-            tile_x_1.setTile( tile_x_1.id() - 4, Tile::WALL, tile_x_1.background_type(), tile_x_1.floor_type());
+            tile_x_1.setCellTile( tile_x_1.id() - 4, Tile::WALL);
         }
     }
     if( x < width_-1 ) {
-        if( tile(x+1,y).type() == Tile::WALL ) {
+        if( Tile::isWall(tile(x+1,y)) ) {
             Tile& tile_x_1 = tile(x+1,y);
-            tile_x_1.setTile( tile_x_1.id() - 1, Tile::WALL, tile_x_1.background_type(), tile_x_1.floor_type());
+            tile_x_1.setCellTile( tile_x_1.id() - 1, Tile::WALL);
         }
     }
     if( y < height_-1 ) {
-        if( tile(x,y+1).type() == Tile::WALL ) {
+        if( Tile::isWall(tile(x,y+1)) ) {
             Tile& tile_y_1 = tile(x,y+1);
-            tile_y_1.setTile( tile_y_1.id() - 8, Tile::WALL, tile_y_1.background_type(), tile_y_1.floor_type());
+            tile_y_1.setCellTile( tile_y_1.id() - 8, Tile::WALL);
         }
     }
     if( y > 0 ) {
-        if( tile(x,y-1).type() == Tile::WALL ) {
+        if( Tile::isWall(tile(x,y-1)) ) {
             Tile& tile_y_1 = tile(x,y-1);
-            tile_y_1.setTile( tile_y_1.id() - 2, Tile::WALL, tile_y_1.background_type(), tile_y_1.floor_type());
+            tile_y_1.setCellTile( tile_y_1.id() - 2, Tile::WALL);
         }
     }
 }
 
 void MapData::addFloor(int x, int y) {
-    if( tile(x,y).type() == Tile::FLOOR || tile(x,y).type() == Tile::WALL ) { // cannot build floor on a wall
+    if( Tile::isFloor(tile(x,y)) || Tile::isWall(tile(x,y)) ) { // cannot build floor on a wall
         // already a floor
         return;
     }
     Tile& cur = tile(x,y);
-    cur.setTile(cur.id(), Tile::FLOOR, Tile::NONE, Tile::METAL);
+    cur.setCellTile(cur.id(), Tile::FLOOR);
 }
 
 void MapData::removeFloor(int x, int y) {
-    if( tile(x,y).type() != Tile::FLOOR ) {
+    if( !Tile::isFloor(tile(x,y)) ) {
         // already empty
         return;
     }
     Tile& cur = tile(x,y);
-    cur.setTile(cur.id(), Tile::EMPTY, Tile::NONE, Tile::METAL);
+    cur.setCellTile(cur.id(), Tile::EMPTY);
 }
 
 void MapData::addGround(int x, int y) {
@@ -201,7 +223,7 @@ void MapData::addGround(int x, int y) {
         return;
     }
     Tile& cur = tile(x,y);
-    cur.setTile(cur.id(), cur.type(), Tile::GRASS, Tile::METAL);
+    cur.setBackgroundTile(cur.id(), Tile::GRASS);
 }
 
 void MapData::removeGround(int x, int y) {
@@ -210,7 +232,7 @@ void MapData::removeGround(int x, int y) {
         return;
     }
     Tile& cur = tile(x,y);
-    cur.setTile(cur.id(), cur.type(), Tile::NONE, Tile::METAL);
+    cur.setBackgroundTile(cur.id(), Tile::NONE);
 }
 
 void MapData::addObject(Object* object, int x, int y) {
@@ -272,17 +294,17 @@ SDL_Texture* TileSetLib::getTextureFromTile(const Tile& tile, SDL_Renderer* rend
     int id = tile.id();
     int max = 5;
 
-    bool background = (tile.type() == Tile::EMPTY);
+    bool background = (tile.cell_type() == Tile::EMPTY);
 
-    if( tile.type() == Tile::EMPTY ) {
+    if( tile.cell_type() == Tile::EMPTY ) {
         return nullptr;
-    } else if( tile.type() == Tile::FLOOR ) {
+    } else if( Tile::isFloor(tile) ) {
         id = int(tile.floor_type());
         background = true;
         if( map_of_grounds.find(id) != map_of_grounds.end()) {
             return map_of_grounds[id];
         }
-    } else if( tile.type() == Tile::WALL ) {
+    } else if( Tile::isWall(tile) ) {
         if(map_of_walls.find(id) != map_of_walls.end()) {
             return map_of_walls[id];
         }
@@ -311,7 +333,7 @@ SDL_Texture* TileSetLib::getTextureFromTile(const Tile& tile, SDL_Renderer* rend
     dest.h = tileSize;
 
     SDL_Surface* surf_source = TileSetLib::instance()->tiles();
-    if( tile.type() == Tile::WALL ) {
+    if( Tile::isWall(tile) ) {
         surf_source = TileSetLib::instance()->walls();
     }
     if( background ) {
@@ -326,7 +348,7 @@ SDL_Texture* TileSetLib::getTextureFromTile(const Tile& tile, SDL_Renderer* rend
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surf_dest);
     if( background ) {
         TileSetLib::instance()->mapOfGrounds()[id] = texture;
-    } else if( tile.type() == Tile::WALL ) {
+    } else if( Tile::isWall(tile) ) {
         TileSetLib::instance()->mapOfWalls()[id] = texture;
     } else {
         TileSetLib::instance()->mapOfTiles()[id] = texture;

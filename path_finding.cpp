@@ -85,28 +85,28 @@ std::vector<Position> PathFinding::list_actual_neighbours(int x, int y) {
     if( x > 0 ) {
         Position position = {x-1,y};
         int index = getIndex(position.x,position.y);
-        if( map_array_[index] == -1 || map_data_->tile(position.x,position.y).type() != Tile::WALL ) {
+        if( map_array_[index] == -1 || map_data_->tile(position.x,position.y).cell_type() != Tile::WALL ) {
             result.push_back(position);
         }
     }
     if( x < width_-1 ) {
         Position position = {x+1,y};
         int index = getIndex(position.x,position.y);
-        if( map_array_[index] == -1 || map_data_->tile(position.x,position.y).type() != Tile::WALL ) {
+        if( map_array_[index] == -1 || map_data_->tile(position.x,position.y).cell_type() != Tile::WALL ) {
             result.push_back(position);
         }
     }
     if( y > 0 ) {
         Position position = {x,y-1};
         int index = getIndex(position.x,position.y);
-        if( map_array_[index] == -1 || map_data_->tile(position.x,position.y).type() != Tile::WALL ) {
+        if( map_array_[index] == -1 || map_data_->tile(position.x,position.y).cell_type() != Tile::WALL ) {
             result.push_back(position);
         }
     }
     if( y < height_-1 ) {
         Position position = {x,y+1};
         int index = getIndex(position.x,position.y);
-        if( map_array_[index] == -1 || map_data_->tile(position.x,position.y).type() != Tile::WALL ) {
+        if( map_array_[index] == -1 || map_data_->tile(position.x,position.y).cell_type() != Tile::WALL ) {
             result.push_back(position);
         }
     }

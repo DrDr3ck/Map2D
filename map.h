@@ -28,25 +28,37 @@ public:
     static bool saveColorMap(const std::string& filename, TerrainType* regions, int regionCount);
 };
 
+struct TileItem {
+    char name; // B for background, S for sol, M for mur, P for porte and F for fenetre
+    int type; // for example: 0 for water, 1 for sand, 2 for grass, ...
+    int value; // pixmap item
+};
+
 class Tile {
 public:
     enum Type { BLOCK, DOOR, FLOOR, EMPTY, WALL };
     enum BType { NONE, GRASS, DIRT, ROCK };
     enum FType { METAL, PLASTIC };
 public:
-    Tile(int id=0, Type type=EMPTY, BType background_type=NONE, FType floor_type=METAL);
+    Tile(int id=0, Type cell_type=EMPTY, BType background_type=NONE, FType floor_type=METAL);
     ~Tile();
 
     int id() const;
-    Type type() const;
+    Type cell_type() const;
     BType background_type() const;
     FType floor_type() const;
-    void setTile(int id, Type type, BType background_type, FType floor_type);
+    void setTile(int id, Type cell_type, BType background_type, FType floor_type);
+    void setCellTile(int id, Type cell_type);
+    void setBackgroundTile(int id, BType background_type);
+    void setFloorTile(int id, FType floor_type);
 
     static std::string typeTileToString(Tile::Type type);
+
+    static bool isWall(const Tile& tile);
+    static bool isFloor(const Tile& tile);
 private:
     int id_;
-    Type type_;
+    Type cell_type_;
     BType background_type_;
     FType floor_type_;
 };

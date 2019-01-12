@@ -211,13 +211,13 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
                 SDL_SetRenderDrawColor( main_renderer, 250, 250, 250, 255 );
                 SDL_RenderDrawRect(main_renderer, &dest);
                 ontile_rect_ = dest;
-                tile_text.append(Tile::typeTileToString(cur.type()));
+                tile_text.append(Tile::typeTileToString(cur.cell_type()));
                 tile_text.append(": ");
                 tile_text.append(Utility::itos(w));
                 tile_text.append(" ");
                 tile_text.append(Utility::itos(h));
                 // debug
-                if( cur.type() == Tile::WALL ) {
+                if( Tile::isWall(cur) ) {
                     tile_text.append(" - id: ");
                     tile_text.append(Utility::itos(cur.id()));
                 }
@@ -257,6 +257,8 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
 
     // Display the tooltip of the tile
     if( !tile_text.empty() ) {
+        tile_text.append("\ntranslate: ");
+        tile_text.append(Utility::itos(translate_x_));
         SDLText text(tile_text, "pixel11", 14, SDLText::black());
         text.set_position(camera->mouse_x()+30,camera->mouse_y()+10);
         sdl_camera->displayText(text, true);
