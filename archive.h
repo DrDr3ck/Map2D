@@ -41,13 +41,14 @@ protected:
 
 private:
     MapData* data_;
-    int x = 0;
-    int y = 0;
-    int tile_id;
-    Tile::Type tile_type = Tile::BLOCK;
-    Tile::BType tile_btype = Tile::NONE;
-    Tile::FType tile_ftype = Tile::METAL;
-    bool inTile = false;
+    int x_ = 0;
+    int y_ = 0;
+    int tile_id_;
+    Tile::Type tile_type_ = Tile::BLOCK;
+    int occurrences_;
+    Tile::BType tile_btype_ = Tile::NONE;
+    Tile::FType tile_ftype_ = Tile::METAL;
+    bool inTile_ = false;
 };
 
 class CharacterConverter : public DataConverter {

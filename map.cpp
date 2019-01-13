@@ -50,7 +50,9 @@ bool MapUtility::saveColorMap(const std::string& filename, TerrainType* regions,
 
 Tile::Tile(
     int id, Type cell_type, BType background_type, FType floor_type
-) : id_(id), cell_type_(cell_type), background_type_(background_type), floor_type_(floor_type) {
+) : id_(id), cell_type_(cell_type), occurrences_(0),
+    background_type_(background_type), floor_type_(floor_type)
+{
 }
 
 Tile::~Tile() {
@@ -71,12 +73,21 @@ Tile::Type Tile::cell_type() const {
     return cell_type_;
 }
 
+// occurrences de la tuile : par exemple, 10 cailloux
+int Tile::occurrences() const {
+    return occurrences_;
+}
+
 Tile::BType Tile::background_type() const {
     return background_type_;
 }
 
 Tile::FType Tile::floor_type() const {
     return floor_type_;
+}
+
+void Tile::setOccurrences(int value) {
+    occurrences_ = value;
 }
 
 void Tile::setTile(int id, Type cell_type, BType background_type, FType floor_type) {

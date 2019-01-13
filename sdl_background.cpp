@@ -78,7 +78,7 @@ namespace {
     }
 }
 
-void BackGroundGenerator::execute(const std::string& filename) const {
+void BackGroundGenerator::execute(const std::string& filename, float** noise_map) const {
     if( surfaces_.size() == 0 ) {
         std::cout << "Error: Cannot generate background without pictures" << std::endl;
         return;
@@ -99,8 +99,9 @@ void BackGroundGenerator::execute(const std::string& filename) const {
     int offset = 4; // left, right, top, bottom
     int fullsize = tilesize + offset*2;
 
-    //int type = 2; // TODO : terrain type (depend of the value in the perlin noise generated map)
-    float** noise_map = Noise::generateNoiseMap(width_, height_, rand(), 150, 4, 0.5f, 2.f);
+    if( noise_map == nullptr ) {
+        noise_map = Noise::generateNoiseMap(width_, height_, rand(), 150, 4, 0.5f, 2.f);
+    }
 
     std::vector<MapTile> map_tiles;
     for( int col=0; col < width_; col++ ) {

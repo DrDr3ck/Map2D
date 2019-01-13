@@ -58,7 +58,6 @@ int main(int /*argc*/, char** /*argv*/) {
         std::cout << "cannot find save named " << filename << std::endl;
         // otherwise, create a random map
         //MapUtility::createMap()
-        data.tile(2,2).setTile(8,Tile::BLOCK,Tile::NONE,Tile::METAL);
 
         // with a robot
         Position position = {2,1};

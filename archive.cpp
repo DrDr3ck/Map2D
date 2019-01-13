@@ -81,6 +81,8 @@ void ArchiveConverter::save(GameBoard* board, const std::string& filename) {
         return;
     }
 
+    std::cout << "Saving " << filename << "..." << std::endl;
+
     MapDataConverter mconverter(board->data());
     mconverter.save(file);
 
@@ -100,36 +102,42 @@ void MapDataConverter::load(const std::string& str) {
         int height = atoi(height_str.c_str());
         data_->reset(width,height);
     }
-    if( !inTile ) {
+    if( !inTile_ ) {
         if( isTag(str, "tile") ) {
             std::string x_str = getAttribute(str, "x");
-            x = atoi(x_str.c_str());
+            x_ = atoi(x_str.c_str());
             std::string y_str = getAttribute(str, "y");
-            y = atoi(y_str.c_str());
-            inTile = true;
+            y_ = atoi(y_str.c_str());
+            inTile_ = true;
+            occurrences_ = 0;
         }
     }
-    if( inTile ) {
+    if( inTile_ ) {
         if( isTag(str, "id") ) {
             std::string value_str = getAttribute(str, "value");
-            tile_id = atoi(value_str.c_str());
+            tile_id_ = atoi(value_str.c_str());
         }
         if( isTag(str, "type") ) {
             std::string value_str = getAttribute(str, "value");
-            tile_type = stringTileToType(value_str);
+            tile_type_ = stringTileToType(value_str);
+        }
+        if( isTag(str, "occurrences") ) {
+            std::string value_str = getAttribute(str, "value");
+            occurrences_ = atoi(value_str.c_str());
         }
         if( isTag(str, "btype") ) {
             std::string value_str = getAttribute(str, "value");
-            tile_btype = stringTileToBType(value_str);
+            tile_btype_ = stringTileToBType(value_str);
         }
         if( isTag(str, "ftype") ) {
             std::string value_str = getAttribute(str, "value");
-            tile_ftype = stringTileToFType(value_str);
+            tile_ftype_ = stringTileToFType(value_str);
         }
         if( isEndTag(str, "tile") ) {
-            Tile& cur_tile = data_->tile(x,y);
-            cur_tile.setTile(tile_id, tile_type, tile_btype, tile_ftype);
-            inTile = false;
+            Tile& cur_tile = data_->tile(x_,y_);
+            cur_tile.setTile(tile_id_, tile_type_, tile_btype_, tile_ftype_);
+            cur_tile.setOccurrences(occurrences_);
+            inTile_ = false;
         }
     }
 }
@@ -146,6 +154,8 @@ std::string MapDataConverter::typeTileToString(Tile::Type type) const {
 
 std::string MapDataConverter::btypeTileToString(Tile::BType type) const {
     if( type == Tile::NONE ) return "NONE";
+    if( type == Tile::WATER ) return "WATER";
+    if( type == Tile::DIRT ) return "DIRT";
     if( type == Tile::GRASS ) return "GRASS";
     if( type == Tile::DIRT ) return "DIRT";
     if( type == Tile::ROCK ) return "ROCK";
@@ -172,6 +182,8 @@ Tile::Type MapDataConverter::stringTileToType(const std::string& str) const {
 
 Tile::BType MapDataConverter::stringTileToBType(const std::string& str) const {
     if( str == "NONE" ) return Tile::NONE;
+    if( str == "WATER" ) return Tile::WATER;
+    if( str == "DIRT" ) return Tile::DIRT;
     if( str == "GRASS" ) return Tile::GRASS;
     if( str == "DIRT" ) return Tile::DIRT;
     if( str == "ROCK" ) return Tile::ROCK;
@@ -194,6 +206,7 @@ void MapDataConverter::save(std::ofstream& file) {
             file << "  <tile x=\"" << i << "\" y=\"" << j << "\">" << std::endl;
             file << "    <id value=\"" << cur.id() << "\" />" << std::endl;
             file << "    <type value=\"" << typeTileToString(cur.cell_type()) << "\" />" << std::endl;
+            file << "    <occurrence value=\"" << Utility::itos(cur.occurrences()) << "\" />" << std::endl;
             file << "    <btype value=\"" << btypeTileToString(cur.background_type()) << "\" />" << std::endl;
             file << "    <ftype value=\"" << ftypeTileToString(cur.floor_type()) << "\" />" << std::endl;
             file << "  </tile>" << std::endl;

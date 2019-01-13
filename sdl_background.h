@@ -15,7 +15,7 @@ public:
     BackGroundGenerator(int width, int height);
     ~BackGroundGenerator();
 
-    virtual void execute(const std::string& filename) const;
+    virtual void execute(const std::string& filename, float** noise_map = nullptr) const;
 
 protected:
     int getType(float value) const;

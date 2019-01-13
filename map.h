@@ -37,7 +37,7 @@ struct TileItem {
 class Tile {
 public:
     enum Type { BLOCK, DOOR, FLOOR, EMPTY, WALL };
-    enum BType { NONE, GRASS, DIRT, ROCK };
+    enum BType { NONE, WATER, SAND, DIRT, GRASS, ROCK };
     enum FType { METAL, PLASTIC };
 public:
     Tile(int id=0, Type cell_type=EMPTY, BType background_type=NONE, FType floor_type=METAL);
@@ -47,6 +47,8 @@ public:
     Type cell_type() const;
     BType background_type() const;
     FType floor_type() const;
+    int occurrences() const;
+    void setOccurrences(int value);
     void setTile(int id, Type cell_type, BType background_type, FType floor_type);
     void setCellTile(int id, Type cell_type);
     void setBackgroundTile(int id, BType background_type);
@@ -59,6 +61,7 @@ public:
 private:
     int id_;
     Type cell_type_;
+    int occurrences_;
     BType background_type_;
     FType floor_type_;
 };
