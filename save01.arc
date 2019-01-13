@@ -13374,13 +13374,13 @@
     <ftype value="METAL" />
   </tile>
   <tile x="29" y="22">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="6" />
+    <type value="WALL" />
     <btype value="NONE" />
     <ftype value="METAL" />
   </tile>
   <tile x="30" y="22">
-    <id value="4" />
+    <id value="5" />
     <type value="WALL" />
     <btype value="NONE" />
     <ftype value="METAL" />
@@ -13974,8 +13974,8 @@
     <ftype value="METAL" />
   </tile>
   <tile x="29" y="23">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="10" />
+    <type value="WALL" />
     <btype value="NONE" />
     <ftype value="METAL" />
   </tile>
@@ -14574,8 +14574,8 @@
     <ftype value="METAL" />
   </tile>
   <tile x="29" y="24">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="10" />
+    <type value="WALL" />
     <btype value="NONE" />
     <ftype value="METAL" />
   </tile>
@@ -15174,8 +15174,8 @@
     <ftype value="METAL" />
   </tile>
   <tile x="29" y="25">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="10" />
+    <type value="WALL" />
     <btype value="NONE" />
     <ftype value="METAL" />
   </tile>
@@ -15192,7 +15192,7 @@
     <ftype value="METAL" />
   </tile>
   <tile x="32" y="25">
-    <id value="8" />
+    <id value="10" />
     <type value="WALL" />
     <btype value="NONE" />
     <ftype value="METAL" />
@@ -15774,26 +15774,26 @@
     <ftype value="METAL" />
   </tile>
   <tile x="29" y="26">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="12" />
+    <type value="WALL" />
     <btype value="NONE" />
     <ftype value="METAL" />
   </tile>
   <tile x="30" y="26">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="1" />
+    <type value="WALL" />
     <btype value="NONE" />
     <ftype value="METAL" />
   </tile>
   <tile x="31" y="26">
     <id value="0" />
-    <type value="EMPTY" />
+    <type value="FLOOR" />
     <btype value="NONE" />
     <ftype value="METAL" />
   </tile>
   <tile x="32" y="26">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="8" />
+    <type value="WALL" />
     <btype value="NONE" />
     <ftype value="METAL" />
   </tile>
@@ -36002,8 +36002,8 @@
 </mapdata>
 <group>
   <people name="Bob">
-    <position x="31" y="24" />
-    <direction x="-1" y="0" />
+    <position x="30" y="24" />
+    <direction x="1" y="1" />
     <activity value="0" />
     <image_id value="0" />
   </people>
