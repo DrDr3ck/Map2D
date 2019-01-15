@@ -8,11 +8,8 @@
 
 /********************************************************************/
 
-BackGroundGenerator::BackGroundGenerator(int width, int height) : width_(width), height_(height), window_(nullptr), renderer_(nullptr) {
-    //int tilesize = 64;
-    if(SDL_Init(SDL_INIT_VIDEO) >= 0) {
-        //window_ = SDL_CreateWindow("Tile Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width_*tilesize, height_*tilesize, SDL_WINDOW_SHOWN);
-        //renderer_ = SDL_CreateRenderer(window_, -1, 0);
+Biome::Biome(const std::string& type) {
+    if( type == "forest" ) {
         SDL_Surface* water_surface = IMG_Load("WaterGenerator72_01.png");
         if( water_surface != nullptr ) {
             surfaces_.push_back(water_surface);
@@ -33,37 +30,56 @@ BackGroundGenerator::BackGroundGenerator(int width, int height) : width_(width),
             surfaces_.push_back(rock_surface);
             heights_.push_back(260);
         }
-        //texture_ = SDL_CreateTextureFromSurface(renderer_, tiles_surface);
+    }
+
+    int enlargedtilesize = 72;
+    for( auto surf : surfaces_ ) {
+        int column = surf->w / enlargedtilesize;
+        int row = surf->h / enlargedtilesize;
+        surface_columns_.push_back(column);
+        surface_columns_.push_back(row);
     }
 }
 
-BackGroundGenerator::~BackGroundGenerator() {
+Biome::~Biome() {
     for( auto surf : surfaces_ ) {
         if( surf != nullptr ) {
             SDL_FreeSurface(surf);
         }
     }
-    if( renderer_ != nullptr ) {
-        SDL_DestroyRenderer(renderer_);
-    }
-    if( window_ != nullptr ) {
-        SDL_DestroyWindow(window_);
-    }
 }
 
-std::string itos(int i){
-    std::stringstream ss;
-    ss<<i;
-    return ss.str();
-}
-
-int BackGroundGenerator::getType(float value) const {
+int Biome::getType(float value) const {
     for( int region = 0; region < int(heights_.size()); region++ ) {
         if( value <= heights_[region] ) {
             return region;
         }
     }
     return heights_.size()-1;
+}
+
+bool Biome::is_valid() const {
+    if( surfaces_.size() == 0 ) {
+        std::cout << "Error: Cannot generate background without pictures" << std::endl;
+        return false;
+    }
+    return true;
+}
+
+/********************************************************************/
+
+BackGroundGenerator::BackGroundGenerator(
+    int width, int height, Biome* biome
+) : width_(width), height_(height), biome_(biome) {
+    if( biome_ == nullptr ) {
+        biome_ = new Biome("forest"); // Default biome
+    }
+    //if(SDL_Init(SDL_INIT_VIDEO) >= 0) {
+
+    //}
+}
+
+BackGroundGenerator::~BackGroundGenerator() {
 }
 
 namespace {
@@ -79,19 +95,13 @@ namespace {
 }
 
 void BackGroundGenerator::execute(const std::string& filename, float** noise_map) const {
-    if( surfaces_.size() == 0 ) {
-        std::cout << "Error: Cannot generate background without pictures" << std::endl;
+    if( !biome_->is_valid() ) {
+        std::cout << "Error: biome " << biome_->type() << " is invalid" << std::endl;
         return;
     }
-    int enlargedtilesize = 72;
-    std::vector<int> columns;
-    std::vector<int> rows;
-    for( auto surf : surfaces_ ) {
-        int column = surf->w / enlargedtilesize;
-        int row = surf->h / enlargedtilesize;
-        columns.push_back(column);
-        rows.push_back(row);
-    }
+
+    const std::vector<int>& columns = biome_->surface_columns();
+    const std::vector<int>& rows = biome_->surface_rows();
 
     int tilesize = 64;
     Uint32 amask = 0x000000ff;
@@ -116,7 +126,7 @@ void BackGroundGenerator::execute(const std::string& filename, float** noise_map
     sort(map_tiles.begin(), map_tiles.end(), wayToSortTile);
 
     for( unsigned int index=0; index < map_tiles.size(); index++ ) {
-        int type = getType(map_tiles[index].value);
+        int type = biome_->getType(map_tiles[index].value);
         int col = map_tiles[index].x;
         int row = map_tiles[index].y;
         int idx = std::rand() % columns[type];
@@ -133,7 +143,7 @@ void BackGroundGenerator::execute(const std::string& filename, float** noise_map
         dest.w = fullsize;
         dest.h = fullsize;
         SDL_BlitSurface(
-                surfaces_[type],
+                biome_->surface(type),
                 &source,
                 image,
                 &dest

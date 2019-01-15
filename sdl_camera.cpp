@@ -343,7 +343,6 @@ Position MapView::getCenterTile() const {
 }
 
 void MapView::restoreCenterTile(Position pos) {
-    std::cout << "TODO: need to restore center tile " << pos.x << " " << pos.y << std::endl;
     int mid_x = data()->width() / 2;
     mid_x = mid_x - pos.x;
     float translate_x = (mid_x * 64 * camera_->scale());

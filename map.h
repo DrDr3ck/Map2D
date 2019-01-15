@@ -90,6 +90,8 @@ public:
     void reset(int width, int height);
     int width() const { return width_; }
     int height() const { return height_; }
+
+    static void createMap(MapData* data);
 private:
     int width_;
     int height_;

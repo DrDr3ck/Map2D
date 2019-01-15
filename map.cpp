@@ -4,6 +4,8 @@
 
 #include "SDL2/SDL_image.h"
 #include "character.h"
+#include "perlin_noise.h"
+#include "sdl_background.h"
 #include <iostream>
 #include <fstream>
 
@@ -260,6 +262,32 @@ const Tile& MapData::tile(int x,int y) const {
 
 Tile& MapData::tile(int x,int y) {
     return tiles_[x+y*width_];
+}
+
+void MapData::createMap(MapData* data) {
+    if( data == nullptr ) {
+        std::cout << "Error : cannot create map because data is nullptr" << std::endl;
+        return;
+    }
+    int width = data->width();
+    int height = data->height();
+    int seed = rand();
+    float** noise_map = Noise::generateNoiseMap(width, height, seed, 150, 4, 0.5f, 2.f);
+
+    // create the background picture
+    Biome* biome = new Biome("forest"); // generator is ownership of biome
+    BackGroundGenerator generator(width,height,biome);
+    std::string filename("_out.png");
+    filename.insert(0, Utility::itos(seed));
+    generator.execute(filename);
+
+    for( int col=0; col < width; col++ ) {
+        for( int row=0; row < height; row++ ) {
+            Tile& tile = data->tile(col,row);
+            float value = noise_map[col][row]* 255;
+            tile.setBackgroundTile(tile.id(), Tile::GRASS); // TODO change GRASS according to 'value' (need to be given by Biome)
+        }
+    }
 }
 
 /********************************************************************/
