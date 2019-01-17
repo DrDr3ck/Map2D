@@ -391,7 +391,7 @@
 	<random>
 	<SDL2/SDL_ttf.h>
 
-1516875671 source:d:\games\programs\map2d\camera.cpp
+1547729082 source:d:\games\programs\map2d\camera.cpp
 	"camera.h"
 	<iostream>
 
@@ -400,7 +400,7 @@
 	<list>
 	<vector>
 
-1547715043 source:d:\games\programs\map2d\archive.cpp
+1547729251 source:d:\games\programs\map2d\archive.cpp
 	"archive.h"
 	"character.h"
 	"logger.h"
@@ -412,7 +412,7 @@
 	"map.h"
 	<string>
 
-1547721132 source:d:\games\programs\map2d\sdl_camera.cpp
+1547729251 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -571,7 +571,7 @@
 	<iostream>
 	<fstream>
 
-1547719092 source:d:\games\programs\map2d\logger.cpp
+1547729171 source:d:\games\programs\map2d\logger.cpp
 	"logger.h"
 	"utility.h"
 

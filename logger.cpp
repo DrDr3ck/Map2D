@@ -54,7 +54,7 @@ Logger& Logger::operator<<(const std::string& str) {
         // display string in terminal
         std::cout << getType() << ": " << string_ << std::endl;
         if( type_ != Logger::DEBUG ) {
-            //LoggerMgr::instance()->addString( LoggerString(getType(), string_) );
+            LoggerMgr::instance()->addString( LoggerString(getType(), string_) );
         }
     }
     return *this;

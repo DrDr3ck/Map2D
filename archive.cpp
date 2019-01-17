@@ -8,10 +8,6 @@
 
 namespace { // anonymous namespace
 
-//bool startsWith(const std::string& str, const std::string& prefix) {
-//    return str.rfind(prefix, 0) == 0;
-//}
-
 bool isTag(const std::string& str, const std::string& tag_origin, bool is_end=false) {
     std::string tag("<");
     if( is_end ) {

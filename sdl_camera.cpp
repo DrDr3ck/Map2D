@@ -435,6 +435,7 @@ SDL_Texture* SDLText::texture(SDL_Renderer* renderer) {
         texture_ = SDL_CreateTextureFromSurface(renderer, final_dst);
         rect_.w = final_rect.w;
         rect_.h = final_rect.h;
+        SDL_FreeSurface(final_dst);
     }
     return texture_;
 }
