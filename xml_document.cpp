@@ -179,7 +179,7 @@ namespace {
 XMLNode* XMLDocument::read_doc(const std::string& filename) {
     std::ifstream file(filename);
     if (!file) {
-        std::cout << "unable to open file for load: " << filename << "\n";
+        Logger::error() << "unable to open file for load: " << filename << Logger::endl;
         return nullptr;
     }
 
@@ -211,7 +211,7 @@ XMLNode* XMLDocument::read_doc(const std::string& filename) {
 bool XMLDocument::write_doc(const XMLNode* node, const std::string& filename) {
     std::ofstream file(filename);
     if (!file) {
-        std::cout << "unable to open file for save: " << filename << std::endl;
+        Logger::error() << "unable to open file for save: " << filename << Logger::endl;
         return false;
     }
 

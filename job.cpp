@@ -1,5 +1,6 @@
 #include "job.h"
 #include "sdl_camera.h"
+#include "logger.h"
 
 /***********************************/
 
@@ -70,7 +71,7 @@ SDL_Texture* JobMgr::getTexture(const std::string& icon_type) {
     filename += ".png";
     SDL_Surface* icon_surface = Utility::IMGLoad(filename.c_str());
     if( icon_surface == nullptr ) {
-        std::cout << "Cannot find icon for " << filename << std::endl;
+        Logger::error() << "Cannot find icon for " << filename << Logger::endl;
         SDL_Texture* texture = map_of_jobs_["none"]; // return the 'none' icon texture
         map_of_jobs_[icon_type] = texture;
         return texture;

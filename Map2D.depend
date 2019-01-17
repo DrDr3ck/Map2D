@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1547411941 source:d:\games\programs\map2d\main.cpp
+1547720183 source:d:\games\programs\map2d\main.cpp
 	<SDL2/SDL.h>
 	<iostream>
 	<fstream>
@@ -11,6 +11,7 @@
 	"font.h"
 	"archive.h"
 	"sdl_camera.h"
+	"logger.h"
 	"tests.h"
 
 1508787066 d:\games\programs\map2d\library\compiler\sdl2\sdl.h
@@ -346,13 +347,14 @@
 	"begin_code.h"
 	"close_code.h"
 
-1547565300 source:d:\games\programs\map2d\map.cpp
+1547715848 source:d:\games\programs\map2d\map.cpp
 	"map.h"
 	<cmath>
 	"SDL2/SDL_image.h"
 	"character.h"
 	"perlin_noise.h"
 	"sdl_background.h"
+	"logger.h"
 	<iostream>
 	<fstream>
 
@@ -372,13 +374,14 @@
 	<list>
 	<string>
 
-1547324912 source:d:\games\programs\map2d\tests.cpp
+1547716843 source:d:\games\programs\map2d\tests.cpp
 	"tests.h"
 	"archive.h"
 	"font.h"
 	"job.h"
 	"perlin_noise.h"
 	"xml_document.h"
+	"logger.h"
 	<stdio.h>
 	<cstdlib>
 	<iostream>
@@ -397,9 +400,10 @@
 	<list>
 	<vector>
 
-1547410474 source:d:\games\programs\map2d\archive.cpp
+1547715043 source:d:\games\programs\map2d\archive.cpp
 	"archive.h"
 	"character.h"
+	"logger.h"
 	<stdlib.h>
 	<iostream>
 	<fstream>
@@ -408,7 +412,7 @@
 	"map.h"
 	<string>
 
-1547332175 source:d:\games\programs\map2d\sdl_camera.cpp
+1547721132 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -419,7 +423,7 @@
 	"sdl_tool.h"
 	"sdl_background.h"
 
-1547332126 d:\games\programs\map2d\sdl_camera.h
+1547719961 d:\games\programs\map2d\sdl_camera.h
 	"character.h"
 	"map.h"
 	"job.h"
@@ -430,7 +434,7 @@
 	<SDL2/SDL_ttf.h>
 	<SDL2/SDL_image.h>
 
-1516824253 source:d:\games\programs\map2d\button.cpp
+1547721132 source:d:\games\programs\map2d\button.cpp
 	"button.h"
 	<iostream>
 
@@ -438,16 +442,17 @@
 	"camera.h"
 	<list>
 
-1516310654 source:d:\games\programs\map2d\font.cpp
+1547713057 source:d:\games\programs\map2d\font.cpp
 	"font.h"
 	"map.h"
+	"logger.h"
 	<iostream>
 
 1522766398 d:\games\programs\map2d\font.h
 	<SDL2/SDL_ttf.h>
 	<map>
 
-1522921732 source:d:\games\programs\map2d\sdl_button.cpp
+1547721132 source:d:\games\programs\map2d\sdl_button.cpp
 	"sdl_button.h"
 	<iostream>
 	<math.h>
@@ -464,7 +469,7 @@
 	<SDL2/SDL.h>
 	"camera.h"
 
-1522921687 source:d:\games\programs\map2d\sdl_tool.cpp
+1547715043 source:d:\games\programs\map2d\sdl_tool.cpp
 	"sdl_tool.h"
 	<iostream>
 	<math.h>
@@ -473,9 +478,10 @@
 	"sdl_camera.h"
 	"sdl_button.h"
 
-1547565827 source:d:\games\programs\map2d\sdl_background.cpp
+1547714271 source:d:\games\programs\map2d\sdl_background.cpp
 	"sdl_background.h"
 	"perlin_noise.h"
+	"logger.h"
 	<iostream>
 	<sstream>
 	<random>
@@ -487,10 +493,11 @@
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 
-1522750229 source:d:\games\programs\map2d\character.cpp
+1547715043 source:d:\games\programs\map2d\character.cpp
 	"character.h"
 	"sdl_camera.h"
 	"path_finding.h"
+	"logger.h"
 	<iostream>
 	<sstream>
 	<cmath>
@@ -511,9 +518,10 @@
 	"map.h"
 	<vector>
 
-1546804759 source:d:\games\programs\map2d\job.cpp
+1547713066 source:d:\games\programs\map2d\job.cpp
 	"job.h"
 	"sdl_camera.h"
+	"logger.h"
 
 1520448477 d:\games\programs\map2d\job.h
 	"map.h"
@@ -531,16 +539,18 @@
 	<string>
 	"utility.h"
 
-1547411909 d:\games\programs\map2d\utility.h
+1547714557 d:\games\programs\map2d\utility.h
 	<string>
 	<iostream>
 	<sstream>
 	<cstdlib>
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
+	"logger.h"
 
-1546893177 source:d:\games\programs\map2d\perlin_noise.cpp
+1547714283 source:d:\games\programs\map2d\perlin_noise.cpp
 	"perlin_noise.h"
+	"logger.h"
 	<cmath>
 	<random>
 	<algorithm>
@@ -554,10 +564,20 @@
 	<string>
 	<vector>
 
-1546701106 source:d:\games\programs\map2d\xml_document.cpp
+1547715043 source:d:\games\programs\map2d\xml_document.cpp
 	"xml_document.h"
 	"utility.h"
 	<stdlib.h>
 	<iostream>
 	<fstream>
+
+1547719092 source:d:\games\programs\map2d\logger.cpp
+	"logger.h"
+	"utility.h"
+
+1547720156 d:\games\programs\map2d\logger.h
+	<cstdlib>
+	<iostream>
+	<sstream>
+	<vector>
 

@@ -1,5 +1,6 @@
 #include "font.h"
 #include "map.h"
+#include "logger.h"
 
 #include <iostream>
 
@@ -17,7 +18,7 @@ FontLib::~FontLib() {
 
 FontLib* FontLib::instance() {
     if( singleton_ == nullptr ) {
-        std::cout << "creating FontLib singleton" << std::endl;
+        Logger::debug() << "creating FontLib singleton" << Logger::endl;
         singleton_ =  new FontLib();
     }
     return singleton_;
@@ -26,7 +27,7 @@ FontLib* FontLib::instance() {
 void FontLib::kill() {
     if( singleton_ != nullptr ) {
         delete singleton_;
-        std::cout << "destroying FontLib singleton" << std::endl;
+        Logger::debug() << "destroying FontLib singleton" << Logger::endl;
         singleton_ = nullptr;
     }
 }

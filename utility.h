@@ -8,6 +8,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "logger.h"
+
 /********************************************************************/
 
 #define BUILDWALL "build"
@@ -29,6 +31,16 @@ public:
     static std::string itos(int i) {
         std::ostringstream stm;
         stm << i ;
+        return stm.str();
+    }
+
+    /*!
+     * Transforms a float into a string.
+     */
+    static std::string ftos(float f) {
+        std::ostringstream stm;
+        stm.precision(6);
+        stm << f ;
         return stm.str();
     }
 
@@ -64,11 +76,11 @@ public:
     }
 
     static SDL_Surface* IMGLoad(const std::string& filename) {
-        std::cout << "Load image " << filename << std::endl;
+        Logger::info() << "Load image " << filename << Logger::endl;
         SDL_Surface* bg_surface = IMG_Load(filename.c_str());
         if(!bg_surface) {
             // handle error
-            std::cout << "IMG_Load: " << IMG_GetError() << std::endl;
+            Logger::error() << "IMG_Load: " << IMG_GetError() << Logger::endl;
         }
         return bg_surface;
     }

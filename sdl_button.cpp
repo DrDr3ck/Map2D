@@ -61,6 +61,7 @@ void SDLButtonManager::do_render(Camera* camera, double /*delay_in_ms*/) {
         SDLButton* button = dynamic_cast<SDLButton*>(b);
         SDL_Texture* texture = button->getTexture(main_renderer);
         sdl_camera->displayTexture(texture, &button->rect());
+
         if( button->hasFocus() ) {
             SDL_SetRenderDrawColor( main_renderer, 250, 250, 250, 255 );
             SDL_RenderDrawRect(main_renderer, &button->rect());
@@ -89,7 +90,7 @@ SDL_Texture* SDLButton::getTexture(SDL_Renderer* renderer) {
     if( texture_ == nullptr ) {
         texture_ = SDL_CreateTextureFromSurface(renderer, surface_);
         if( texture_ == nullptr ) {
-            std::cout << "CreateRGBSurface failed: " << SDL_GetError() << std::endl;
+            Logger::error() << "CreateRGBSurface failed: " << SDL_GetError() << Logger::endl;
         }
     }
     return texture_;

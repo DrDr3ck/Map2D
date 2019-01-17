@@ -10,6 +10,7 @@
 #include "font.h"
 #include "archive.h"
 #include "sdl_camera.h"
+#include "logger.h"
 
 #include "tests.h"
 
@@ -42,7 +43,7 @@ int main(int /*argc*/, char** /*argv*/) {
     // check if save already exists
     std::ifstream f(filename.c_str());
     if( f.good() ) {
-        std::cout << "loading existing save" << std::endl;
+        Logger::info() << "loading existing save" << Logger::endl;
         // if save exists, load it
         ArchiveConverter::load(&board, filename);
 
@@ -55,7 +56,7 @@ int main(int /*argc*/, char** /*argv*/) {
         }
         // end test
     } else {
-        std::cout << "cannot find save named " << filename << std::endl;
+        Logger::warning() << "cannot find save named " << filename << Logger::endl;
         // otherwise, create a random map
         MapData::createMap(&data);
 
@@ -73,6 +74,9 @@ int main(int /*argc*/, char** /*argv*/) {
     std::chrono::steady_clock::time_point start_draw = std::chrono::steady_clock::now();
     std::chrono::steady_clock::time_point start_anim = std::chrono::steady_clock::now();
     bool ending = false;
+
+    LoggerMgr::instance()->clear();
+
     while(!ending) {
 
         camera->handleEvent();

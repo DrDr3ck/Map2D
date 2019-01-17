@@ -1,6 +1,7 @@
 #include "character.h"
 #include "sdl_camera.h"
 #include "path_finding.h"
+#include "logger.h"
 
 #include <iostream>
 #include <sstream>
@@ -35,7 +36,7 @@ void DynamicItem::animate(double delta) {
     if( action_ == nullptr ) {
         return;
     }
-    //std::cout << "Animate " << name_ << std::endl;
+    //Logger::debug() << "Animate " << name_ << Logger::endl;
     if( !action_->spentTime(time_spent_) ) {
         action_->postAction();
         delete action_;
@@ -236,7 +237,7 @@ bool BuildAction::spentTime(double time_spent) {
             action_ = nullptr;
             start_time_ = std::chrono::steady_clock::now();
             if( !game_board_->jobManager()->findJobAt(job_->tilePosition() ) ) {
-                std::cout << "Job cancel" << std::endl;
+                Logger::info() << "Job cancel" << Logger::endl;
                 return false; // job has been cancel
             }
             // set direction so that people can 'work'
@@ -276,11 +277,10 @@ void BuildAction::postAction() {
 /********************************************************************/
 
 CharacterSetLib::CharacterSetLib() {
-    std::cout << "CharacterSetLib" << std::endl;
     characters_surface_ = Utility::IMGLoad("robots.png");
 
     if( characters_surface_ == nullptr ) {
-        std::cout << "cannot initialize CharacterSetLib" << std::endl;
+        Logger::error() << "cannot initialize CharacterSetLib" << Logger::endl;
     }
 }
 
@@ -290,7 +290,7 @@ CharacterSetLib::~CharacterSetLib() {
 
 CharacterSetLib* CharacterSetLib::instance() {
     if( singleton_ == nullptr ) {
-        std::cout << "creating CharacterSetLib singleton" << std::endl;
+        Logger::debug() << "creating CharacterSetLib singleton" << Logger::endl;
         singleton_ =  new CharacterSetLib();
     }
     return singleton_;
@@ -299,7 +299,7 @@ CharacterSetLib* CharacterSetLib::instance() {
 void CharacterSetLib::kill() {
     if( singleton_ != nullptr ) {
         delete singleton_;
-        std::cout << "destroying CharacterSetLib singleton" << std::endl;
+        Logger::debug() << "destroying CharacterSetLib singleton" << Logger::endl;
         singleton_ = nullptr;
     }
 }
@@ -370,7 +370,7 @@ void PeopleGroup::animate(GameBoard* board, double delta_ms) {
         if( people->action() == nullptr ) {
             Job* job = board->jobManager()->getFirstAvailableJob();
             if( job != nullptr ) {
-                std::cout << job->name() << std::endl;
+                Logger::debug() << job->name() << Logger::endl;
                 if( job->name() == BUILDWALL ) {
                     job->takeJob(people);
                     people->setAction( new BuildAction(board, people, job, 64), "building a wall" );

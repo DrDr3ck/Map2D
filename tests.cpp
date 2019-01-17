@@ -5,6 +5,7 @@
 #include "job.h"
 #include "perlin_noise.h"
 #include "xml_document.h"
+#include "logger.h"
 #include <stdio.h>
 #include <cstdlib>
 #include <iostream>
@@ -234,11 +235,12 @@ namespace {
         SDL_Surface* surface = SDL_CreateRGBSurface(0, sizeX, sizeY, 32, 0, 0, 0, 0);
         SDL_LockSurface(surface);
         Uint32* pixels = (Uint32*)surface->pixels;
+        //Logger debug = Logger::debug();
         for( int y = 0; y < sizeY; y++ ) {
             for( int x = 0; x < sizeX; x++ ) {
                 float value = noise_map[x][y];
-                //std::cout << value << " ";
                 int color = value * 255;
+                //debug << color << " ";
                 int r = color;
                 int g = color;
                 int b = color;
@@ -253,7 +255,7 @@ namespace {
                 Uint32 couleur = SDL_MapRGB(surface->format, r, g, b);
                 pixels[y * surface->w + x] = couleur;
             }
-            //std::cout << std::endl;
+            //debug << Logger::endl;
         }
         SDL_UnlockSurface(surface);
         SDL_SaveBMP(surface, filename.data());
@@ -394,7 +396,7 @@ TestManager::TestManager() {
 
 TestManager* TestManager::instance() {
     if( singleton_ == nullptr ) {
-        std::cout << "creating TestManager singleton" << std::endl;
+        Logger::debug() << "creating TestManager singleton" << Logger::endl;
         singleton_ =  new TestManager();
     }
     return singleton_;
@@ -403,7 +405,7 @@ TestManager* TestManager::instance() {
 void TestManager::kill() {
     if( singleton_ != nullptr ) {
         delete singleton_;
-        std::cout << "destroying TestManager singleton" << std::endl;
+        Logger::debug() << "destroying TestManager singleton" << Logger::endl;
         singleton_ = nullptr;
     }
 }
@@ -417,20 +419,21 @@ bool TestManager::execute() {
     } else {
         CHECK( tests_.size() > 0, return false;);
     }
-    std::cout << "Executing " << tests_.size() << " tests ...\n";
+    Logger::debug() << "Executing " << tests_.size() << " tests ..." << Logger::endl;
     auto chrono_start = std::chrono::system_clock::now();
     for( auto test : tests_ ) {
-        std::cout << "    > " << test->name();
+        Logger debug = Logger::debug();
+        debug << "    > " << test->name();
         if( test->do_execute() ) {
-            std::cout << " ... OK\n";
+            debug << " ... OK" << Logger::endl;
         } else {
             result = false;
-            std::cout << " ... KO\n";
+            debug << " ... KO" << Logger::endl;
         }
     }
     auto chrono_end = std::chrono::system_clock::now();
     std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(chrono_end-chrono_start);
-    std::cout << "Ending tests in " << ms.count() << " ms\n";
+    Logger::debug() << "Ending tests in " << ms.count() << " ms" << Logger::endl;
     return result;
 }
 
@@ -453,7 +456,7 @@ bool TestManager::countTestsInFile(const std::string& filename, int& count) cons
 }
 
 void TestManager::addTest(Test* test) {
-    std::cout << "add test " << test->name() << std::endl;
+    Logger::debug() << "add test " << test->name() << Logger::endl;
     tests_.push_back(test);
 }
 

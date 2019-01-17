@@ -1,5 +1,6 @@
 #include "sdl_background.h"
 #include "perlin_noise.h"
+#include "logger.h"
 
 #include <iostream>
 #include <sstream>
@@ -60,7 +61,7 @@ int Biome::getType(float value) const {
 
 bool Biome::is_valid() const {
     if( surfaces_.size() == 0 ) {
-        std::cout << "Error: Cannot generate background without pictures" << std::endl;
+        Logger::error() << "Cannot generate background without pictures" << Logger::endl;
         return false;
     }
     return true;
@@ -74,9 +75,6 @@ BackGroundGenerator::BackGroundGenerator(
     if( biome_ == nullptr ) {
         biome_ = new Biome("forest"); // Default biome
     }
-    //if(SDL_Init(SDL_INIT_VIDEO) >= 0) {
-
-    //}
 }
 
 BackGroundGenerator::~BackGroundGenerator() {
@@ -96,7 +94,7 @@ namespace {
 
 void BackGroundGenerator::execute(const std::string& filename, float** noise_map) const {
     if( !biome_->is_valid() ) {
-        std::cout << "Error: biome " << biome_->type() << " is invalid" << std::endl;
+        Logger::error() << "biome " << biome_->type() << " is invalid" << Logger::endl;
         return;
     }
 

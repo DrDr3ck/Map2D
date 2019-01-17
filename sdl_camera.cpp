@@ -204,8 +204,10 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     std::string tile_text;
     ontile_rect_ = {0,0,0,0};
     SDL_Texture* small = nullptr;
-    for( int w = 0 ; w < data_->width(); w++ ) {
-        for( int h = 0 ; h < data_->height(); h++ ) {
+    Position topleft = onTile(0,0);
+    Position bottomright = onTile(800+64*camera->scale(),600+64*camera->scale()); // TODO size of window
+    for( int w = std::max(0,topleft.x) ; w < std::min(data_->width(),bottomright.x); w++ ) {
+        for( int h = std::max(0,topleft.y) ; h < std::min(data_->height(),bottomright.y); h++ ) {
             const Tile& cur = data_->tile(w,h);
             SDL_Rect dest;
             dest.x = w*scaled_tile_size_ + scaled_start_x_;
@@ -569,13 +571,40 @@ void SDLCamera::render(double delay_in_ms) {
         }
     }
 
+    // render Logger
+    const std::vector<LoggerString>& strings = LoggerMgr::instance()->terminal();
+    int max_terminal_strings = 10;
+    int text_offset = 0;
+    for( unsigned int i=0; i < strings.size(); i++ ) {
+        const LoggerString& log = strings[i];
+        if( log.expired() ) {
+            LoggerMgr::instance()->moveInJournal(i);
+            i--;
+        } else if( max_terminal_strings > 0 ) {
+            // display logger string
+            SDLText text(log.full_string(), "pixel11", 14, (log.type() == "Info") ? SDLText::yellow() : ((log.type() == "Error") ? SDLText::red() : SDLText::black()));
+            text.set_position(30,550-text_offset);
+            this->displayText(text, true);
+            max_terminal_strings--;
+            text_offset += text.rect().h + 3;
+        }
+    }
+
     SDL_RenderPresent(main_renderer_);
 }
 
 void SDLCamera::displayTexture(SDL_Texture* texture, const SDL_Rect* rect) {
-    int check = SDL_RenderCopy(main_renderer_, texture, NULL, rect);
+    int check = -1;
+    try {
+        check = SDL_RenderCopy(main_renderer_, texture, NULL, rect);
+    }
+    catch(...) {
+        return;
+    }
     if( check != 0 ) {
-        std::cout << "Check = " << check << "  " << SDL_GetError() << std::endl;
+        std::ostringstream oss;
+        oss << "Check = " << check << "  " << SDL_GetError();
+        Logger::error() << oss.str() << Logger::endl;
     }
 }
 
@@ -677,7 +706,7 @@ void SDLCamera::setMapView(MapView* view) {
 
 void SDLCamera::do_quit() const {
     if( !valid() ) {
-        std::cout << "Camera not valid: " << SDL_GetError() << std::endl;
+        Logger::error() << "Camera not valid: " << SDL_GetError() << Logger::endl;
     }
     SDL_Quit();
 }

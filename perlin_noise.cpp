@@ -1,4 +1,5 @@
 #include "perlin_noise.h"
+#include "logger.h"
 
 #include <cmath>
 #include <random>
@@ -115,14 +116,14 @@ float** Noise::generateNoiseMap(int maxWidth, int maxHeight, unsigned int seed, 
     }
     if( lacunarity < 1.f ) {
         lacunarity = 1.f;
-        std::cout << "lacunarity cannot be less than 1" << std::endl;
+        Logger::warning() << "lacunarity cannot be less than 1" << Logger::endl;
     }
     if( persistance < 0.f ) {
         persistance = 0.f;
-        std::cout << "persistance cannot be less than 0" << std::endl;
+        Logger::warning() << "persistance cannot be less than 0" << Logger::endl;
     } else if( persistance > 1.f ) {
         persistance = 1.f;
-        std::cout << "persistance cannot be greather than 1" << std::endl;
+        Logger::warning() << "persistance cannot be greather than 1" << Logger::endl;
     }
 
     PerlinNoise perlin(seed);

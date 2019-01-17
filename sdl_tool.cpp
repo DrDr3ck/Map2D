@@ -58,7 +58,7 @@ void SDLTool::mouseMoved(int, int) {
 }
 
 void SDLTool::keyPressed(const std::string& key) {
-    std::cout << "KeyPressed: " << key << std::endl;
+    Logger::debug() << "KeyPressed: " << key << Logger::endl;
 }
 
 void SDLTool::mouseReleased(int) {
@@ -66,7 +66,11 @@ void SDLTool::mouseReleased(int) {
 
 /********************************************************************/
 
-SDLBuildTool::SDLBuildTool(SDLCamera* camera, const std::string& icon_name, int type) : SDLTool(camera) {
+SDLBuildTool::SDLBuildTool(
+    SDLCamera* camera,
+    const std::string& icon_name,
+    int type
+) : SDLTool(camera) {
     surface_ = Utility::IMGLoad(icon_name.c_str());
     type_ = type;
 }
@@ -81,7 +85,7 @@ SDL_Texture* SDLBuildTool::getTexture(SDL_Renderer* renderer) {
     if( texture_ == nullptr ) {
         texture_ = SDL_CreateTextureFromSurface(renderer, surface_);
         if( texture_ == nullptr ) {
-            std::cout << "CreateRGBSurface failed: " << SDL_GetError() << std::endl;
+            Logger::error() << "CreateRGBSurface failed: " << SDL_GetError() << Logger::endl;
         }
         SDL_SetTextureAlphaMod( texture_, 192 );
         SDL_FreeSurface(surface_);
@@ -99,7 +103,7 @@ void SDLBuildTool::mousePressed(int button) {
         } else if( type_ == FLOORTOOL ) {
             camera()->mapView()->addFloor(x,y);
         } else if( type_ == OBJECTTOOL ) {
-            std::cout << "add object " << type_ << std::endl;
+            Logger::debug() << "add object " << type_ << Logger::endl;
             //camera()->mapView()->addFloor(x,y);
         }
     }

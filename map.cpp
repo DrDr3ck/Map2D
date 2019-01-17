@@ -6,6 +6,7 @@
 #include "character.h"
 #include "perlin_noise.h"
 #include "sdl_background.h"
+#include "logger.h"
 #include <iostream>
 #include <fstream>
 
@@ -14,7 +15,7 @@
 TerrainType* MapUtility::readColorMap(const std::string& filename) {
     std::ifstream file(filename);
     if (!file) {
-        std::cout << "unable to open file for load: " << filename << "\n";
+        Logger::error() << "unable to open file for load: " << filename << Logger::endl;
         return nullptr;
     }
     int size = 6;
@@ -26,7 +27,7 @@ TerrainType* MapUtility::readColorMap(const std::string& filename) {
 bool MapUtility::saveColorMap(const std::string& filename, TerrainType* regions, int regionCount) {
     std::ofstream file(filename);
     if (!file) {
-        std::cout << "Unable to open file for colormap: " << filename << std::endl;
+        Logger::error() << "Unable to open file for colormap: " << filename << Logger::endl;
         return false;
     }
     file << "{" << std::endl;
@@ -120,7 +121,7 @@ std::string Tile::typeTileToString(Tile::Type type) {
     if( type == Tile::FLOOR ) return "Floor";
     if( type == Tile::WALL ) return "Wall";
     if( type == Tile::EMPTY ) return "Nothing...";
-    std::cout << "unable to find string for type: " << type << std::endl;
+    Logger::error() << "unable to find string for type: " << type << Logger::endl;
     return "NONE";
 }
 
@@ -266,7 +267,7 @@ Tile& MapData::tile(int x,int y) {
 
 void MapData::createMap(MapData* data) {
     if( data == nullptr ) {
-        std::cout << "Error : cannot create map because data is nullptr" << std::endl;
+        Logger::error() << "cannot create map because data is nullptr" << Logger::endl;
         return;
     }
     int width = data->width();
@@ -297,7 +298,7 @@ TileSetLib::TileSetLib() {
     walls_surface_ = Utility::IMGLoad("walls01.png");
     grounds_surface_ = Utility::IMGLoad("grounds01.png");
     if( tiles_surface_ == nullptr || walls_surface_ == nullptr ) {
-        std::cout << "cannot initialize TileSetLib" << std::endl;
+        Logger::error() << "cannot initialize TileSetLib" << Logger::endl;
     }
 }
 
@@ -309,7 +310,7 @@ TileSetLib::~TileSetLib() {
 
 TileSetLib* TileSetLib::instance() {
     if( singleton_ == nullptr ) {
-        std::cout << "creating TileSetLib singleton" << std::endl;
+        Logger::debug() << "creating TileSetLib singleton" << Logger::endl;
         singleton_ =  new TileSetLib();
     }
     return singleton_;
@@ -318,7 +319,7 @@ TileSetLib* TileSetLib::instance() {
 void TileSetLib::kill() {
     if( singleton_ != nullptr ) {
         delete singleton_;
-        std::cout << "destroying TileSetLib singleton" << std::endl;
+        Logger::debug() << "destroying TileSetLib singleton" << Logger::endl;
         singleton_ = nullptr;
     }
 }
@@ -413,6 +414,7 @@ GameBoard::~GameBoard() {
 void GameBoard::animate(double delay_ms) {
     group_->animate(this, delay_ms);
     //data_->animate(delay_ms);
+    LoggerMgr::instance()->animate(delay_ms);
 }
 
 /********************************************************************/

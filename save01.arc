@@ -42002,8 +42002,8 @@
 </mapdata>
 <group>
   <people name="Bob">
-    <position x="8" y="35" />
-    <direction x="1" y="1" />
+    <position x="9" y="32" />
+    <direction x="1" y="0" />
     <activity value="0" />
     <image_id value="0" />
   </people>

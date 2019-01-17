@@ -95,6 +95,11 @@ public:
         return red;
     }
 
+    static SDL_Color& yellow() { // royal
+        static SDL_Color red = {250, 218, 94, 255};
+        return red;
+    }
+
     static SDL_Color& white() {
         static SDL_Color white = {250, 250, 250, 255};
         return white;

@@ -45,6 +45,8 @@
 		<Unit filename="font.h" />
 		<Unit filename="job.cpp" />
 		<Unit filename="job.h" />
+		<Unit filename="logger.cpp" />
+		<Unit filename="logger.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="map.cpp" />
 		<Unit filename="map.h" />
