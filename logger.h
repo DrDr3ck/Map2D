@@ -61,9 +61,9 @@ private:
 
 class Logger {
 public:
-    enum Type { INFO, WARNING, ERROR, DEBUG };
+    enum class LoggerType { INFO, WARNING, ERROR, DEBUG };
 public:
-    Logger(Type type);
+    Logger(LoggerType type);
     Logger(const Logger& logger);
     ~Logger();
 
@@ -73,7 +73,7 @@ public:
     Logger& operator<<(const int& value);
 
     const std::string& getString() const { return string_; }
-    const Type& type() const { return type_; }
+    const LoggerType& type() const { return type_; }
     const std::string& getType() const;
 
     static Logger info();
@@ -85,7 +85,7 @@ protected:
     void appendString(const std::string& str);
 
 private:
-    Type type_;
+    LoggerType type_;
     std::string string_;
 };
 

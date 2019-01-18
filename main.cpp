@@ -62,7 +62,7 @@ int main(int /*argc*/, char** /*argv*/) {
 
         // with a robot
         Position position = {2,1};
-        Character* people = new Character("Bob", position, 0);
+        Character* people = new Character("B0b31", position, 0);
         people->setDirection(1,0);
         group.add(people);
     }
@@ -75,7 +75,7 @@ int main(int /*argc*/, char** /*argv*/) {
     std::chrono::steady_clock::time_point start_anim = std::chrono::steady_clock::now();
     bool ending = false;
 
-    LoggerMgr::instance()->clear();
+    //LoggerMgr::instance()->clear();
 
     while(!ending) {
 

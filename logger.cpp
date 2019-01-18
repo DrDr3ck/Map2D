@@ -32,7 +32,7 @@ std::string LoggerString::full_string() const {
 
 /********************************************************************/
 
-Logger::Logger(Type type) : type_(type) {
+Logger::Logger(LoggerType type) : type_(type) {
 }
 
 Logger::Logger(const Logger& logger) {
@@ -53,7 +53,7 @@ Logger& Logger::operator<<(const std::string& str) {
     } else {
         // display string in terminal
         std::cout << getType() << ": " << string_ << std::endl;
-        if( type_ != Logger::DEBUG ) {
+        if( type_ != LoggerType::DEBUG ) {
             LoggerMgr::instance()->addString( LoggerString(getType(), string_) );
         }
     }
@@ -70,31 +70,31 @@ void Logger::appendString(const std::string& str) {
 }
 
 Logger Logger::info() {
-    return Logger(INFO);
+    return Logger(LoggerType::INFO);
 }
 
 Logger Logger::warning() {
-    return Logger(WARNING);
+    return Logger(LoggerType::WARNING);
 }
 
 Logger Logger::error() {
-    return Logger(ERROR);
+    return Logger(LoggerType::ERROR);
 }
 
 Logger Logger::debug() {
-    return Logger(DEBUG);
+    return Logger(LoggerType::DEBUG);
 }
 
 const std::string& Logger::getType() const {
-    if( type_ == Logger::INFO ) {
+    if( type_ == LoggerType::INFO ) {
         static std::string info_str("Info");
         return info_str;
     }
-    if( type_ == Logger::WARNING ) {
+    if( type_ == LoggerType::WARNING ) {
         static std::string warning_str("Warning");
         return warning_str;
     }
-    if( type_ == Logger::ERROR ) {
+    if( type_ == LoggerType::ERROR ) {
         static std::string error_str("Error");
         return error_str;
     }
