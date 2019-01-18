@@ -286,7 +286,20 @@ void MapData::createMap(MapData* data) {
         for( int row=0; row < height; row++ ) {
             Tile& tile = data->tile(col,row);
             float value = noise_map[col][row]* 255;
-            tile.setBackgroundTile(tile.id(), Tile::GRASS); // TODO change GRASS according to 'value' (need to be given by Biome)
+            int region = biome->getType( value );
+            // TODO change btype according to 'value' (need to be given by Biome ?)
+            Tile::BType btype = Tile::GRASS;
+            if( region == 0 ) {
+                btype = Tile::WATER;
+            } else if( region == 1 ) {
+                btype = Tile::SAND;
+            } else if( region == 3 ) {
+                btype = Tile::ROCK;
+            }
+            tile.setBackgroundTile(tile.id(), btype);
+            if( tile.background_type() == Tile::ROCK ) {
+                tile.setOccurrences( rand()%40+10 ); // valeur entre 10 et 50
+            }
         }
     }
 }
