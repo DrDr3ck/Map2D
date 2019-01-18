@@ -22,7 +22,7 @@ public:
 
 class Camera {
 public:
-    Camera();
+    Camera(int width, int height);
     virtual ~Camera() {}
 
     virtual bool valid() const = 0;
@@ -35,6 +35,9 @@ public:
 
     float scale() const { return scales_[scale_idx_]; }
     void zoom(bool up);
+
+    int width() const { return width_; }
+    int height() const { return height_; }
 
     virtual void onMouseMove(int x, int y);
     virtual void onMouseWheelScroll(int x, int y);
@@ -61,6 +64,9 @@ protected:
     int wheel_y_;
     int scale_idx_;
     std::vector<float> scales_;
+
+    int width_;
+    int height_;
 };
 
 /********************************************************************/

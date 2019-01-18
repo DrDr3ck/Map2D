@@ -23,7 +23,7 @@ int main(int /*argc*/, char** /*argv*/) {
     test_manager->kill();
 
     // Create window
-    SDLCamera* camera = new SDLCamera();
+    SDLCamera* camera = new SDLCamera(800,600);
     if( !camera->valid() ) {
         delete camera;
         return -1;

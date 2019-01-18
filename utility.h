@@ -74,6 +74,8 @@ public:
         return r;
     }
 
+    static const int tileSize = 64; // Tile Size
+
     /*!
      * \return true if \p original_str starts with \p prefix. spaces are trimmed if strict is false.
      */

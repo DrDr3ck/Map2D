@@ -72,12 +72,12 @@ void Character::render(SDLCamera* camera, const SDL_Rect& rect) {
         static int offset = 3;
         SDL_Rect activity_rect = {rect.x+offset,rect.y+offset,0,0};
         SDL_SetRenderDrawColor( camera->main_renderer(), 0, 250, 0, 255 );
-        int width = activity_percent_ / 100.0 * (64-2*offset);
+        int width = activity_percent_ / 100.0 * (Utility::tileSize-2*offset);
         activity_rect.w = width;
         activity_rect.h = 9;
         SDL_RenderFillRect( camera->main_renderer(), &activity_rect );
         SDL_SetRenderDrawColor( camera->main_renderer(), 0, 255, 128, 255 );
-        activity_rect.w = 64-2*offset;
+        activity_rect.w = Utility::tileSize-2*offset;
         activity_rect.h = 9;
         SDL_RenderDrawRect( camera->main_renderer(), &activity_rect );
     }
@@ -181,14 +181,14 @@ Position MoveAction::get_position_in_pixel() {
     int x1 = prev.x;
     int y1 = prev.y;
     Position cur_position = {
-        int(std::round(x1/64.)),
-        int(std::round(y1/64.)) };
+        int(std::round(x1/float(Utility::tileSize))),
+        int(std::round(y1/float(Utility::tileSize))) };
     character_->setTilePosition( cur_position );
     prev_position_ = cur_position;
     Position next = path_in_pixel_.at(base+1);
     int x2 = next.x;
     int y2 = next.y;
-    next_position_ = { int(std::round(x2/64.)), int(std::round(y2/64.))  };
+    next_position_ = { int(std::round(x2/float(Utility::tileSize))), int(std::round(y2/float(Utility::tileSize)))  };
     double factor = cur_time - base;
     Position cur_in_pixel;
     cur_in_pixel.x = int(x1 + (x2-x1)*factor);
@@ -199,12 +199,11 @@ Position MoveAction::get_position_in_pixel() {
 /********************************************************************/
 
 BuildAction::BuildAction(
-    GameBoard* game_board, Character* people, Job* job, int tile_size
+    GameBoard* game_board, Character* people, Job* job
 ) {
     game_board_ = game_board;
     people_ = people;
     job_ = job;
-    tile_size_ = tile_size;
     action_ = nullptr;
     isValid_ = true;
 }
@@ -224,7 +223,7 @@ void BuildAction::preAction() {
         isValid_ = false;
         job_->reset();
     } else {
-        action_ = new MoveAction(people_, positions, tile_size_);
+        action_ = new MoveAction(people_, positions, Utility::tileSize);
     }
 }
 
@@ -305,23 +304,22 @@ void CharacterSetLib::kill() {
 }
 
 void CharacterSetLib::init(SDL_Renderer* renderer) {
-    static int tileSize = 64;
     for( int x=0; x<4; x++ ) {
         for( int y=0; y<4; y++ ) {
             int id = x+y*4;
             SDL_Rect source;
-            source.x = x * tileSize;
-            source.y = y * tileSize;
-            source.w = tileSize;
-            source.h = tileSize;
+            source.x = x * Utility::tileSize;
+            source.y = y * Utility::tileSize;
+            source.w = Utility::tileSize;
+            source.h = Utility::tileSize;
 
-            SDL_Surface* surf_dest = SDL_CreateRGBSurface(0, tileSize, tileSize, 32, 0, 0, 0, 0);
+            SDL_Surface* surf_dest = SDL_CreateRGBSurface(0, Utility::tileSize, Utility::tileSize, 32, 0, 0, 0, 0);
 
             SDL_Rect dest;
             dest.x = 0;
             dest.y = 0;
-            dest.w = tileSize;
-            dest.h = tileSize;
+            dest.w = Utility::tileSize;
+            dest.h = Utility::tileSize;
 
             SDL_Surface* surf_source = CharacterSetLib::instance()->characters();
 
@@ -373,24 +371,24 @@ void PeopleGroup::animate(GameBoard* board, double delta_ms) {
                 Logger::debug() << job->name() << Logger::endl;
                 if( job->name() == BUILDWALL ) {
                     job->takeJob(people);
-                    people->setAction( new BuildAction(board, people, job, 64), "building a wall" );
+                    people->setAction( new BuildAction(board, people, job), "building a wall" );
                     people->action()->preAction();
                 } else if( job->name() == DEMOLISHWALL ) {
                     job->takeJob(people);
-                    people->setAction( new BuildAction(board, people, job, 64), "demolishing a wall" );
+                    people->setAction( new BuildAction(board, people, job), "demolishing a wall" );
                     people->action()->preAction();
                 } else if( job->name() == BUILDFLOOR ) {
                     job->takeJob(people);
-                    people->setAction( new BuildAction(board, people, job, 64), "building a foundation" );
+                    people->setAction( new BuildAction(board, people, job), "building a foundation" );
                     people->action()->preAction();
                 } else if( job->name() == DEMOLISHFLOOR ) {
                     job->takeJob(people);
-                    people->setAction( new BuildAction(board, people, job, 64), "demolishing a foundation" );
+                    people->setAction( new BuildAction(board, people, job), "demolishing a foundation" );
                     people->action()->preAction();
                 } else if( job->name() == "build_object" ) {
                     // TODO
                     //job.dynamic_item = people
-                    //people.action = BuildObjectAction(self, people, job, self.tile_size)
+                    //people.action = BuildObjectAction(self, people, job)
                     //people.action.preAction()
                 }
             }

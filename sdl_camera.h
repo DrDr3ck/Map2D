@@ -121,7 +121,7 @@ class SDLButtonManager;
 
 class SDLCamera : public Camera {
 public:
-    SDLCamera();
+    SDLCamera(int width, int height);
     virtual ~SDLCamera();
 
     virtual bool valid() const override;

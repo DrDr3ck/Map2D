@@ -131,8 +131,8 @@ SDL_Rect MapView::getPeopleRect(Character* people) const {
     int people_x = people->tilePosition().x;
     int people_y = people->tilePosition().y;
     if( people->validPixelPosition() ) {
-        dest.x = people->pixelPosition().x*scaled_tile_size_/64. + scaled_start_x_;
-        dest.y = people->pixelPosition().y*scaled_tile_size_/64. + scaled_start_y_;
+        dest.x = people->pixelPosition().x*scaled_tile_size_/float(Utility::tileSize) + scaled_start_x_;
+        dest.y = people->pixelPosition().y*scaled_tile_size_/float(Utility::tileSize) + scaled_start_y_;
     } else {
         dest.x = people_x*scaled_tile_size_ + scaled_start_x_;
         dest.y = people_y*scaled_tile_size_ + scaled_start_y_;
@@ -184,7 +184,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
 
     int screen_width, screen_height;
     sdl_camera->getSize(screen_width, screen_height);
-    scaled_tile_size_ = 64 * scale;
+    scaled_tile_size_ = Utility::tileSize * scale;
     int map_width = data_->width() * scaled_tile_size_;
     int map_height = data_->height() * scaled_tile_size_;
     int delta_width = (screen_width - map_width)/2;
@@ -208,7 +208,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     ontile_rect_ = {0,0,0,0};
     SDL_Texture* small = nullptr;
     Position topleft = onTile(0,0);
-    Position bottomright = onTile(800+64*camera->scale(),600+64*camera->scale()); // TODO size of window
+    Position bottomright = onTile(camera->width()+Utility::tileSize*camera->scale(),camera->height()+Utility::tileSize*camera->scale());
     for( int w = std::max(0,topleft.x) ; w < std::min(data_->width(),bottomright.x); w++ ) {
         for( int h = std::max(0,topleft.y) ; h < std::min(data_->height(),bottomright.y); h++ ) {
             const Tile& cur = data_->tile(w,h);
@@ -244,7 +244,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     // render objects
     for( auto position_object : data_->objects() ) {
         SDL_Rect dest = getTileRect(position_object.x,position_object.y);
-        position_object.object->render(sdl_camera, dest); // TODO scale !!
+        position_object.object->render(sdl_camera, dest);
     }
 
     // display jobs (in semi transparency)
@@ -274,8 +274,6 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
 
     // Display the tooltip of the tile
     if( !tile_text.empty() ) {
-        tile_text.append("\ntranslate: ");
-        tile_text.append(Utility::itos(translate_x_));
         SDLText text(tile_text, "pixel11", 14, SDLText::black());
         text.set_position(camera->mouse_x()+30,camera->mouse_y()+10);
         sdl_camera->displayText(text, true);
@@ -316,7 +314,7 @@ void MapView::handleEvent(Camera* camera) {
                 Position end_position = {tile_x_, tile_y_};
                 std::vector<Position> positions = path.findPath(selected_people_->tilePosition(), end_position);
                 if( positions.size() > 0 ) {
-                    ActionBase* action = new MoveAction(selected_people_, positions, 64);
+                    ActionBase* action = new MoveAction(selected_people_, positions, Utility::tileSize);
                     selected_people_->setAction( action, "Move to new location");
                 }
             }
@@ -352,13 +350,13 @@ Position MapView::getCenterTile() const {
 void MapView::restoreCenterTile(Position pos) {
     int mid_x = data()->width() / 2;
     mid_x = mid_x - pos.x;
-    float translate_x = (mid_x * 64 * camera_->scale());
-    translate_x_ = translate_x - 32*camera_->scale();
+    float translate_x = (mid_x * Utility::tileSize * camera_->scale());
+    translate_x_ = translate_x - (Utility::tileSize/2)*camera_->scale();
 
     int mid_y = data()->height() / 2;
     mid_y = mid_y - pos.y;
-    float translate_y = (mid_y * 64 * camera_->scale());
-    translate_y_ = translate_y - 32*camera_->scale();
+    float translate_y = (mid_y * Utility::tileSize * camera_->scale());
+    translate_y_ = translate_y - (Utility::tileSize/2)*camera_->scale();
 }
 
 PeopleGroup* MapView::group() const {
@@ -449,9 +447,11 @@ SDL_Texture* SDLText::texture(SDL_Renderer* renderer) {
 
 /********************************************************************/
 
-SDLCamera::SDLCamera() : Camera(), window_(nullptr), main_renderer_(nullptr), tool_(nullptr), map_view_(nullptr) {
+SDLCamera::SDLCamera(
+    int width, int height
+) : Camera(width, height), window_(nullptr), main_renderer_(nullptr), tool_(nullptr), map_view_(nullptr) {
     if(SDL_Init(SDL_INIT_VIDEO) >= 0) {
-        window_ = SDL_CreateWindow("Tile Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
+        window_ = SDL_CreateWindow("Tile Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
         main_renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
         TTF_Init();
     }
@@ -573,7 +573,7 @@ void SDLCamera::render(double delay_in_ms) {
         SDL_Rect tilerect = map_view_->onTileRect();
         rect.x = tilerect.x;
         rect.y = tilerect.y;
-        rect.y = rect.y + 64*scale() - rect.h;
+        rect.y = rect.y + Utility::tileSize*scale() - rect.h;
         if( tilerect.w != 0 ) {
             displayTexture(texture, &rect);
         }

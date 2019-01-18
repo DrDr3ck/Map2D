@@ -20,7 +20,7 @@ TerrainType* MapUtility::readColorMap(const std::string& filename) {
     }
     int size = 6;
     TerrainType* terrain = new TerrainType[size];
-    // TODO
+    // TODO read colormap
     return terrain;
 }
 
@@ -368,22 +368,21 @@ SDL_Texture* TileSetLib::getTextureFromTile(const Tile& tile, SDL_Renderer* rend
         }
     }
 
-    static int tileSize = 64;
     int x = id % max;
     int y = floor(id / max);
     SDL_Rect source;
-    source.x = x * tileSize;
-    source.y = y * tileSize;
-    source.w = tileSize;
-    source.h = tileSize;
+    source.x = x * Utility::tileSize;
+    source.y = y * Utility::tileSize;
+    source.w = Utility::tileSize;
+    source.h = Utility::tileSize;
 
-    SDL_Surface* surf_dest = SDL_CreateRGBSurface(0, tileSize, tileSize, 32, 0, 0, 0, 0);
+    SDL_Surface* surf_dest = SDL_CreateRGBSurface(0, Utility::tileSize, Utility::tileSize, 32, 0, 0, 0, 0);
 
     SDL_Rect dest;
     dest.x = 0;
     dest.y = 0;
-    dest.w = tileSize;
-    dest.h = tileSize;
+    dest.w = Utility::tileSize;
+    dest.h = Utility::tileSize;
 
     SDL_Surface* surf_source = TileSetLib::instance()->tiles();
     if( Tile::isWall(tile) ) {

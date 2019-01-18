@@ -135,10 +135,11 @@ class NoAction : public ActionBase {
 public:
     NoAction(Character* character) : ActionBase(), character_(character) {
         max_time_spent_ = std::rand() % 5; // in seconds
+        // TODO: random choice from list of no action descs
         if( max_time_spent_ > 2 )
-            character->setAction(this, std::string("Need a job")); // TODO: random choice from list of no action descs
+            character->setAction(this, std::string("Need a job"));
         else
-            character->setAction(this, std::string("Dreaming")); // TODO: random choice from list of no action descs
+            character->setAction(this, std::string("Dreaming"));
     }
 
     virtual bool spentTime(double time_spent) override;
@@ -183,7 +184,7 @@ class GameBoard;
 
 class BuildAction : public ActionBase {
 public:
-    BuildAction(GameBoard* game_board, Character* people, Job* job, int tile_size);
+    BuildAction(GameBoard* game_board, Character* people, Job* job);
     virtual ~BuildAction();
 
     virtual void preAction() override;
@@ -194,7 +195,6 @@ private:
     GameBoard* game_board_;
     Character* people_;
     Job* job_;
-    int tile_size_;
     ActionBase* action_;
     bool isValid_;
     std::chrono::steady_clock::time_point start_time_;

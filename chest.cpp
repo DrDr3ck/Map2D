@@ -57,7 +57,7 @@ SDL_Texture* Object::getTexture(SDLCamera* camera, int /*index*/) {
         images_.push_back( SDL_CreateTextureFromSurface(main_renderer, surface) );
         SDL_FreeSurface(surface);
     }
-    return images_[0]; // TODO
+    return images_[0]; // TODO : take into account the orientation of the object
 }
 
 void Object::render(SDLCamera* camera, const SDL_Rect& original_rect) {
@@ -65,7 +65,7 @@ void Object::render(SDLCamera* camera, const SDL_Rect& original_rect) {
     SDL_Texture* texture = getTexture(camera);
     rect.w = pixel_width()*camera->scale();
     rect.h = pixel_height()*camera->scale();
-    rect.y = rect.y + 64*camera->scale() - rect.h;
+    rect.y = rect.y + Utility::tileSize*camera->scale() - rect.h;
     camera->displayTexture( texture, &rect);
 }
 

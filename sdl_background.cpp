@@ -1,6 +1,7 @@
 #include "sdl_background.h"
 #include "perlin_noise.h"
 #include "logger.h"
+#include "utility.h"
 
 #include <iostream>
 #include <sstream>
@@ -101,11 +102,10 @@ void BackGroundGenerator::execute(const std::string& filename, float** noise_map
     const std::vector<int>& columns = biome_->surface_columns();
     const std::vector<int>& rows = biome_->surface_rows();
 
-    int tilesize = 64;
     Uint32 amask = 0x000000ff;
-    SDL_Surface* image = SDL_CreateRGBSurface(0, width_*tilesize, height_*tilesize, 32, 0, 0, 0, amask);
+    SDL_Surface* image = SDL_CreateRGBSurface(0, width_*Utility::tileSize, height_*Utility::tileSize, 32, 0, 0, 0, amask);
     int offset = 4; // left, right, top, bottom
-    int fullsize = tilesize + offset*2;
+    int fullsize = Utility::tileSize + offset*2;
 
     if( noise_map == nullptr ) {
         noise_map = Noise::generateNoiseMap(width_, height_, rand(), 150, 4, 0.5f, 2.f);
@@ -136,8 +136,8 @@ void BackGroundGenerator::execute(const std::string& filename, float** noise_map
         source.h = fullsize;
 
         SDL_Rect dest;
-        dest.x = col * tilesize - offset;
-        dest.y = row * tilesize - offset;
+        dest.x = col * Utility::tileSize - offset;
+        dest.y = row * Utility::tileSize - offset;
         dest.w = fullsize;
         dest.h = fullsize;
         SDL_BlitSurface(

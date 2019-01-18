@@ -4,7 +4,7 @@
 
 /***********************************/
 
-Camera::Camera() {
+Camera::Camera(int width, int height) : width_(width), height_(height) {
     pause_ = true;
     quit_ = false;
     scales_ = { 0.5, 0.6, 0.8, 1., 1.2, 1.5, 1.9, 2.4, 2.8 };
