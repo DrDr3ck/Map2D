@@ -51,7 +51,7 @@ class SDLCamera;
 
 class Object {
 public:
-    Object(const std::string& icon_name);
+    Object(const std::string& icon_name, const std::string& object_name);
     ~Object() {}
 
     SDL_Texture* getTexture(SDLCamera* camera, int index = 0);
@@ -60,11 +60,16 @@ public:
     int pixel_width() const  { return width_; }
     int pixel_height() const  { return height_; }
 
+    const std::string& name() const {
+        return name_;
+    }
+
 protected:
     std::string icon_name_;
     std::vector<SDL_Texture*> images_;
     int width_;
     int height_;
+    std::string name_;
 };
 
 class Chest : public Object {

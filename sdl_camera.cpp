@@ -166,6 +166,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         translate_y_ += delta_y_ * scale_speed * (delay_in_ms / 1000.);
     }
 
+    // compute background (one time only)
     SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
     float scale = camera->scale();
     SDL_Renderer* main_renderer = sdl_camera->main_renderer();
@@ -192,6 +193,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     scaled_start_x_ = delta_width + translate_x_;
     scaled_start_y_ = delta_height + translate_y_;
 
+    // display background with scale
     if( map_background_ != nullptr ) {
         SDL_Rect dest;
         dest.x = scaled_start_x_;
@@ -201,6 +203,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         sdl_camera->displayTexture(map_background_, &dest);
     }
 
+    // display objects on Map
     std::string tile_text;
     ontile_rect_ = {0,0,0,0};
     SDL_Texture* small = nullptr;
@@ -238,11 +241,13 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         }
     }
 
+    // render objects
     for( auto position_object : data_->objects() ) {
         SDL_Rect dest = getTileRect(position_object.x,position_object.y);
-        position_object.object->render(sdl_camera, dest);
+        position_object.object->render(sdl_camera, dest); // TODO scale !!
     }
 
+    // display jobs (in semi transparency)
     for( auto job : job_manager_->jobs() ) {
         int job_x = job->tilePosition().x;
         int job_y = job->tilePosition().y;
@@ -256,8 +261,8 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         people->render(sdl_camera, dest);
     }
 
+    // display a circle around selected people if any
     if( selected_people_ != nullptr ) {
-        // display a circle
         SDL_SetRenderDrawColor( main_renderer, 250, 250, 250, 255 );
         SDL_Rect dest = getPeopleRect(selected_people_);
         SDL_RenderDrawCircle(main_renderer, dest);
@@ -416,7 +421,8 @@ SDL_Texture* SDLText::texture(SDL_Renderer* renderer) {
             final_rect.h += rect_.h;
         }
         SDL_Surface* final_dst = SDL_CreateRGBSurface(0, final_rect.w, final_rect.h, 32, 0, 0, 0, 0);
-        SDL_FillRect(final_dst, NULL, SDL_MapRGB(final_dst->format, 255, 255, 255));
+        SDL_FillRect(final_dst, NULL, SDL_MapRGBA(final_dst->format, 255, 255, 255, 255));
+        //SDL_SetSurfaceBlendMode(final_dst, SDL_BLENDMODE_BLEND) ;
         // create SDL_Surface of size: final_rect
         SDL_Rect cur_rect = {0,0,0,0};
         for( auto surface : surfaces ) {
@@ -433,6 +439,7 @@ SDL_Texture* SDLText::texture(SDL_Renderer* renderer) {
             SDL_FreeSurface(surface);
         }
         texture_ = SDL_CreateTextureFromSurface(renderer, final_dst);
+        SDL_SetTextureAlphaMod( texture_, 12 );
         rect_.w = final_rect.w;
         rect_.h = final_rect.h;
         SDL_FreeSurface(final_dst);
@@ -539,7 +546,7 @@ void SDLCamera::render(double delay_in_ms) {
         r.x = 400;
         SDL_RenderFillRect( main_renderer_, &r );
 
-        SDLText text("Pause (Press SPACE)\nLeft click to select a robot\nRight click to move it", "pixel11", 16, SDLText::black());
+        SDLText text("Pause (Press SPACE)\nPress 'c' to center a robot\nLeft click to select a robot\nRight click to move it", "pixel11", 16, SDLText::black());
         text.set_position(300,70);
         SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
         text.texture(main_renderer_); // need to create texture in order to get correct text dimension
@@ -604,6 +611,7 @@ void SDLCamera::displayTexture(SDL_Texture* texture, const SDL_Rect* rect) {
 void SDLCamera::displayText(SDLText& text, bool background) {
     SDL_Texture* texture = text.texture(main_renderer_);
     if( background ) {
+        // draw a white rectangle with a dark border line
         SDL_Rect rect = text.rect();
         rect.x = rect.x - 5;
         rect.w = rect.w + 10;

@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1547720183 source:d:\games\programs\map2d\main.cpp
+1547827807 source:d:\games\programs\map2d\main.cpp
 	<SDL2/SDL.h>
 	<iostream>
 	<fstream>
@@ -347,7 +347,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1547715848 source:d:\games\programs\map2d\map.cpp
+1547827400 source:d:\games\programs\map2d\map.cpp
 	"map.h"
 	<cmath>
 	"SDL2/SDL_image.h"
@@ -412,7 +412,7 @@
 	"map.h"
 	<string>
 
-1547820956 source:d:\games\programs\map2d\sdl_camera.cpp
+1547828631 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -529,17 +529,17 @@
 	<string>
 	<list>
 
-1546617920 source:d:\games\programs\map2d\chest.cpp
+1547828860 source:d:\games\programs\map2d\chest.cpp
 	"chest.h"
 	<iostream>
 	"sdl_camera.h"
 
-1522766837 d:\games\programs\map2d\chest.h
+1547828835 d:\games\programs\map2d\chest.h
 	<vector>
 	<string>
 	"utility.h"
 
-1547714557 d:\games\programs\map2d\utility.h
+1547826895 d:\games\programs\map2d\utility.h
 	<string>
 	<iostream>
 	<sstream>
@@ -571,11 +571,11 @@
 	<iostream>
 	<fstream>
 
-1547729171 source:d:\games\programs\map2d\logger.cpp
+1547826832 source:d:\games\programs\map2d\logger.cpp
 	"logger.h"
 	"utility.h"
 
-1547720156 d:\games\programs\map2d\logger.h
+1547826797 d:\games\programs\map2d\logger.h
 	<cstdlib>
 	<iostream>
 	<sstream>

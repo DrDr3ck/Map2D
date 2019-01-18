@@ -42,7 +42,10 @@ int CountedItem::removeItem(int count) {
 
 /********************************************************************/
 
-Object::Object(const std::string& icon_name) : icon_name_(icon_name) {
+Object::Object(
+    const std::string& icon_name,
+    const std::string& object_name
+) : icon_name_(icon_name), name_(object_name) {
 }
 
 SDL_Texture* Object::getTexture(SDLCamera* camera, int /*index*/) {
@@ -60,15 +63,15 @@ SDL_Texture* Object::getTexture(SDLCamera* camera, int /*index*/) {
 void Object::render(SDLCamera* camera, const SDL_Rect& original_rect) {
     SDL_Rect rect(original_rect);
     SDL_Texture* texture = getTexture(camera);
-    rect.w = pixel_width();
-    rect.h = pixel_height();
+    rect.w = pixel_width()*camera->scale();
+    rect.h = pixel_height()*camera->scale();
     rect.y = rect.y + 64*camera->scale() - rect.h;
     camera->displayTexture( texture, &rect);
 }
 
 /********************************************************************/
 
-Chest::Chest(int size) : Object("chest.png"), max_size_(size) {
+Chest::Chest(int size) : Object("chest.png", "Chest"), max_size_(size) {
 }
 
 // return the number of items not added in this Chest
