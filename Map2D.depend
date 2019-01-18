@@ -412,7 +412,7 @@
 	"map.h"
 	<string>
 
-1547729251 source:d:\games\programs\map2d\sdl_camera.cpp
+1547820956 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -452,7 +452,7 @@
 	<SDL2/SDL_ttf.h>
 	<map>
 
-1547721132 source:d:\games\programs\map2d\sdl_button.cpp
+1547821299 source:d:\games\programs\map2d\sdl_button.cpp
 	"sdl_button.h"
 	<iostream>
 	<math.h>

@@ -62,6 +62,7 @@ void SDLButtonManager::do_render(Camera* camera, double /*delay_in_ms*/) {
         SDL_Texture* texture = button->getTexture(main_renderer);
         sdl_camera->displayTexture(texture, &button->rect());
 
+        // display white rectangle if button has focus
         if( button->hasFocus() ) {
             SDL_SetRenderDrawColor( main_renderer, 250, 250, 250, 255 );
             SDL_RenderDrawRect(main_renderer, &button->rect());
@@ -77,6 +78,7 @@ SDLButton::SDLButton(std::string name, int x, int y) : Button(name,x,y) {
     int h = surface_->h;
     setSize(w,h);
     rect_ = {x,y,w,h};
+    texture_ = nullptr;
 }
 
 SDLButton::~SDLButton() {

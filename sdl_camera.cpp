@@ -595,17 +595,9 @@ void SDLCamera::render(double delay_in_ms) {
 }
 
 void SDLCamera::displayTexture(SDL_Texture* texture, const SDL_Rect* rect) {
-    int check = -1;
-    try {
-        check = SDL_RenderCopy(main_renderer_, texture, NULL, rect);
-    }
-    catch(...) {
-        return;
-    }
+    int check = SDL_RenderCopy(main_renderer_, texture, NULL, rect);
     if( check != 0 ) {
-        std::ostringstream oss;
-        oss << "Check = " << check << "  " << SDL_GetError();
-        Logger::error() << oss.str() << Logger::endl;
+        Logger::error() << "Check = " << check << "  " << SDL_GetError() << Logger::endl;
     }
 }
 
