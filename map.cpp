@@ -7,6 +7,7 @@
 #include "perlin_noise.h"
 #include "sdl_background.h"
 #include "logger.h"
+#include "translator.h"
 #include <iostream>
 #include <fstream>
 
@@ -116,11 +117,11 @@ void Tile::setFloorTile(int id, FType floor_type) {
 }
 
 std::string Tile::typeTileToString(Tile::Type type) {
-    if( type == Tile::BLOCK ) return "Block";
-    if( type == Tile::DOOR ) return "Door";
-    if( type == Tile::FLOOR ) return "Floor";
-    if( type == Tile::WALL ) return "Wall";
-    if( type == Tile::EMPTY ) return "Nothing...";
+    if( type == Tile::BLOCK ) return tr("Block");
+    if( type == Tile::DOOR ) return tr("Door");
+    if( type == Tile::FLOOR ) return tr("Floor");
+    if( type == Tile::WALL ) return tr("Wall");
+    if( type == Tile::EMPTY ) return tr("Nothing...");
     Logger::error() << "unable to find string for type: " << type << Logger::endl;
     return "NONE";
 }

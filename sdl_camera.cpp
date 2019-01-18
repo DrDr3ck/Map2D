@@ -9,6 +9,7 @@
 #include "sdl_button.h"
 #include "sdl_tool.h"
 #include "sdl_background.h"
+#include "translator.h"
 
 /********************************************************************/
 
@@ -267,7 +268,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         SDL_Rect dest = getPeopleRect(selected_people_);
         SDL_RenderDrawCircle(main_renderer, dest);
         if( tile_x_ == selected_people_->tilePosition().x && tile_y_ == selected_people_->tilePosition().y ) {
-            tile_text.append("\nPeople: ");
+            tile_text.append(tr("\nPeople: "));
             tile_text.append(selected_people_->name());
         }
     }
@@ -546,7 +547,7 @@ void SDLCamera::render(double delay_in_ms) {
         r.x = 400;
         SDL_RenderFillRect( main_renderer_, &r );
 
-        SDLText text("Pause (Press SPACE)\nPress 'c' to center a robot\nLeft click to select a robot\nRight click to move it", "pixel11", 16, SDLText::black());
+        SDLText text(tr("Pause (Press SPACE)\nPress 'c' to center a robot\nLeft click to select a robot\nRight click to move it"), "pixel11", 16, SDLText::black());
         text.set_position(300,70);
         SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
         text.texture(main_renderer_); // need to create texture in order to get correct text dimension

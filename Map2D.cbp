@@ -64,6 +64,8 @@
 		<Unit filename="sdl_tool.h" />
 		<Unit filename="tests.cpp" />
 		<Unit filename="tests.h" />
+		<Unit filename="translator.cpp" />
+		<Unit filename="translator.h" />
 		<Unit filename="utility.h" />
 		<Unit filename="xml_document.cpp" />
 		<Unit filename="xml_document.h" />

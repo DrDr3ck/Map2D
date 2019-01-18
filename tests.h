@@ -91,6 +91,13 @@ public:
     virtual bool do_execute() override;
 };
 
+class TranslatorTest : public Test {
+public:
+    TranslatorTest() : Test("TranslatorTest") {}
+
+    virtual bool do_execute() override;
+};
+
 /*******************************/
 
 class TestManager {

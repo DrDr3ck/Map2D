@@ -2,6 +2,7 @@
 #include "sdl_camera.h"
 #include "path_finding.h"
 #include "logger.h"
+#include "translator.h"
 
 #include <iostream>
 #include <sstream>
@@ -236,8 +237,8 @@ bool BuildAction::spentTime(double time_spent) {
             action_ = nullptr;
             start_time_ = std::chrono::steady_clock::now();
             if( !game_board_->jobManager()->findJobAt(job_->tilePosition() ) ) {
-                Logger::info() << "Job cancel" << Logger::endl;
-                return false; // job has been cancel
+                Logger::info() << tr("Job canceled") << Logger::endl;
+                return false; // job has been canceled
             }
             // set direction so that people can 'work'
             people_->setDirection(people_->direction().x, 1);

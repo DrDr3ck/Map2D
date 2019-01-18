@@ -2,6 +2,7 @@
 
 #include "character.h"
 #include "logger.h"
+#include "translator.h"
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
@@ -41,7 +42,7 @@ std::string getAttribute(const std::string& str, const std::string& attr_origin)
 void ArchiveConverter::load(GameBoard* board, const std::string& filename) {
     std::ifstream file(filename);
     if (!file) {
-        Logger::error() << "unable to open file for load: " << filename << Logger::endl;
+        Logger::error() << tr("unable to open file for load: ") << filename << Logger::endl;
         return;
     }
 
@@ -74,11 +75,11 @@ void ArchiveConverter::load(GameBoard* board, const std::string& filename) {
 void ArchiveConverter::save(GameBoard* board, const std::string& filename) {
     std::ofstream file(filename);
     if (!file) {
-        Logger::error() << "unable to open file for save: " << filename << Logger::endl;
+        Logger::error() << tr("unable to open file for save: ") << filename << Logger::endl;
         return;
     }
 
-    Logger::info() << "Saving " << filename << "..." << Logger::endl;
+    Logger::info() << tr("Saving ") << filename << "..." << Logger::endl;
 
     MapDataConverter mconverter(board->data());
     mconverter.save(file);

@@ -6,6 +6,7 @@
 #include "perlin_noise.h"
 #include "xml_document.h"
 #include "logger.h"
+#include "translator.h"
 #include <stdio.h>
 #include <cstdlib>
 #include <iostream>
@@ -379,6 +380,13 @@ bool XMLTest::do_execute() {
     return true;
 }
 
+bool TranslatorTest::do_execute() {
+    Translator::instance()->readDictionary("language/fr.txt");
+    const std::string& result = tr("this is a test");
+    CHECK_STR_EQUAL( result, std::string("ceci est un test"), return false; );
+    return true;
+}
+
 /*******************************************/
 
 TestManager::TestManager() {
@@ -392,6 +400,7 @@ TestManager::TestManager() {
     addTest(new ChestTest());
     addTest(new PerlinTest());
     addTest(new XMLTest());
+    addTest(new TranslatorTest());
 }
 
 TestManager* TestManager::instance() {
