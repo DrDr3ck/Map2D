@@ -12,6 +12,7 @@
 #include "sdl_camera.h"
 #include "logger.h"
 #include "translator.h"
+#include "session.h"
 
 #include "tests.h"
 
@@ -102,6 +103,7 @@ int main(int /*argc*/, char** /*argv*/) {
 
     tileset->kill();
     font_manager->kill();
+    Session::instance()->kill();
 
     delete camera;
 

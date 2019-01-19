@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1547840992 source:d:\games\programs\map2d\main.cpp
+1547891004 source:d:\games\programs\map2d\main.cpp
 	<SDL2/SDL.h>
 	<iostream>
 	<fstream>
@@ -394,8 +394,9 @@
 	<random>
 	<SDL2/SDL_ttf.h>
 
-1547829620 source:d:\games\programs\map2d\camera.cpp
+1547889879 source:d:\games\programs\map2d\camera.cpp
 	"camera.h"
+	"session.h"
 	<iostream>
 
 1547829708 d:\games\programs\map2d\camera.h
@@ -546,7 +547,7 @@
 	<string>
 	"utility.h"
 
-1547830311 d:\games\programs\map2d\utility.h
+1547891296 d:\games\programs\map2d\utility.h
 	<string>
 	<iostream>
 	<sstream>
@@ -597,4 +598,17 @@
 1547840835 d:\games\programs\map2d\translator.h
 	<string>
 	<map>
+
+1547891807 d:\games\programs\map2d\session.h
+	<string>
+	<map>
+
+1547891774 source:d:\games\programs\map2d\session.cpp
+	"session.h"
+	"logger.h"
+	"translator.h"
+	"utility.h"
+	<iostream>
+	<sstream>
+	<fstream>
 
