@@ -20,10 +20,10 @@ public:
     void loadSession();
     void saveSession();
 
-    bool getBoolean(const std::string& label);
-    int getInteger(const std::string& label);
-    float getFloat(const std::string& label);
-    std::string getString(const std::string& label);
+    bool getBoolean(const std::string& label, bool default_value = false);
+    int getInteger(const std::string& label, int default_value = 0);
+    float getFloat(const std::string& label, float default_value = 0.f);
+    std::string getString(const std::string& label, std::string default_value="");
 
 private:
     static Session* singleton_;

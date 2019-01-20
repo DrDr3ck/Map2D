@@ -12,6 +12,7 @@
 
 /********************************************************************/
 
+#define EXTRACT "extract"
 #define BUILDWALL "build"
 #define DEMOLISHWALL "demolish"
 #define BUILDFLOOR "build_floor"
@@ -85,6 +86,17 @@ public:
             str = trim(str);
         }
         return str.find(prefix) == 0;
+    }
+
+    /*!
+     * \return true if \p original_str ends with \p suffix. spaces are trimmed if strict is false.
+     */
+    static bool endsWith(const std::string& original_str, const std::string& suffix, bool strict = false) {
+        std::string str = original_str;
+        if( !strict ) {
+            str = trim(str);
+        }
+        return str.find(suffix) == (str.length()-suffix.length());
     }
 
     static SDL_Surface* IMGLoad(const std::string& filename) {

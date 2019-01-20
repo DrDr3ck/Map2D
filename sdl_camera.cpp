@@ -10,6 +10,7 @@
 #include "sdl_tool.h"
 #include "sdl_background.h"
 #include "translator.h"
+#include "action.h"
 
 /********************************************************************/
 
@@ -67,7 +68,7 @@ MapView::~MapView() {
 /*!
  * Adds a wall in the queue of the job manager at (x,y) if possible.
  */
-void MapView::addWall(int x, int y) {
+void MapView::addWallJob(int x, int y) {
     Position tile_position = {x,y};
     Job* job = new BuildJob(tile_position, "wall_tool", 3500);
     job_manager_->addJob(job);
@@ -76,16 +77,22 @@ void MapView::addWall(int x, int y) {
 /*!
  * Adds a wall destruction in the queue of the job manager at (x,y) if possible.
  */
-void MapView::removeWall(int x, int y) {
+void MapView::removeWallJob(int x, int y) {
     Position tile_position = {x,y};
     Job* job = new DemolishJob(tile_position, "demolish_tool", 2500);
+    job_manager_->addJob(job);
+}
+
+void MapView::extractItemJob(int x, int y) {
+    Position tile_position = {x,y};
+    Job* job = new ExtractJob(tile_position, "extract_tool", 5000);
     job_manager_->addJob(job);
 }
 
 /*!
  * Adds a floor in the queue of the job manager at (x,y) if possible.
  */
-void MapView::addFloor(int x, int y) {
+void MapView::addFloorJob(int x, int y) {
     Position tile_position = {x,y};
     Job* job = new BuildFloorJob(tile_position, "foundation_tool", 1500);
     job_manager_->addJob(job);
@@ -94,7 +101,7 @@ void MapView::addFloor(int x, int y) {
 /*!
  * Adds a floor destruction in the queue of the job manager at (x,y) if possible.
  */
-void MapView::removeFloor(int x, int y) {
+void MapView::removeFloorJob(int x, int y) {
     Position tile_position = {x,y};
     Job* job = new DemolishFloorJob(tile_position, "demolish_foundation_tool", 1000);
     job_manager_->addJob(job);
@@ -227,7 +234,14 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
                 SDL_SetRenderDrawColor( main_renderer, 250, 250, 250, 255 );
                 SDL_RenderDrawRect(main_renderer, &dest);
                 ontile_rect_ = dest;
-                tile_text.append(Tile::typeTileToString(cur.cell_type()));
+                if( cur.occurrences() != 0 ) {
+                    tile_text.append(Tile::btypeTileToString(cur.background_type()));
+                    tile_text.append(" (");
+                    tile_text.append(Utility::itos(cur.occurrences()));
+                    tile_text.append(")");
+                } else {
+                    tile_text.append(Tile::typeTileToString(cur.cell_type()));
+                }
                 tile_text.append(": ");
                 tile_text.append(Utility::itos(w));
                 tile_text.append(" ");
@@ -516,7 +530,7 @@ SDLCamera::~SDLCamera() {
     }
     TTF_Quit();
     delete manager_;
-    do_quit();
+    SDL_Quit();
 }
 
 /*!
@@ -547,7 +561,19 @@ void SDLCamera::render(double delay_in_ms) {
         r.x = 400;
         SDL_RenderFillRect( main_renderer_, &r );
 
-        SDLText text(tr("Pause (Press SPACE)\nPress 'c' to center a robot\nLeft click to select a robot\nRight click to move it"), "pixel11", 16, SDLText::black());
+        std::vector<std::string> option_list;
+        option_list.push_back( tr("Pause (Press SPACE)") );
+        option_list.push_back( tr("Press c to center a robot") );
+        option_list.push_back( tr("Left click to select a robot") );
+        option_list.push_back( tr("Right click to move it") );
+        std::string options;
+        for( auto opt : option_list ) {
+            if( options.length() != 0 ) {
+                options.append("\n");
+            }
+            options.append(opt);
+        }
+        SDLText text(options, "pixel11", 16, SDLText::black());
         text.set_position(300,70);
         SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
         text.texture(main_renderer_); // need to create texture in order to get correct text dimension
@@ -655,7 +681,9 @@ void SDLCamera::handleEvent() {
                     Character* p = g->group().at(0);
                     map_view_->restoreCenterTile( p->tilePosition() );
                 }
-            } else if( event_.key.keysym.sym == SDLK_b ) {
+            } else if( event_.key.keysym.sym == SDLK_e ) { // DEBUG ONLY
+                mapView()->extractItemJob(11,40);
+            } else if( event_.key.keysym.sym == SDLK_b ) { // DEBUG ONLY
                 BackGroundGenerator generator(100,60); //10,6);
                 generator.execute("new_out.png");
             }
@@ -705,12 +733,4 @@ void SDLCamera::setMapView(MapView* view) {
     map_view_ = view;
     addView(map_view_);
 }
-
-void SDLCamera::do_quit() const {
-    if( !valid() ) {
-        Logger::error() << "Camera not valid: " << SDL_GetError() << Logger::endl;
-    }
-    SDL_Quit();
-}
-
 /********************************************************************/

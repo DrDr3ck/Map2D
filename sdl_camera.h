@@ -26,10 +26,11 @@ public:
 
     MapData* data() const { return data_; }
 
-    void addWall(int x, int y);
-    void removeWall(int x, int y);
-    void addFloor(int x, int y);
-    void removeFloor(int x, int y);
+    void addWallJob(int x, int y);
+    void removeWallJob(int x, int y);
+    void addFloorJob(int x, int y);
+    void removeFloorJob(int x, int y);
+    void extractItemJob(int x, int y);
 
     Position onTile(int mouse_x, int mouse_y) const;
     void setTile(int tile_x, int tile_y);
@@ -127,7 +128,6 @@ public:
     virtual bool valid() const override;
     virtual void render(double delay_in_ms) override;
     virtual void handleEvent() override;
-    virtual void do_quit() const override;
     virtual void onMouseMove(int x, int y) override;
     virtual void onMouseWheelScroll(int x, int y) override;
 

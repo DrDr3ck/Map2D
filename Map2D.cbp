@@ -32,6 +32,8 @@
 			<Add option="-Wall" />
 			<Add option="-std=c++11" />
 		</Compiler>
+		<Unit filename="action.cpp" />
+		<Unit filename="action.h" />
 		<Unit filename="archive.cpp" />
 		<Unit filename="archive.h" />
 		<Unit filename="button.cpp" />
@@ -67,6 +69,8 @@
 		<Unit filename="session.h" />
 		<Unit filename="tests.cpp" />
 		<Unit filename="tests.h" />
+		<Unit filename="texture_mgr.cpp" />
+		<Unit filename="texture_mgr.h" />
 		<Unit filename="translator.cpp" />
 		<Unit filename="translator.h" />
 		<Unit filename="utility.h" />

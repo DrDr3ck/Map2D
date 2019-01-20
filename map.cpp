@@ -126,6 +126,16 @@ std::string Tile::typeTileToString(Tile::Type type) {
     return "NONE";
 }
 
+std::string Tile::btypeTileToString(Tile::BType type) {
+    if( type == Tile::NONE ) return tr("None");
+    if( type == Tile::WATER ) return tr("Water");
+    if( type == Tile::DIRT ) return tr("Dirt");
+    if( type == Tile::GRASS ) return tr("Grass");
+    if( type == Tile::ROCK ) return tr("Rock");
+    Logger::error() << "unable to find string for background type: " << type << Logger::endl;
+    return "NONE";
+}
+
 /********************************************************************/
 
 MapData::MapData(int width, int height) : width_(width), height_(height) {
@@ -230,6 +240,18 @@ void MapData::removeFloor(int x, int y) {
     }
     Tile& cur = tile(x,y);
     cur.setCellTile(cur.id(), Tile::EMPTY);
+}
+
+void MapData::extractItemFromTile(int x,int y) {
+    Tile& cur = tile(x,y);
+    if( cur.background_type() == Tile::ROCK ) {
+        // extraction of a rock
+        if( cur.occurrences() > 0 ) {
+            cur.setOccurrences( cur.occurrences()-1 );
+            // TODO should we change rock into dirt if occurrences == 0 ?
+            // TODO create an item rock and put it on the 'cur' Tile
+        }
+    }
 }
 
 void MapData::addGround(int x, int y) {

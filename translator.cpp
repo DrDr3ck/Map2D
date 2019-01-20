@@ -42,23 +42,17 @@ void Translator::readDictionary(const std::string& filename) {
         return;
     }
     // fill map with entries coming from file
-    // TODO
-    dictionary_.insert(std::pair<std::string, std::string>("loading existing save","chargement de la sauvegarde existante") );
-    dictionary_.insert(std::pair<std::string, std::string>("Nothing...","Rien...") );
     std::string str;
     while (std::getline(file, str)) {
         str = str.substr(2);
         int index = str.find_first_of("','");
         if( index > 0 ) {
             std::string left = str.substr(0,index);
-            Logger::debug() << "left is [" << left << "]" << Logger::endl;
             std::string right = str.substr(index+3);
             right = right.substr(0, right.length()-2);
-            Logger::debug() << "right is [" << right << "]" << Logger::endl;
             dictionary_.insert(std::pair<std::string, std::string>(left,right) );
         }
     }
-    // END TODO
     empty_ = (dictionary_.size() == 0);
 }
 

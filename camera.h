@@ -42,7 +42,6 @@ public:
     virtual void onMouseMove(int x, int y);
     virtual void onMouseWheelScroll(int x, int y);
 
-    virtual void do_quit() const = 0;
     bool quit() const { return quit_; }
     void set_quit() { quit_ = true; }
 

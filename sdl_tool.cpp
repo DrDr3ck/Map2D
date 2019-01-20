@@ -99,9 +99,9 @@ void SDLBuildTool::mousePressed(int button) {
     int x,y;
     if( camera()->mapView()->curTile(x,y) ) {
         if( type_ == WALLTOOL ) {
-            camera()->mapView()->addWall(x,y);
+            camera()->mapView()->addWallJob(x,y);
         } else if( type_ == FLOORTOOL ) {
-            camera()->mapView()->addFloor(x,y);
+            camera()->mapView()->addFloorJob(x,y);
         } else if( type_ == OBJECTTOOL ) {
             Logger::debug() << "add object " << type_ << Logger::endl;
             //camera()->mapView()->addFloor(x,y);
@@ -119,9 +119,9 @@ void SDLUnbuildTool::mousePressed(int button) {
     int x,y;
     if( camera()->mapView()->curTile(x,y) ) {
         if( type() == WALLTOOL ) {
-            camera()->mapView()->removeWall(x,y);
+            camera()->mapView()->removeWallJob(x,y);
         } else if( type() == FLOORTOOL ) {
-            camera()->mapView()->removeFloor(x,y);
+            camera()->mapView()->removeFloorJob(x,y);
         }
     }
 }

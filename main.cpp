@@ -13,6 +13,7 @@
 #include "logger.h"
 #include "translator.h"
 #include "session.h"
+#include "texture_mgr.h"
 
 #include "tests.h"
 
@@ -30,6 +31,8 @@ int main(int /*argc*/, char** /*argv*/) {
         delete camera;
         return -1;
     }
+
+    TextureMgr::instance()->loadAllItems(camera->main_renderer());
 
     TileSetLib* tileset = TileSetLib::instance();
     CharacterSetLib::instance()->init( camera->main_renderer() );
@@ -104,6 +107,7 @@ int main(int /*argc*/, char** /*argv*/) {
     tileset->kill();
     font_manager->kill();
     Session::instance()->kill();
+    TextureMgr::instance()->kill();
 
     delete camera;
 

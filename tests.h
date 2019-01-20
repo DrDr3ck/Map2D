@@ -98,6 +98,13 @@ public:
     virtual bool do_execute() override;
 };
 
+class TextureMgrTest : public Test {
+public:
+    TextureMgrTest() : Test("TextureMgrTest") {}
+
+    virtual bool do_execute() override;
+};
+
 /*******************************/
 
 class TestManager {

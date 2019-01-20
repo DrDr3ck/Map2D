@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <ctime>
 
 using namespace std;
 
@@ -59,10 +60,28 @@ void Session::loadSession() {
 }
 
 void Session::saveSession() {
-    // TODO save session
+    std::ofstream file(option_filename);
+    if (!file) {
+        Logger::error() << tr("unable to open file for save: ") << option_filename << Logger::endl;
+        return;
+    }
+
+    Logger::info() << tr("Saving ") << option_filename << "..." << Logger::endl;
+
+    time_t now = time(0);
+    char* date = ctime(&now);
+
+    file << "# edit at your own risk !!" << std::endl;
+    file << "# date " << date << std::endl;
+
+    for( auto attr : dictionary_ ) {
+        file << attr.first << ": " << attr.second.first << " " << attr.second.second << std::endl;
+    }
+
+    file.close();
 }
 
-bool Session::getBoolean(const string& label) {
+bool Session::getBoolean(const string& label, bool default_value) {
     map<string, ValueDesc>::iterator it = dictionary_.find(label);
     if( it != dictionary_.end() ) {
         const string& value = it->second.first;
@@ -70,12 +89,12 @@ bool Session::getBoolean(const string& label) {
             return true;
         }
     }
-    return false;
+    return default_value;
 }
 
-int Session::getInteger(const string& label) {
+int Session::getInteger(const string& label, int default_value) {
     map<string, ValueDesc>::iterator it = dictionary_.find(label);
-    int value = 0;
+    int value = default_value;
     if( it != dictionary_.end() ) {
         const string& str_value = it->second.first;
         value = ::atoi(str_value.c_str());
@@ -83,9 +102,9 @@ int Session::getInteger(const string& label) {
     return value;
 }
 
-float Session::getFloat(const string& label) {
+float Session::getFloat(const string& label, float default_value) {
     map<string, ValueDesc>::iterator it = dictionary_.find(label);
-    float value = 0.f;
+    float value = default_value;
     if( it != dictionary_.end() ) {
         const string& str_value = it->second.first;
         value = ::atof(str_value.c_str());
@@ -93,9 +112,9 @@ float Session::getFloat(const string& label) {
     return value;
 }
 
-string Session::getString(const string& label) {
+string Session::getString(const string& label, string default_value) {
     map<string, ValueDesc>::iterator it = dictionary_.find(label);
-    string value = "";
+    string value = default_value;
     if( it != dictionary_.end() ) {
         value = it->second.first;
     }

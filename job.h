@@ -79,6 +79,15 @@ public:
     }
 };
 
+class ExtractJob : public Job {
+public:
+    ExtractJob(
+        Position tile_position, const std::string& icon_type, int build_time_ms
+    ) : Job(EXTRACT, tile_position, icon_type, build_time_ms)
+    {
+    }
+};
+
 /********************************************************************/
 
 class JobMgr {

@@ -6,7 +6,7 @@
 /***********************************/
 
 Camera::Camera(int width, int height) : width_(width), height_(height) {
-    pause_ = Session::instance()->getBoolean("*pause_when_launched");
+    pause_ = Session::instance()->getBoolean("*pause_when_launched", true);
     quit_ = false;
     scales_ = { 0.5, 0.6, 0.8, 1., 1.2, 1.5, 1.9, 2.4, 2.8 };
     scale_idx_ = 3; // so that scales_[scale_idx_] = 1

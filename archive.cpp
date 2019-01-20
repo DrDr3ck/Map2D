@@ -119,7 +119,7 @@ void MapDataConverter::load(const std::string& str) {
             std::string value_str = getAttribute(str, "value");
             tile_type_ = stringTileToType(value_str);
         }
-        if( isTag(str, "occurrences") ) {
+        if( isTag(str, "occurrence") ) {
             std::string value_str = getAttribute(str, "value");
             occurrences_ = atoi(value_str.c_str());
         }
@@ -134,6 +134,9 @@ void MapDataConverter::load(const std::string& str) {
         if( isEndTag(str, "tile") ) {
             Tile& cur_tile = data_->tile(x_,y_);
             cur_tile.setTile(tile_id_, tile_type_, tile_btype_, tile_ftype_);
+            if( occurrences_ > 0 ) {
+                std::cout << x_ << " rock!!! " << y_ << std::endl;
+            }
             cur_tile.setOccurrences(occurrences_);
             inTile_ = false;
         }
@@ -155,7 +158,6 @@ std::string MapDataConverter::btypeTileToString(Tile::BType type) const {
     if( type == Tile::WATER ) return "WATER";
     if( type == Tile::DIRT ) return "DIRT";
     if( type == Tile::GRASS ) return "GRASS";
-    if( type == Tile::DIRT ) return "DIRT";
     if( type == Tile::ROCK ) return "ROCK";
     Logger::error() << "unable to find string for background type: " << type << Logger::endl;
     return "NONE";
@@ -183,7 +185,6 @@ Tile::BType MapDataConverter::stringTileToBType(const std::string& str) const {
     if( str == "WATER" ) return Tile::WATER;
     if( str == "DIRT" ) return Tile::DIRT;
     if( str == "GRASS" ) return Tile::GRASS;
-    if( str == "DIRT" ) return Tile::DIRT;
     if( str == "ROCK" ) return Tile::ROCK;
     Logger::error() << "unable to find background type for string: " << str << Logger::endl;
     return Tile::NONE;

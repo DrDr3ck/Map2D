@@ -1414,8 +1414,8 @@
     <ftype value="METAL" />
   </tile>
   <tile x="2" y="2">
-    <id value="8" />
-    <type value="BLOCK" />
+    <id value="0" />
+    <type value="EMPTY" />
     <occurrence value="0" />
     <btype value="NONE" />
     <ftype value="METAL" />
@@ -28079,8 +28079,8 @@
   <tile x="11" y="40">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="0" />
-    <btype value="NONE" />
+    <occurrence value="49" />
+    <btype value="ROCK" />
     <ftype value="METAL" />
   </tile>
   <tile x="12" y="40">
@@ -42002,8 +42002,8 @@
 </mapdata>
 <group>
   <people name="Bob">
-    <position x="10" y="39" />
-    <direction x="-1" y="1" />
+    <position x="13" y="40" />
+    <direction x="-1" y="0" />
     <activity value="0" />
     <image_id value="0" />
   </people>

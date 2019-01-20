@@ -55,6 +55,7 @@ public:
     void setFloorTile(int id, FType floor_type);
 
     static std::string typeTileToString(Tile::Type type);
+    static std::string btypeTileToString(Tile::BType type);
 
     static bool isWall(const Tile& tile);
     static bool isFloor(const Tile& tile);
@@ -83,6 +84,8 @@ public:
 
     void addGround(int x, int y);
     void removeGround(int x, int y);
+
+    void extractItemFromTile(int x,int y);
 
     void addObject(Object* object, int x, int y);
     std::vector<PositionObject>& objects() { return objects_; }
