@@ -98,9 +98,9 @@ public:
     virtual bool do_execute() override;
 };
 
-class TextureMgrTest : public Test {
+class CraftMgrTest : public Test {
 public:
-    TextureMgrTest() : Test("TextureMgrTest") {}
+    CraftMgrTest() : Test("CraftMgrTest") {}
 
     virtual bool do_execute() override;
 };

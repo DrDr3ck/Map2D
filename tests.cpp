@@ -8,6 +8,7 @@
 #include "logger.h"
 #include "action.h"
 #include "translator.h"
+#include "craft_mgr.h"
 #include <stdio.h>
 #include <cstdlib>
 #include <iostream>
@@ -388,8 +389,8 @@ bool TranslatorTest::do_execute() {
     return true;
 }
 
-bool TextureMgrTest::do_execute() {
-    // TODO... need a fake renderer
+bool CraftMgrTest::do_execute() {
+    CraftMgr::instance()->loadCrafts("craft.xml");
     return true;
 }
 
@@ -407,7 +408,7 @@ TestManager::TestManager() {
     addTest(new PerlinTest());
     addTest(new XMLTest());
     addTest(new TranslatorTest());
-    addTest(new TextureMgrTest());
+    addTest(new CraftMgrTest());
 }
 
 TestManager* TestManager::instance() {

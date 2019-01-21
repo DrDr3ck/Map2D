@@ -11,6 +11,8 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Option parameters="-language fr" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -44,8 +46,12 @@
 		<Unit filename="character.h" />
 		<Unit filename="chest.cpp" />
 		<Unit filename="chest.h" />
+		<Unit filename="craft_mgr.cpp" />
+		<Unit filename="craft_mgr.h" />
 		<Unit filename="font.cpp" />
 		<Unit filename="font.h" />
+		<Unit filename="items.cpp" />
+		<Unit filename="items.h" />
 		<Unit filename="job.cpp" />
 		<Unit filename="job.h" />
 		<Unit filename="logger.cpp" />

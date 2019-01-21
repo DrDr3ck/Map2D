@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1548015269 source:d:\games\programs\map2d\main.cpp
+1548103605 source:d:\games\programs\map2d\main.cpp
 	<SDL2/SDL.h>
 	<iostream>
 	<fstream>
@@ -15,6 +15,7 @@
 	"translator.h"
 	"session.h"
 	"texture_mgr.h"
+	"craft_mgr.h"
 	"tests.h"
 
 1508787066 d:\games\programs\map2d\library\compiler\sdl2\sdl.h
@@ -371,14 +372,14 @@
 	<iostream>
 	<sstream>
 
-1548016820 d:\games\programs\map2d\tests.h
+1548103662 d:\games\programs\map2d\tests.h
 	"map.h"
 	"character.h"
 	"chest.h"
 	<list>
 	<string>
 
-1548016819 source:d:\games\programs\map2d\tests.cpp
+1548103689 source:d:\games\programs\map2d\tests.cpp
 	"tests.h"
 	"archive.h"
 	"font.h"
@@ -388,6 +389,7 @@
 	"logger.h"
 	"action.h"
 	"translator.h"
+	"craft_mgr.h"
 	<stdio.h>
 	<cstdlib>
 	<iostream>
@@ -397,7 +399,7 @@
 	<random>
 	<SDL2/SDL_ttf.h>
 
-1547889879 source:d:\games\programs\map2d\camera.cpp
+1548020598 source:d:\games\programs\map2d\camera.cpp
 	"camera.h"
 	"session.h"
 	<iostream>
@@ -420,7 +422,7 @@
 	"map.h"
 	<string>
 
-1548020361 source:d:\games\programs\map2d\sdl_camera.cpp
+1548103748 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -430,6 +432,7 @@
 	"sdl_button.h"
 	"sdl_tool.h"
 	"sdl_background.h"
+	"texture_mgr.h"
 	"translator.h"
 	"action.h"
 
@@ -542,15 +545,16 @@
 	<string>
 	<list>
 
-1547830000 source:d:\games\programs\map2d\chest.cpp
+1548104305 source:d:\games\programs\map2d\chest.cpp
 	"chest.h"
 	<iostream>
 	"sdl_camera.h"
 
-1547828835 d:\games\programs\map2d\chest.h
+1548104305 d:\games\programs\map2d\chest.h
 	<vector>
 	<string>
 	"utility.h"
+	"items.h"
 
 1548017228 d:\games\programs\map2d\utility.h
 	<string>
@@ -594,13 +598,13 @@
 	<sstream>
 	<vector>
 
-1548017072 source:d:\games\programs\map2d\translator.cpp
+1548102359 source:d:\games\programs\map2d\translator.cpp
 	"translator.h"
 	"logger.h"
 	<iostream>
 	<fstream>
 
-1547840835 d:\games\programs\map2d\translator.h
+1548102384 d:\games\programs\map2d\translator.h
 	<string>
 	<map>
 
@@ -608,7 +612,7 @@
 	<string>
 	<map>
 
-1547897233 source:d:\games\programs\map2d\session.cpp
+1548020598 source:d:\games\programs\map2d\session.cpp
 	"session.h"
 	"logger.h"
 	"translator.h"
@@ -647,4 +651,23 @@
 	<vector>
 	<ctime>
 	<chrono>
+
+1548103854 source:d:\games\programs\map2d\craft_mgr.cpp
+	"craft_mgr.h"
+	"logger.h"
+	"utility.h"
+	"translator.h"
+	<fstream>
+
+1548104329 d:\games\programs\map2d\craft_mgr.h
+	<map>
+	<vector>
+	<string>
+	"items.h"
+
+1548104305 d:\games\programs\map2d\items.h
+	<string>
+
+1548104305 source:d:\games\programs\map2d\items.cpp
+	"items.h"
 
