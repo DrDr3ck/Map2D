@@ -17,7 +17,7 @@ public:
     static Translator* instance();
     static void kill();
 
-    void readDictionary(const std::string& filename);
+    void readDictionary(const std::string& filename = "none");
     const std::string& translate(const std::string& str);
 
 protected:

@@ -36,6 +36,9 @@ void Translator::readDictionary(const std::string& filename) {
     // clear map
     clear();
     // open file
+    if( filename == "none") {
+        return;
+    }
     std::ifstream file(filename);
     if (!file) {
         Logger::error() << tr("unable to read translator file: ") << filename << Logger::endl;

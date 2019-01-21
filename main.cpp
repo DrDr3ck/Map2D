@@ -14,10 +14,11 @@
 #include "translator.h"
 #include "session.h"
 #include "texture_mgr.h"
+#include "craft_mgr.h"
 
 #include "tests.h"
 
-int main(int /*argc*/, char** /*argv*/) {
+int main(int argc, char** argv) {
     // Check tests first
     TestManager* test_manager = TestManager::instance();
     if( !test_manager->execute() ) {
@@ -31,6 +32,17 @@ int main(int /*argc*/, char** /*argv*/) {
         delete camera;
         return -1;
     }
+
+    std::string language = "none";
+    if( argc == 3 ) {
+        if( std::string(argv[1]) == "-language" ) {
+            language = "language/";
+            language.append(argv[2]);
+            language.append(".txt");
+        }
+    }
+
+    Translator::instance()->readDictionary("language/fr.txt");
 
     TextureMgr::instance()->loadAllItems(camera->main_renderer());
 
