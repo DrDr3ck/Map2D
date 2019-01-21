@@ -9,6 +9,7 @@
 #include "sdl_button.h"
 #include "sdl_tool.h"
 #include "sdl_background.h"
+#include "texture_mgr.h"
 #include "translator.h"
 #include "action.h"
 
@@ -211,7 +212,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         sdl_camera->displayTexture(map_background_, &dest);
     }
 
-    // display objects on Map
+    // display tiles on Map // wall, floor, door, ...
     std::string tile_text;
     ontile_rect_ = {0,0,0,0};
     SDL_Texture* small = nullptr;
@@ -262,6 +263,19 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         position_object.object->render(sdl_camera, dest);
     }
 
+    // render items
+    // debug
+    {
+    SDL_Texture* stone_texture = TextureMgr::instance()->getItemTexture("stone");
+    SDL_Rect dest;
+    dest.x = 11*scaled_tile_size_ + scaled_start_x_;
+    dest.y = 40*scaled_tile_size_ + scaled_start_y_;
+    dest.w = scaled_tile_size_/2;
+    dest.h = scaled_tile_size_/2;
+    sdl_camera->displayTexture(stone_texture, &dest);
+    }
+    // end debug
+
     // display jobs (in semi transparency)
     for( auto job : job_manager_->jobs() ) {
         int job_x = job->tilePosition().x;
@@ -282,7 +296,8 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         SDL_Rect dest = getPeopleRect(selected_people_);
         SDL_RenderDrawCircle(main_renderer, dest);
         if( tile_x_ == selected_people_->tilePosition().x && tile_y_ == selected_people_->tilePosition().y ) {
-            tile_text.append(tr("\nPeople: "));
+            tile_text.append("\n");
+            tile_text.append(tr("People: "));
             tile_text.append(selected_people_->name());
         }
     }
@@ -544,7 +559,10 @@ void SDLCamera::render(double delay_in_ms) {
     // rendering for all View(s)
     Camera::render(delay_in_ms);
     manager_->do_render(this, delay_in_ms);
+
+    // display PAUSE tooltip
     if( pause_ ) {
+        // display the 'pause' button
         SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
         SDL_Rect r;
         r.x = 360;
@@ -574,9 +592,10 @@ void SDLCamera::render(double delay_in_ms) {
             options.append(opt);
         }
         SDLText text(options, "pixel11", 16, SDLText::black());
-        text.set_position(300,70);
+        text.set_position(0,0);
         SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
         text.texture(main_renderer_); // need to create texture in order to get correct text dimension
+        text.set_position(400 - text.rect().w / 2, 120 - text.rect().h / 2);
         SDL_RenderFillRect( main_renderer_, &text.rect() );
         displayText(text);
     }
