@@ -65,4 +65,22 @@ public:
 
 /********************************************************************/
 
+class SDLExtractTool : public SDLTool {
+public:
+    SDLExtractTool(SDLCamera* camera, const std::string& icon_name, int nb);
+    virtual ~SDLExtractTool();
+
+    virtual SDL_Texture* getTexture(SDL_Renderer* renderer) override;
+
+    virtual void mousePressed(int button) override;
+
+    int nb() const { return nb_; }
+
+private:
+    SDL_Surface* surface_;
+    int nb_;
+};
+
+/********************************************************************/
+
 #endif // sdl_tool_h

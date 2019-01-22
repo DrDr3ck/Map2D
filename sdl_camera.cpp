@@ -514,18 +514,27 @@ SDLCamera::SDLCamera(
     manager_->addButton( new SDLButtonMenu(wall_menu, "wall.png", 10,10) );
     manager_->addMenuButton( wall_menu );
 
-    // Add Floor menu
-    MenuButton* floor_menu = new MenuButton(max_column, 70, 75);
-
     SDLBuildTool* foundation_tool = new SDLBuildTool(this, "foundation_tool.png", FLOORTOOL);
     SDLButton* foundation_button_tool = new SDLToolButton(foundation_tool, "foundation_tool.png", 0, 0);
     manager_->addButton(foundation_button_tool);
-    floor_menu->addButton(foundation_button_tool);
+    wall_menu->addButton(foundation_button_tool);
 
     SDLUnbuildTool* demolish_foundation_tool = new SDLUnbuildTool(this, "demolish_foundation_tool.png", FLOORTOOL); // demolish_foundation_tool.png
     SDLButton* demolish_foundation_button_tool = new SDLToolButton(demolish_foundation_tool, "demolish_foundation_tool.png", 0, 0); // demolish_foundation_tool.png
     manager_->addButton(demolish_foundation_button_tool);
-    floor_menu->addButton(demolish_foundation_button_tool);
+    wall_menu->addButton(demolish_foundation_button_tool);
+
+    // Add Floor menu
+    MenuButton* floor_menu = new MenuButton(max_column, 70, 75);
+    SDLExtractTool* extract_tool = new SDLExtractTool(this, "extract_tool.png", 1);
+    SDLButton* extract_button_tool = new SDLToolButton(extract_tool, "extract_tool.png", 0, 0);
+    manager_->addButton(extract_button_tool);
+    floor_menu->addButton(extract_button_tool);
+
+    SDLExtractTool* extract_tool2 = new SDLExtractTool(this, "extract_tool_10.png", 10);
+    SDLButton* extract_button_tool2 = new SDLToolButton(extract_tool2, "extract_tool_10.png", 0, 0);
+    manager_->addButton(extract_button_tool2);
+    floor_menu->addButton(extract_button_tool2);
 
     manager_->addButton( new SDLButtonMenu(floor_menu, "floor.png", 70,10) );
     manager_->addMenuButton( floor_menu );
