@@ -253,6 +253,12 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
                     tile_text.append(Utility::itos(cur.id()));
                 }
                 // end debug
+                if( !cur.counted_item().isNull() ) {
+                    tile_text.append("\n");
+                    tile_text.append(cur.counted_item().item().name());
+                    tile_text.append(": ");
+                    tile_text.append(Utility::itos(cur.counted_item().count()));
+                }
             }
         }
     }
@@ -266,12 +272,18 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     // render items
     // debug
     {
-    SDL_Texture* stone_texture = TextureMgr::instance()->getItemTexture("stone");
+    Tile& cur = data_->tile(11,40);
+    if( cur.counted_item().isNull() ) {
+            std::cout << "additem" << std::endl;
+        cur.addItem(BasicItem("stone"), 1);
+    }
+    SDL_Texture* stone_texture = cur.counted_item().texture();
     SDL_Rect dest;
-    dest.x = 11*scaled_tile_size_ + scaled_start_x_;
-    dest.y = 40*scaled_tile_size_ + scaled_start_y_;
-    dest.w = scaled_tile_size_/2;
-    dest.h = scaled_tile_size_/2;
+    int half_scaled_tile_size = scaled_tile_size_/2;
+    dest.x = 11*scaled_tile_size_ + scaled_start_x_ + half_scaled_tile_size/2;
+    dest.y = 40*scaled_tile_size_ + scaled_start_y_ + half_scaled_tile_size/2;
+    dest.w = half_scaled_tile_size;
+    dest.h = half_scaled_tile_size;
     sdl_camera->displayTexture(stone_texture, &dest);
     }
     // end debug
@@ -480,11 +492,9 @@ SDL_Texture* SDLText::texture(SDL_Renderer* renderer) {
 SDLCamera::SDLCamera(
     int width, int height
 ) : Camera(width, height), window_(nullptr), main_renderer_(nullptr), tool_(nullptr), map_view_(nullptr) {
-    if(SDL_Init(SDL_INIT_VIDEO) >= 0) {
-        window_ = SDL_CreateWindow("Tile Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
-        main_renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-        TTF_Init();
-    }
+    window_ = SDL_CreateWindow("Tile Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+    main_renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    TTF_Init();
     manager_ = new SDLButtonManager();
 
     // Add Wall menu
@@ -678,6 +688,9 @@ void SDLCamera::getSize(int& screen_width, int& screen_height) {
     SDL_GetRendererOutputSize(main_renderer_, &screen_width, &screen_height);
 }
 
+/*!
+ * Handle keyboard and mouse event
+ */
 void SDLCamera::handleEvent() {
     SDL_GetMouseState(&mouse_x_, &mouse_y_);
 

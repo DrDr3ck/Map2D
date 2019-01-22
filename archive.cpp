@@ -108,6 +108,8 @@ void MapDataConverter::load(const std::string& str) {
             y_ = atoi(y_str.c_str());
             inTile_ = true;
             occurrences_ = 0;
+            item_name_ = "none";
+            item_count_ = 0;
         }
     }
     if( inTile_ ) {
@@ -123,6 +125,12 @@ void MapDataConverter::load(const std::string& str) {
             std::string value_str = getAttribute(str, "value");
             occurrences_ = atoi(value_str.c_str());
         }
+        if( isTag(str, "counteditem") ) {
+            item_name_ = getAttribute(str, "name");
+            std::string value_str = getAttribute(str, "value");
+            std::cout << str << ": " << value_str << std::endl;
+            item_count_ = atoi(value_str.c_str());
+        }
         if( isTag(str, "btype") ) {
             std::string value_str = getAttribute(str, "value");
             tile_btype_ = stringTileToBType(value_str);
@@ -135,6 +143,9 @@ void MapDataConverter::load(const std::string& str) {
             Tile& cur_tile = data_->tile(x_,y_);
             cur_tile.setTile(tile_id_, tile_type_, tile_btype_, tile_ftype_);
             cur_tile.setOccurrences(occurrences_);
+            if( item_name_ != "none" && item_count_ > 0 ) {
+                cur_tile.addItem(BasicItem(item_name_), item_count_);
+            }
             inTile_ = false;
         }
     }
@@ -205,6 +216,9 @@ void MapDataConverter::save(std::ofstream& file) {
             file << "    <occurrence value=\"" << Utility::itos(cur.occurrences()) << "\" />" << std::endl;
             file << "    <btype value=\"" << btypeTileToString(cur.background_type()) << "\" />" << std::endl;
             file << "    <ftype value=\"" << ftypeTileToString(cur.floor_type()) << "\" />" << std::endl;
+            if( !cur.counted_item().isNull() ) {
+                file << "    <counteditem name=\"" << cur.counted_item().item().name() << "\" value=\"" << cur.counted_item().count() << "\" />" << std::endl;
+            }
             file << "  </tile>" << std::endl;
         }
     }

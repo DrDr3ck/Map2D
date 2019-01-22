@@ -136,6 +136,28 @@ std::string Tile::btypeTileToString(Tile::BType type) {
     return "NONE";
 }
 
+void Tile::addItem(const BasicItem& item, int nb) {
+    if( item.name() == counted_item_.item().name() ) {
+        counted_item_.addItem(nb);
+        return;
+    }
+    if( counted_item_.isNull() ) {
+        counted_item_ = CountedItem(item, nb);
+    }
+}
+
+std::string Tile::removeItem(int nb) {
+    if( counted_item_.isNull() ) {
+        return "none";
+    }
+    counted_item_.removeItem(nb);
+    std::string item_name = counted_item_.item().name();
+    if( counted_item_.count() == 0 ) {
+        counted_item_ = CountedItem();
+    }
+    return item_name;
+}
+
 /********************************************************************/
 
 MapData::MapData(int width, int height) : width_(width), height_(height) {
@@ -248,8 +270,10 @@ void MapData::extractItemFromTile(int x,int y) {
         // extraction of a rock
         if( cur.occurrences() > 0 ) {
             cur.setOccurrences( cur.occurrences()-1 );
+            // create an item stone and put it on the 'cur' Tile
+            cur.addItem(BasicItem("stone"), 1);
+
             // TODO should we change rock into dirt if occurrences == 0 ?
-            // TODO create an item rock and put it on the 'cur' Tile
         }
     }
 }

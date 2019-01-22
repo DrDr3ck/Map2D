@@ -48,23 +48,30 @@ public:
     BType background_type() const;
     FType floor_type() const;
     int occurrences() const;
-    void setOccurrences(int value);
+    CountedItem counted_item() const { return counted_item_; }
+
     void setTile(int id, Type cell_type, BType background_type, FType floor_type);
     void setCellTile(int id, Type cell_type);
     void setBackgroundTile(int id, BType background_type);
     void setFloorTile(int id, FType floor_type);
+
+    void setOccurrences(int value);
 
     static std::string typeTileToString(Tile::Type type);
     static std::string btypeTileToString(Tile::BType type);
 
     static bool isWall(const Tile& tile);
     static bool isFloor(const Tile& tile);
+
+    void addItem(const BasicItem& item, int nb=1);
+    std::string removeItem(int nb);
 private:
     int id_;
     Type cell_type_;
     int occurrences_;
     BType background_type_;
     FType floor_type_;
+    CountedItem counted_item_;
 };
 
 /********************************************************************/

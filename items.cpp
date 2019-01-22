@@ -1,6 +1,17 @@
 #include "items.h"
+#include "texture_mgr.h"
 
 /********************************************************************/
+
+SDL_Texture* BasicItem::texture() {
+    if( texture_ == nullptr ) {
+        texture_ = TextureMgr::instance()->getItemTexture(name());
+    }
+    return texture_;
+}
+
+CountedItem::CountedItem() : item_(BasicItem("none")), count_(0) {
+}
 
 CountedItem::CountedItem(const BasicItem& item, int count) : item_(item), count_(count) {
 }
@@ -35,4 +46,8 @@ int CountedItem::removeItem(int count) {
     int item_removed = count_;
     count_ = 0;
     return count - item_removed;
+}
+
+bool CountedItem::isNull() const {
+    return item_.name() == "none";
 }

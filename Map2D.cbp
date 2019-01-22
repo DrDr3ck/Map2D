@@ -11,7 +11,6 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option use_console_runner="0" />
 				<Option parameters="-language fr" />
 				<Compiler>
 					<Add option="-g" />
@@ -22,6 +21,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+                <Option parameters="-language fr" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>

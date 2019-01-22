@@ -28079,9 +28079,10 @@
   <tile x="11" y="40">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="49" />
+    <occurrence value="46" />
     <btype value="ROCK" />
     <ftype value="METAL" />
+    <counteditem name="stone" value="4" />
   </tile>
   <tile x="12" y="40">
     <id value="0" />
@@ -42002,8 +42003,8 @@
 </mapdata>
 <group>
   <people name="Bob">
-    <position x="12" y="40" />
-    <direction x="0" y="1" />
+    <position x="13" y="40" />
+    <direction x="-1" y="0" />
     <activity value="0" />
     <image_id value="0" />
   </people>
