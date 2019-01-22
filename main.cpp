@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
@@ -26,6 +27,8 @@ int main(int argc, char** argv) {
     }
     test_manager->kill();
 
+    SDL_Init(SDL_INIT_VIDEO);
+
     // Create window
     SDLCamera* camera = new SDLCamera(800,600);
     if( !camera->valid() ) {
@@ -42,7 +45,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    Translator::instance()->readDictionary("language/fr.txt");
+    Translator::instance()->readDictionary(language);
 
     TextureMgr::instance()->loadAllItems(camera->main_renderer());
 
@@ -56,6 +59,10 @@ int main(int argc, char** argv) {
     JobMgr job_mgr(camera->main_renderer());
 
     GameBoard board(&group, &data, &job_mgr);
+
+    //if( Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1 ) {
+    //    Logger::error() << "Cannot init sound because of " << Mix_GetError() << Logger::endl;
+    //}
 
     // check if save already exists
     std::ifstream f(filename.c_str());
@@ -109,7 +116,9 @@ int main(int argc, char** argv) {
         double delay_clock_us = std::chrono::duration_cast<std::chrono::microseconds>(end_clock - start_clock).count();
         if( delay_clock_us > delay_in_us ) {
             camera->render(delay_clock_us/1000.);
-            board.animate(delay_clock_us/1000.);
+            if( !camera->isInPause() ) {
+                board.animate(delay_clock_us/1000.);
+            }
             start_clock = end_clock;
             second += delay_clock_us;
             fps++;
