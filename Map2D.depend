@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1548103605 source:d:\games\programs\map2d\main.cpp
+1548141981 source:d:\games\programs\map2d\main.cpp
 	<SDL2/SDL.h>
 	<iostream>
 	<fstream>
@@ -409,7 +409,7 @@
 	<list>
 	<vector>
 
-1548019153 source:d:\games\programs\map2d\archive.cpp
+1548141981 source:d:\games\programs\map2d\archive.cpp
 	"archive.h"
 	"character.h"
 	"logger.h"
@@ -422,7 +422,7 @@
 	"map.h"
 	<string>
 
-1548103748 source:d:\games\programs\map2d\sdl_camera.cpp
+1548141981 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -652,14 +652,14 @@
 	<ctime>
 	<chrono>
 
-1548103854 source:d:\games\programs\map2d\craft_mgr.cpp
+1548106419 source:d:\games\programs\map2d\craft_mgr.cpp
 	"craft_mgr.h"
 	"logger.h"
 	"utility.h"
 	"translator.h"
 	<fstream>
 
-1548104329 d:\games\programs\map2d\craft_mgr.h
+1548106202 d:\games\programs\map2d\craft_mgr.h
 	<map>
 	<vector>
 	<string>

@@ -2,6 +2,8 @@
 
 #include "utility.h"
 
+using namespace std;
+
 /********************************************************************/
 
 LoggerString::LoggerString(const std::string& type, const std::string& string) : type_(type), string_(string) {
@@ -45,14 +47,14 @@ Logger::Logger(const Logger& logger) {
 Logger::~Logger() {
 }
 
-std::string Logger::endl("endl");
+string Logger::endl("endl");
 
-Logger& Logger::operator<<(const std::string& str) {
+Logger& Logger::operator<<(const string& str) {
     if( str != Logger::endl ) {
         this->appendString(str);
     } else {
         // display string in terminal
-        std::cout << getType() << ": " << string_ << std::endl;
+        cout << getType() << ": " << string_ << std::endl;
         if( type_ != LoggerType::DEBUG ) {
             LoggerMgr::instance()->addString( LoggerString(getType(), string_) );
         }
@@ -65,7 +67,7 @@ Logger& Logger::operator<<(const int& value) {
     return *this;
 }
 
-void Logger::appendString(const std::string& str) {
+void Logger::appendString(const string& str) {
     string_.append(str);
 }
 

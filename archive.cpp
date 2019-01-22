@@ -134,9 +134,6 @@ void MapDataConverter::load(const std::string& str) {
         if( isEndTag(str, "tile") ) {
             Tile& cur_tile = data_->tile(x_,y_);
             cur_tile.setTile(tile_id_, tile_type_, tile_btype_, tile_ftype_);
-            if( occurrences_ > 0 ) {
-                std::cout << x_ << " rock!!! " << y_ << std::endl;
-            }
             cur_tile.setOccurrences(occurrences_);
             inTile_ = false;
         }

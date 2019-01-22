@@ -169,10 +169,10 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         scale_speed = 1./camera->scale() * 1./camera->scale();
     }
     if( delta_x_ != 0 ) {
-        translate_x_ += delta_x_ * scale_speed * (delay_in_ms / 1000.);
+        translate_x_ += delta_x_ * scale_speed * delay_in_ms;
     }
     if( delta_y_ != 0 ) {
-        translate_y_ += delta_y_ * scale_speed * (delay_in_ms / 1000.);
+        translate_y_ += delta_y_ * scale_speed * delay_in_ms;
     }
 
     // compute background (one time only)
@@ -482,7 +482,7 @@ SDLCamera::SDLCamera(
 ) : Camera(width, height), window_(nullptr), main_renderer_(nullptr), tool_(nullptr), map_view_(nullptr) {
     if(SDL_Init(SDL_INIT_VIDEO) >= 0) {
         window_ = SDL_CreateWindow("Tile Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
-        main_renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
+        main_renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
         TTF_Init();
     }
     manager_ = new SDLButtonManager();

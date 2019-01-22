@@ -88,30 +88,40 @@ int main(int argc, char** argv) {
     FontLib* font_manager = FontLib::instance();
 
     // Main loop
-    std::chrono::steady_clock::time_point start_draw = std::chrono::steady_clock::now();
-    std::chrono::steady_clock::time_point start_anim = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point start_clock = std::chrono::steady_clock::now();
     bool ending = false;
 
     //LoggerMgr::instance()->clear();
 
+    const int FPS = 30;
+    double delay_in_us = 1000000 / FPS;
+
+    double second = 0;
+    int fps = 0;
     while(!ending) {
 
         camera->handleEvent();
         if( camera->quit() ) {
             ending = true;
         }
-        std::chrono::steady_clock::time_point end_draw = std::chrono::steady_clock::now();
-        std::chrono::steady_clock::time_point end_anim = std::chrono::steady_clock::now();
-        double delay_draw_us = std::chrono::duration_cast<std::chrono::microseconds>(end_draw - start_draw).count();
-        double delay_anim_us = std::chrono::duration_cast<std::chrono::microseconds>(end_anim - start_anim).count();
-        if( delay_draw_us > 25000 ) {
-            camera->render(delay_draw_us);
-            start_draw = end_draw;
+
+        std::chrono::steady_clock::time_point end_clock = std::chrono::steady_clock::now();
+        double delay_clock_us = std::chrono::duration_cast<std::chrono::microseconds>(end_clock - start_clock).count();
+        if( delay_clock_us > delay_in_us ) {
+            camera->render(delay_clock_us/1000.);
+            board.animate(delay_clock_us/1000.);
+            start_clock = end_clock;
+            second += delay_clock_us;
+            fps++;
+
         }
-        if( delay_anim_us > 100000 ) {
-            board.animate(delay_anim_us/1000.);
-            start_anim = end_anim;
+
+        if( second > 1000000 ) {
+            Logger::debug() << "FPS: " << fps << Logger::endl;
+            second = 0;
+            fps = 0;
         }
+
     }
 
     ArchiveConverter::save(&board, filename);
