@@ -11,15 +11,21 @@
 
 class Craft {
 public:
-    Craft(const std::string& name);
-    ~Craft();
+    enum class CraftType {ITEM, OBJECT};
+public:
+    Craft(const std::string& name, CraftType type, int time_in_seconds);
+    ~Craft() = default;
 
     const std::string& name() const { return name_; }
+    void addCountedItem(const std::string& basic_item, int occurrences);
+    const std::vector<CountedItem>& getItems() const { return items_; }
+    CraftType type() const { return type_; }
+
 private:
     std::string name_;
-    std::vector<CountedItem> items_;
+    CraftType type_;
     int time_in_seconds_;
-
+    std::vector<CountedItem> items_;
 };
 
 class CraftMgr {

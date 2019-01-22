@@ -5,9 +5,15 @@
 
 #include <fstream>
 
+using namespace std;
+
 /********************************************************************/
 
-Craft::Craft(const std::string& name) : name_(name) {
+Craft::Craft(const string& name, CraftType type, int time_in_seconds) : name_(name), type_(type), time_in_seconds_(time_in_seconds) {
+}
+
+void Craft::addCountedItem(const string& basic_item, int occurrences) {
+    items_.push_back(CountedItem(BasicItem(basic_item), occurrences));
 }
 
 /********************************************************************/
@@ -41,6 +47,13 @@ void CraftMgr::loadCrafts(const std::string& filename) {
     std::string str;
     while (std::getline(file, str)) {
     }
+
+    // debug
+    Craft* stone_furnace = new Craft("StoneFurnace", Craft::CraftType::OBJECT, 5);
+    vector<Craft*> crafts;
+    crafts.push_back(stone_furnace);
+    crafts_by_machine_.insert( pair<string,vector<Craft*>>("Etabli", crafts) );
+    // end debug
 
     file.close();
 }
