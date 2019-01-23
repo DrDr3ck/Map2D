@@ -7,13 +7,31 @@
 Job::Job(
     const std::string& name,
     Position tile_position,
-    const std::string& icon_type, int build_time_ms
+    const std::string& icon_type,
+    int build_time_ms
 ) : name_(name),
     tile_position_(tile_position),
     icon_type_(icon_type),
     build_time_ms_(build_time_ms),
     people_(nullptr)
 {
+}
+
+RepetitiveJob::RepetitiveJob(
+    const std::string& name,
+    Position tile_position,
+    const std::string& icon_type,
+    int build_time_ms,
+    int repetition
+) : Job(name, tile_position, icon_type, build_time_ms) {
+    original_build_time_ms_ = build_time_ms;
+    repetition_ = repetition;
+}
+
+bool RepetitiveJob::isRepetitive() {
+    repetition_--;
+    setBuildTime(original_build_time_ms_);
+    return repetition_ > 0;
 }
 
 /**************************************/

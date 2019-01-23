@@ -17,7 +17,10 @@ public:
     Position tilePosition() const { return tile_position_; }
     const std::string& iconType() const { return icon_type_; }
     int buildTime() const { return build_time_ms_; }
+    void setBuildTime(int build_time_in_ms) { build_time_ms_ = build_time_in_ms; }
     Character* people() const { return people_; }
+
+    virtual bool isRepetitive() { return false; }
 
     void reset() {
         people_ = nullptr;
@@ -39,6 +42,18 @@ private:
 
     // if nullptr, job is available otherwise someone plans to work on it
     Character* people_ = nullptr;
+};
+
+class RepetitiveJob : public Job {
+public:
+    RepetitiveJob(const std::string& name, Position tile_position, const std::string& icon_type, int build_time_ms, int repetition);
+    virtual ~RepetitiveJob() {}
+
+    virtual bool isRepetitive();
+
+private:
+    int original_build_time_ms_;
+    int repetition_;
 };
 
 /********************************************************************/
@@ -79,11 +94,11 @@ public:
     }
 };
 
-class ExtractJob : public Job {
+class ExtractJob : public RepetitiveJob {
 public:
     ExtractJob(
-        Position tile_position, const std::string& icon_type, int build_time_ms
-    ) : Job(EXTRACT, tile_position, icon_type, build_time_ms)
+        Position tile_position, const std::string& icon_type, int build_time_ms, int repetition
+    ) : RepetitiveJob(EXTRACT, tile_position, icon_type, build_time_ms, repetition)
     {
     }
 };

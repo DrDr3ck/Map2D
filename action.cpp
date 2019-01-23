@@ -257,6 +257,15 @@ bool ExtractAction::spentTime(double time_spent) {
         double delta_time = delay_anim_us/1000.;
         people_->setActivityPercent( std::min(100,int(100.0*delta_time/job_->buildTime())) );
         if( delta_time > job_->buildTime() ) {
+            if( job_->isRepetitive() ) {
+                // repeat action
+                if( job_->name() == EXTRACT ) {
+                    Position position = job_->tilePosition();
+                    game_board_->data()->extractItemFromTile(position.x,position.y);
+                }
+                start_time_ = std::chrono::steady_clock::now();
+                return true;
+            }
             return false;
         }
     }

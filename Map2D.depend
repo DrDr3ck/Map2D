@@ -423,7 +423,7 @@
 	"map.h"
 	<string>
 
-1548190441 source:d:\games\programs\map2d\sdl_camera.cpp
+1548274045 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -437,7 +437,7 @@
 	"translator.h"
 	"action.h"
 
-1548018001 d:\games\programs\map2d\sdl_camera.h
+1548273032 d:\games\programs\map2d\sdl_camera.h
 	"character.h"
 	"map.h"
 	"job.h"
@@ -483,7 +483,7 @@
 	<SDL2/SDL.h>
 	"camera.h"
 
-1548190384 source:d:\games\programs\map2d\sdl_tool.cpp
+1548273032 source:d:\games\programs\map2d\sdl_tool.cpp
 	"sdl_tool.h"
 	<iostream>
 	<math.h>
@@ -535,12 +535,12 @@
 	"map.h"
 	<vector>
 
-1548018370 source:d:\games\programs\map2d\job.cpp
+1548273927 source:d:\games\programs\map2d\job.cpp
 	"job.h"
 	"sdl_camera.h"
 	"logger.h"
 
-1548017208 d:\games\programs\map2d\job.h
+1548274033 d:\games\programs\map2d\job.h
 	"map.h"
 	"character.h"
 	<string>
@@ -634,7 +634,7 @@
 	<map>
 	<string>
 
-1548017474 source:d:\games\programs\map2d\action.cpp
+1548273949 source:d:\games\programs\map2d\action.cpp
 	"action.h"
 	"character.h"
 	"job.h"
@@ -645,7 +645,7 @@
 	<cmath>
 	"SDL2/SDL_image.h"
 
-1548017339 d:\games\programs\map2d\action.h
+1548273772 d:\games\programs\map2d\action.h
 	"utility.h"
 	<SDL2/SDL.h>
 	<map>

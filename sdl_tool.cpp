@@ -145,8 +145,7 @@ void SDLExtractTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
     if( camera()->mapView()->curTile(x,y) ) {
-        camera()->mapView()->extractItemJob(x,y);
-        // TODO manage nb for extraction
+        camera()->mapView()->extractItemJob(x,y,nb_);
     }
 }
 

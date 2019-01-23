@@ -84,9 +84,9 @@ void MapView::removeWallJob(int x, int y) {
     job_manager_->addJob(job);
 }
 
-void MapView::extractItemJob(int x, int y) {
+void MapView::extractItemJob(int x, int y, int nb) {
     Position tile_position = {x,y};
-    Job* job = new ExtractJob(tile_position, "extract_tool", 5000);
+    Job* job = new ExtractJob(tile_position, "extract_tool", 5000, nb);
     job_manager_->addJob(job);
 }
 

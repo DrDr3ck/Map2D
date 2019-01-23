@@ -30,7 +30,7 @@ public:
     void removeWallJob(int x, int y);
     void addFloorJob(int x, int y);
     void removeFloorJob(int x, int y);
-    void extractItemJob(int x, int y);
+    void extractItemJob(int x, int y, int nb=1);
 
     Position onTile(int mouse_x, int mouse_y) const;
     void setTile(int tile_x, int tile_y);
