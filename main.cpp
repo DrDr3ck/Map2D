@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
     PeopleGroup group;
 
     std::string filename("save01.arc");
-    MapData data(100,60);
+    MapData data(10,6);
     JobMgr job_mgr(camera->main_renderer());
 
     GameBoard board(&group, &data, &job_mgr);
@@ -85,7 +85,7 @@ int main(int argc, char** argv) {
         MapData::createMap(&data);
 
         // with a robot
-        Position position = {2,1};
+        Position position = {data.width()/2,data.height()/2};
         Character* people = new Character("B0b31", position, 0);
         people->setDirection(1,0);
         group.add(people);
@@ -126,7 +126,7 @@ int main(int argc, char** argv) {
         }
 
         if( second > 1000000 ) {
-            Logger::debug() << "FPS: " << fps << Logger::endl;
+            //Logger::debug() << "FPS: " << fps << Logger::endl;
             second = 0;
             fps = 0;
         }

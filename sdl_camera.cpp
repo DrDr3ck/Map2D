@@ -217,9 +217,13 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     ontile_rect_ = {0,0,0,0};
     SDL_Texture* small = nullptr;
     Position topleft = onTile(0,0);
+    if( topleft.x < 0 ) topleft.x = 0;
+    if( topleft.y < 0 ) topleft.y = 0;
     Position bottomright = onTile(camera->width()+Utility::tileSize*camera->scale(),camera->height()+Utility::tileSize*camera->scale());
-    for( int w = std::max(0,topleft.x) ; w < std::min(data_->width(),bottomright.x); w++ ) {
-        for( int h = std::max(0,topleft.y) ; h < std::min(data_->height(),bottomright.y); h++ ) {
+    if( bottomright.x < 0 ) bottomright.x = data_->width();
+    if( bottomright.y < 0 ) bottomright.y = data_->height();
+    for( int w = topleft.x ; w < bottomright.x; w++ ) {
+        for( int h = topleft.y ; h < bottomright.y; h++ ) {
             const Tile& cur = data_->tile(w,h);
             SDL_Rect dest;
             dest.x = w*scaled_tile_size_ + scaled_start_x_;
@@ -230,19 +234,30 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
             if( small != nullptr ) {
                 sdl_camera->displayTexture(small, &dest);
             }
+            // display item
+            if( !cur.counted_item().isNull() ) {
+                SDL_Texture* item_texture = cur.counted_item().texture();
+                SDL_Rect dest;
+                int half_scaled_tile_size = scaled_tile_size_/2;
+                dest.x = w*scaled_tile_size_ + scaled_start_x_ + half_scaled_tile_size/2;
+                dest.y = h*scaled_tile_size_ + scaled_start_y_ + half_scaled_tile_size/2;
+                dest.w = half_scaled_tile_size;
+                dest.h = half_scaled_tile_size;
+                sdl_camera->displayTexture(item_texture, &dest);
+            }
+            // display white square over the onTile cursor
             if( tile_x_ == w && tile_y_ == h ) {
-                // dessine un carre blanc autour de la tuile 'onTile'
                 SDL_SetRenderDrawColor( main_renderer, 250, 250, 250, 255 );
                 SDL_RenderDrawRect(main_renderer, &dest);
                 ontile_rect_ = dest;
-                if( cur.occurrences() != 0 ) {
+                //if( cur.occurrences() != 0 ) {
                     tile_text.append(Tile::btypeTileToString(cur.background_type()));
                     tile_text.append(" (");
                     tile_text.append(Utility::itos(cur.occurrences()));
                     tile_text.append(")");
-                } else {
-                    tile_text.append(Tile::typeTileToString(cur.cell_type()));
-                }
+                //} else {
+                //    tile_text.append(Tile::typeTileToString(cur.cell_type()));
+                //}
                 tile_text.append(": ");
                 tile_text.append(Utility::itos(w));
                 tile_text.append(" ");
@@ -272,16 +287,16 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     // render items
     // debug
     {
-    Tile& cur = data_->tile(11,40);
+    Tile& cur = data_->tile(3,4);
     if( cur.counted_item().isNull() ) {
-            std::cout << "additem" << std::endl;
+        std::cout << "additem" << std::endl;
         cur.addItem(BasicItem("stone"), 1);
     }
     SDL_Texture* stone_texture = cur.counted_item().texture();
     SDL_Rect dest;
     int half_scaled_tile_size = scaled_tile_size_/2;
-    dest.x = 11*scaled_tile_size_ + scaled_start_x_ + half_scaled_tile_size/2;
-    dest.y = 40*scaled_tile_size_ + scaled_start_y_ + half_scaled_tile_size/2;
+    dest.x = 3*scaled_tile_size_ + scaled_start_x_ + half_scaled_tile_size/2;
+    dest.y = 4*scaled_tile_size_ + scaled_start_y_ + half_scaled_tile_size/2;
     dest.w = half_scaled_tile_size;
     dest.h = half_scaled_tile_size;
     sdl_camera->displayTexture(stone_texture, &dest);

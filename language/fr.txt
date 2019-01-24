@@ -15,6 +15,7 @@
 ('Nothing...','Rien...')
 ('None','Rien')
 ('Water','Eau')
+('Sand','Sable')
 ('Dirt','Terre')
 ('Grass','Herbe')
 ('Rock','Rocher')

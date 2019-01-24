@@ -129,6 +129,7 @@ std::string Tile::typeTileToString(Tile::Type type) {
 std::string Tile::btypeTileToString(Tile::BType type) {
     if( type == Tile::NONE ) return tr("None");
     if( type == Tile::WATER ) return tr("Water");
+    if( type == Tile::SAND ) return tr("Sand");
     if( type == Tile::DIRT ) return tr("Dirt");
     if( type == Tile::GRASS ) return tr("Grass");
     if( type == Tile::ROCK ) return tr("Rock");
@@ -319,16 +320,19 @@ void MapData::createMap(MapData* data) {
     }
     int width = data->width();
     int height = data->height();
-    int seed = rand();
+    int seed = 6334;//rand();
     float** noise_map = Noise::generateNoiseMap(width, height, seed, 150, 4, 0.5f, 2.f);
 
+    Logger::info() << tr("Generating a new map of dimension: ") << width << " x " << height << Logger::endl;
     // create the background picture
     Biome* biome = new Biome("forest"); // generator is ownership of biome
     BackGroundGenerator generator(width,height,biome);
     std::string filename("_out.png");
     filename.insert(0, Utility::itos(seed));
+    Logger::debug() << "Seed is " << seed << Logger::endl;
     generator.execute(filename);
 
+    Logger::info() << tr("Filling terrain...") << Logger::endl;
     for( int col=0; col < width; col++ ) {
         for( int row=0; row < height; row++ ) {
             Tile& tile = data->tile(col,row);
@@ -349,6 +353,7 @@ void MapData::createMap(MapData* data) {
             }
         }
     }
+    Logger::info() << tr("End of generation") << Logger::endl;
 }
 
 /********************************************************************/
@@ -463,7 +468,7 @@ TileSetLib* TileSetLib::singleton_ = nullptr;
 GameBoard::GameBoard(PeopleGroup* group, MapData* data, JobMgr* manager) : group_(group), data_(data), job_mgr_(manager) {
     // debug
     // add chest for fun :)
-    data->addObject(new Chest(), 2, 3);
+    // data->addObject(new Chest(), 2, 3);
     // end debug
 }
 

@@ -128,7 +128,7 @@ void MapDataConverter::load(const std::string& str) {
         if( isTag(str, "counteditem") ) {
             item_name_ = getAttribute(str, "name");
             std::string value_str = getAttribute(str, "value");
-            std::cout << str << ": " << value_str << std::endl;
+            std::cout << str << ": " << value_str << " at " << x_ << "," << y_ << std::endl;
             item_count_ = atoi(value_str.c_str());
         }
         if( isTag(str, "btype") ) {
@@ -164,6 +164,7 @@ std::string MapDataConverter::typeTileToString(Tile::Type type) const {
 std::string MapDataConverter::btypeTileToString(Tile::BType type) const {
     if( type == Tile::NONE ) return "NONE";
     if( type == Tile::WATER ) return "WATER";
+    if( type == Tile::SAND ) return "SAND";
     if( type == Tile::DIRT ) return "DIRT";
     if( type == Tile::GRASS ) return "GRASS";
     if( type == Tile::ROCK ) return "ROCK";
@@ -174,7 +175,7 @@ std::string MapDataConverter::btypeTileToString(Tile::BType type) const {
 std::string MapDataConverter::ftypeTileToString(Tile::FType type) const {
     if( type == Tile::METAL ) return "METAL";
     if( type == Tile::PLASTIC ) return "PLASTIC";
-    Logger::error() << "unable to find string for background type: " << type << Logger::endl;
+    Logger::error() << "unable to find string for floor type: " << type << Logger::endl;
     return "METAL";
 }
 
@@ -191,6 +192,7 @@ Tile::Type MapDataConverter::stringTileToType(const std::string& str) const {
 Tile::BType MapDataConverter::stringTileToBType(const std::string& str) const {
     if( str == "NONE" ) return Tile::NONE;
     if( str == "WATER" ) return Tile::WATER;
+    if( str == "SAND" ) return Tile::SAND;
     if( str == "DIRT" ) return Tile::DIRT;
     if( str == "GRASS" ) return Tile::GRASS;
     if( str == "ROCK" ) return Tile::ROCK;

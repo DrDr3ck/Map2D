@@ -39,7 +39,7 @@ Biome::Biome(const std::string& type) {
         int column = surf->w / enlargedtilesize;
         int row = surf->h / enlargedtilesize;
         surface_columns_.push_back(column);
-        surface_columns_.push_back(row);
+        surface_rows_.push_back(row);
     }
 }
 
@@ -121,6 +121,7 @@ void BackGroundGenerator::execute(const std::string& filename, float** noise_map
             map_tiles.push_back(tile);
         }
     }
+    Logger::debug() << "Sorting map tiles" << Logger::endl;
     sort(map_tiles.begin(), map_tiles.end(), wayToSortTile);
 
     for( unsigned int index=0; index < map_tiles.size(); index++ ) {
@@ -129,6 +130,7 @@ void BackGroundGenerator::execute(const std::string& filename, float** noise_map
         int row = map_tiles[index].y;
         int idx = std::rand() % columns[type];
         int idy = std::rand() % rows[type];
+
         SDL_Rect source;
         source.x = idx * fullsize;
         source.y = idy * fullsize;
@@ -147,6 +149,8 @@ void BackGroundGenerator::execute(const std::string& filename, float** noise_map
                 &dest
         );
     }
+
+    Logger::debug() << "Saving map background in " << filename << Logger::endl;
 
     IMG_SavePNG(image, filename.c_str());
 }
