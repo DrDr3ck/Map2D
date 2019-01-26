@@ -17,6 +17,15 @@ Job::Job(
 {
 }
 
+Object* BuildObjectJob::getObject() const {
+    if( object_name_ == "chest" ) {
+        return new Chest(4);
+    } else if( object_name_ == "stone_furnace" ) {
+        return new StoneFurnace();
+    }
+    return nullptr;
+}
+
 RepetitiveJob::RepetitiveJob(
     const std::string& name,
     Position tile_position,
@@ -88,6 +97,11 @@ SDL_Texture* JobMgr::getTexture(const std::string& icon_type) {
     std::string filename = icon_type;
     filename += ".png";
     SDL_Surface* icon_surface = Utility::IMGLoad(filename.c_str());
+    if( icon_surface == nullptr ) {
+        std::string object_filename = "objects/";
+        object_filename.append(filename);
+        icon_surface = Utility::IMGLoad(object_filename.c_str());
+    }
     if( icon_surface == nullptr ) {
         Logger::error() << "Cannot find icon for " << filename << Logger::endl;
         SDL_Texture* texture = map_of_jobs_["none"]; // return the 'none' icon texture

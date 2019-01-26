@@ -106,10 +106,17 @@ public:
 class BuildObjectJob : public Job {
 public:
     BuildObjectJob(
-        Position tile_position, const std::string& icon_type, int build_time_ms
-    ) : Job(BUILDOBJECT, tile_position, icon_type, build_time_ms)
+        Position tile_position, const std::string& icon_type, const std::string& object_name, int build_time_ms
+    ) : Job(BUILDOBJECT, tile_position, icon_type, build_time_ms), object_name_(object_name)
     {
     }
+
+    Object* getObject() const;
+    const std::string& objectName() const {
+        return object_name_;
+    }
+private:
+    std::string object_name_;
 };
 
 /********************************************************************/

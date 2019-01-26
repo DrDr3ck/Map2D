@@ -57,6 +57,18 @@ protected:
     std::vector<CountedItem> items_;
 };
 
+class StoneFurnace : public Object {
+public:
+    StoneFurnace();
+    virtual ~StoneFurnace() {}
+};
+
+class ElectricFurnace : public Object {
+public:
+    ElectricFurnace();
+    virtual ~ElectricFurnace() {}
+};
+
 /********************************************************************/
 
 struct PositionObject {

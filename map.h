@@ -1,7 +1,7 @@
 #ifndef map_h
 #define map_h
 
-#include "chest.h"
+#include "object.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>

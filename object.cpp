@@ -1,4 +1,4 @@
-#include "chest.h"
+#include "object.h"
 
 #include <iostream>
 #include "sdl_camera.h"
@@ -94,6 +94,14 @@ int Chest::removeItem(const BasicItem& item, int count) {
         }
     }
     return total_count;
+}
+
+/********************************************************************/
+
+StoneFurnace::StoneFurnace() : Object("objects/stone_furnace.png", "StoneFurnace") {
+}
+
+ElectricFurnace::ElectricFurnace() : Object("objects/electric_furnace.png", "ElectricFurnace") {
 }
 
 /********************************************************************/

@@ -200,6 +200,14 @@ void BuildAction::postAction() {
             game_board_->data()->addFloor(position.x,position.y);
         } else if( job_->name() == DEMOLISHFLOOR ) {
             game_board_->data()->removeFloor(position.x,position.y);
+        } else if( job_->name() == BUILDOBJECT ) {
+            BuildObjectJob* bjob = static_cast<BuildObjectJob*>(job_);
+            Object* object = bjob->getObject();
+            if( object != nullptr ) {
+                game_board_->data()->addObject(object,position.x,position.y);
+            } else {
+                Logger::error() << "Cannot create object " << bjob->objectName() << Logger::endl;
+            }
         }
     }
 }

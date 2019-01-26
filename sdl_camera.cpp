@@ -121,7 +121,7 @@ void MapView::removeFloorJob(int x, int y) {
  */
 void MapView::addObjectJob(const std::string& object_name, int x, int y) {
     Position tile_position = {x,y};
-    Job* job = new BuildObjectJob(tile_position, object_name, 1000);
+    Job* job = new BuildObjectJob(tile_position, object_name, object_name, 1000);
     job_manager_->addJob(job);
 }
 

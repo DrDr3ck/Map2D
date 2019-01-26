@@ -3,7 +3,7 @@
 
 #include "map.h"
 #include "character.h"
-#include "chest.h"
+#include "object.h"
 #include <list>
 #include <string>
 

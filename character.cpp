@@ -207,11 +207,10 @@ void PeopleGroup::animate(GameBoard* board, double delta_ms) {
                     people->setAction( new ExtractAction(board, people, job), "extraction" );
                     people->action()->preAction();
                 } else if( job->name() == "build_object" ) {
-                    // TODO
-                    //job->takeJob(people);
-                    //BuildObjectJob* bjob = static_cast<BuildObjectJob*>(job);
-                    //people->setAction( new BuildObjectAction(board, people, job), bjob->object_name() );
-                    //people->action()->preAction();
+                    job->takeJob(people);
+                    BuildObjectJob* bjob = static_cast<BuildObjectJob*>(job);
+                    people->setAction( new BuildAction(board, people, job), bjob->objectName() );
+                    people->action()->preAction();
                 }
             }
         }
