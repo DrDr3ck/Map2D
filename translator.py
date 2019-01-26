@@ -39,11 +39,12 @@ class Translator:
 if __name__ == "__main__":
     argc = len(sys.argv)
     
-    if argc != 2:
+    filename = "language/fr.txt"
+    if argc > 2:
         print "Error: need 1 argument (destination filename)"
         sys.exit()
-    
-    filename = sys.argv[1]
+    elif argc == 2:
+        filename = sys.argv[1]
         
     print "Build translation for file", filename
     

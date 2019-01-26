@@ -1,4 +1,5 @@
 #include "object.h"
+#include "translator.h"
 
 #include <iostream>
 #include "sdl_camera.h"
@@ -34,7 +35,7 @@ void Object::render(SDLCamera* camera, const SDL_Rect& original_rect) {
 
 /********************************************************************/
 
-Chest::Chest(int size) : Object("objects/chest.png", "Chest"), max_size_(size) {
+Chest::Chest(int size) : Object("objects/chest.png", tr("Chest")), max_size_(size) {
 }
 
 // return the number of items not added in this Chest
@@ -98,10 +99,10 @@ int Chest::removeItem(const BasicItem& item, int count) {
 
 /********************************************************************/
 
-StoneFurnace::StoneFurnace() : Object("objects/stone_furnace.png", "StoneFurnace") {
+StoneFurnace::StoneFurnace() : Object("objects/stone_furnace.png", tr("StoneFurnace")) {
 }
 
-ElectricFurnace::ElectricFurnace() : Object("objects/electric_furnace.png", "ElectricFurnace") {
+ElectricFurnace::ElectricFurnace() : Object("objects/electric_furnace.png", tr("ElectricFurnace")) {
 }
 
 /********************************************************************/

@@ -299,6 +299,10 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     for( auto position_object : data_->objects() ) {
         SDL_Rect dest = getTileRect(position_object.x,position_object.y);
         position_object.object->render(sdl_camera, dest);
+        if( tile_x_ == position_object.x && tile_y_ == position_object.y ) {
+            tile_text.append("\n");
+            tile_text.append(tr(position_object.object->name()));
+        }
     }
 
     // display jobs (in semi transparency)
@@ -564,6 +568,11 @@ SDLCamera::SDLCamera(
     SDLButton* chest_button_tool = new SDLToolButton(chest_tool, "objects/chest.png", 0, 0);
     manager_->addButton(chest_button_tool);
     object_menu->addButton(chest_button_tool);
+
+    SDLBuildObjectTool* stone_furnace_tool = new SDLBuildObjectTool(this, "objects/stone_furnace.png", "stone_furnace");
+    SDLButton* stone_furnace_button_tool = new SDLToolButton(stone_furnace_tool, "objects/stone_furnace.png", 0, 0);
+    manager_->addButton(stone_furnace_button_tool);
+    object_menu->addButton(stone_furnace_button_tool);
 
     manager_->addButton( new SDLButtonMenu(object_menu, "object.png", object_menu->x(), 10) );
     manager_->addMenuButton( object_menu );
