@@ -12,22 +12,22 @@
 
 Biome::Biome(const std::string& type) {
     if( type == "forest" ) {
-        SDL_Surface* water_surface = IMG_Load("WaterGenerator72_01.png");
+        SDL_Surface* water_surface = IMG_Load("generator/WaterGenerator72_01.png");
         if( water_surface != nullptr ) {
             surfaces_.push_back(water_surface);
             heights_.push_back(20);
         }
-        SDL_Surface* sand_surface = IMG_Load("SandGenerator72_02.png");
+        SDL_Surface* sand_surface = IMG_Load("generator/SandGenerator72_02.png");
         if( sand_surface != nullptr ) {
             surfaces_.push_back(sand_surface);
             heights_.push_back(50);
         }
-        SDL_Surface* grass_surface = IMG_Load("GrassGenerator72_02.png");
+        SDL_Surface* grass_surface = IMG_Load("generator/GrassGenerator72_02.png");
         if( grass_surface != nullptr ) {
             surfaces_.push_back(grass_surface);
             heights_.push_back(220);
         }
-        SDL_Surface* rock_surface = IMG_Load("RockGenerator72_03.png");
+        SDL_Surface* rock_surface = IMG_Load("generator/RockGenerator72_03.png");
         if( rock_surface != nullptr ) {
             surfaces_.push_back(rock_surface);
             heights_.push_back(260);
