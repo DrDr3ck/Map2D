@@ -427,8 +427,8 @@
 </mapdata>
 <group>
   <people name="B0b31">
-    <position x="1" y="1" />
-    <direction x="-1" y="0" />
+    <position x="2" y="2" />
+    <direction x="0" y="1" />
     <activity value="0" />
     <image_id value="0" />
   </people>
