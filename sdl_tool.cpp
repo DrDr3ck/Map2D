@@ -188,6 +188,44 @@ void SDLExtractTool::mousePressed(int button) {
 
 /********************************************************************/
 
+SDLCleanTool::SDLCleanTool(
+    SDLCamera* camera,
+    const std::string& icon_name
+) : SDLTool(camera) {
+    surface_ = Utility::IMGLoad(icon_name.c_str());
+    Uint32 key = SDL_MapRGB(surface_->format, 0, 255, 0);
+    SDL_SetColorKey(surface_ , SDL_TRUE, key);
+}
+
+SDLCleanTool::~SDLCleanTool() {
+    if( surface_ != nullptr ) {
+        SDL_FreeSurface(surface_);
+    }
+}
+
+SDL_Texture* SDLCleanTool::getTexture(SDL_Renderer* renderer) {
+    if( texture_ == nullptr ) {
+        texture_ = SDL_CreateTextureFromSurface(renderer, surface_);
+        if( texture_ == nullptr ) {
+            Logger::error() << "CreateRGBSurface failed: " << SDL_GetError() << Logger::endl;
+        }
+        SDL_SetTextureAlphaMod( texture_, 192 );
+        SDL_FreeSurface(surface_);
+        surface_ = nullptr;
+    }
+    return texture_;
+}
+
+void SDLCleanTool::mousePressed(int button) {
+    SDLTool::mousePressed(button);
+    int x,y;
+    if( camera()->mapView()->getCurTile(x,y) ) {
+        //camera()->mapView()->cleanItemJob(x,y);
+    }
+}
+
+/********************************************************************/
+
 SDLUnbuildTool::SDLUnbuildTool(SDLCamera* camera, const std::string& icon_name, int type) : SDLBuildTool(camera, icon_name, type) {
 }
 

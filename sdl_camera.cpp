@@ -563,6 +563,11 @@ SDLCamera::SDLCamera(
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
+    SDLCleanTool* clean_tool = new SDLCleanTool(this, "balai_tool.png");
+    extract_button_tool = new SDLToolButton(clean_tool, "balai_tool.png", 0, 0);
+    manager_->addButton(extract_button_tool);
+    excavation_menu->addButton(extract_button_tool);
+
     manager_->addButton( new SDLButtonMenu(excavation_menu, "excavation.png", 70,10) );
     manager_->addMenuButton( excavation_menu );
 

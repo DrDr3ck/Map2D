@@ -101,4 +101,19 @@ private:
 
 /********************************************************************/
 
+class SDLCleanTool : public SDLTool {
+public:
+    SDLCleanTool(SDLCamera* camera, const std::string& icon_name);
+    virtual ~SDLCleanTool();
+
+    virtual SDL_Texture* getTexture(SDL_Renderer* renderer) override;
+
+    virtual void mousePressed(int button) override;
+
+private:
+    SDL_Surface* surface_;
+};
+
+/********************************************************************/
+
 #endif // sdl_tool_h

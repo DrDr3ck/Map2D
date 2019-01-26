@@ -21,7 +21,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-                <Option parameters="-language fr" />
+				<Option parameters="-language fr" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>
@@ -44,8 +44,6 @@
 		<Unit filename="camera.h" />
 		<Unit filename="character.cpp" />
 		<Unit filename="character.h" />
-		<Unit filename="chest.cpp" />
-		<Unit filename="chest.h" />
 		<Unit filename="craft_mgr.cpp" />
 		<Unit filename="craft_mgr.h" />
 		<Unit filename="font.cpp" />
@@ -59,6 +57,8 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="map.cpp" />
 		<Unit filename="map.h" />
+		<Unit filename="object.cpp" />
+		<Unit filename="object.h" />
 		<Unit filename="path_finding.cpp" />
 		<Unit filename="path_finding.h" />
 		<Unit filename="perlin_noise.cpp" />
