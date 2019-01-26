@@ -97,15 +97,52 @@ SDL_Texture* SDLBuildTool::getTexture(SDL_Renderer* renderer) {
 void SDLBuildTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
-    if( camera()->mapView()->curTile(x,y) ) {
+    if( camera()->mapView()->getCurTile(x,y) ) {
         if( type_ == WALLTOOL ) {
             camera()->mapView()->addWallJob(x,y);
         } else if( type_ == FLOORTOOL ) {
             camera()->mapView()->addFloorJob(x,y);
-        } else if( type_ == OBJECTTOOL ) {
-            Logger::debug() << "add object " << type_ << Logger::endl;
-            //camera()->mapView()->addFloor(x,y);
         }
+    }
+}
+
+/********************************************************************/
+
+SDLBuildObjectTool::SDLBuildObjectTool(
+    SDLCamera* camera,
+    const std::string& icon_name,
+    const std::string& object_name
+) : SDLTool(camera) {
+    surface_ = Utility::IMGLoad(icon_name.c_str());
+    object_name_ = object_name;
+}
+
+SDLBuildObjectTool::~SDLBuildObjectTool() {
+    if( surface_ != nullptr ) {
+        SDL_FreeSurface(surface_);
+    }
+}
+
+SDL_Texture* SDLBuildObjectTool::getTexture(SDL_Renderer* renderer) {
+    if( texture_ == nullptr ) {
+        texture_ = SDL_CreateTextureFromSurface(renderer, surface_);
+        if( texture_ == nullptr ) {
+            Logger::error() << "CreateRGBSurface failed: " << SDL_GetError() << Logger::endl;
+        }
+        SDL_SetTextureAlphaMod( texture_, 192 );
+        SDL_FreeSurface(surface_);
+        surface_ = nullptr;
+    }
+    return texture_;
+}
+
+void SDLBuildObjectTool::mousePressed(int button) {
+    SDLTool::mousePressed(button);
+    int x,y;
+    if( camera()->mapView()->getCurTile(x,y) ) {
+        // TODO check that an object is not already here !!
+        camera()->mapView()->addObjectJob(object_name_,x,y);
+        std::cout << "add object " << object_name_ << std::endl;
     }
 }
 
@@ -144,7 +181,7 @@ SDL_Texture* SDLExtractTool::getTexture(SDL_Renderer* renderer) {
 void SDLExtractTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
-    if( camera()->mapView()->curTile(x,y) ) {
+    if( camera()->mapView()->getCurTile(x,y) ) {
         camera()->mapView()->extractItemJob(x,y,nb_);
     }
 }
@@ -157,7 +194,7 @@ SDLUnbuildTool::SDLUnbuildTool(SDLCamera* camera, const std::string& icon_name, 
 void SDLUnbuildTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
-    if( camera()->mapView()->curTile(x,y) ) {
+    if( camera()->mapView()->getCurTile(x,y) ) {
         if( type() == WALLTOOL ) {
             camera()->mapView()->removeWallJob(x,y);
         } else if( type() == FLOORTOOL ) {

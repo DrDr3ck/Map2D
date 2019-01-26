@@ -128,7 +128,6 @@ void MapDataConverter::load(const std::string& str) {
         if( isTag(str, "counteditem") ) {
             item_name_ = getAttribute(str, "name");
             std::string value_str = getAttribute(str, "value");
-            std::cout << str << ": " << value_str << " at " << x_ << "," << y_ << std::endl;
             item_count_ = atoi(value_str.c_str());
         }
         if( isTag(str, "btype") ) {

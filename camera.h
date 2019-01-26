@@ -57,6 +57,8 @@ protected:
     std::list<View*> views_;
     bool pause_;
     bool quit_;
+    bool lctrl_down_;
+    bool rctrl_down_;
     int mouse_x_;
     int mouse_y_;
     int wheel_x_;

@@ -86,8 +86,16 @@ void MapView::removeWallJob(int x, int y) {
 
 void MapView::extractItemJob(int x, int y, int nb) {
     Position tile_position = {x,y};
-    Job* job = new ExtractJob(tile_position, "extract_tool", 5000, nb);
-    job_manager_->addJob(job);
+    Tile cur_tile = data_->tile(x,y);
+    Job* job = nullptr;
+    if( cur_tile.background_type() == Tile::ROCK ) {
+        job = new ExtractJob(tile_position, "extract_tool", 5000, nb);
+    } else if( cur_tile.background_type() == Tile::SAND ) {
+        job = new ExtractJob(tile_position, "pelle_tool", 5000, nb);
+    }
+    if( job != nullptr ) {
+        job_manager_->addJob(job);
+    }
 }
 
 /*!
@@ -105,6 +113,15 @@ void MapView::addFloorJob(int x, int y) {
 void MapView::removeFloorJob(int x, int y) {
     Position tile_position = {x,y};
     Job* job = new DemolishFloorJob(tile_position, "demolish_foundation_tool", 1000);
+    job_manager_->addJob(job);
+}
+
+/*!
+ * Adds an object construction in the queue of the job manager at (x,y) if possible.
+ */
+void MapView::addObjectJob(const std::string& object_name, int x, int y) {
+    Position tile_position = {x,y};
+    Job* job = new BuildObjectJob(tile_position, object_name, 1000);
     job_manager_->addJob(job);
 }
 
@@ -284,25 +301,6 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         position_object.object->render(sdl_camera, dest);
     }
 
-    // render items
-    // debug
-    {
-    Tile& cur = data_->tile(3,4);
-    if( cur.counted_item().isNull() ) {
-        std::cout << "additem" << std::endl;
-        cur.addItem(BasicItem("stone"), 1);
-    }
-    SDL_Texture* stone_texture = cur.counted_item().texture();
-    SDL_Rect dest;
-    int half_scaled_tile_size = scaled_tile_size_/2;
-    dest.x = 3*scaled_tile_size_ + scaled_start_x_ + half_scaled_tile_size/2;
-    dest.y = 4*scaled_tile_size_ + scaled_start_y_ + half_scaled_tile_size/2;
-    dest.w = half_scaled_tile_size;
-    dest.h = half_scaled_tile_size;
-    sdl_camera->displayTexture(stone_texture, &dest);
-    }
-    // end debug
-
     // display jobs (in semi transparency)
     for( auto job : job_manager_->jobs() ) {
         int job_x = job->tilePosition().x;
@@ -393,7 +391,7 @@ void MapView::handleEvent(Camera* camera) {
  * param[out] tile_y current y tile if valid
  * \return True if current tile is valid, false otherwise
  */
-bool MapView::curTile(int& tile_x, int& tile_y) {
+bool MapView::getCurTile(int& tile_x, int& tile_y) {
     tile_x = tile_x_;
     tile_y = tile_y_;
     return tile_x_ >= 0;
@@ -546,10 +544,15 @@ SDLCamera::SDLCamera(
     manager_->addButton(extract_button_tool);
     floor_menu->addButton(extract_button_tool);
 
-    SDLExtractTool* extract_tool2 = new SDLExtractTool(this, "extract_tool_10.png", 10);
-    SDLButton* extract_button_tool2 = new SDLToolButton(extract_tool2, "extract_tool_10.png", 0, 0);
-    manager_->addButton(extract_button_tool2);
-    floor_menu->addButton(extract_button_tool2);
+    extract_tool = new SDLExtractTool(this, "pelle_tool.png", 1);
+    extract_button_tool = new SDLToolButton(extract_tool, "pelle_tool.png", 0, 0);
+    manager_->addButton(extract_button_tool);
+    floor_menu->addButton(extract_button_tool);
+
+    extract_tool = new SDLExtractTool(this, "extract_tool_10.png", 10);
+    extract_button_tool = new SDLToolButton(extract_tool, "extract_tool_10.png", 0, 0);
+    manager_->addButton(extract_button_tool);
+    floor_menu->addButton(extract_button_tool);
 
     manager_->addButton( new SDLButtonMenu(floor_menu, "floor.png", 70,10) );
     manager_->addMenuButton( floor_menu );
@@ -557,8 +560,8 @@ SDLCamera::SDLCamera(
     // Add Object menu
     MenuButton* object_menu = new MenuButton(max_column, 130, 75);
 
-    SDLBuildTool* chest_tool = new SDLBuildTool(this, "chest.png", OBJECTTOOL);
-    SDLButton* chest_button_tool = new SDLToolButton(chest_tool, "chest.png", 0, 0);
+    SDLBuildObjectTool* chest_tool = new SDLBuildObjectTool(this, "objects/chest.png", "chest");
+    SDLButton* chest_button_tool = new SDLToolButton(chest_tool, "objects/chest.png", 0, 0);
     manager_->addButton(chest_button_tool);
     object_menu->addButton(chest_button_tool);
 
@@ -725,11 +728,24 @@ void SDLCamera::handleEvent() {
         case SDL_QUIT:
             quit_ = true;
             return;
+        case SDL_KEYUP:
+            if( event_.key.keysym.sym == SDLK_LCTRL ) {
+                lctrl_down_ = false;
+            } else if( event_.key.keysym.sym == SDLK_LCTRL ) {
+                rctrl_down_ = false;
+            }
+            break;
         case SDL_KEYDOWN:
             if( event_.key.keysym.sym == SDLK_SPACE ) {
                 pause_ = !pause_;
-            } else if( event_.key.keysym.sym == SDLK_ESCAPE ) {
-                quit_ = true;
+            } else if( event_.key.keysym.sym == SDLK_LCTRL ) {
+                lctrl_down_ = true;
+            } else if( event_.key.keysym.sym == SDLK_LCTRL ) {
+                rctrl_down_ = true;
+            } else if( event_.key.keysym.sym == SDLK_q ) {
+                if( lctrl_down_ || rctrl_down_ ) {
+                    quit_ = true;
+                }
             } else if( event_.key.keysym.sym == SDLK_c ) {
                 // TODO: center view to next robot
                 PeopleGroup* g = map_view_->group();
@@ -737,8 +753,6 @@ void SDLCamera::handleEvent() {
                     Character* p = g->group().at(0);
                     map_view_->restoreCenterTile( p->tilePosition() );
                 }
-            } else if( event_.key.keysym.sym == SDLK_e ) { // DEBUG ONLY
-                mapView()->extractItemJob(11,40);
             } else if( event_.key.keysym.sym == SDLK_b ) { // DEBUG ONLY
                 BackGroundGenerator generator(100,60); //10,6);
                 generator.execute("new_out.png");

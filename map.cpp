@@ -276,6 +276,15 @@ void MapData::extractItemFromTile(int x,int y) {
 
             // TODO should we change rock into dirt if occurrences == 0 ?
         }
+    } else if( cur.background_type() == Tile::SAND ) {
+        // extraction of a sand
+        if( cur.occurrences() > 0 ) {
+            cur.setOccurrences( cur.occurrences()-1 );
+            // create an item stone and put it on the 'cur' Tile
+            cur.addItem(BasicItem("sand"), 1);
+
+            // TODO should we change sand into dirt if occurrences == 0 ?
+        }
     }
 }
 

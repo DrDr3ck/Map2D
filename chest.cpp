@@ -34,7 +34,7 @@ void Object::render(SDLCamera* camera, const SDL_Rect& original_rect) {
 
 /********************************************************************/
 
-Chest::Chest(int size) : Object("chest.png", "Chest"), max_size_(size) {
+Chest::Chest(int size) : Object("objects/chest.png", "Chest"), max_size_(size) {
 }
 
 // return the number of items not added in this Chest

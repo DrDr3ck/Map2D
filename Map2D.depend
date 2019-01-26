@@ -352,7 +352,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1548359115 source:d:\games\programs\map2d\map.cpp
+1548494456 source:d:\games\programs\map2d\map.cpp
 	"map.h"
 	<cmath>
 	"SDL2/SDL_image.h"
@@ -400,17 +400,17 @@
 	<random>
 	<SDL2/SDL_ttf.h>
 
-1548020598 source:d:\games\programs\map2d\camera.cpp
+1548496719 source:d:\games\programs\map2d\camera.cpp
 	"camera.h"
 	"session.h"
 	<iostream>
 
-1548015413 d:\games\programs\map2d\camera.h
+1548496719 d:\games\programs\map2d\camera.h
 	"utility.h"
 	<list>
 	<vector>
 
-1548358491 source:d:\games\programs\map2d\archive.cpp
+1548494579 source:d:\games\programs\map2d\archive.cpp
 	"archive.h"
 	"character.h"
 	"logger.h"
@@ -423,7 +423,7 @@
 	"map.h"
 	<string>
 
-1548359047 source:d:\games\programs\map2d\sdl_camera.cpp
+1548498235 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -437,7 +437,7 @@
 	"translator.h"
 	"action.h"
 
-1548273032 d:\games\programs\map2d\sdl_camera.h
+1548498154 d:\games\programs\map2d\sdl_camera.h
 	"character.h"
 	"map.h"
 	"job.h"
@@ -479,11 +479,11 @@
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 
-1548190464 d:\games\programs\map2d\sdl_tool.h
+1548497704 d:\games\programs\map2d\sdl_tool.h
 	<SDL2/SDL.h>
 	"camera.h"
 
-1548273032 source:d:\games\programs\map2d\sdl_tool.cpp
+1548498154 source:d:\games\programs\map2d\sdl_tool.cpp
 	"sdl_tool.h"
 	<iostream>
 	<math.h>
@@ -492,7 +492,7 @@
 	"sdl_camera.h"
 	"sdl_button.h"
 
-1548352166 source:d:\games\programs\map2d\sdl_background.cpp
+1548359467 source:d:\games\programs\map2d\sdl_background.cpp
 	"sdl_background.h"
 	"perlin_noise.h"
 	"logger.h"
@@ -540,13 +540,13 @@
 	"sdl_camera.h"
 	"logger.h"
 
-1548274033 d:\games\programs\map2d\job.h
+1548498312 d:\games\programs\map2d\job.h
 	"map.h"
 	"character.h"
 	<string>
 	<list>
 
-1548104305 source:d:\games\programs\map2d\chest.cpp
+1548496190 source:d:\games\programs\map2d\chest.cpp
 	"chest.h"
 	<iostream>
 	"sdl_camera.h"
@@ -557,7 +557,7 @@
 	"utility.h"
 	"items.h"
 
-1548017228 d:\games\programs\map2d\utility.h
+1548498304 d:\games\programs\map2d\utility.h
 	<string>
 	<iostream>
 	<sstream>

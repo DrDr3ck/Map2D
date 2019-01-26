@@ -46,6 +46,16 @@ for f in listOfFiles:
         print "Copying", f, "..."
         shutil.copy(f, dest_dir)        
         
+src_dir = "./objects/"
+dest_dir = "./dist/objects"
+os.makedirs(dest_dir)
+listOfFiles = os.listdir(src_dir)
+for f in listOfFiles:
+    if f.endswith("png"):
+        f = src_dir+f
+        print "Copying", f, "..."
+        shutil.copy(f, dest_dir)                
+        
 src_dir = "./language/"
 dest_dir = "./dist/language"
 os.makedirs(dest_dir)
@@ -78,6 +88,12 @@ for f in listOfFiles:
     f = src_dir+f
     print "Zipping", f, "..."
     zf.write(f)      
+src_dir = "./dist/objects/"
+listOfFiles = os.listdir(src_dir)
+for f in listOfFiles:
+    f = src_dir+f
+    print "Zipping", f, "..."
+    zf.write(f)          
 src_dir = "./dist/language/"
 listOfFiles = os.listdir(src_dir)
 for f in listOfFiles:

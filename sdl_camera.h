@@ -31,12 +31,13 @@ public:
     void addFloorJob(int x, int y);
     void removeFloorJob(int x, int y);
     void extractItemJob(int x, int y, int nb=1);
+    void addObjectJob(const std::string& object_name, int x, int y);
 
     Position onTile(int mouse_x, int mouse_y) const;
     void setTile(int tile_x, int tile_y);
     const SDL_Rect& onTileRect() const { return ontile_rect_; }
 
-    bool curTile(int& tile_x, int& tile_y);
+    bool getCurTile(int& tile_x, int& tile_y);
 
     Position getCenterTile() const;
     void restoreCenterTile(Position position);
