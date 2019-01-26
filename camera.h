@@ -53,6 +53,8 @@ public:
     int wheel_x() const { return wheel_x_; }
     int wheel_y() const { return wheel_y_; }
 
+    static Camera* cur_camera;
+
 protected:
     std::list<View*> views_;
     bool pause_;

@@ -7,15 +7,15 @@
     <ftype value="METAL" />
   </tile>
   <tile x="1" y="0">
-    <id value="5" />
+    <id value="1" />
     <type value="WALL" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
   </tile>
   <tile x="2" y="0">
-    <id value="1" />
-    <type value="WALL" />
+    <id value="0" />
+    <type value="EMPTY" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
@@ -70,7 +70,7 @@
     <ftype value="METAL" />
   </tile>
   <tile x="0" y="1">
-    <id value="10" />
+    <id value="8" />
     <type value="WALL" />
     <occurrence value="0" />
     <btype value="GRASS" />
@@ -78,14 +78,14 @@
   </tile>
   <tile x="1" y="1">
     <id value="0" />
-    <type value="FLOOR" />
+    <type value="EMPTY" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
   </tile>
   <tile x="2" y="1">
     <id value="0" />
-    <type value="FLOOR" />
+    <type value="EMPTY" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
@@ -141,22 +141,22 @@
     <ftype value="METAL" />
   </tile>
   <tile x="0" y="2">
-    <id value="8" />
-    <type value="WALL" />
+    <id value="0" />
+    <type value="EMPTY" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
   </tile>
   <tile x="1" y="2">
     <id value="0" />
-    <type value="FLOOR" />
+    <type value="EMPTY" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
   </tile>
   <tile x="2" y="2">
     <id value="0" />
-    <type value="FLOOR" />
+    <type value="EMPTY" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
@@ -307,6 +307,7 @@
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
+    <counteditem name="stone" value="1" />
   </tile>
   <tile x="4" y="4">
     <id value="0" />
@@ -426,20 +427,14 @@
 </mapdata>
 <group>
   <people name="B0b31">
-    <position x="2" y="1" />
-    <direction x="1" y="0" />
+    <position x="1" y="1" />
+    <direction x="-1" y="1" />
     <activity value="0" />
     <image_id value="0" />
   </people>
 </group>
-<position_objects>
+<objects>
   <object name="chest">
     <position x="1" y="1" />
   </object>
-  <object name="stone_furnace">
-    <position x="6" y="1" />
-  </object>
-  <object name="chest">
-    <position x="2" y="1" />
-  </object>
-</position_objects>
+</objects>

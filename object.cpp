@@ -8,8 +8,9 @@
 
 Object::Object(
     const std::string& icon_name,
-    const std::string& object_name
-) : icon_name_(icon_name), name_(object_name) {
+    const std::string& user_name,
+    const std::string& name
+) : icon_name_(icon_name), user_name_(user_name), name_(name) {
 }
 
 SDL_Texture* Object::getTexture(SDLCamera* camera, int /*index*/) {
@@ -35,7 +36,7 @@ void Object::render(SDLCamera* camera, const SDL_Rect& original_rect) {
 
 /********************************************************************/
 
-Chest::Chest(int size) : Object("objects/chest.png", tr("Chest")), max_size_(size) {
+Chest::Chest(int size) : Object("objects/chest.png", tr("Chest"), "chest"), max_size_(size) {
 }
 
 // return the number of items not added in this Chest
@@ -99,10 +100,10 @@ int Chest::removeItem(const BasicItem& item, int count) {
 
 /********************************************************************/
 
-StoneFurnace::StoneFurnace() : Object("objects/stone_furnace.png", tr("StoneFurnace")) {
+StoneFurnace::StoneFurnace() : Object("objects/stone_furnace.png", tr("StoneFurnace"), "stone_furnace") {
 }
 
-ElectricFurnace::ElectricFurnace() : Object("objects/electric_furnace.png", tr("ElectricFurnace")) {
+ElectricFurnace::ElectricFurnace() : Object("objects/electric_furnace.png", tr("ElectricFurnace"), "electric_furnace") {
 }
 
 /********************************************************************/

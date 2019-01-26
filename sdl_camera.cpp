@@ -268,24 +268,27 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
                 SDL_SetRenderDrawColor( main_renderer, 250, 250, 250, 255 );
                 SDL_RenderDrawRect(main_renderer, &dest);
                 ontile_rect_ = dest;
-                //if( cur.occurrences() != 0 ) {
+                // build tooltip: add background if no wall/floor
+                if( Tile::isWall(cur) ) {
+                    tile_text.append(tr("Wall"));
+                    // debug
+                    //tile_text.append(" - id: ");
+                    //tile_text.append(Utility::itos(cur.id()));
+                    // end debug
+                } else if( Tile::isFloor(cur) ) {
+                    tile_text.append(tr("Floor"));
+                } else {
                     tile_text.append(Tile::btypeTileToString(cur.background_type()));
                     tile_text.append(" (");
                     tile_text.append(Utility::itos(cur.occurrences()));
                     tile_text.append(")");
-                //} else {
-                //    tile_text.append(Tile::typeTileToString(cur.cell_type()));
-                //}
+                }
+                // add position of tile
                 tile_text.append(": ");
                 tile_text.append(Utility::itos(w));
                 tile_text.append(" ");
                 tile_text.append(Utility::itos(h));
-                // debug
-                if( Tile::isWall(cur) ) {
-                    tile_text.append(" - id: ");
-                    tile_text.append(Utility::itos(cur.id()));
-                }
-                // end debug
+                // add counted item if any
                 if( !cur.counted_item().isNull() ) {
                     tile_text.append("\n");
                     tile_text.append(cur.counted_item().item().name());
@@ -301,8 +304,9 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         SDL_Rect dest = getTileRect(position_object.x,position_object.y);
         position_object.object->render(sdl_camera, dest);
         if( tile_x_ == position_object.x && tile_y_ == position_object.y ) {
+            // add object name on tile tooltip
             tile_text.append("\n");
-            tile_text.append(tr(position_object.object->name()));
+            tile_text.append(tr(position_object.object->userName()));
         }
     }
 
@@ -517,50 +521,50 @@ SDLCamera::SDLCamera(
 
     // Add Wall menu
     int max_column = 4;
-    MenuButton* wall_menu = new MenuButton(max_column, 10, 75);
+    MenuButton* build_menu = new MenuButton(max_column, 10, 75);
 
     SDLBuildTool* wall_tool = new SDLBuildTool(this, "wall_tool.png", WALLTOOL);
     SDLButton* wall_button_tool = new SDLToolButton(wall_tool, "wall_tool.png", 0, 0);
     manager_->addButton(wall_button_tool);
-    wall_menu->addButton(wall_button_tool);
+    build_menu->addButton(wall_button_tool);
 
     SDLUnbuildTool* demolish_tool = new SDLUnbuildTool(this, "demolish_tool.png", WALLTOOL);
     SDLButton* demolish_button_tool = new SDLToolButton(demolish_tool, "demolish_tool.png", 0, 0);
     manager_->addButton(demolish_button_tool);
-    wall_menu->addButton(demolish_button_tool);
-
-    manager_->addButton( new SDLButtonMenu(wall_menu, "wall.png", 10,10) );
-    manager_->addMenuButton( wall_menu );
+    build_menu->addButton(demolish_button_tool);
 
     SDLBuildTool* foundation_tool = new SDLBuildTool(this, "foundation_tool.png", FLOORTOOL);
     SDLButton* foundation_button_tool = new SDLToolButton(foundation_tool, "foundation_tool.png", 0, 0);
     manager_->addButton(foundation_button_tool);
-    wall_menu->addButton(foundation_button_tool);
+    build_menu->addButton(foundation_button_tool);
 
-    SDLUnbuildTool* demolish_foundation_tool = new SDLUnbuildTool(this, "demolish_foundation_tool.png", FLOORTOOL); // demolish_foundation_tool.png
-    SDLButton* demolish_foundation_button_tool = new SDLToolButton(demolish_foundation_tool, "demolish_foundation_tool.png", 0, 0); // demolish_foundation_tool.png
+    SDLUnbuildTool* demolish_foundation_tool = new SDLUnbuildTool(this, "demolish_foundation_tool.png", FLOORTOOL);
+    SDLButton* demolish_foundation_button_tool = new SDLToolButton(demolish_foundation_tool, "demolish_foundation_tool.png", 0, 0);
     manager_->addButton(demolish_foundation_button_tool);
-    wall_menu->addButton(demolish_foundation_button_tool);
+    build_menu->addButton(demolish_foundation_button_tool);
 
-    // Add Floor menu
-    MenuButton* floor_menu = new MenuButton(max_column, 70, 75);
+    manager_->addButton( new SDLButtonMenu(build_menu, "build.png", 10,10) );
+    manager_->addMenuButton( build_menu );
+
+    // Add excavation menu
+    MenuButton* excavation_menu = new MenuButton(max_column, 70, 75);
     SDLExtractTool* extract_tool = new SDLExtractTool(this, "extract_tool.png", 1);
     SDLButton* extract_button_tool = new SDLToolButton(extract_tool, "extract_tool.png", 0, 0);
     manager_->addButton(extract_button_tool);
-    floor_menu->addButton(extract_button_tool);
+    excavation_menu->addButton(extract_button_tool);
 
     extract_tool = new SDLExtractTool(this, "pelle_tool.png", 1);
     extract_button_tool = new SDLToolButton(extract_tool, "pelle_tool.png", 0, 0);
     manager_->addButton(extract_button_tool);
-    floor_menu->addButton(extract_button_tool);
+    excavation_menu->addButton(extract_button_tool);
 
     extract_tool = new SDLExtractTool(this, "extract_tool_10.png", 10);
     extract_button_tool = new SDLToolButton(extract_tool, "extract_tool_10.png", 0, 0);
     manager_->addButton(extract_button_tool);
-    floor_menu->addButton(extract_button_tool);
+    excavation_menu->addButton(extract_button_tool);
 
-    manager_->addButton( new SDLButtonMenu(floor_menu, "floor.png", 70,10) );
-    manager_->addMenuButton( floor_menu );
+    manager_->addButton( new SDLButtonMenu(excavation_menu, "excavation.png", 70,10) );
+    manager_->addMenuButton( excavation_menu );
 
     // Add Object menu
     MenuButton* object_menu = new MenuButton(max_column, 130, 75);
@@ -703,6 +707,20 @@ void SDLCamera::displayTexture(SDL_Texture* texture, const SDL_Rect* rect) {
 
 void SDLCamera::displayText(SDLText& text, bool background) {
     SDL_Texture* texture = text.texture(main_renderer_);
+    // if text length is greater than window size, translate the text position
+    {
+        SDL_Rect rect = text.rect();
+        if( rect.x + rect.w > Camera::cur_camera->width() ) {
+            int x = rect.x;
+            x -= (rect.x + rect.w - Camera::cur_camera->width() );
+            text.set_position(x, rect.y);
+        }
+        if( rect.y + rect.h > Camera::cur_camera->height() ) {
+            int y = rect.y;
+            y -= (rect.y + rect.h - Camera::cur_camera->height());
+            text.set_position(rect.x, y);
+        }
+    }
     if( background ) {
         // draw a white rectangle with a dark border line
         SDL_Rect rect = text.rect();

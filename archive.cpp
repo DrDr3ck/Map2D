@@ -64,6 +64,14 @@ void ArchiveConverter::load(GameBoard* board, const std::string& filename) {
             delete converter;
             converter = nullptr;
         }
+
+        if( isTag(str, "position_objects") ) {
+            converter = new ObjectConverter(board->data());
+        }
+        if( isEndTag(str, "position_objects") ) {
+            delete converter;
+            converter = nullptr;
+        }
         if( converter != nullptr ) {
             converter->load(str);
         }
@@ -86,6 +94,9 @@ void ArchiveConverter::save(GameBoard* board, const std::string& filename) {
 
     CharacterConverter cconverter(board->group());
     cconverter.save(file);
+
+    ObjectConverter oconverter(board->data());
+    oconverter.save(file);
 
     file.close();
 }
@@ -226,6 +237,8 @@ void MapDataConverter::save(std::ofstream& file) {
     file << "</mapdata>" << std::endl;
 }
 
+/********************************************************************/
+
 void CharacterConverter::load(const std::string& str) {
     if( !inPeople ) {
         if( isTag(str, "people") ) {
@@ -281,5 +294,50 @@ void CharacterConverter::save(std::ofstream& file) {
     }
 
     file << "</group>" << std::endl;
+}
+
+/********************************************************************/
+
+void ObjectConverter::load(const std::string& str) {
+    if( !inObject ) {
+        if( isTag(str, "object") ) {
+            name = getAttribute(str, "name");
+            inObject = true;
+        }
+    }
+
+    if( inObject ) {
+        if( isTag(str, "position") ) {
+            std::string x_str = getAttribute(str, "x");
+            int x = atoi(x_str.c_str());
+            std::string y_str = getAttribute(str, "y");
+            int y = atoi(y_str.c_str());
+            pos = {x,y};
+        }
+    }
+    if( isEndTag(str, "object") ) {
+        Object* object = nullptr;
+        if( name == "chest" ) {
+            object = new Chest(4);
+        } else if( name == "stone_furnace" ) {
+            object = new StoneFurnace();
+        } else if( name == "electric_furnace" ) {
+            object = new ElectricFurnace();
+        }
+        if( object != nullptr ) {
+            data_->addObject(object, pos.x, pos.y);
+        }
+        inObject = false;
+    }
+}
+
+void ObjectConverter::save(std::ofstream& file) {
+    file << "<position_objects>" << std::endl;
+    for( PositionObject position_object : data_->objects() ) {
+        file << "  <object name=\"" << position_object.object->name() << "\">" << std::endl;
+        file << "    <position x=\"" << position_object.x << "\" y=\"" << position_object.y << "\" />" << std::endl;
+        file << "  </object>" << std::endl;
+    }
+    file << "</position_objects>" << std::endl;
 }
 

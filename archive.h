@@ -56,7 +56,7 @@ private:
 class CharacterConverter : public DataConverter {
 public:
     CharacterConverter(PeopleGroup* group) : group_(group) {}
-    ~CharacterConverter() {}
+    virtual ~CharacterConverter() {}
 
     virtual void load(const std::string& str) override;
     virtual void save(std::ofstream& file) override;
@@ -72,7 +72,23 @@ private:
     bool inPeople = false;
 };
 
-class JobsConverter {
+class ObjectConverter : public DataConverter {
+public:
+    ObjectConverter(MapData* data) : data_(data) {}
+    virtual ~ObjectConverter() {}
+
+    virtual void load(const std::string& str) override;
+    virtual void save(std::ofstream& file) override;
+
+private:
+    MapData* data_;
+
+    std::string name;
+    Position pos = {0,0};
+    bool inObject = false;
+};
+
+class JobsConverter { // TODO
 public:
     JobsConverter() {}
     ~JobsConverter() {}
