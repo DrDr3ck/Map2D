@@ -2,6 +2,7 @@
 #define map_h
 
 #include "object.h"
+#include "character.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -93,6 +94,7 @@ public:
     void removeGround(int x, int y);
 
     void extractItemFromTile(int x,int y);
+    void cleanItemFromTile(int x,int y,Character* people);
 
     void addObject(Object* object, int x, int y);
     std::vector<PositionObject>& objects() { return objects_; }

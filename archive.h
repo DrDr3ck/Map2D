@@ -70,6 +70,7 @@ private:
     int activity_percentage = 0;
     int image_id = 0;
     bool inPeople = false;
+    std::vector<BasicItem> carried_items;
 };
 
 class ObjectConverter : public DataConverter {

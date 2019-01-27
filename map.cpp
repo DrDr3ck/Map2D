@@ -265,6 +265,23 @@ void MapData::removeFloor(int x, int y) {
     cur.setCellTile(cur.id(), Tile::EMPTY);
 }
 
+void MapData::cleanItemFromTile(int x,int y,Character* people) {
+    Tile& cur = tile(x,y);
+    if( cur.counted_item().isNull() ) {
+        // nothing to do, no counted item on this tile
+        return;
+    }
+    int max_carry = people->maxCarriable(cur.counted_item().item()); // get the maximum of item the robot can carry
+    int max_items = cur.counted_item().count();
+    if( max_items >= max_carry ) {
+        people->carryItem(cur.counted_item().item(), max_carry);
+        cur.counted_item().removeItem(max_carry);
+    } else {
+        people->carryItem(cur.counted_item().item(), max_items);
+        cur.counted_item().removeItem(max_items);
+    }
+}
+
 void MapData::extractItemFromTile(int x,int y) {
     Tile& cur = tile(x,y);
     if( cur.background_type() == Tile::ROCK ) {

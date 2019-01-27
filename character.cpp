@@ -90,6 +90,21 @@ void Character::setDirection(int x, int y) {
     direction_.y = y;
 }
 
+int Character::maxCarry() const {
+    return max_carry_;
+}
+
+int Character::maxCarriable(const BasicItem& /*item*/) const {
+    int cur_carry = carried_items_.size();
+    return max_carry_ - cur_carry;
+}
+
+void Character::carryItem(const BasicItem& item, int nb) {
+    for( int i= 0; i < nb ; i++ ) {
+        carried_items_.push_back(item);
+    }
+}
+
 /********************************************************************/
 
 CharacterSetLib::CharacterSetLib() {
@@ -206,7 +221,11 @@ void PeopleGroup::animate(GameBoard* board, double delta_ms) {
                     job->takeJob(people);
                     people->setAction( new ExtractAction(board, people, job), "extraction" );
                     people->action()->preAction();
-                } else if( job->name() == "build_object" ) {
+                } else if( job->name() == CLEAN ) {
+                    job->takeJob(people);
+                    people->setAction( new CleanAction(board, people, job), "cleaning" );
+                    people->action()->preAction();
+                } else if( job->name() == BUILDOBJECT ) {
                     job->takeJob(people);
                     BuildObjectJob* bjob = static_cast<BuildObjectJob*>(job);
                     people->setAction( new BuildAction(board, people, job), bjob->objectName() );

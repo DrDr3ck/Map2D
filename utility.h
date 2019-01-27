@@ -13,6 +13,7 @@
 /********************************************************************/
 
 #define EXTRACT "extract"
+#define CLEAN "clean"
 #define BUILDWALL "build"
 #define DEMOLISHWALL "demolish"
 #define BUILDFLOOR "build_floor"

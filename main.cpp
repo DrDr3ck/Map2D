@@ -142,5 +142,6 @@ int main(int argc, char** argv) {
 
     delete camera;
 
+    std::cout << "\n *** Game correctly ended ***" << std::endl;
     return 0;
 }

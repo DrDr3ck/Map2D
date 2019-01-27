@@ -2,6 +2,7 @@
 #define character_h
 
 #include "utility.h"
+#include "items.h"
 
 #include <SDL2/SDL.h>
 #include <map>
@@ -103,9 +104,16 @@ public:
         activity_percent_ = value;
     }
 
+    int maxCarry() const;
+    int maxCarriable(const BasicItem& item) const;
+    void carryItem(const BasicItem& item, int nb=1);
+    const std::vector<BasicItem>& carriedItems() const { return carried_items_; }
+
 protected:
     Direction direction_;
     int activity_percent_ = 0; // 0 to 100
+    int max_carry_ = 5;
+    std::vector<BasicItem> carried_items_;
 };
 
 /********************************************************************/

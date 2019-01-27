@@ -46,7 +46,7 @@ private:
 
 class RepetitiveJob : public Job {
 public:
-    RepetitiveJob(const std::string& name, Position tile_position, const std::string& icon_type, int build_time_ms, int repetition);
+    RepetitiveJob(const std::string& name, Position tile_position, const std::string& icon_type, int build_time_ms, int repetition=9999);
     virtual ~RepetitiveJob() {}
 
     virtual bool isRepetitive();
@@ -99,6 +99,15 @@ public:
     ExtractJob(
         Position tile_position, const std::string& icon_type, int build_time_ms, int repetition
     ) : RepetitiveJob(EXTRACT, tile_position, icon_type, build_time_ms, repetition)
+    {
+    }
+};
+
+class CleanJob : public RepetitiveJob {
+public:
+    CleanJob(
+        Position tile_position, const std::string& icon_type, int build_time_ms
+    ) : RepetitiveJob(CLEAN, tile_position, icon_type, build_time_ms)
     {
     }
 };

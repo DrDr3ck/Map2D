@@ -291,3 +291,94 @@ void ExtractAction::postAction() {
         }
     }
 }
+
+/********************************************************************/
+
+// Clean the Tile by transporting items in a chest
+
+CleanAction::CleanAction(
+    GameBoard* game_board, Character* people, Job* job
+) {
+    game_board_ = game_board;
+    people_ = people;
+    job_ = job;
+    action_ = nullptr;
+    isValid_ = true;
+}
+
+CleanAction::~CleanAction() {
+}
+
+void CleanAction::preAction() {
+    if( people_->tilePosition().x == job_->tilePosition().x && people_->tilePosition().y == job_->tilePosition().y ) {
+        return;
+    }
+    PathFinding path(game_board_->data());
+    Position end_position = job_->tilePosition();
+    std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
+
+    if( positions.size() == 0 ) {
+        isValid_ = false;
+        job_->reset();
+    } else {
+        action_ = new MoveAction(people_, positions, Utility::tileSize);
+    }
+
+    // TODO if robot can carry and robot is on the tile position, call cleanItemFromTile
+    // TODO if robot is full or tile is empty, ask robot to move to a chest
+    // TODO if robot on a chest and not empty, ask robot to transfer item in chest
+    // if tile is empty and robot is empty : stop clean action
+}
+
+bool CleanAction::spentTime(double time_spent) {
+    if( !isValid_ ) return false;
+    if( action_ != nullptr ) {
+        if( !action_->spentTime(time_spent) ) {
+            action_->postAction();
+            delete action_;
+            action_ = nullptr;
+            start_time_ = std::chrono::steady_clock::now();
+            if( !game_board_->jobManager()->findJobAt(job_->tilePosition() ) ) {
+                Logger::info() << tr("Job canceled") << Logger::endl;
+                return false; // job has been canceled
+            }
+            // set direction so that people can 'work'
+            people_->setDirection(people_->direction().x, 1);
+        }
+    } else {
+        // spent time on extraction...
+        std::chrono::steady_clock::time_point cur_time = std::chrono::steady_clock::now();
+        double delay_anim_us = std::chrono::duration_cast<std::chrono::microseconds>(cur_time - start_time_).count();
+        double delta_time = delay_anim_us/1000.;
+        people_->setActivityPercent( std::min(100,int(100.0*delta_time/job_->buildTime())) );
+        if( delta_time > job_->buildTime() ) {
+            if( job_->isRepetitive() ) {
+                // repeat action
+                if( job_->name() == CLEAN ) {
+                    Position position = job_->tilePosition();
+                    game_board_->data()->cleanItemFromTile(position.x,position.y,people_);
+                    Tile& cur_tile = game_board_->data()->tile(position.x, position.y);
+                    if( cur_tile.counted_item().isNull() ) {
+                        return false; // end of cleaning
+                    }
+                }
+                start_time_ = std::chrono::steady_clock::now();
+                return true;
+            }
+            return false;
+        }
+    }
+    return true;
+}
+
+void CleanAction::postAction() {
+    people_->setActivityPercent(0);
+    if( !isValid_ ) return;
+    Position position = job_->tilePosition();
+    if( game_board_->jobManager()->findJobAt(position) ) {
+        game_board_->jobManager()->cancelJob(position);
+        if( job_->name() == CLEAN ) {
+            game_board_->data()->cleanItemFromTile(position.x,position.y,people_);
+        }
+    }
+}

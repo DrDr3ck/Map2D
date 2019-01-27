@@ -116,6 +116,24 @@ private:
     std::chrono::steady_clock::time_point start_time_;
 };
 
+class CleanAction : public ActionBase {
+public:
+    CleanAction(GameBoard* game_board, Character* people, Job* job);
+    virtual ~CleanAction();
+
+    virtual void preAction() override;
+    virtual bool spentTime(double time_spent) override;
+    virtual void postAction() override;
+
+private:
+    GameBoard* game_board_;
+    Character* people_;
+    Job* job_;
+    ActionBase* action_;
+    bool isValid_;
+    std::chrono::steady_clock::time_point start_time_;
+};
+
 /********************************************************************/
 
 #endif // action_h

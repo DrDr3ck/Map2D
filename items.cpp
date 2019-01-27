@@ -45,6 +45,8 @@ int CountedItem::removeItem(int count) {
     }
     int item_removed = count_;
     count_ = 0;
+    // invalidate the basicitem
+    item_ = BasicItem("none");
     return count - item_removed;
 }
 

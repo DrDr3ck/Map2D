@@ -243,6 +243,7 @@ void CharacterConverter::load(const std::string& str) {
     if( !inPeople ) {
         if( isTag(str, "people") ) {
             name = getAttribute(str, "name");
+            carried_items.clear();
             inPeople = true;
         }
     }
@@ -270,10 +271,17 @@ void CharacterConverter::load(const std::string& str) {
             std::string str_value = getAttribute(str, "value");
             activity_percentage = atoi(str_value.c_str());
         }
+        if( isTag(str, "carried_item") ) {
+            std::string str_value = getAttribute(str, "name");
+            carried_items.push_back(BasicItem(str_value));
+        }
 
         if( isEndTag(str, "people") ) {
             Character* people = new Character(name, pos, image_id);
             people->setDirection(dir.x, dir.y);
+            for( auto carried_item : carried_items ) {
+                people->carryItem(carried_item);
+            }
             group_->add(people);
             inPeople = false;
         }
@@ -290,6 +298,11 @@ void CharacterConverter::save(std::ofstream& file) {
         file << "    <direction x=\"" << dir.x << "\" y=\"" << dir.y << "\" />" << std::endl;
         file << "    <activity value=\"" << people->activityPercent() << "\" />" << std::endl;
         file << "    <image_id value=\"" << people->imageIdForArchive() << "\" />" << std::endl;
+        const std::vector<BasicItem>& carried_items = people->carriedItems();
+        for( unsigned int i=0; i < carried_items.size(); i++ ) {
+            const BasicItem& item = carried_items[i];
+            file << "    <carried_item>" << item.name() << "</carried_item>" << std::endl;
+        }
         file << "  </people>" << std::endl;
     }
 
