@@ -310,19 +310,37 @@ CleanAction::~CleanAction() {
 }
 
 void CleanAction::preAction() {
-    if( people_->tilePosition().x == job_->tilePosition().x && people_->tilePosition().y == job_->tilePosition().y ) {
-        return;
+    // first check if robot can carry or not
+    int max_carriable = people_->maxCarriable();
+    if( max_carriable > 0 ) {
+        // go to the tile if still not the case
+        if( people_->tilePosition().x == job_->tilePosition().x && people_->tilePosition().y == job_->tilePosition().y ) {
+            // take all what you can
+            game_board_->data()->transferItems(people_); // transfer max items from Tile to People
+            // then move to the nearest non full chest
+            PositionObject pobject = game_board_->data()->getNearestChest(people_->tilePosition());
+            PathFinding path(game_board_->data());
+            Position end_position = {pobject.x,pobject.y};
+            std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
+            if( positions.size() == 0 ) {
+                isValid_ = false;
+                job_->reset();
+            } else {
+                action_ = new MoveAction(people_, positions, Utility::tileSize);
+            }
+        } else {
+            PathFinding path(game_board_->data());
+            Position end_position = job_->tilePosition();
+            std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
+            if( positions.size() == 0 ) {
+                isValid_ = false;
+                job_->reset();
+            } else {
+                action_ = new MoveAction(people_, positions, Utility::tileSize);
+            }
+        }
     }
-    PathFinding path(game_board_->data());
-    Position end_position = job_->tilePosition();
-    std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
 
-    if( positions.size() == 0 ) {
-        isValid_ = false;
-        job_->reset();
-    } else {
-        action_ = new MoveAction(people_, positions, Utility::tileSize);
-    }
 
     // TODO if robot can carry and robot is on the tile position, call cleanItemFromTile
     // TODO if robot is full or tile is empty, ask robot to move to a chest

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
+#include <cmath>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -25,6 +26,16 @@
 #define OBJECTTOOL 2
 
 /********************************************************************/
+
+struct Direction {
+    int x;
+    int y;
+};
+
+struct Position {
+    int x;
+    int y;
+};
 
 class Utility {
 public:
@@ -111,16 +122,13 @@ public:
         return bg_surface;
     }
 
-};
+    static float distance(Position from, Position to) {
+        int X = (to.x - from.x);
+        int Y = (to.y - from.y);
+        int dist_square = X*X +  Y*Y;
+        return sqrt(dist_square);
+    }
 
-struct Direction {
-    int x;
-    int y;
-};
-
-struct Position {
-    int x;
-    int y;
 };
 
 /********************************************************************/

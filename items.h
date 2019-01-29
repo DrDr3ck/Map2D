@@ -21,6 +21,8 @@ public:
         return name_;
     }
 
+    static BasicItem& null();
+
     SDL_Texture* texture();
 protected:
     std::string name_;

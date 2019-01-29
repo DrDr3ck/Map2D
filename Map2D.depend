@@ -364,7 +364,7 @@
 	<iostream>
 	<fstream>
 
-1548611911 d:\games\programs\map2d\map.h
+1548793404 d:\games\programs\map2d\map.h
 	"object.h"
 	"character.h"
 	<SDL2/SDL.h>
@@ -411,7 +411,7 @@
 	<list>
 	<vector>
 
-1548612799 source:d:\games\programs\map2d\archive.cpp
+1548613715 source:d:\games\programs\map2d\archive.cpp
 	"archive.h"
 	"character.h"
 	"logger.h"
@@ -521,7 +521,7 @@
 	<cmath>
 	"SDL2/SDL_image.h"
 
-1548613684 d:\games\programs\map2d\character.h
+1548792548 d:\games\programs\map2d\character.h
 	"utility.h"
 	"items.h"
 	<SDL2/SDL.h>
@@ -559,11 +559,12 @@
 	"utility.h"
 	"items.h"
 
-1548611934 d:\games\programs\map2d\utility.h
+1548794018 d:\games\programs\map2d\utility.h
 	<string>
 	<iostream>
 	<sstream>
 	<cstdlib>
+	<cmath>
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 	"logger.h"
@@ -636,7 +637,7 @@
 	<map>
 	<string>
 
-1548613299 source:d:\games\programs\map2d\action.cpp
+1548793349 source:d:\games\programs\map2d\action.cpp
 	"action.h"
 	"character.h"
 	"job.h"
@@ -668,10 +669,10 @@
 	<string>
 	"items.h"
 
-1548161977 d:\games\programs\map2d\items.h
+1548792493 d:\games\programs\map2d\items.h
 	<string>
 
-1548611849 source:d:\games\programs\map2d\items.cpp
+1548792493 source:d:\games\programs\map2d\items.cpp
 	"items.h"
 	"texture_mgr.h"
 

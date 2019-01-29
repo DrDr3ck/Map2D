@@ -305,6 +305,28 @@ void MapData::extractItemFromTile(int x,int y) {
     }
 }
 
+void MapData::transferItems(Character* people) {
+    Tile& tile = this->tile(people->tilePosition().x, people->tilePosition().y);
+    int max_item = std::min(people->maxCarriable(), tile.counted_item().count());
+    people->carryItem( tile.removeItem(max_item), max_item );
+}
+
+PositionObject MapData::getNearestChest(Position position) {
+    PositionObject nearest_chest;
+    nearest_chest.object = nullptr;
+    float distance = 10000.f;
+    for( PositionObject pobject : objects() ) {
+        if( pobject.object->name() != "chest" ) continue;
+        Position chest_position = {pobject.x, pobject.y};
+        float dist = Utility::distance(chest_position, position);
+        if( dist < distance ) {
+            distance = dist;
+            nearest_chest = pobject;
+        }
+    }
+    return nearest_chest;
+}
+
 void MapData::addGround(int x, int y) {
     if( tile(x,y).background_type() != Tile::NONE ) {
         // already a floor

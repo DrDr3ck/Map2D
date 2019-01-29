@@ -10,6 +10,13 @@ SDL_Texture* BasicItem::texture() {
     return texture_;
 }
 
+BasicItem& BasicItem::null() {
+    static BasicItem none("none");
+    return none;
+}
+
+/********************************************************************/
+
 CountedItem::CountedItem() : item_(BasicItem("none")), count_(0) {
 }
 
