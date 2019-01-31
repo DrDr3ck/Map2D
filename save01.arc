@@ -427,13 +427,13 @@
 <group>
   <people name="B0b">
     <position x="1" y="5" />
-    <direction x="1" y="1" />
+    <direction x="-1" y="1" />
     <activity value="0" />
     <image_id value="0" />
   </people>
   <people name="Bi11">
     <position x="6" y="1" />
-    <direction x="1" y="0" />
+    <direction x="-1" y="1" />
     <activity value="0" />
     <image_id value="12" />
   </people>

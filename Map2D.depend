@@ -509,7 +509,7 @@
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 
-1548910526 source:d:\games\programs\map2d\character.cpp
+1548919015 source:d:\games\programs\map2d\character.cpp
 	"character.h"
 	"sdl_camera.h"
 	"path_finding.h"
@@ -608,7 +608,7 @@
 	<iostream>
 	<fstream>
 
-1548102384 d:\games\programs\map2d\translator.h
+1548919193 d:\games\programs\map2d\translator.h
 	<string>
 	<map>
 
@@ -683,9 +683,10 @@
 	"translator.h"
 	"items.h"
 
-1548917635 source:d:\games\programs\map2d\object.cpp
+1548918030 source:d:\games\programs\map2d\object.cpp
 	"object.h"
 	"translator.h"
 	<iostream>
+	<algorithm>
 	"sdl_camera.h"
 

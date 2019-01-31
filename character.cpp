@@ -136,9 +136,18 @@ void CharacterSetLib::kill() {
 }
 
 void CharacterSetLib::init(SDL_Renderer* renderer) {
-    for( int x=0; x<4; x++ ) {
-        for( int y=0; y<4; y++ ) {
-            int id = x+y*4;
+    SDL_Surface* surf_source = CharacterSetLib::instance()->characters();
+    SDL_Rect dest;
+    dest.x = 0;
+    dest.y = 0;
+    dest.w = Utility::tileSize;
+    dest.h = Utility::tileSize;
+    int maxX = surf_source->w / Utility::tileSize;
+    int maxY = surf_source->h / Utility::tileSize;
+    Logger::info() << "Loading " << maxY << " robot's skins" << Logger::endl;
+    for( int y=0; y<maxY; y++ ) {
+        for( int x=0; x<maxX; x++ ) {
+            int id = x+y*maxX;
             SDL_Rect source;
             source.x = x * Utility::tileSize;
             source.y = y * Utility::tileSize;
@@ -146,19 +155,7 @@ void CharacterSetLib::init(SDL_Renderer* renderer) {
             source.h = Utility::tileSize;
 
             SDL_Surface* surf_dest = SDL_CreateRGBSurface(0, Utility::tileSize, Utility::tileSize, 32, 0, 0, 0, 0);
-
-            SDL_Rect dest;
-            dest.x = 0;
-            dest.y = 0;
-            dest.w = Utility::tileSize;
-            dest.h = Utility::tileSize;
-
-            SDL_Surface* surf_source = CharacterSetLib::instance()->characters();
-
-            SDL_BlitSurface(surf_source,
-                            &source,
-                            surf_dest,
-                            &dest);
+            SDL_BlitSurface( surf_source, &source, surf_dest, &dest );
 
             // Transparency with green color
             Uint32 key = SDL_MapRGB(surf_dest->format, 0, 255, 0);
