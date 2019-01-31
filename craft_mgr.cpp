@@ -52,7 +52,7 @@ void CraftMgr::loadCrafts(const std::string& filename) {
     Craft* stone_furnace = new Craft("StoneFurnace", Craft::CraftType::OBJECT, 5);
     vector<Craft*> crafts;
     crafts.push_back(stone_furnace);
-    crafts_by_machine_.insert( pair<string,vector<Craft*>>("Etabli", crafts) );
+    crafts_by_machine_.insert( pair<string,vector<Craft*>>("WorkBench", crafts) );
     // end debug
 
     file.close();

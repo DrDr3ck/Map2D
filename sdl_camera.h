@@ -48,6 +48,10 @@ protected:
     SDL_Rect getPeopleRect(Character* people) const;
     SDL_Rect getTileRect(int tile_x, int tile_y) const;
 
+    void renderObjects(SDLCamera* sdl_camera, std::string& tile_text);
+    void renderJobs(SDLCamera* sdl_camera);
+    void renderGroup(SDLCamera* sdl_camera);
+
 private:
     MapData* data_;
     PeopleGroup* group_;

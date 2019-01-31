@@ -14,43 +14,43 @@
     <ftype value="METAL" />
   </tile>
   <tile x="2" y="0">
-    <id value="1" />
+    <id value="5" />
     <type value="WALL" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
   </tile>
   <tile x="3" y="0">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="5" />
+    <type value="WALL" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
   </tile>
   <tile x="4" y="0">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="5" />
+    <type value="WALL" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
   </tile>
   <tile x="5" y="0">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="5" />
+    <type value="WALL" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
   </tile>
   <tile x="6" y="0">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="5" />
+    <type value="WALL" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
   </tile>
   <tile x="7" y="0">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="1" />
+    <type value="WALL" />
     <occurrence value="10" />
     <btype value="SAND" />
     <ftype value="METAL" />
@@ -92,35 +92,35 @@
   </tile>
   <tile x="3" y="1">
     <id value="0" />
-    <type value="EMPTY" />
+    <type value="FLOOR" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
   </tile>
   <tile x="4" y="1">
     <id value="0" />
-    <type value="EMPTY" />
+    <type value="FLOOR" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
   </tile>
   <tile x="5" y="1">
     <id value="0" />
-    <type value="EMPTY" />
+    <type value="FLOOR" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
   </tile>
   <tile x="6" y="1">
     <id value="0" />
-    <type value="EMPTY" />
+    <type value="FLOOR" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
   </tile>
   <tile x="7" y="1">
     <id value="0" />
-    <type value="EMPTY" />
+    <type value="FLOOR" />
     <occurrence value="7" />
     <btype value="SAND" />
     <ftype value="METAL" />
@@ -177,14 +177,14 @@
   </tile>
   <tile x="5" y="2">
     <id value="0" />
-    <type value="EMPTY" />
+    <type value="FLOOR" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
   </tile>
   <tile x="6" y="2">
     <id value="0" />
-    <type value="EMPTY" />
+    <type value="FLOOR" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
@@ -425,21 +425,27 @@
   </tile>
 </mapdata>
 <group>
-  <people name="B0b31">
-    <position x="2" y="2" />
+  <people name="B0b">
+    <position x="1" y="5" />
     <direction x="1" y="1" />
     <activity value="0" />
     <image_id value="0" />
   </people>
+  <people name="Bi11">
+    <position x="6" y="1" />
+    <direction x="1" y="0" />
+    <activity value="0" />
+    <image_id value="12" />
+  </people>
 </group>
 <position_objects>
-  <object name="chest">
-    <position x="1" y="1" />
-  </object>
   <object name="stone_furnace">
     <position x="6" y="1" />
   </object>
   <object name="chest">
-    <position x="2" y="1" />
+    <position x="5" y="1" />
+  </object>
+  <object name="workbench">
+    <position x="1" y="1" />
   </object>
 </position_objects>

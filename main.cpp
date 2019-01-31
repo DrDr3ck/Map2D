@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
     SDL_Init(SDL_INIT_VIDEO);
 
     // Create window
-    SDLCamera* camera = new SDLCamera(800,600);
+    SDLCamera* camera = new SDLCamera(1000,800);
     if( !camera->valid() ) {
         delete camera;
         return -1;
@@ -75,6 +75,12 @@ int main(int argc, char** argv) {
         if( group.group().size() == 0 ) {
             Position position = {2,1};
             Character* people = new Character("Bob", position, 0);
+            people->setDirection(1,0);
+            group.add(people);
+        }
+        if( group.group().size() == 1 ) {
+            Position position = {1,1};
+            Character* people = new Character("Bill", position, 5);
             people->setDirection(1,0);
             group.add(people);
         }

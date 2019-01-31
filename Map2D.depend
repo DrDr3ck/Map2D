@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1548612869 source:d:\games\programs\map2d\main.cpp
+1548910405 source:d:\games\programs\map2d\main.cpp
 	<SDL2/SDL.h>
 	<SDL2/SDL_mixer.h>
 	<iostream>
@@ -352,7 +352,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1548612521 source:d:\games\programs\map2d\map.cpp
+1548793986 source:d:\games\programs\map2d\map.cpp
 	"map.h"
 	<cmath>
 	"SDL2/SDL_image.h"
@@ -381,7 +381,7 @@
 	<list>
 	<string>
 
-1548103689 source:d:\games\programs\map2d\tests.cpp
+1548916960 source:d:\games\programs\map2d\tests.cpp
 	"tests.h"
 	"archive.h"
 	"font.h"
@@ -411,7 +411,7 @@
 	<list>
 	<vector>
 
-1548613715 source:d:\games\programs\map2d\archive.cpp
+1548913141 source:d:\games\programs\map2d\archive.cpp
 	"archive.h"
 	"character.h"
 	"logger.h"
@@ -424,7 +424,7 @@
 	"map.h"
 	<string>
 
-1548526138 source:d:\games\programs\map2d\sdl_camera.cpp
+1548917460 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -438,7 +438,7 @@
 	"translator.h"
 	"action.h"
 
-1548498154 d:\games\programs\map2d\sdl_camera.h
+1548913666 d:\games\programs\map2d\sdl_camera.h
 	"character.h"
 	"map.h"
 	"job.h"
@@ -509,7 +509,7 @@
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 
-1548612551 source:d:\games\programs\map2d\character.cpp
+1548910526 source:d:\games\programs\map2d\character.cpp
 	"character.h"
 	"sdl_camera.h"
 	"path_finding.h"
@@ -537,7 +537,7 @@
 	"map.h"
 	<vector>
 
-1548520909 source:d:\games\programs\map2d\job.cpp
+1548913216 source:d:\games\programs\map2d\job.cpp
 	"job.h"
 	"sdl_camera.h"
 	"logger.h"
@@ -637,7 +637,7 @@
 	<map>
 	<string>
 
-1548793349 source:d:\games\programs\map2d\action.cpp
+1548794848 source:d:\games\programs\map2d\action.cpp
 	"action.h"
 	"character.h"
 	"job.h"
@@ -656,7 +656,7 @@
 	<ctime>
 	<chrono>
 
-1548106419 source:d:\games\programs\map2d\craft_mgr.cpp
+1548913084 source:d:\games\programs\map2d\craft_mgr.cpp
 	"craft_mgr.h"
 	"logger.h"
 	"utility.h"
@@ -669,20 +669,21 @@
 	<string>
 	"items.h"
 
-1548792493 d:\games\programs\map2d\items.h
+1548916342 d:\games\programs\map2d\items.h
 	<string>
 
-1548792493 source:d:\games\programs\map2d\items.cpp
+1548916255 source:d:\games\programs\map2d\items.cpp
 	"items.h"
 	"texture_mgr.h"
 
-1548521870 d:\games\programs\map2d\object.h
+1548917671 d:\games\programs\map2d\object.h
 	<vector>
 	<string>
 	"utility.h"
+	"translator.h"
 	"items.h"
 
-1548521936 source:d:\games\programs\map2d\object.cpp
+1548917635 source:d:\games\programs\map2d\object.cpp
 	"object.h"
 	"translator.h"
 	<iostream>

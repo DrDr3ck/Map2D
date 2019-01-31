@@ -2,6 +2,7 @@
 #include "translator.h"
 
 #include <iostream>
+#include <algorithm>
 #include "sdl_camera.h"
 
 /********************************************************************/
@@ -37,6 +38,37 @@ void Object::render(SDLCamera* camera, const SDL_Rect& original_rect) {
 /********************************************************************/
 
 Chest::Chest(int size) : Object("objects/chest.png", tr("Chest"), "chest"), max_size_(size) {
+    // debug
+    addItem(BasicItem("stone"), 5);
+    addItem(BasicItem("sand"), 3);
+    addItem(BasicItem("copper_cable"), 2);
+    addItem(BasicItem("coal"), 10);
+    // end debug
+}
+
+void Chest::render(SDLCamera* sdl_camera, const SDL_Rect& rect) {
+    // first: display texture of the chest
+    Object::render(sdl_camera, rect);
+    // second: display items stored in the chest
+    const std::vector<CountedItem>& items = this->items();
+    int scaled_tile_size = Utility::tileSize * sdl_camera->scale();
+    for( int i = 0; i < std::min(4, int(items.size())); i++ ) {
+        const CountedItem& cur = items[i];
+
+        SDL_Texture* item_texture = cur.texture();
+        SDL_Rect dest;
+        int half_scaled_tile_size = scaled_tile_size/2;
+        dest.x = rect.x; // + half_scaled_tile_size/2;
+        if( i == 1 ) dest.x += half_scaled_tile_size;
+        if( i == 3 ) dest.x += half_scaled_tile_size;
+        dest.y = rect.y; // + half_scaled_tile_size/2;
+        if( i == 2 ) dest.y += half_scaled_tile_size;
+        if( i == 3 ) dest.y += half_scaled_tile_size;
+        dest.w = half_scaled_tile_size;
+        dest.h = half_scaled_tile_size;
+        sdl_camera->displayTexture(item_texture, &dest);
+    }
+
 }
 
 // return the number of items not added in this Chest
@@ -98,9 +130,29 @@ int Chest::removeItem(const BasicItem& item, int count) {
     return total_count;
 }
 
+const std::string Chest::tooltip() const {
+    std::string text = Object::tooltip();
+    if( items_.size() == 0 ) {
+        return text;
+    }
+    text.append(":");
+    for(auto item : items_) {
+        text.append(" ");
+        std::string s = tr(item.item().name());
+        std::replace(s.begin(), s.end(), '_', ' ');
+        text.append(s);
+        text.append("x");
+        text.append( Utility::itos(item.count()) );
+    }
+    return text;
+}
+
 /********************************************************************/
 
 StoneFurnace::StoneFurnace() : Object("objects/stone_furnace.png", tr("StoneFurnace"), "stone_furnace") {
+}
+
+WorkBench::WorkBench() : Object("objects/workbench.png", tr("WorkBench"), "workbench") {
 }
 
 ElectricFurnace::ElectricFurnace() : Object("objects/electric_furnace.png", tr("ElectricFurnace"), "electric_furnace") {

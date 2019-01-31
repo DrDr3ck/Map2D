@@ -45,8 +45,9 @@ public:
 
     bool isNull() const;
 
-    SDL_Texture* texture() {
-        return item_.texture();
+    SDL_Texture* texture() const {
+        CountedItem* non_const = const_cast<CountedItem*>(this);
+        return non_const->item_.texture();
     }
 protected:
     BasicItem item_;

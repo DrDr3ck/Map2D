@@ -332,6 +332,8 @@ void ObjectConverter::load(const std::string& str) {
         Object* object = nullptr;
         if( name == "chest" ) {
             object = new Chest(4);
+        } else if( name == "workbench" ) {
+            object = new WorkBench();
         } else if( name == "stone_furnace" ) {
             object = new StoneFurnace();
         } else if( name == "electric_furnace" ) {

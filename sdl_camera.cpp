@@ -181,6 +181,37 @@ SDL_Rect MapView::getTileRect(int tile_x, int tile_y) const {
     return dest;
 }
 
+// render objects
+void MapView::renderObjects(SDLCamera* sdl_camera, std::string& tile_text) {
+    for( auto position_object : data_->objects() ) {
+        SDL_Rect dest = getTileRect(position_object.x,position_object.y);
+        position_object.object->render(sdl_camera, dest);
+        if( tile_x_ == position_object.x && tile_y_ == position_object.y ) {
+            // add object name on tile tooltip
+            tile_text.append("\n");
+            tile_text.append(position_object.object->tooltip());
+        }
+    }
+}
+
+void MapView::renderJobs(SDLCamera* sdl_camera) {
+    // display jobs (in semi transparency)
+    for( auto job : job_manager_->jobs() ) {
+        int job_x = job->tilePosition().x;
+        int job_y = job->tilePosition().y;
+        SDL_Rect dest = getTileRect(job_x, job_y);
+        job_manager_->render(*job, sdl_camera, dest);
+    }
+}
+
+void MapView::renderGroup(SDLCamera* sdl_camera) {
+    // display people
+    for( Character* people : group_->group() ) {
+        SDL_Rect dest = getPeopleRect(people);
+        people->render(sdl_camera, dest);
+    }
+}
+
 void MapView::do_render(Camera* camera, double delay_in_ms) {
     float scale_speed = camera->scale()*camera->scale();
     if( camera->scale() < 1 ) {
@@ -299,30 +330,11 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         }
     }
 
-    // render objects
-    for( auto position_object : data_->objects() ) {
-        SDL_Rect dest = getTileRect(position_object.x,position_object.y);
-        position_object.object->render(sdl_camera, dest);
-        if( tile_x_ == position_object.x && tile_y_ == position_object.y ) {
-            // add object name on tile tooltip
-            tile_text.append("\n");
-            tile_text.append(tr(position_object.object->userName()));
-        }
-    }
+    renderObjects(sdl_camera, tile_text);
 
-    // display jobs (in semi transparency)
-    for( auto job : job_manager_->jobs() ) {
-        int job_x = job->tilePosition().x;
-        int job_y = job->tilePosition().y;
-        SDL_Rect dest = getTileRect(job_x, job_y);
-        job_manager_->render(*job, sdl_camera, dest);
-    }
+    renderJobs(sdl_camera);
 
-    // display people
-    for( Character* people : group_->group() ) {
-        SDL_Rect dest = getPeopleRect(people);
-        people->render(sdl_camera, dest);
-    }
+    renderGroup(sdl_camera);
 
     // display a circle around selected people if any
     if( selected_people_ != nullptr ) {
@@ -558,21 +570,33 @@ SDLCamera::SDLCamera(
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
+    SDLCleanTool* clean_tool = new SDLCleanTool(this, "balai_tool.png");
+    extract_button_tool = new SDLToolButton(clean_tool, "balai_tool.png", 0, 0);
+    manager_->addButton(extract_button_tool);
+    excavation_menu->addButton(extract_button_tool);
+
     extract_tool = new SDLExtractTool(this, "extract_tool_10.png", 10);
     extract_button_tool = new SDLToolButton(extract_tool, "extract_tool_10.png", 0, 0);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
-    SDLCleanTool* clean_tool = new SDLCleanTool(this, "balai_tool.png");
-    extract_button_tool = new SDLToolButton(clean_tool, "balai_tool.png", 0, 0);
+    extract_tool = new SDLExtractTool(this, "pelle_tool_10.png", 10);
+    extract_button_tool = new SDLToolButton(extract_tool, "pelle_tool_10.png", 0, 0);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
+
+
 
     manager_->addButton( new SDLButtonMenu(excavation_menu, "excavation.png", 70,10) );
     manager_->addMenuButton( excavation_menu );
 
     // Add Object menu
     MenuButton* object_menu = new MenuButton(max_column, 130, 75);
+
+    SDLBuildObjectTool* workbench_tool = new SDLBuildObjectTool(this, "objects/workbench.png", "workbench");
+    SDLButton* workbench_button_tool = new SDLToolButton(workbench_tool, "objects/workbench.png", 0, 0);
+    manager_->addButton(workbench_button_tool);
+    object_menu->addButton(workbench_button_tool);
 
     SDLBuildObjectTool* chest_tool = new SDLBuildObjectTool(this, "objects/chest.png", "chest");
     SDLButton* chest_button_tool = new SDLToolButton(chest_tool, "objects/chest.png", 0, 0);
@@ -588,7 +612,7 @@ SDLCamera::SDLCamera(
     manager_->addMenuButton( object_menu );
 
     // Add Quit Button
-    manager_->addButton( new SDLQuitButton(this, 750,10) );
+    manager_->addButton( new SDLQuitButton(this, Camera::cur_camera->width()-50,10) );
 }
 
 SDLCamera::~SDLCamera() {
@@ -621,18 +645,18 @@ void SDLCamera::render(double delay_in_ms) {
         // display the 'pause' button
         SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
         SDL_Rect r;
-        r.x = 360;
-        r.y = 240;
+        r.x = Camera::cur_camera->width() / 2 - 40;
+        r.y = Camera::cur_camera->height() / 2 - 60;
         r.w = 70;
         r.h = 70;
         SDL_RenderFillRect( main_renderer_, &r );
         SDL_SetRenderDrawColor( main_renderer_, 222, 50, 50, 255 );
-        r.x = 370;
-        r.y = 250;
+        r.x = Camera::cur_camera->width() / 2 - 30;
+        r.y = Camera::cur_camera->height() / 2 - 50;
         r.w = 20;
         r.h = 50;
         SDL_RenderFillRect( main_renderer_, &r );
-        r.x = 400;
+        r.x = Camera::cur_camera->width() / 2;
         SDL_RenderFillRect( main_renderer_, &r );
 
         std::vector<std::string> option_list;
@@ -651,7 +675,7 @@ void SDLCamera::render(double delay_in_ms) {
         text.set_position(0,0);
         SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
         text.texture(main_renderer_); // need to create texture in order to get correct text dimension
-        text.set_position(400 - text.rect().w / 2, 120 - text.rect().h / 2);
+        text.set_position(Camera::cur_camera->width()/2 - text.rect().w / 2, 120 - text.rect().h / 2);
         SDL_RenderFillRect( main_renderer_, &text.rect() );
         displayText(text);
     }
@@ -662,7 +686,7 @@ void SDLCamera::render(double delay_in_ms) {
     mouse_position.append(" ");
     mouse_position.append(Utility::itos(mouse_y()));
     SDLText text(mouse_position, "pixel11", 14, SDLText::red());
-    text.set_position(10,580);
+    text.set_position(10,Camera::cur_camera->height()-30);
     displayText(text);
     // end debug
 
@@ -693,7 +717,7 @@ void SDLCamera::render(double delay_in_ms) {
         } else if( max_terminal_strings > 0 ) {
             // display logger string
             SDLText text(log.full_string(), "pixel11", 14, (log.type() == "Info") ? SDLText::yellow() : ((log.type() == "Error") ? SDLText::red() : SDLText::black()));
-            text.set_position(30,550-text_offset);
+            text.set_position(30,Camera::cur_camera->height()-50-text_offset);
             this->displayText(text, true);
             max_terminal_strings--;
             text_offset += text.rect().h + 3;

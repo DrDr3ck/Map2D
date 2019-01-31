@@ -25,6 +25,7 @@
 ('Filling terrain...','')
 ('End of generation','')
 ('Chest','Coffre')
+('WorkBench','Etabli')
 ('StoneFurnace','Four en Pierre')
 ('ElectricFurnace','Four Electrique')
 ('Pause (Press SPACE)','Pause (Presser la touche Espace)')
