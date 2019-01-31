@@ -98,6 +98,13 @@ void MapView::extractItemJob(int x, int y, int nb) {
     }
 }
 
+void MapView::cleanItemJob(int x, int y) {
+    Position tile_position = {x,y};
+    Tile cur_tile = data_->tile(x,y);
+    Job* job = new CleanJob(tile_position, "clean_tool", 0);
+    job_manager_->addJob(job);
+}
+
 /*!
  * Adds a floor in the queue of the job manager at (x,y) if possible.
  */
@@ -570,8 +577,8 @@ SDLCamera::SDLCamera(
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
-    SDLCleanTool* clean_tool = new SDLCleanTool(this, "balai_tool.png");
-    extract_button_tool = new SDLToolButton(clean_tool, "balai_tool.png", 0, 0);
+    SDLCleanTool* clean_tool = new SDLCleanTool(this, "clean_tool.png");
+    extract_button_tool = new SDLToolButton(clean_tool, "clean_tool.png", 0, 0);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 

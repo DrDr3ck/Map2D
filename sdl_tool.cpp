@@ -220,7 +220,7 @@ void SDLCleanTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
     if( camera()->mapView()->getCurTile(x,y) ) {
-        //camera()->mapView()->cleanItemJob(x,y);
+        camera()->mapView()->cleanItemJob(x,y);
     }
 }
 

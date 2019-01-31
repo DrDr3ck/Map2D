@@ -103,7 +103,8 @@ public:
     int width() const { return width_; }
     int height() const { return height_; }
 
-    void transferItems(Character* people);
+    bool transferItems(Character* people);
+    void transferItems(Character* people, Chest* chest);
     PositionObject getNearestChest(Position position);
 
     static void createMap(MapData* data);

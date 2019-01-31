@@ -105,6 +105,16 @@ void Character::carryItem(const BasicItem& item, int nb) {
     }
 }
 
+BasicItem Character::dropItem() {
+    int size = carried_items_.size();
+    if( size == 0 ) {
+        return BasicItem::null();
+    }
+    BasicItem cur_item = carried_items_.at(size-1);
+    carried_items_.pop_back();
+    return cur_item;
+}
+
 /********************************************************************/
 
 CharacterSetLib::CharacterSetLib() {

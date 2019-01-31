@@ -312,17 +312,22 @@ CleanAction::~CleanAction() {
 void CleanAction::preAction() {
     // first check if robot can carry or not
     int max_carriable = people_->maxCarriable();
-    if( max_carriable > 0 ) {
+    Tile& cur =game_board_->data()->tile(job_->tilePosition().x,job_->tilePosition().y);
+    if( max_carriable > 0 && cur.counted_item().count() > 0 ) {
         // go to the tile if still not the case
         if( people_->tilePosition().x == job_->tilePosition().x && people_->tilePosition().y == job_->tilePosition().y ) {
-            // take all what you can
-            game_board_->data()->transferItems(people_); // transfer max items from Tile to People
+            // take all what you can by transferring max items from Tile to People
+            if( !game_board_->data()->transferItems(people_) ) {
+                // no action, Tile is empty
+                return;
+            }
             // then move to the nearest non full chest
             PositionObject pobject = game_board_->data()->getNearestChest(people_->tilePosition());
             PathFinding path(game_board_->data());
             Position end_position = {pobject.x,pobject.y};
             std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
             if( positions.size() == 0 ) {
+                // cannot achieve the job
                 isValid_ = false;
                 job_->reset();
             } else {
@@ -333,6 +338,38 @@ void CleanAction::preAction() {
             Position end_position = job_->tilePosition();
             std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
             if( positions.size() == 0 ) {
+                // cannot achieve the job
+                isValid_ = false;
+                job_->reset();
+            } else {
+                action_ = new MoveAction(people_, positions, Utility::tileSize);
+            }
+        }
+    } else {
+        // robot is full
+        PositionObject pobject = game_board_->data()->getNearestChest(people_->tilePosition());
+        if( people_->tilePosition().x == pobject.x && people_->tilePosition().y == pobject.y ) { // drop items
+            Chest* chest = static_cast<Chest*>(pobject.object);
+            game_board_->data()->transferItems(people_, chest); // transfer all items from robot to chest
+            // then move to the tile, again !
+            PathFinding path(game_board_->data());
+            Position end_position = job_->tilePosition();
+            std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
+            if( positions.size() == 0 ) {
+                // cannot achieve the job
+                isValid_ = false;
+                job_->reset();
+            } else {
+                if( cur.counted_item().count() > 0 ) {
+                    action_ = new MoveAction(people_, positions, Utility::tileSize);
+                } // otherwise, end of cleaning action
+            }
+        } else { // move to chest
+            PathFinding path(game_board_->data());
+            Position end_position = {pobject.x,pobject.y};
+            std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
+            if( positions.size() == 0 ) {
+                // cannot achieve the job
                 isValid_ = false;
                 job_->reset();
             } else {
@@ -362,29 +399,10 @@ bool CleanAction::spentTime(double time_spent) {
             }
             // set direction so that people can 'work'
             people_->setDirection(people_->direction().x, 1);
+            preAction();
         }
     } else {
-        // spent time on extraction...
-        std::chrono::steady_clock::time_point cur_time = std::chrono::steady_clock::now();
-        double delay_anim_us = std::chrono::duration_cast<std::chrono::microseconds>(cur_time - start_time_).count();
-        double delta_time = delay_anim_us/1000.;
-        people_->setActivityPercent( std::min(100,int(100.0*delta_time/job_->buildTime())) );
-        if( delta_time > job_->buildTime() ) {
-            if( job_->isRepetitive() ) {
-                // repeat action
-                if( job_->name() == CLEAN ) {
-                    Position position = job_->tilePosition();
-                    game_board_->data()->cleanItemFromTile(position.x,position.y,people_);
-                    Tile& cur_tile = game_board_->data()->tile(position.x, position.y);
-                    if( cur_tile.counted_item().isNull() ) {
-                        return false; // end of cleaning
-                    }
-                }
-                start_time_ = std::chrono::steady_clock::now();
-                return true;
-            }
-            return false;
-        }
+        return false; // end of cleaning action
     }
     return true;
 }
@@ -395,8 +413,5 @@ void CleanAction::postAction() {
     Position position = job_->tilePosition();
     if( game_board_->jobManager()->findJobAt(position) ) {
         game_board_->jobManager()->cancelJob(position);
-        if( job_->name() == CLEAN ) {
-            game_board_->data()->cleanItemFromTile(position.x,position.y,people_);
-        }
     }
 }

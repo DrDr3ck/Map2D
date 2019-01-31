@@ -353,26 +353,25 @@
   <tile x="0" y="5">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="34" />
+    <occurrence value="24" />
     <btype value="ROCK" />
     <ftype value="METAL" />
-    <counteditem name="stone" value="11" />
+    <counteditem name="stone" value="16" />
   </tile>
   <tile x="1" y="5">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="15" />
+    <occurrence value="14" />
     <btype value="ROCK" />
     <ftype value="METAL" />
-    <counteditem name="stone" value="2" />
   </tile>
   <tile x="2" y="5">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="23" />
+    <occurrence value="21" />
     <btype value="ROCK" />
     <ftype value="METAL" />
-    <counteditem name="stone" value="2" />
+    <counteditem name="stone" value="1" />
   </tile>
   <tile x="3" y="5">
     <id value="0" />
@@ -426,14 +425,14 @@
 </mapdata>
 <group>
   <people name="B0b">
-    <position x="1" y="5" />
-    <direction x="-1" y="1" />
+    <position x="4" y="5" />
+    <direction x="1" y="0" />
     <activity value="0" />
     <image_id value="0" />
   </people>
   <people name="Bi11">
-    <position x="6" y="1" />
-    <direction x="-1" y="1" />
+    <position x="5" y="1" />
+    <direction x="1" y="0" />
     <activity value="0" />
     <image_id value="12" />
   </people>

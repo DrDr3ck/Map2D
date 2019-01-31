@@ -31,6 +31,7 @@ public:
     void addFloorJob(int x, int y);
     void removeFloorJob(int x, int y);
     void extractItemJob(int x, int y, int nb=1);
+    void cleanItemJob(int x, int y);
     void addObjectJob(const std::string& object_name, int x, int y);
 
     Position onTile(int mouse_x, int mouse_y) const;

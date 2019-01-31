@@ -305,10 +305,18 @@ void MapData::extractItemFromTile(int x,int y) {
     }
 }
 
-void MapData::transferItems(Character* people) {
+bool MapData::transferItems(Character* people) {
     Tile& tile = this->tile(people->tilePosition().x, people->tilePosition().y);
     int max_item = std::min(people->maxCarriable(), tile.counted_item().count());
     people->carryItem( tile.removeItem(max_item), max_item );
+    return max_item > 0;
+}
+
+void MapData::transferItems(Character* people, Chest* chest) {
+    while(people->carriedItems().size() != 0 ) {
+        BasicItem item = people->dropItem();
+        chest->addItem( item );
+    }
 }
 
 PositionObject MapData::getNearestChest(Position position) {

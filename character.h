@@ -107,6 +107,7 @@ public:
     int maxCarry() const;
     int maxCarriable(const BasicItem& item = BasicItem::null()) const;
     void carryItem(const BasicItem& item, int nb=1);
+    BasicItem dropItem();
     const std::vector<BasicItem>& carriedItems() const { return carried_items_; }
 
 protected:
