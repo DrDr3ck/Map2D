@@ -381,7 +381,7 @@
 	<list>
 	<string>
 
-1548916960 source:d:\games\programs\map2d\tests.cpp
+1549105423 source:d:\games\programs\map2d\tests.cpp
 	"tests.h"
 	"archive.h"
 	"font.h"
@@ -411,7 +411,7 @@
 	<list>
 	<vector>
 
-1548913141 source:d:\games\programs\map2d\archive.cpp
+1549105397 source:d:\games\programs\map2d\archive.cpp
 	"archive.h"
 	"character.h"
 	"logger.h"
@@ -419,8 +419,9 @@
 	<stdlib.h>
 	<iostream>
 	<fstream>
+	<algorithm>
 
-1548613618 d:\games\programs\map2d\archive.h
+1549105197 d:\games\programs\map2d\archive.h
 	"map.h"
 	<string>
 
@@ -637,7 +638,7 @@
 	<map>
 	<string>
 
-1548966319 source:d:\games\programs\map2d\action.cpp
+1548967437 source:d:\games\programs\map2d\action.cpp
 	"action.h"
 	"character.h"
 	"job.h"
@@ -676,14 +677,14 @@
 	"items.h"
 	"texture_mgr.h"
 
-1548917671 d:\games\programs\map2d\object.h
+1549105197 d:\games\programs\map2d\object.h
 	<vector>
 	<string>
 	"utility.h"
 	"translator.h"
 	"items.h"
 
-1548918030 source:d:\games\programs\map2d\object.cpp
+1549105397 source:d:\games\programs\map2d\object.cpp
 	"object.h"
 	"translator.h"
 	<iostream>

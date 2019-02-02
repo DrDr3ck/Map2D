@@ -35,6 +35,15 @@ public:
         return tr(user_name_);
     }
 
+    virtual int getNodeCount() const;
+    virtual const std::string getNodeName(int node_index) const;
+    virtual int getAttributeCount(int node_index) const;
+    virtual const std::string getAttributeName(int node_index,int attr_index) const;
+    virtual const std::string getAttributeValue(int node_index,int attr_index) const;
+    virtual const std::string getNodeValue(int node_index) const;
+
+    virtual void setNode(const std::string& node_name, std::vector<std::pair<std::string, std::string>> attributes, const std::string& value);
+
 protected:
     std::string icon_name_;
     std::vector<SDL_Texture*> images_;
@@ -43,6 +52,8 @@ protected:
     std::string user_name_;
     std::string name_;
 };
+
+#define Attr std::pair<std::string,std::string>
 
 class Chest : public Object {
 public:
@@ -65,6 +76,15 @@ public:
     }
 
     virtual const std::string tooltip() const override;
+
+    virtual int getNodeCount() const override;
+    virtual const std::string getNodeName(int node_index) const override;
+    virtual int getAttributeCount(int node_index) const override;
+    virtual const std::string getAttributeName(int node_index,int attr_index) const override;
+    virtual const std::string getAttributeValue(int node_index,int attr_index) const override;
+    virtual const std::string getNodeValue(int node_index) const override;
+
+    virtual void setNode(const std::string& node_name, std::vector<Attr> attributes, const std::string& value) override;
 
 protected:
     int max_size_;

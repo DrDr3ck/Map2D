@@ -202,12 +202,6 @@ bool ChestTest::do_execute() {
     Chest chest(16);
     BasicItem stone("stone");
     int result = chest.addItem(stone, 3);
-    // debug only
-    result = chest.removeItem(stone, 5);
-    result = chest.removeItem(BasicItem("sand"), 3);
-    result = chest.removeItem(BasicItem("copper_cable"), 2);
-    result = chest.removeItem(BasicItem("coal"), 10);
-    // end debug
     result = chest.addItem(stone, 2);
     CHECK_EQUAL( result, 0, return false; );
     CHECK_EQUAL( chest.sizeAvailable(), 15, return false; );

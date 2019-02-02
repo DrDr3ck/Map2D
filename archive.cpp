@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 namespace { // anonymous namespace
 
@@ -19,8 +20,96 @@ bool isTag(const std::string& str, const std::string& tag_origin, bool is_end=fa
     return tag_found != std::string::npos;
 }
 
+bool startsWithTag(const std::string& str) {
+    std::string trimmed_str = Utility::trim(str);
+    if( trimmed_str.size() >= 2 && trimmed_str[0] == '<' && trimmed_str[1] != '/' ) {
+        return true;
+    }
+    return false;
+}
+
 bool isEndTag(const std::string& str, const std::string& tag_origin) {
     return isTag(str, tag_origin, true);
+}
+
+// example of random tag: <counted_item nb="2" attr="value">copper_cable</counted_item>
+//                        <TagName TagAttrName="TagAttrValue">TagValue</TagName>
+
+std::string getTagName(const std::string& str) {
+    // <TagName TagAttrName="TagAttrValue">TagValue</TagName>
+    // get end tag
+    std::string tag("</");
+    std::string endtag(">");
+    std::size_t tag_idx = str.find(tag);
+    if( tag_idx != std::string::npos ) {
+        std::size_t end_tag_idx = str.find(endtag, tag_idx);
+        std::string tag_name = str.substr(tag_idx+2, end_tag_idx-tag_idx-2);
+        return tag_name;
+    }
+    return "";
+}
+
+std::string getTagValue(const std::string& str) {
+    // <TagName TagAttrName="TagAttrValue">TagValue</TagName>
+    // find value between > and </
+    std::string endtag(">");
+    std::size_t end_tag_idx = str.find(endtag);
+    if( end_tag_idx != std::string::npos ) {
+        std::string tag("</");
+        std::size_t tag_idx = str.find(tag, end_tag_idx);
+        std::string tag_value = str.substr(end_tag_idx+1, tag_idx-end_tag_idx-1);
+        return tag_value;
+    }
+    return "";
+}
+
+int getTagAttrCount(const std::string& str) {
+    int n = int(std::count(str.begin(), str.end(), '='));
+    return n;
+}
+
+std::string getTagAttrName(const std::string& str, int attr_occurrence) {
+    // find string '="'
+    int index = 0;
+    std::size_t equal_idx = str.find("=\"");
+    if( equal_idx == std::string::npos ) {
+        return "";
+    }
+    while( index != attr_occurrence ) { // need to find the attr_occurrence of '="'
+        equal_idx = str.find("=\"");
+        if( equal_idx == std::string::npos ) {
+            return "";
+        }
+        index++;
+    }
+    if( equal_idx != std::string::npos ) {
+        std::size_t attr_name_idx = str.rfind(" ", equal_idx);
+        std::string attr_name = str.substr(attr_name_idx+1, equal_idx-attr_name_idx-1);
+        return attr_name;
+    }
+    return "";
+}
+
+std::string getTagAttrValue(const std::string& str, int attr_occurrence) {
+    // find string '="'
+    int index = 0;
+    std::size_t equal_idx = str.find("=\"");
+    if( equal_idx == std::string::npos ) {
+        return "";
+    }
+    while( index != attr_occurrence ) { // need to find the attr_occurrence of '="'
+        equal_idx = str.find("=\"");
+        if( equal_idx == std::string::npos ) {
+            return "";
+        }
+        index++;
+    }
+    if( equal_idx != std::string::npos ) {
+        std::size_t attr_value_idx = str.find("\"", equal_idx+2);
+        std::string attr_value = str.substr(equal_idx+2, attr_value_idx-equal_idx-2);
+        return attr_value;
+    }
+    return "";
 }
 
 std::string getAttribute(const std::string& str, const std::string& attr_origin) {
@@ -316,6 +405,7 @@ void ObjectConverter::load(const std::string& str) {
         if( isTag(str, "object") ) {
             name = getAttribute(str, "name");
             inObject = true;
+            return;
         }
     }
 
@@ -326,6 +416,21 @@ void ObjectConverter::load(const std::string& str) {
             std::string y_str = getAttribute(str, "y");
             int y = atoi(y_str.c_str());
             pos = {x,y};
+        } else if( startsWithTag(str) ) {
+            // get tag name, tag value and tag attributes !!
+            std::string tag_name = getTagName(str);
+            std::string tag_value = getTagValue(str);
+            int nb_attr = getTagAttrCount(str);
+            std::vector<Attr> attrs;
+            for( int i=0; i < nb_attr; i++ ) {
+                std::string attr_name = getTagAttrName(str, i);
+                std::string attr_value = getTagAttrValue(str, i);
+                attrs.push_back(Attr({attr_name, attr_value}));
+            }
+            if( tag_name != "" && tag_value != "" ) {
+                NameValue nv{tag_name, tag_value};
+                nodes.push_back(Node({nv, attrs}));
+            }
         }
     }
     if( isEndTag(str, "object") ) {
@@ -341,16 +446,41 @@ void ObjectConverter::load(const std::string& str) {
         }
         if( object != nullptr ) {
             data_->addObject(object, pos.x, pos.y);
+            // add also attributes !!
+            for( auto node : nodes ) {
+                NameValue nv = node.first;
+                std::vector<Attr> attrs = node.second;
+                object->setNode(nv.first, attrs, nv.second);
+            }
         }
         inObject = false;
+        nodes.clear();
+    }
+}
+
+void ObjectConverter::save_nodes(std::ofstream& file, Object* object) {
+    // file << "    <counted_item nb=\"" << citem.count() << "\">" << citem.item().name() << "</counted_item>" << std::endl;
+    for(int i=0; i < object->getNodeCount(); i++ ) {
+        const std::string name = object->getNodeName(i); // counted_item
+        file << "    <" << name;
+        for( int j=0; j < object->getAttributeCount(i); j++ ) {
+            const std::string attr_name = object->getAttributeName(i,j); // nb
+            const std::string attr_value = object->getAttributeValue(i,j); // citem.count()
+            file << " " << attr_name << "=\"" << attr_value << "\"";
+        }
+        const std::string value = object->getNodeValue(i); // citem.item().name()
+        file << ">" << value << "</" << name << ">" << std::endl;
     }
 }
 
 void ObjectConverter::save(std::ofstream& file) {
     file << "<position_objects>" << std::endl;
     for( PositionObject position_object : data_->objects() ) {
-        file << "  <object name=\"" << position_object.object->name() << "\">" << std::endl;
+        Object* object = position_object.object;
+        file << "  <object name=\"" << object->name() << "\">" << std::endl;
         file << "    <position x=\"" << position_object.x << "\" y=\"" << position_object.y << "\" />" << std::endl;
+        // save nodes of object
+        save_nodes(file, object);
         file << "  </object>" << std::endl;
     }
     file << "</position_objects>" << std::endl;

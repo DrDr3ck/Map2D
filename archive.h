@@ -73,6 +73,9 @@ private:
     std::vector<BasicItem> carried_items;
 };
 
+#define NameValue std::pair<std::string,std::string>
+#define Node std::pair<NameValue,std::vector<Attr>>
+
 class ObjectConverter : public DataConverter {
 public:
     ObjectConverter(MapData* data) : data_(data) {}
@@ -81,12 +84,17 @@ public:
     virtual void load(const std::string& str) override;
     virtual void save(std::ofstream& file) override;
 
+protected:
+    void save_nodes(std::ofstream& file, Object* object);
+
 private:
     MapData* data_;
 
     std::string name;
     Position pos = {0,0};
     bool inObject = false;
+
+    std::vector<Node> nodes;
 };
 
 class JobsConverter { // TODO

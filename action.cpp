@@ -315,11 +315,11 @@ void CleanAction::preAction() {
     Tile& cur =game_board_->data()->tile(job_->tilePosition().x,job_->tilePosition().y);
     if( max_carriable > 0 && cur.counted_item().count() > 0 ) {
         // go to the tile if still not the case
-        if( people_->tilePosition().x == job_->tilePosition().x && people_->tilePosition().y == job_->tilePosition().y ) {
+        if( people_->tilePosition().x == job_->tilePosition().x && people_->tilePosition().y == job_->tilePosition().y ) { // robot is over the tile: transfer items to robot
             // take all what you can by transferring max items from Tile to People
             if( !game_board_->data()->transferItems(people_) ) {
                 // no action, Tile is empty
-                return;
+                return; // end of cleaning action
             }
             // then move to the nearest non full chest
             PositionObject pobject = game_board_->data()->getNearestChest(people_->tilePosition());
@@ -333,7 +333,7 @@ void CleanAction::preAction() {
             } else {
                 action_ = new MoveAction(people_, positions, Utility::tileSize);
             }
-        } else {
+        } else { // move robot to tile
             PathFinding path(game_board_->data());
             Position end_position = job_->tilePosition();
             std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
@@ -348,7 +348,7 @@ void CleanAction::preAction() {
     } else {
         // robot is full
         PositionObject pobject = game_board_->data()->getNearestChest(people_->tilePosition());
-        if( people_->tilePosition().x == pobject.x && people_->tilePosition().y == pobject.y ) { // drop items
+        if( people_->tilePosition().x == pobject.x && people_->tilePosition().y == pobject.y ) { // robot is over the chest: drop items
             Chest* chest = static_cast<Chest*>(pobject.object);
             game_board_->data()->transferItems(people_, chest); // transfer all items from robot to chest
             // then move to the tile, again !
@@ -364,7 +364,7 @@ void CleanAction::preAction() {
                     action_ = new MoveAction(people_, positions, Utility::tileSize);
                 } // otherwise, end of cleaning action
             }
-        } else { // move to chest
+        } else { // move robot over the chest
             PathFinding path(game_board_->data());
             Position end_position = {pobject.x,pobject.y};
             std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
@@ -377,12 +377,6 @@ void CleanAction::preAction() {
             }
         }
     }
-
-
-    // TODO if robot can carry and robot is on the tile position, call cleanItemFromTile
-    // TODO if robot is full or tile is empty, ask robot to move to a chest
-    // TODO if robot on a chest and not empty, ask robot to transfer item in chest
-    // if tile is empty and robot is empty : stop clean action
 }
 
 bool CleanAction::spentTime(double time_spent) {
