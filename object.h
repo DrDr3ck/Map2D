@@ -109,6 +109,12 @@ public:
     virtual ~ElectricFurnace() {}
 };
 
+class Breaker : public Object {
+public:
+    Breaker();
+    virtual ~Breaker() {}
+};
+
 /********************************************************************/
 
 struct PositionObject {

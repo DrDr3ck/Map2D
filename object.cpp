@@ -225,6 +225,9 @@ const std::string Chest::tooltip() const {
 StoneFurnace::StoneFurnace() : Object("objects/stone_furnace.png", tr("StoneFurnace"), "stone_furnace") {
 }
 
+Breaker::Breaker() : Object("objects/breaker.png", tr("Breaker"), "breaker") {
+}
+
 WorkBench::WorkBench() : Object("objects/workbench.png", tr("WorkBench"), "workbench") {
 }
 

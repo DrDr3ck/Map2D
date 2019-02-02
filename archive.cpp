@@ -439,6 +439,8 @@ void ObjectConverter::load(const std::string& str) {
             object = new Chest(4);
         } else if( name == "workbench" ) {
             object = new WorkBench();
+        } else if( name == "breaker" ) {
+            object = new Breaker();
         } else if( name == "stone_furnace" ) {
             object = new StoneFurnace();
         } else if( name == "electric_furnace" ) {

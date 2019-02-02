@@ -128,10 +128,10 @@
   <tile x="8" y="1">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="29" />
+    <occurrence value="19" />
     <btype value="SAND" />
     <ftype value="METAL" />
-    <counteditem name="sand" value="1" />
+    <counteditem name="sand" value="11" />
   </tile>
   <tile x="9" y="1">
     <id value="0" />
@@ -361,10 +361,10 @@
   <tile x="1" y="5">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="20" />
+    <occurrence value="10" />
     <btype value="ROCK" />
     <ftype value="METAL" />
-    <counteditem name="stone" value="10" />
+    <counteditem name="stone" value="20" />
   </tile>
   <tile x="2" y="5">
     <id value="0" />
@@ -372,7 +372,6 @@
     <occurrence value="39" />
     <btype value="ROCK" />
     <ftype value="METAL" />
-    <counteditem name="stone" value="1" />
   </tile>
   <tile x="3" y="5">
     <id value="0" />
@@ -426,14 +425,14 @@
 </mapdata>
 <group>
   <people name="Bob">
-    <position x="6" y="0" />
-    <direction x="-1" y="1" />
+    <position x="5" y="1" />
+    <direction x="0" y="1" />
     <activity value="0" />
     <image_id value="0" />
   </people>
   <people name="Bill">
-    <position x="2" y="1" />
-    <direction x="-1" y="1" />
+    <position x="4" y="4" />
+    <direction x="1" y="1" />
     <activity value="0" />
     <image_id value="12" />
   </people>
@@ -441,7 +440,7 @@
 <position_objects>
   <object name="chest">
     <position x="3" y="1" />
-    <counted_item nb="5">stone</counted_item>
+    <counted_item nb="6">stone</counted_item>
     <counted_item nb="3">sand</counted_item>
     <counted_item nb="2">copper_cable</counted_item>
     <counted_item nb="10">coal</counted_item>
@@ -451,5 +450,8 @@
   </object>
   <object name="workbench">
     <position x="2" y="1" />
+  </object>
+  <object name="breaker">
+    <position x="4" y="4" />
   </object>
 </position_objects>

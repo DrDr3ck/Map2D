@@ -22,6 +22,8 @@ Object* BuildObjectJob::getObject() const {
         return new Chest(4);
     } else if( object_name_ == "workbench" ) {
         return new WorkBench();
+    } else if( object_name_ == "breaker" ) {
+        return new Breaker();
     } else if( object_name_ == "electric_furnace" ) {
         return new ElectricFurnace();
     } else if( object_name_ == "stone_furnace" ) {

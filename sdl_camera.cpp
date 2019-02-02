@@ -610,6 +610,11 @@ SDLCamera::SDLCamera(
     manager_->addButton(chest_button_tool);
     object_menu->addButton(chest_button_tool);
 
+    SDLBuildObjectTool* breaker_tool = new SDLBuildObjectTool(this, "objects/breaker.png", "breaker");
+    SDLButton* breaker_button_tool = new SDLToolButton(breaker_tool, "objects/breaker.png", 0, 0);
+    manager_->addButton(breaker_button_tool);
+    object_menu->addButton(breaker_button_tool);
+
     SDLBuildObjectTool* stone_furnace_tool = new SDLBuildObjectTool(this, "objects/stone_furnace.png", "stone_furnace");
     SDLButton* stone_furnace_button_tool = new SDLToolButton(stone_furnace_tool, "objects/stone_furnace.png", 0, 0);
     manager_->addButton(stone_furnace_button_tool);
