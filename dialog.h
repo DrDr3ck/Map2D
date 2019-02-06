@@ -17,12 +17,24 @@ public:
     virtual void do_render(Camera* camera, double delay_in_ms);
     virtual void handleEvent(Camera* camera);
 
+    bool hasFocus(int mouse_x, int mouse_y);
+
+    bool killMe() const { return kill_me_; }
+
 protected:
     int x_;
     int y_;
     int width_;
     int height_;
+    int red_ = 210;
+    int green_ = 210;
+    int blue_ = 210;
+    int alpha_ = 255;
     SDL_Surface* surface_;
+    bool kill_me_ = false;
+    bool grabbing_ = false;
+    int rel_grab_x_ = 0;
+    int rel_grab_y_ = 0;
 };
 
 /********************************************************************/

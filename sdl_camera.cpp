@@ -13,6 +13,7 @@
 #include "translator.h"
 #include "action.h"
 #include "session.h"
+#include "dialog.h"
 
 /********************************************************************/
 
@@ -798,6 +799,23 @@ void SDLCamera::handleEvent() {
     if( SDL_PollEvent(&event_) == 0 ) {
         return;
     }
+
+    Dialog* cur_dialog = nullptr;
+    for( auto view : views_ ) {
+        Dialog* dialog = dynamic_cast<Dialog*>(view);
+        if( dialog == nullptr ) continue;
+        if( dialog->hasFocus(mouse_x_, mouse_y_) ) {
+            dialog->handleEvent(this);
+            if( dialog->killMe() ) {
+                removeView(dialog);
+                delete dialog;
+            } else {
+                cur_dialog = dialog;
+                break;
+            }
+        }
+    }
+
     switch( event_.type ) {
         case SDL_QUIT:
             quit_ = true;
@@ -819,6 +837,12 @@ void SDLCamera::handleEvent() {
                 lctrl_down_ = true;
             } else if( event_.key.keysym.sym == SDLK_LCTRL ) {
                 rctrl_down_ = true;
+            } else if( event_.key.keysym.sym == SDLK_d ) { // DEBUG : create a dialog
+                // debug
+                Dialog* dialog = new Dialog(10 + Utility::randint(0,40)*10,100 + Utility::randint(0,20)*10,160 + Utility::randint(-40,20),180 + Utility::randint(0,40));
+                dialog->setBackgroundColor(211,211,211);
+                addView(dialog);
+                // end debug
             } else if( event_.key.keysym.sym == SDLK_q ) {
                 if( lctrl_down_ || rctrl_down_ ) {
                     quit_ = true;
@@ -855,7 +879,9 @@ void SDLCamera::handleEvent() {
     }
 
     // handle event for all View(s)
+    removeView(cur_dialog);
     Camera::handleEvent();
+    addView(cur_dialog);
 }
 
 void SDLCamera::onMouseMove(int mouse_x, int mouse_y) {

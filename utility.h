@@ -129,6 +129,14 @@ public:
         return sqrt(dist_square);
     }
 
+    static bool contains(SDL_Rect rect, int x, int y) {
+        if( x < rect.x ) return false;
+        if( x > rect.x+rect.w ) return false;
+        if( y < rect.y ) return false;
+        if( y > rect.y+rect.h ) return false;
+        return true;
+    }
+
 };
 
 /********************************************************************/

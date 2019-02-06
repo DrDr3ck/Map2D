@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1549426130 source:d:\games\programs\map2d\main.cpp
+1549481777 source:d:\games\programs\map2d\main.cpp
 	<SDL2/SDL.h>
 	<SDL2/SDL_mixer.h>
 	<iostream>
@@ -9,7 +9,6 @@
 	<chrono>
 	"map.h"
 	"character.h"
-	"dialog.h"
 	"font.h"
 	"archive.h"
 	"sdl_camera.h"
@@ -402,7 +401,7 @@
 	<random>
 	<SDL2/SDL_ttf.h>
 
-1549424807 source:d:\games\programs\map2d\camera.cpp
+1549484002 source:d:\games\programs\map2d\camera.cpp
 	"camera.h"
 	"session.h"
 	<iostream>
@@ -426,7 +425,7 @@
 	"map.h"
 	<string>
 
-1549424807 source:d:\games\programs\map2d\sdl_camera.cpp
+1549484005 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -440,6 +439,7 @@
 	"translator.h"
 	"action.h"
 	"session.h"
+	"dialog.h"
 
 1549422388 d:\games\programs\map2d\sdl_camera.h
 	"character.h"
@@ -562,7 +562,7 @@
 	"utility.h"
 	"items.h"
 
-1548794018 d:\games\programs\map2d\utility.h
+1549483550 d:\games\programs\map2d\utility.h
 	<string>
 	<iostream>
 	<sstream>
@@ -693,12 +693,12 @@
 	<algorithm>
 	"sdl_camera.h"
 
-1549426130 source:d:\games\programs\map2d\dialog.cpp
+1549483893 source:d:\games\programs\map2d\dialog.cpp
 	"dialog.h"
 	"sdl_camera.h"
 	<tuple>
 	<SDL2/SDL.h>
 
-1549425544 d:\games\programs\map2d\dialog.h
+1549484460 d:\games\programs\map2d\dialog.h
 	"camera.h"
 

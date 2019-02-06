@@ -18,10 +18,12 @@ Camera::Camera(int width, int height) : width_(width), height_(height) {
 }
 
 void Camera::addView(View* view) {
-    views_.insert(views_.begin(), view);
+    if( view == nullptr ) return;
+    views_.push_back(view);
 }
 
 void Camera::removeView(View* view) {
+    if( view == nullptr ) return;
     views_.remove(view);
 }
 
