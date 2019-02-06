@@ -89,7 +89,18 @@ bool Session::getBoolean(const string& label, bool default_value) {
             return true;
         }
     }
+    ValueDesc vd = std::pair<string, string>(default_value?"true":"false", "");
+    dictionary_.insert(std::pair<string,ValueDesc>(label, vd));
     return default_value;
+}
+
+void Session::setBoolean(const string& label, bool value) {
+    map<string, ValueDesc>::iterator it = dictionary_.find(label);
+    if( it != dictionary_.end() ) {
+        dictionary_.erase(it);
+    }
+    ValueDesc vd = std::pair<string, string>(value?"true":"false", "");
+    dictionary_.insert(std::pair<string,ValueDesc>(label, vd));
 }
 
 int Session::getInteger(const string& label, int default_value) {
@@ -99,7 +110,18 @@ int Session::getInteger(const string& label, int default_value) {
         const string& str_value = it->second.first;
         value = ::atoi(str_value.c_str());
     }
+    ValueDesc vd = std::pair<string, string>(Utility::itos(default_value), "");
+    dictionary_.insert(std::pair<string,ValueDesc>(label, vd));
     return value;
+}
+
+void Session::setInteger(const string& label, int value) {
+    map<string, ValueDesc>::iterator it = dictionary_.find(label);
+    if( it != dictionary_.end() ) {
+        dictionary_.erase(it);
+    }
+    ValueDesc vd = std::pair<string, string>(Utility::itos(value), "");
+    dictionary_.insert(std::pair<string,ValueDesc>(label, vd));
 }
 
 float Session::getFloat(const string& label, float default_value) {
@@ -109,6 +131,8 @@ float Session::getFloat(const string& label, float default_value) {
         const string& str_value = it->second.first;
         value = ::atof(str_value.c_str());
     }
+    ValueDesc vd = std::pair<string, string>(Utility::ftos(default_value), "");
+    dictionary_.insert(std::pair<string,ValueDesc>(label, vd));
     return value;
 }
 
@@ -118,6 +142,8 @@ string Session::getString(const string& label, string default_value) {
     if( it != dictionary_.end() ) {
         value = it->second.first;
     }
+    ValueDesc vd = std::pair<string, string>(default_value, "");
+    dictionary_.insert(std::pair<string,ValueDesc>(label, vd));
     return value;
 }
 

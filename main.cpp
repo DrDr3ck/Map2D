@@ -8,6 +8,7 @@
 
 #include "map.h"
 #include "character.h"
+#include "dialog.h"
 #include "font.h"
 #include "archive.h"
 #include "sdl_camera.h"
@@ -30,7 +31,10 @@ int main(int argc, char** argv) {
     SDL_Init(SDL_INIT_VIDEO);
 
     // Create window
-    SDLCamera* camera = new SDLCamera(1000,800);
+    int camera_width = Session::instance()->getInteger("*camera*width", 1000);
+    int camera_height = Session::instance()->getInteger("*camera*height", 800);
+    SDLCamera* camera = new SDLCamera(camera_width,camera_height);
+    camera->init();
     if( !camera->valid() ) {
         delete camera;
         return -1;
@@ -96,8 +100,14 @@ int main(int argc, char** argv) {
         people->setDirection(1,0);
         group.add(people);
     }
-    MapView mapview(camera, &data, &group, &job_mgr);
 
+    // debug
+    Dialog dialog(10,100,160,180);
+    dialog.setBackgroundColor(211,211,211);
+    camera->addView(&dialog);
+    // end debug
+
+    MapView mapview(camera, &data, &group, &job_mgr);
     FontLib* font_manager = FontLib::instance();
 
     // Main loop

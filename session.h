@@ -25,6 +25,9 @@ public:
     float getFloat(const std::string& label, float default_value = 0.f);
     std::string getString(const std::string& label, std::string default_value="");
 
+    void setBoolean(const std::string& label, bool value);
+    void setInteger(const std::string& label, int value);
+
 private:
     static Session* singleton_;
     std::map< std::string, ValueDesc > dictionary_;

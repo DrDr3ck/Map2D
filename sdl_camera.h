@@ -131,6 +131,8 @@ public:
     SDLCamera(int width, int height);
     virtual ~SDLCamera();
 
+    void init();
+
     virtual bool valid() const override;
     virtual void render(double delay_in_ms) override;
     virtual void handleEvent() override;

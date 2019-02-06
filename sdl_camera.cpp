@@ -12,6 +12,7 @@
 #include "texture_mgr.h"
 #include "translator.h"
 #include "action.h"
+#include "session.h"
 
 /********************************************************************/
 
@@ -71,7 +72,7 @@ MapView::~MapView() {
  */
 void MapView::addWallJob(int x, int y) {
     Position tile_position = {x,y};
-    Job* job = new BuildJob(tile_position, "wall_tool", 3500);
+    Job* job = new BuildJob(tile_position, "buttons/wall_tool", 3500);
     job_manager_->addJob(job);
 }
 
@@ -80,7 +81,7 @@ void MapView::addWallJob(int x, int y) {
  */
 void MapView::removeWallJob(int x, int y) {
     Position tile_position = {x,y};
-    Job* job = new DemolishJob(tile_position, "demolish_tool", 2500);
+    Job* job = new DemolishJob(tile_position, "buttons/demolish_tool", 2500);
     job_manager_->addJob(job);
 }
 
@@ -89,9 +90,9 @@ void MapView::extractItemJob(int x, int y, int nb) {
     Tile cur_tile = data_->tile(x,y);
     Job* job = nullptr;
     if( cur_tile.background_type() == Tile::ROCK ) {
-        job = new ExtractJob(tile_position, "extract_tool", 5000, nb);
+        job = new ExtractJob(tile_position, "buttons/extract_tool", 5000, nb);
     } else if( cur_tile.background_type() == Tile::SAND ) {
-        job = new ExtractJob(tile_position, "pelle_tool", 5000, nb);
+        job = new ExtractJob(tile_position, "buttons/pelle_tool", 5000, nb);
     }
     if( job != nullptr ) {
         job_manager_->addJob(job);
@@ -101,7 +102,7 @@ void MapView::extractItemJob(int x, int y, int nb) {
 void MapView::cleanItemJob(int x, int y) {
     Position tile_position = {x,y};
     Tile cur_tile = data_->tile(x,y);
-    Job* job = new CleanJob(tile_position, "clean_tool", 0);
+    Job* job = new CleanJob(tile_position, "buttons/clean_tool", 0);
     job_manager_->addJob(job);
 }
 
@@ -110,7 +111,7 @@ void MapView::cleanItemJob(int x, int y) {
  */
 void MapView::addFloorJob(int x, int y) {
     Position tile_position = {x,y};
-    Job* job = new BuildFloorJob(tile_position, "foundation_tool", 1500);
+    Job* job = new BuildFloorJob(tile_position, "buttons/foundation_tool", 1500);
     job_manager_->addJob(job);
 }
 
@@ -119,7 +120,7 @@ void MapView::addFloorJob(int x, int y) {
  */
 void MapView::removeFloorJob(int x, int y) {
     Position tile_position = {x,y};
-    Job* job = new DemolishFloorJob(tile_position, "demolish_foundation_tool", 1000);
+    Job* job = new DemolishFloorJob(tile_position, "buttons/demolish_foundation_tool", 1000);
     job_manager_->addJob(job);
 }
 
@@ -236,7 +237,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     float scale = camera->scale();
     SDL_Renderer* main_renderer = sdl_camera->main_renderer();
     if( window_background_ == nullptr ) {
-        SDL_Surface* bg_surface = Utility::IMGLoad("background.bmp");
+        SDL_Surface* bg_surface = Utility::IMGLoad("images/background.bmp");
         window_background_ = SDL_CreateTextureFromSurface(main_renderer, bg_surface);
         SDL_FreeSurface(bg_surface);
     }
@@ -542,59 +543,59 @@ SDLCamera::SDLCamera(
     int max_column = 4;
     MenuButton* build_menu = new MenuButton(max_column, 10, 75);
 
-    SDLBuildTool* wall_tool = new SDLBuildTool(this, "wall_tool.png", WALLTOOL);
-    SDLButton* wall_button_tool = new SDLToolButton(wall_tool, "wall_tool.png", 0, 0);
+    SDLBuildTool* wall_tool = new SDLBuildTool(this, "buttons/wall_tool.png", WALLTOOL);
+    SDLButton* wall_button_tool = new SDLToolButton(wall_tool, "buttons/wall_tool.png", 0, 0);
     manager_->addButton(wall_button_tool);
     build_menu->addButton(wall_button_tool);
 
-    SDLUnbuildTool* demolish_tool = new SDLUnbuildTool(this, "demolish_tool.png", WALLTOOL);
-    SDLButton* demolish_button_tool = new SDLToolButton(demolish_tool, "demolish_tool.png", 0, 0);
+    SDLUnbuildTool* demolish_tool = new SDLUnbuildTool(this, "buttons/demolish_tool.png", WALLTOOL);
+    SDLButton* demolish_button_tool = new SDLToolButton(demolish_tool, "buttons/demolish_tool.png", 0, 0);
     manager_->addButton(demolish_button_tool);
     build_menu->addButton(demolish_button_tool);
 
-    SDLBuildTool* foundation_tool = new SDLBuildTool(this, "foundation_tool.png", FLOORTOOL);
-    SDLButton* foundation_button_tool = new SDLToolButton(foundation_tool, "foundation_tool.png", 0, 0);
+    SDLBuildTool* foundation_tool = new SDLBuildTool(this, "buttons/foundation_tool.png", FLOORTOOL);
+    SDLButton* foundation_button_tool = new SDLToolButton(foundation_tool, "buttons/foundation_tool.png", 0, 0);
     manager_->addButton(foundation_button_tool);
     build_menu->addButton(foundation_button_tool);
 
-    SDLUnbuildTool* demolish_foundation_tool = new SDLUnbuildTool(this, "demolish_foundation_tool.png", FLOORTOOL);
-    SDLButton* demolish_foundation_button_tool = new SDLToolButton(demolish_foundation_tool, "demolish_foundation_tool.png", 0, 0);
+    SDLUnbuildTool* demolish_foundation_tool = new SDLUnbuildTool(this, "buttons/demolish_foundation_tool.png", FLOORTOOL);
+    SDLButton* demolish_foundation_button_tool = new SDLToolButton(demolish_foundation_tool, "buttons/demolish_foundation_tool.png", 0, 0);
     manager_->addButton(demolish_foundation_button_tool);
     build_menu->addButton(demolish_foundation_button_tool);
 
-    manager_->addButton( new SDLButtonMenu(build_menu, "build.png", 10,10) );
+    manager_->addButton( new SDLButtonMenu(build_menu, "buttons/build.png", 10,10) );
     manager_->addMenuButton( build_menu );
 
     // Add excavation menu
     MenuButton* excavation_menu = new MenuButton(max_column, 70, 75);
-    SDLExtractTool* extract_tool = new SDLExtractTool(this, "extract_tool.png", 1);
-    SDLButton* extract_button_tool = new SDLToolButton(extract_tool, "extract_tool.png", 0, 0);
+    SDLExtractTool* extract_tool = new SDLExtractTool(this, "buttons/extract_tool.png", 1);
+    SDLButton* extract_button_tool = new SDLToolButton(extract_tool, "buttons/extract_tool.png", 0, 0);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
-    extract_tool = new SDLExtractTool(this, "pelle_tool.png", 1);
-    extract_button_tool = new SDLToolButton(extract_tool, "pelle_tool.png", 0, 0);
+    extract_tool = new SDLExtractTool(this, "buttons/pelle_tool.png", 1);
+    extract_button_tool = new SDLToolButton(extract_tool, "buttons/pelle_tool.png", 0, 0);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
-    SDLCleanTool* clean_tool = new SDLCleanTool(this, "clean_tool.png");
-    extract_button_tool = new SDLToolButton(clean_tool, "clean_tool.png", 0, 0);
+    SDLCleanTool* clean_tool = new SDLCleanTool(this, "buttons/clean_tool.png");
+    extract_button_tool = new SDLToolButton(clean_tool, "buttons/clean_tool.png", 0, 0);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
-    extract_tool = new SDLExtractTool(this, "extract_tool_10.png", 10);
-    extract_button_tool = new SDLToolButton(extract_tool, "extract_tool_10.png", 0, 0);
+    extract_tool = new SDLExtractTool(this, "buttons/extract_tool_10.png", 10);
+    extract_button_tool = new SDLToolButton(extract_tool, "buttons/extract_tool_10.png", 0, 0);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
-    extract_tool = new SDLExtractTool(this, "pelle_tool_10.png", 10);
-    extract_button_tool = new SDLToolButton(extract_tool, "pelle_tool_10.png", 0, 0);
+    extract_tool = new SDLExtractTool(this, "buttons/pelle_tool_10.png", 10);
+    extract_button_tool = new SDLToolButton(extract_tool, "buttons/pelle_tool_10.png", 0, 0);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
 
 
-    manager_->addButton( new SDLButtonMenu(excavation_menu, "excavation.png", 70,10) );
+    manager_->addButton( new SDLButtonMenu(excavation_menu, "buttons/excavation.png", 70,10) );
     manager_->addMenuButton( excavation_menu );
 
     // Add Object menu
@@ -620,7 +621,7 @@ SDLCamera::SDLCamera(
     manager_->addButton(stone_furnace_button_tool);
     object_menu->addButton(stone_furnace_button_tool);
 
-    manager_->addButton( new SDLButtonMenu(object_menu, "object.png", object_menu->x(), 10) );
+    manager_->addButton( new SDLButtonMenu(object_menu, "buttons/object.png", object_menu->x(), 10) );
     manager_->addMenuButton( object_menu );
 
     // Add Quit Button
@@ -640,6 +641,10 @@ SDLCamera::~SDLCamera() {
     SDL_Quit();
 }
 
+void SDLCamera::init() {
+    addView(manager_);
+}
+
 /*!
  * \return true if this camera is valid
  */
@@ -650,7 +655,6 @@ bool SDLCamera::valid() const {
 void SDLCamera::render(double delay_in_ms) {
     // rendering for all View(s)
     Camera::render(delay_in_ms);
-    manager_->do_render(this, delay_in_ms);
 
     // display PAUSE tooltip
     if( pause_ ) {
@@ -692,15 +696,16 @@ void SDLCamera::render(double delay_in_ms) {
         displayText(text);
     }
 
-    // debug: display mouse position
-    std::string mouse_position;
-    mouse_position.append(Utility::itos(mouse_x()));
-    mouse_position.append(" ");
-    mouse_position.append(Utility::itos(mouse_y()));
-    SDLText text(mouse_position, "pixel11", 14, SDLText::red());
-    text.set_position(10,Camera::cur_camera->height()-30);
-    displayText(text);
-    // end debug
+    // F3: display mouse position
+    if( Session::instance()->getBoolean("*display_F3", true) ) {
+        std::string mouse_position;
+        mouse_position.append(Utility::itos(mouse_x()));
+        mouse_position.append(" ");
+        mouse_position.append(Utility::itos(mouse_y()));
+        SDLText text(mouse_position, "pixel11", 14, SDLText::red());
+        text.set_position(10,Camera::cur_camera->height()-30);
+        displayText(text);
+    }
 
     // render tool
     if( tool_ != nullptr ) {
@@ -807,6 +812,9 @@ void SDLCamera::handleEvent() {
         case SDL_KEYDOWN:
             if( event_.key.keysym.sym == SDLK_SPACE ) {
                 pause_ = !pause_;
+            } else if( event_.key.keysym.sym == SDLK_F3 ) {
+                bool display_F3 = Session::instance()->getBoolean("*display_F3");
+                Session::instance()->setBoolean("*display_F3", !display_F3);
             } else if( event_.key.keysym.sym == SDLK_LCTRL ) {
                 lctrl_down_ = true;
             } else if( event_.key.keysym.sym == SDLK_LCTRL ) {
@@ -848,7 +856,6 @@ void SDLCamera::handleEvent() {
 
     // handle event for all View(s)
     Camera::handleEvent();
-    manager_->handleEvent(this);
 }
 
 void SDLCamera::onMouseMove(int mouse_x, int mouse_y) {
