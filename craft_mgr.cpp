@@ -37,7 +37,7 @@ void CraftMgr::kill() {
     }
 }
 
-void CraftMgr::loadCrafts(const std::string& filename) {
+void CraftMgr::loadCrafts(const std::string& filename) { // TODO
     std::ifstream file(filename);
     if (!file) {
         Logger::error() << tr("Cannot load craft, unable to open file: ") << filename << Logger::endl;

@@ -75,12 +75,6 @@ void Object::setNode(const std::string& node_name, std::vector<std::pair<std::st
 /********************************************************************/
 
 Chest::Chest(int size) : Object("objects/chest.png", tr("Chest"), "chest"), max_size_(size) {
-    // debug
-    //addItem(BasicItem("stone"), 5);
-    //addItem(BasicItem("sand"), 3);
-    //addItem(BasicItem("copper_cable"), 2);
-    //addItem(BasicItem("coal"), 10);
-    // end debug
 }
 
 void Chest::setNode(const std::string& node_name, std::vector<Attr> attributes, const std::string& value) {

@@ -415,9 +415,9 @@ void MapData::createMap(MapData* data) {
 /********************************************************************/
 
 TileSetLib::TileSetLib() {
-    tiles_surface_ = Utility::IMGLoad("tiles.png");
-    walls_surface_ = Utility::IMGLoad("walls01.png");
-    grounds_surface_ = Utility::IMGLoad("grounds01.png");
+    tiles_surface_ = Utility::IMGLoad("images/tiles.png");
+    walls_surface_ = Utility::IMGLoad("images/walls01.png");
+    grounds_surface_ = Utility::IMGLoad("images/grounds01.png");
     if( tiles_surface_ == nullptr || walls_surface_ == nullptr ) {
         Logger::error() << "cannot initialize TileSetLib" << Logger::endl;
     }
@@ -522,10 +522,6 @@ TileSetLib* TileSetLib::singleton_ = nullptr;
 /********************************************************************/
 
 GameBoard::GameBoard(PeopleGroup* group, MapData* data, JobMgr* manager) : group_(group), data_(data), job_mgr_(manager) {
-    // debug
-    // add chest for fun :)
-    // data->addObject(new Chest(), 2, 3);
-    // end debug
 }
 
 GameBoard::~GameBoard() {

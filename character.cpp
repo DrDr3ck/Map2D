@@ -38,7 +38,6 @@ void DynamicItem::animate(double delta) {
     if( action_ == nullptr ) {
         return;
     }
-    //Logger::debug() << "Animate " << name_ << Logger::endl;
     if( !action_->spentTime(time_spent_) ) {
         action_->postAction();
         delete action_;
@@ -118,7 +117,7 @@ BasicItem Character::dropItem() {
 /********************************************************************/
 
 CharacterSetLib::CharacterSetLib() {
-    characters_surface_ = Utility::IMGLoad("robots.png");
+    characters_surface_ = Utility::IMGLoad("images/robots.png");
 
     if( characters_surface_ == nullptr ) {
         Logger::error() << "cannot initialize CharacterSetLib" << Logger::endl;

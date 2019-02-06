@@ -46,6 +46,8 @@
 		<Unit filename="character.h" />
 		<Unit filename="craft_mgr.cpp" />
 		<Unit filename="craft_mgr.h" />
+		<Unit filename="dialog.cpp" />
+		<Unit filename="dialog.h" />
 		<Unit filename="font.cpp" />
 		<Unit filename="font.h" />
 		<Unit filename="items.cpp" />

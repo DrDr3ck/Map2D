@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1548910405 source:d:\games\programs\map2d\main.cpp
+1549426130 source:d:\games\programs\map2d\main.cpp
 	<SDL2/SDL.h>
 	<SDL2/SDL_mixer.h>
 	<iostream>
@@ -9,6 +9,7 @@
 	<chrono>
 	"map.h"
 	"character.h"
+	"dialog.h"
 	"font.h"
 	"archive.h"
 	"sdl_camera.h"
@@ -352,7 +353,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1548966824 source:d:\games\programs\map2d\map.cpp
+1549127098 source:d:\games\programs\map2d\map.cpp
 	"map.h"
 	<cmath>
 	"SDL2/SDL_image.h"
@@ -381,7 +382,7 @@
 	<list>
 	<string>
 
-1549105423 source:d:\games\programs\map2d\tests.cpp
+1549127098 source:d:\games\programs\map2d\tests.cpp
 	"tests.h"
 	"archive.h"
 	"font.h"
@@ -401,7 +402,7 @@
 	<random>
 	<SDL2/SDL_ttf.h>
 
-1548524221 source:d:\games\programs\map2d\camera.cpp
+1549424807 source:d:\games\programs\map2d\camera.cpp
 	"camera.h"
 	"session.h"
 	<iostream>
@@ -411,7 +412,7 @@
 	<list>
 	<vector>
 
-1549105397 source:d:\games\programs\map2d\archive.cpp
+1549108167 source:d:\games\programs\map2d\archive.cpp
 	"archive.h"
 	"character.h"
 	"logger.h"
@@ -425,7 +426,7 @@
 	"map.h"
 	<string>
 
-1548965596 source:d:\games\programs\map2d\sdl_camera.cpp
+1549424807 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -438,8 +439,9 @@
 	"texture_mgr.h"
 	"translator.h"
 	"action.h"
+	"session.h"
 
-1548965543 d:\games\programs\map2d\sdl_camera.h
+1549422388 d:\games\programs\map2d\sdl_camera.h
 	"character.h"
 	"map.h"
 	"job.h"
@@ -510,7 +512,7 @@
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 
-1548966779 source:d:\games\programs\map2d\character.cpp
+1549127098 source:d:\games\programs\map2d\character.cpp
 	"character.h"
 	"sdl_camera.h"
 	"path_finding.h"
@@ -538,7 +540,7 @@
 	"map.h"
 	<vector>
 
-1548913216 source:d:\games\programs\map2d\job.cpp
+1549108167 source:d:\games\programs\map2d\job.cpp
 	"job.h"
 	"sdl_camera.h"
 	"logger.h"
@@ -613,11 +615,11 @@
 	<string>
 	<map>
 
-1548020557 d:\games\programs\map2d\session.h
+1549426231 d:\games\programs\map2d\session.h
 	<string>
 	<map>
 
-1548020598 source:d:\games\programs\map2d\session.cpp
+1549426231 source:d:\games\programs\map2d\session.cpp
 	"session.h"
 	"logger.h"
 	"translator.h"
@@ -657,7 +659,7 @@
 	<ctime>
 	<chrono>
 
-1548913084 source:d:\games\programs\map2d\craft_mgr.cpp
+1549126979 source:d:\games\programs\map2d\craft_mgr.cpp
 	"craft_mgr.h"
 	"logger.h"
 	"utility.h"
@@ -684,10 +686,19 @@
 	"translator.h"
 	"items.h"
 
-1549105397 source:d:\games\programs\map2d\object.cpp
+1549127098 source:d:\games\programs\map2d\object.cpp
 	"object.h"
 	"translator.h"
 	<iostream>
 	<algorithm>
 	"sdl_camera.h"
+
+1549426130 source:d:\games\programs\map2d\dialog.cpp
+	"dialog.h"
+	"sdl_camera.h"
+	<tuple>
+	<SDL2/SDL.h>
+
+1549425544 d:\games\programs\map2d\dialog.h
+	"camera.h"
 

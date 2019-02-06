@@ -18,7 +18,7 @@ Camera::Camera(int width, int height) : width_(width), height_(height) {
 }
 
 void Camera::addView(View* view) {
-    views_.push_back(view);
+    views_.insert(views_.begin(), view);
 }
 
 void Camera::removeView(View* view) {

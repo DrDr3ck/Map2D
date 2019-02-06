@@ -1,7 +1,12 @@
-<Etabli>
+<WorkBench>
 	<object name="StoneFurnace">
 		<item name="stone" occ=5/>
 		<time>5</time>
+	</object>
+    <object name="Breaker">
+		<item name="stone" occ=4/>
+        <item name="glass" occ=2/>
+		<time>10</time>
 	</object>
 	<object name="Assembleur">
 	    <item name="iron ingot" occ=4/>
@@ -9,7 +14,13 @@
 		<item name="glass" occ=2/>
 		<time>25</time>
 	</object>
-</Etabli>
+</WorkBench>
+<Breaker>
+	<finalItem name="powder" occ=5>
+		<item name="stone" occ=1/>
+		<time>2</time>
+	</finalItem>
+</Breaker>
 <StoneFurnace>
 	<finalItem name="glass" occ=1>
 		<item name="sand" occ=1/>

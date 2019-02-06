@@ -238,12 +238,10 @@ namespace {
         SDL_Surface* surface = SDL_CreateRGBSurface(0, sizeX, sizeY, 32, 0, 0, 0, 0);
         SDL_LockSurface(surface);
         Uint32* pixels = (Uint32*)surface->pixels;
-        //Logger debug = Logger::debug();
         for( int y = 0; y < sizeY; y++ ) {
             for( int x = 0; x < sizeX; x++ ) {
                 float value = noise_map[x][y];
                 int color = value * 255;
-                //debug << color << " ";
                 int r = color;
                 int g = color;
                 int b = color;
@@ -258,7 +256,6 @@ namespace {
                 Uint32 couleur = SDL_MapRGB(surface->format, r, g, b);
                 pixels[y * surface->w + x] = couleur;
             }
-            //debug << Logger::endl;
         }
         SDL_UnlockSurface(surface);
         SDL_SaveBMP(surface, filename.data());
