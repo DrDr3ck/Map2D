@@ -254,4 +254,13 @@ void PeopleGroup::add(Character* people) {
     group_.push_back(people);
 }
 
+Character* PeopleGroup::getNextRobot() {
+    if( group_.size() == 0 ) return nullptr;
+    next_robot_idx_++;
+    if( int(group_.size()) <= next_robot_idx_ ) {
+        next_robot_idx_ = 0;
+    }
+    return group_.at(next_robot_idx_);
+}
+
 /********************************************************************/

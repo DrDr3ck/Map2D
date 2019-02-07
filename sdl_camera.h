@@ -22,7 +22,7 @@ public:
     virtual ~MapView();
 
     virtual void do_render(Camera* camera, double delay_in_ms) override;
-    virtual void handleEvent(Camera* camera) override;
+    virtual bool handleEvent(Camera* camera) override;
 
     MapData* data() const { return data_; }
 
@@ -92,6 +92,9 @@ public:
     const SDL_Rect& rect() const { return rect_; }
     void set_position(int x, int y);
 
+    void setBackgroundColor(const SDL_Color& bgcolor);
+    const SDL_Color& getBackgroundColor() const;
+
     static SDL_Color& black() {
         static SDL_Color black = {0, 0, 0, 255};
         return black;
@@ -119,6 +122,7 @@ private:
     SDL_Texture* texture_;
     SDL_Color color_;
     SDL_Rect rect_;
+    SDL_Color background_color_;
 };
 
 /********************************************************************/
@@ -146,7 +150,7 @@ public:
 
     MapView* mapView() const { return map_view_; }
 
-    void displayTexture(SDL_Texture* texture, const SDL_Rect* rect);
+    void displayTexture(SDL_Texture* texture, const SDL_Rect* rect, const SDL_Rect* dest = NULL);
     void displayText(SDLText& text, bool background=false);
 
     void getSize(int& screen_width, int& screen_height);

@@ -3,31 +3,51 @@
 #include "sdl_camera.h"
 
 #include <tuple>
-#include <SDL2/SDL.h>
 
 /***********************************/
 
 Dialog::Dialog(int x, int y, int width, int height) : View(), x_(x), y_(y), width_(width), height_(height) {
     surface_ = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
-    setBackgroundColor(211,211,211,255);
+    SDL_Color bgcolor = {211,211,211,255};
+    setBackgroundColor(bgcolor);
 }
 
 Dialog::~Dialog() {
     SDL_FreeSurface(surface_);
 }
 
-void Dialog::setBackgroundColor(int R, int G, int B, int A) {
-    red_ = R;
-    green_ = G;
-    blue_ = B;
-    alpha_ = A;
-    SDL_FillRect(surface_, NULL, SDL_MapRGBA(surface_->format, 0, 0, 0, A));
-    SDL_Rect rect = {1,20,width_-2,height_-21};
-    SDL_FillRect(surface_, &rect, SDL_MapRGBA(surface_->format, R, G, B, A));
+SDL_Rect Dialog::getTitleRect() const {
     SDL_Rect window_rect = {1,1,width_-2,18};
-    SDL_FillRect(surface_, &window_rect, SDL_MapRGBA(surface_->format, R*0.9, G*0.9, B*0.9, A));
-    SDL_Rect kill_rect = {width_ - 18, 2,16,16};
-    SDL_FillRect(surface_, &kill_rect, SDL_MapRGBA(surface_->format, 255, 100, 100, A));
+    return window_rect;
+}
+
+SDL_Rect Dialog::getKillRect() const {
+    SDL_Rect window_rect = {width_ - 18, 2,16,16};
+    return window_rect;
+}
+
+SDL_Rect Dialog::getMinimizeRect() const {
+    SDL_Rect window_rect = {width_ - 18 - 20, 2,16,16};
+    return window_rect;
+}
+
+void Dialog::setBackgroundColor(const SDL_Color& bgcolor) {
+    background_color_ = bgcolor;
+    SDL_FillRect(surface_, NULL, SDL_MapRGBA(surface_->format, 0, 0, 0, background_color_.a));
+    SDL_Rect rect = {1,20,width_-2,height_-21};
+    SDL_FillRect(
+        surface_, &rect,
+        SDL_MapRGBA(surface_->format, background_color_.r, background_color_.g, background_color_.b, background_color_.a)
+    );
+
+    SDL_Rect window_rect = getTitleRect();
+    SDL_FillRect(surface_, &window_rect, SDL_MapRGBA(surface_->format, background_color_.r*0.9, background_color_.g*0.9, background_color_.b*0.9, background_color_.a));
+
+    SDL_Rect kill_rect = getKillRect();
+    SDL_FillRect(surface_, &kill_rect, SDL_MapRGBA(surface_->format, 255, 100, 100, background_color_.a));
+
+    SDL_Rect minimize_rect = getMinimizeRect();
+    SDL_FillRect(surface_, &minimize_rect, SDL_MapRGBA(surface_->format, 100, 100, 255, background_color_.a));
 }
 
 void Dialog::do_render(Camera* camera, double delay_in_ms) {
@@ -36,7 +56,16 @@ void Dialog::do_render(Camera* camera, double delay_in_ms) {
     SDL_Renderer* main_renderer = sdl_camera->main_renderer();
     SDL_Texture* texture = SDL_CreateTextureFromSurface(main_renderer,surface_);
     SDL_Rect rect = {x_, y_, width_, height_ };
-    sdl_camera->displayTexture(texture, &rect);
+    if( minimized_ ) {
+        SDL_Rect from = getTitleRect();
+        rect.w = from.w;
+        rect.h = from.h;
+        sdl_camera->displayTexture(texture, &rect, &from);
+        SDL_SetRenderDrawColor( main_renderer, 50, 50, 50, 255 );
+        SDL_RenderDrawRect(main_renderer, &rect);
+    } else {
+        sdl_camera->displayTexture(texture, &rect);
+    }
     SDL_DestroyTexture(texture);
 }
 
@@ -45,17 +74,24 @@ void Dialog::do_render(Camera* camera, double delay_in_ms) {
  * (i.e. if mouse cursor is over the dialog).
  */
 bool Dialog::hasFocus(int mouse_x, int mouse_y) {
+    float width = width_;
+    float height = height_;
+    if( minimized_ ) {
+        width = getTitleRect().w;
+        height = getTitleRect().h;
+    }
     if( mouse_x < x_ ) return false;
-    if( mouse_x > x_+width_ ) return false;
+    if( mouse_x > x_+width ) return false;
     if( mouse_y < y_ ) return false;
-    if( mouse_y > y_+height_ ) return false;
+    if( mouse_y > y_+height ) return false;
     return true;
 }
 
-void Dialog::handleEvent(Camera* camera) {
+bool Dialog::handleEvent(Camera* camera) {
     SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
-    SDL_Rect kill_rect = {width_ - 18, 2,16,16};
-    SDL_Rect window_rect = {1,1,width_-2,18};
+    SDL_Rect kill_rect = getKillRect();
+    SDL_Rect window_rect = getTitleRect();
+    SDL_Rect minimize_rect = getMinimizeRect();
     const SDL_Event& event = sdl_camera->event();
     int rel_mouse_x = sdl_camera->mouse_x() - x_;
     int rel_mouse_y = sdl_camera->mouse_y() - y_;
@@ -65,6 +101,8 @@ void Dialog::handleEvent(Camera* camera) {
                 if( Utility::contains(kill_rect, rel_mouse_x, rel_mouse_y) ) {
                     // kill this dialog !!
                     kill_me_ = true;
+                } else if( Utility::contains(minimize_rect, rel_mouse_x, rel_mouse_y) ) {
+                    minimized_ = ! minimized_;
                 } else if( Utility::contains(window_rect, rel_mouse_x, rel_mouse_y) ) {
                     grabbing_ = true;
                     rel_grab_x_ = rel_mouse_x;
@@ -85,9 +123,85 @@ void Dialog::handleEvent(Camera* camera) {
             }
             break;
         default:
-            break;
+            return false; // event has not been handled
     }
+    return true; // event has been handled
 }
 
 /**************************************/
 
+RobotDialog::RobotDialog(Character* robot, int mouse_x, int mouse_y) : Dialog(mouse_x, mouse_y, 250, 200) {
+    robot_ = robot;
+    SDL_Color bgcolor = {255,211,211,255};
+    setBackgroundColor(bgcolor);
+}
+
+RobotDialog::~RobotDialog() {
+    robot_ = nullptr;
+}
+
+void RobotDialog::do_render(Camera* camera, double delay_in_ms) {
+    Dialog::do_render(camera, delay_in_ms);
+    SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
+
+    std::string title_str = tr(" - Robot");
+    SDLText title(title_str, "pixel11", 10);
+    title.set_position(3+x_,2+y_);
+    SDL_Color title_bgcolor = getBackgroundColor();
+    title_bgcolor.r = title_bgcolor.r*0.9;
+    title_bgcolor.g = title_bgcolor.g*0.9;
+    title_bgcolor.b = title_bgcolor.b*0.9;
+    title.setBackgroundColor(title_bgcolor);
+    sdl_camera->displayText(title, false);
+
+    if( minimized_ ) {
+        return;
+    }
+
+    std::string str = tr("Name: ");
+    str+=robot_->name();
+    str+= "\n" + tr("Slot: ") + Utility::itos(robot_->maxCarry()-robot_->maxCarriable()) + "/" + Utility::itos(robot_->maxCarry());
+    str+="\n" + robot_->actionDescription();
+    SDLText text(str);
+    text.set_position(9+x_,25+y_);
+    text.setBackgroundColor(getBackgroundColor());
+    sdl_camera->displayText(text, false);
+}
+
+/**************************************/
+
+ObjectDialog::ObjectDialog(PositionObject pobject, int mouse_x, int mouse_y) : Dialog(mouse_x, mouse_y, 250, 300) {
+    pobject_ = pobject;
+    SDL_Color bgcolor = {211,211,255,255};
+    setBackgroundColor(bgcolor);
+}
+
+ObjectDialog::~ObjectDialog() {
+}
+
+void ObjectDialog::do_render(Camera* camera, double delay_in_ms) {
+    Dialog::do_render(camera, delay_in_ms);
+    SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
+    Object* object = pobject_.object;
+
+    std::string title_str(" - ");
+    title_str.append( object->userName() );
+    SDLText title(title_str, "pixel11", 11);
+    title.set_position(3+x_,3+y_);
+    SDL_Color title_bgcolor = getBackgroundColor();
+    title_bgcolor.r = title_bgcolor.r*0.9;
+    title_bgcolor.g = title_bgcolor.g*0.9;
+    title_bgcolor.b = title_bgcolor.b*0.9;
+    title.setBackgroundColor(title_bgcolor);
+    sdl_camera->displayText(title, false);
+
+    std::string str = tr("Name: ");
+    str+=object->userName();
+    str+="\n" + tr("Tile: ") + Utility::itos(pobject_.x) + " " + Utility::itos(pobject_.y);
+    SDLText text(str);
+    text.set_position(9+x_,25+y_);
+    text.setBackgroundColor(getBackgroundColor());
+    sdl_camera->displayText(text, false);
+}
+
+/**************************************/

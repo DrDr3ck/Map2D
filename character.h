@@ -152,8 +152,11 @@ public:
 
     void add(Character* people);
 
+    Character* getNextRobot();
+
 protected:
     std::vector<Character*> group_;
+    int next_robot_idx_ = -1;
 };
 
 /********************************************************************/

@@ -16,9 +16,9 @@ NoAction::NoAction(Character* character) : ActionBase(), character_(character) {
     max_time_spent_ = std::rand() % 5; // in seconds
     // TODO: random choice from list of no action descs
     if( max_time_spent_ > 2 )
-        character->setAction(this, std::string("Need a job"));
+        character->setAction(this, tr("Need a job"));
     else
-        character->setAction(this, std::string("Dreaming"));
+        character->setAction(this, tr("Dreaming"));
 }
 
 bool NoAction::spentTime(double time_spent) {

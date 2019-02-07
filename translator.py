@@ -24,7 +24,7 @@ class Translator:
         
     def getAllTr(self, directory):
         lines = list()
-        pattern = "[ ]tr[ ]*\([ ]*\"(.*)\"[ ]*\)";
+        pattern = "[ ]tr[ ]*\([ ]*\"([^\"]+)\"[ ]*\)";
         for filename in os.listdir(directory):
             if filename.endswith(".cpp") or filename.endswith(".h"): 
                 #print(os.path.join(directory, filename))
@@ -46,7 +46,7 @@ if __name__ == "__main__":
     elif argc == 2:
         filename = sys.argv[1]
         
-    print "Build translation for file", filename
+    print "** Build translation for file", filename
     
     t = Translator()
     old_lines = list()
@@ -58,16 +58,23 @@ if __name__ == "__main__":
     
     file = open(filename,"w")
     
+    print("Get all lines to translate")
     new_lines = t.getAllTr(".")
     
+    print("Recreate translation file")
+    lines_done = list()
     for line in new_lines:
         index = -1
+        if line in lines_done:
+            continue
         if line in old_lines:
             index = old_lines.index(line)
         result = ""
         if index >= 0:
             result = results[index]
         final_line = "('" + line + "','"+result+"')\n"
+        lines_done.append(line)
         file.write(final_line)
     
     file.close();
+    print "** Closing file", filename

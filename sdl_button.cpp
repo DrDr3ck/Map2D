@@ -9,7 +9,7 @@
 
 /********************************************************************/
 
-void SDLButtonManager::handleEvent(Camera* camera) {
+bool SDLButtonManager::handleEvent(Camera* camera) {
     SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
     const SDL_Event& e = sdl_camera->event();
     bool button_pressed = false;
@@ -37,6 +37,7 @@ void SDLButtonManager::handleEvent(Camera* camera) {
             }
         }
     }
+    return false;
 }
 
 // remark: the delay_in_ms may be use to display animated buttons

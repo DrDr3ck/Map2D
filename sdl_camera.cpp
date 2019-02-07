@@ -365,11 +365,12 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     }
 }
 
-void MapView::handleEvent(Camera* camera) {
+bool MapView::handleEvent(Camera* camera) {
     SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
-    if( sdl_camera == nullptr ) return;
+    if( sdl_camera == nullptr ) return false;
     const SDL_Event& e = sdl_camera->event();
-    if( e.type == SDL_KEYDOWN ) {
+    switch( e.type ) {
+        case SDL_KEYDOWN:
         if( e.key.keysym.sym == SDLK_LEFT ) {
             delta_x_ = 1 * delta_speed_;
         } else if( e.key.keysym.sym == SDLK_RIGHT ) {
@@ -379,8 +380,8 @@ void MapView::handleEvent(Camera* camera) {
         } else if( e.key.keysym.sym == SDLK_DOWN ) {
             delta_y_ = -1 * delta_speed_;
         }
-    }
-    if( e.type == SDL_KEYUP ) {
+        break;
+    case SDL_KEYUP:
         if( e.key.keysym.sym == SDLK_LEFT ) {
             delta_x_ = 0;
         } else if( e.key.keysym.sym == SDLK_RIGHT ) {
@@ -390,9 +391,9 @@ void MapView::handleEvent(Camera* camera) {
         } else if( e.key.keysym.sym == SDLK_DOWN ) {
             delta_y_ = 0;
         }
-    }
+        break;
 
-    if( e.type == SDL_MOUSEBUTTONDOWN ) {
+    case SDL_MOUSEBUTTONDOWN:
         if( e.button.button == SDL_BUTTON_RIGHT ) {
             if( selected_people_ != nullptr ) {
                 PathFinding path(data_);
@@ -412,8 +413,25 @@ void MapView::handleEvent(Camera* camera) {
                     break;
                 }
             }
+            if( e.button.clicks > 1 ) {
+                if( selected_people_ != nullptr ) {
+                    RobotDialog* dialog = new RobotDialog(selected_people_, sdl_camera->mouse_x(),sdl_camera->mouse_y()+10);
+                    camera->addView(dialog);
+                } else { // an object is selected ?
+                    for( auto position_object : data_->objects() ) {
+                        if( tile_x_ == position_object.x && tile_y_ == position_object.y ) {
+                            ObjectDialog* dialog = new ObjectDialog(position_object, sdl_camera->mouse_x(),sdl_camera->mouse_y()+10);
+                            camera->addView(dialog);
+                        }
+                    }
+                }
+            }
         }
+        break;
+    default:
+        return true;
     }
+    return false;
 }
 
 /*!
@@ -460,6 +478,7 @@ SDLText::SDLText(
     rect_.h = 0;
     rect_.x = 0;
     rect_.y = 0;
+    background_color_ = SDLText::white();
 }
 
 SDLText::~SDLText() {
@@ -471,6 +490,14 @@ SDLText::~SDLText() {
 void SDLText::set_position(int x, int y) {
     rect_.x = x;
     rect_.y = y;
+}
+
+void SDLText::setBackgroundColor(const SDL_Color& bgcolor) {
+    background_color_ = bgcolor;
+}
+
+const SDL_Color& SDLText::getBackgroundColor() const {
+    return background_color_;
 }
 
 namespace {
@@ -504,7 +531,7 @@ SDL_Texture* SDLText::texture(SDL_Renderer* renderer) {
             final_rect.h += rect_.h;
         }
         SDL_Surface* final_dst = SDL_CreateRGBSurface(0, final_rect.w, final_rect.h, 32, 0, 0, 0, 0);
-        SDL_FillRect(final_dst, NULL, SDL_MapRGBA(final_dst->format, 255, 255, 255, 255));
+        SDL_FillRect(final_dst, NULL, SDL_MapRGBA(final_dst->format, background_color_.r, background_color_.g, background_color_.b, background_color_.a));
         //SDL_SetSurfaceBlendMode(final_dst, SDL_BLENDMODE_BLEND) ;
         // create SDL_Surface of size: final_rect
         SDL_Rect cur_rect = {0,0,0,0};
@@ -745,8 +772,8 @@ void SDLCamera::render(double delay_in_ms) {
     SDL_RenderPresent(main_renderer_);
 }
 
-void SDLCamera::displayTexture(SDL_Texture* texture, const SDL_Rect* rect) {
-    int check = SDL_RenderCopy(main_renderer_, texture, NULL, rect);
+void SDLCamera::displayTexture(SDL_Texture* texture, const SDL_Rect* rect, const SDL_Rect* dest) {
+    int check = SDL_RenderCopy(main_renderer_, texture, dest, rect);
     if( check != 0 ) {
         Logger::error() << "Check = " << check << "  " << SDL_GetError() << Logger::endl;
     }
@@ -775,7 +802,8 @@ void SDLCamera::displayText(SDLText& text, bool background) {
         rect.w = rect.w + 10;
         rect.y = rect.y - 2;
         rect.h = rect.h + 4;
-        SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
+        const SDL_Color& bgcolor = text.getBackgroundColor();
+        SDL_SetRenderDrawColor( main_renderer_, bgcolor.r, bgcolor.g, bgcolor.b, 255 );
         SDL_RenderFillRect( main_renderer_, &rect );
         SDL_SetRenderDrawColor( main_renderer_, 50, 50, 50, 255 );
         SDL_RenderDrawRect(main_renderer_, &rect);
@@ -800,20 +828,30 @@ void SDLCamera::handleEvent() {
         return;
     }
 
+    bool event_handled = false;
     Dialog* cur_dialog = nullptr;
-    for( auto view : views_ ) {
+    for (std::list<View*>::reverse_iterator it = views_.rbegin(); it != views_.rend(); ++it) {
+       View* view = *it;
         Dialog* dialog = dynamic_cast<Dialog*>(view);
         if( dialog == nullptr ) continue;
         if( dialog->hasFocus(mouse_x_, mouse_y_) ) {
-            dialog->handleEvent(this);
+            event_handled = dialog->handleEvent(this);
             if( dialog->killMe() ) {
                 removeView(dialog);
                 delete dialog;
+                break;
             } else {
                 cur_dialog = dialog;
                 break;
             }
         }
+    }
+
+    if( event_handled ) {
+        // put dialog on top !!
+        removeView(cur_dialog);
+        addView(cur_dialog);
+        return;
     }
 
     switch( event_.type ) {
@@ -839,9 +877,12 @@ void SDLCamera::handleEvent() {
                 rctrl_down_ = true;
             } else if( event_.key.keysym.sym == SDLK_d ) { // DEBUG : create a dialog
                 // debug
-                Dialog* dialog = new Dialog(10 + Utility::randint(0,40)*10,100 + Utility::randint(0,20)*10,160 + Utility::randint(-40,20),180 + Utility::randint(0,40));
-                dialog->setBackgroundColor(211,211,211);
-                addView(dialog);
+                PeopleGroup* g = map_view_->group();
+                if( g->group().size() > 0 ) {
+                    Character* p = g->getNextRobot();
+                    RobotDialog* dialog = new RobotDialog(p, mouse_x_,mouse_y_+10);
+                    addView(dialog);
+                }
                 // end debug
             } else if( event_.key.keysym.sym == SDLK_q ) {
                 if( lctrl_down_ || rctrl_down_ ) {
@@ -851,7 +892,7 @@ void SDLCamera::handleEvent() {
                 // TODO: center view to next robot
                 PeopleGroup* g = map_view_->group();
                 if( g->group().size() > 0 ) {
-                    Character* p = g->group().at(0);
+                    Character* p = g->getNextRobot();
                     map_view_->restoreCenterTile( p->tilePosition() );
                 }
             } else if( event_.key.keysym.sym == SDLK_b ) { // DEBUG ONLY

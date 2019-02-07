@@ -15,7 +15,7 @@ public:
     virtual ~View() {}
 
     virtual void do_render(Camera* camera, double delay_in_ms) = 0;
-    virtual void handleEvent(Camera* camera) = 0;
+    virtual bool handleEvent(Camera* camera) = 0;
 };
 
 /********************************************************************/
