@@ -22,7 +22,7 @@
 		<time>2</time>
 	</finalItem>
 </Breaker>
-<StoneFurnace>
+<Stone_Furnace>
 	<finalItem name="glass" occ=1>
 		<item name="sand" occ=1/>
 		<time>10</time>
@@ -35,7 +35,7 @@
 		<item name="copper ore" occ=1/>
 		<time>35</time>
 	</finalItem>
-</StoneFurnace>
+</Stone_Furnace>
 <Assembleur>
 	<finalItem name="iron gear wheel" occ=1>
 		<item name="iron ingot" occ=2/>

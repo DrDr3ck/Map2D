@@ -4,12 +4,13 @@
 #include "translator.h"
 
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 
 /********************************************************************/
 
-Craft::Craft(const string& name, CraftType type, int time_in_seconds) : name_(name), type_(type), time_in_seconds_(time_in_seconds) {
+Craft::Craft(const string& name, CraftType type) : name_(name), type_(type) {
 }
 
 void Craft::addCountedItem(const string& basic_item, int occurrences) {
@@ -37,6 +38,22 @@ void CraftMgr::kill() {
     }
 }
 
+namespace {
+    std::string getName(const std::string& str) {
+        int begin_index = str.find("name=");
+        int end_index = str.find("\"", begin_index+6);
+        std::string sub = str.substr(begin_index+6, end_index-begin_index-6);
+        return sub;
+    }
+
+    int getOccurrence(const std::string& str, bool endtag=false) {
+        int begin_index = str.find("occ=");
+        int end_index = endtag ? str.find("/>") : str.find(">");
+        std::string sub = str.substr(begin_index+4, end_index-begin_index-4);
+        return atoi(sub.c_str());
+    }
+}
+
 void CraftMgr::loadCrafts(const std::string& filename) { // TODO
     std::ifstream file(filename);
     if (!file) {
@@ -44,18 +61,77 @@ void CraftMgr::loadCrafts(const std::string& filename) { // TODO
         return;
     }
 
+    bool in_machine = false;
+    bool in_object = false;
+    bool in_finalItem = false;
+    std::string machine_name;
+    std::string object_name;
+    std::string item_name;
+    std::string end_machine_tag;
+    std::string end_object_tag = "</object>";
+    std::string end_item_tag = "</finalItem>";
     std::string str;
-    while (std::getline(file, str)) {
-    }
-
-    // debug
-    Craft* stone_furnace = new Craft("StoneFurnace", Craft::CraftType::OBJECT, 5);
-    stone_furnace->addCountedItem("stone",4);
-    stone_furnace->addCountedItem("sand",1);
+    Craft* craft = nullptr;
     vector<Craft*> crafts;
-    crafts.push_back(stone_furnace);
-    crafts_by_machine_.insert( pair<string,vector<Craft*>>("workbench", crafts) );
-    // end debug
+    while (std::getline(file, str)) {
+        if( in_machine ) {
+            str = Utility::trim(str, ' ');
+            str = Utility::trim(str, '\t');
+            if( in_object ) {
+                if( Utility::startsWith(str,end_object_tag) ) {
+                    in_object = false;
+                    crafts.push_back(craft);
+                } else if( Utility::startsWith(str, "<item") ) {
+                    std::string name = getName(str);
+                    int occ = getOccurrence(str, true);
+                    craft->addCountedItem(name,occ);
+                } else if( Utility::startsWith(str, "<time>") ) {
+                    int end_index = str.find("</time>");
+                    std::string time_str = str.substr(6,end_index-6);
+                    int time = atoi(time_str.c_str());
+                    craft->setTime(time);
+                }
+            } else if( in_finalItem ) {
+                if( Utility::startsWith(str,end_item_tag) ) {
+                    in_finalItem = false;
+                    crafts.push_back(craft);
+                } else if( Utility::startsWith(str, "<item") ) {
+                    std::string name = getName(str);
+                    int occ = getOccurrence(str, true);
+                    craft->addCountedItem(name,occ);
+                } else if( Utility::startsWith(str, "<time>") ) {
+                    int end_index = str.find("</time>");
+                    std::string time_str = str.substr(6,end_index-6);
+                    int time = atoi(time_str.c_str());
+                    craft->setTime(time);
+                }
+            } else {
+                if( Utility::startsWith(str, "<object") ) {
+                    object_name = getName(str);
+                    in_object = true;
+                    craft = new Craft(object_name, Craft::CraftType::OBJECT);
+                } else if( Utility::startsWith(str, "<finalItem") ) {
+                    std::string name = getName(str);
+                    int occ = getOccurrence(str);
+                    craft->setOccurrence(occ);
+                    in_finalItem = true;
+                    craft = new Craft(name, Craft::CraftType::ITEM);
+                } else if( Utility::startsWith(str,end_machine_tag) ) {
+                    in_machine = false;
+                    std::transform(machine_name.begin(), machine_name.end(), machine_name.begin(), ::tolower);
+                    crafts_by_machine_.insert( pair<string,vector<Craft*>>(machine_name, crafts) );
+                    crafts.clear();
+                }
+            }
+        } else {
+            str = Utility::trim(str, ' ');
+            if( str[0] == '<' && str[str.size()-1] == '>' ) {
+                machine_name = str.substr(1,str.size()-2);
+                in_machine = true;
+                end_machine_tag = "</" + machine_name + ">";
+            }
+        }
+    }
 
     file.close();
 }

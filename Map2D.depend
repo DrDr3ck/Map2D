@@ -381,7 +381,7 @@
 	<list>
 	<string>
 
-1549597208 source:d:\games\programs\map2d\tests.cpp
+1549657652 source:d:\games\programs\map2d\tests.cpp
 	"tests.h"
 	"archive.h"
 	"font.h"
@@ -660,14 +660,15 @@
 	<ctime>
 	<chrono>
 
-1549597199 source:d:\games\programs\map2d\craft_mgr.cpp
+1549658206 source:d:\games\programs\map2d\craft_mgr.cpp
 	"craft_mgr.h"
 	"logger.h"
 	"utility.h"
 	"translator.h"
 	<fstream>
+	<algorithm>
 
-1549597396 d:\games\programs\map2d\craft_mgr.h
+1549658408 d:\games\programs\map2d\craft_mgr.h
 	<map>
 	<vector>
 	<string>
@@ -694,7 +695,7 @@
 	<algorithm>
 	"sdl_camera.h"
 
-1549597048 source:d:\games\programs\map2d\dialog.cpp
+1549657692 source:d:\games\programs\map2d\dialog.cpp
 	"dialog.h"
 	"sdl_camera.h"
 	"craft_mgr.h"

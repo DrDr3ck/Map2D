@@ -389,7 +389,7 @@ bool TranslatorTest::do_execute() {
 bool CraftMgrTest::do_execute() {
     CraftMgr::instance()->loadCrafts("craft.xml");
     std::vector<Craft*> crafts = CraftMgr::instance()->craftsForMachine("workbench");
-    CHECK_EQUAL( crafts.size(), 1, return false;);
+    CHECK_EQUAL( crafts.size(), 3, return false;);
     return true;
 }
 

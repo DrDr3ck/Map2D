@@ -13,7 +13,7 @@ class Craft {
 public:
     enum class CraftType {ITEM, OBJECT};
 public:
-    Craft(const std::string& name, CraftType type, int time_in_seconds);
+    Craft(const std::string& name, CraftType type);
     ~Craft() = default;
 
     const std::string& name() const { return name_; }
@@ -21,11 +21,15 @@ public:
     const std::vector<CountedItem>& getItems() const { return items_; }
     CraftType type() const { return type_; }
     int time() const { return time_in_seconds_; }
+    void setTime(int time_in_seconds) { time_in_seconds_ = time_in_seconds; }
+    int occurrence() const { return occurrence_; }
+    void setOccurrence(int occurrence) { occurrence_ = occurrence; }
 
 private:
     std::string name_;
     CraftType type_;
-    int time_in_seconds_;
+    int time_in_seconds_ = 0;
+    int occurrence_ = 0;
     std::vector<CountedItem> items_;
 };
 

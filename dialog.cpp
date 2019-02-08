@@ -190,7 +190,7 @@ void RobotDialog::do_render(Camera* camera, double delay_in_ms) {
 
 /**************************************/
 
-ObjectDialog::ObjectDialog(PositionObject pobject, int mouse_x, int mouse_y) : Dialog(mouse_x, mouse_y, 300, 300) {
+ObjectDialog::ObjectDialog(PositionObject pobject, int mouse_x, int mouse_y) : Dialog(mouse_x, mouse_y, 300, 400) {
     pobject_ = pobject;
     SDL_Color bgcolor = {211,211,255,255};
     setBackgroundColor(bgcolor);

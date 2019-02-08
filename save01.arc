@@ -426,13 +426,13 @@
 <group>
   <people name="Bob">
     <position x="1" y="3" />
-    <direction x="0" y="0" />
+    <direction x="1" y="1" />
     <activity value="0" />
     <image_id value="0" />
   </people>
   <people name="Bill">
     <position x="7" y="1" />
-    <direction x="1" y="0" />
+    <direction x="0" y="1" />
     <activity value="0" />
     <image_id value="12" />
   </people>
