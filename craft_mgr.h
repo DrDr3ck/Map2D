@@ -20,6 +20,7 @@ public:
     void addCountedItem(const std::string& basic_item, int occurrences);
     const std::vector<CountedItem>& getItems() const { return items_; }
     CraftType type() const { return type_; }
+    int time() const { return time_in_seconds_; }
 
 private:
     std::string name_;
@@ -38,6 +39,8 @@ public:
     static void kill();
 
     void loadCrafts(const std::string& filename);
+
+    std::vector<Craft*> craftsForMachine(const std::string& machine);
 
 private:
     static CraftMgr* singleton_;

@@ -1,6 +1,7 @@
 <WorkBench>
 	<object name="StoneFurnace">
-		<item name="stone" occ=5/>
+		<item name="stone" occ=4/>
+        <item name="sand" occ=1/>
 		<time>5</time>
 	</object>
     <object name="Breaker">

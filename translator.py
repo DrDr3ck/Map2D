@@ -34,6 +34,10 @@ class Translator:
                         matches = re.findall(pattern, line)
                         if len(matches) == 1:
                             lines.append(matches[0])
+        for filename in os.listdir(directory+"\items"):
+            if filename.endswith("_item.png"):
+                size = len(filename)-9
+                lines.append(filename[:size])
         return lines                   
 
 if __name__ == "__main__":

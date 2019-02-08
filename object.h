@@ -35,12 +35,15 @@ public:
         return tr(user_name_);
     }
 
+    bool hasCrafts() const { return is_crafter_; }
+
     virtual int getNodeCount() const;
     virtual const std::string getNodeName(int node_index) const;
     virtual int getAttributeCount(int node_index) const;
     virtual const std::string getAttributeName(int node_index,int attr_index) const;
     virtual const std::string getAttributeValue(int node_index,int attr_index) const;
     virtual const std::string getNodeValue(int node_index) const;
+    virtual const std::string getNodeString(int node_index) const;
 
     virtual void setNode(const std::string& node_name, std::vector<std::pair<std::string, std::string>> attributes, const std::string& value);
 
@@ -51,6 +54,7 @@ protected:
     int height_;
     std::string user_name_;
     std::string name_;
+    bool is_crafter_ = true;
 };
 
 #define Attr std::pair<std::string,std::string>
@@ -83,6 +87,7 @@ public:
     virtual const std::string getAttributeName(int node_index,int attr_index) const override;
     virtual const std::string getAttributeValue(int node_index,int attr_index) const override;
     virtual const std::string getNodeValue(int node_index) const override;
+    virtual const std::string getNodeString(int node_index) const;
 
     virtual void setNode(const std::string& node_name, std::vector<Attr> attributes, const std::string& value) override;
 

@@ -25,9 +25,12 @@ public:
 
     bool killMe() const { return kill_me_; }
 
-    SDL_Rect getTitleRect() const;
+    virtual Position tilePosition() const = 0;
+
+    SDL_Rect getTitleRect(int extension=0) const;
     SDL_Rect getKillRect() const;
-    SDL_Rect getMinimizeRect() const;
+    SDL_Rect getMinimizeRect(int extension=0) const;
+    SDL_Rect getCenterRect() const;
 
 protected:
     int x_;
@@ -50,6 +53,10 @@ public:
     RobotDialog(Character* robot, int mouse_x = 50, int mouse_y = 50);
     virtual ~RobotDialog();
 
+    Character* robot() const { return robot_; }
+
+    virtual Position tilePosition() const override;
+
     virtual void do_render(Camera* camera, double delay_in_ms) override;
 private:
     Character* robot_;
@@ -61,6 +68,10 @@ class ObjectDialog : public Dialog {
 public:
     ObjectDialog(PositionObject pobject, int mouse_x = 50, int mouse_y = 50);
     virtual ~ObjectDialog();
+
+    Object* object() const { return pobject_.object; }
+
+    virtual Position tilePosition() const override;
 
     virtual void do_render(Camera* camera, double delay_in_ms) override;
 private:

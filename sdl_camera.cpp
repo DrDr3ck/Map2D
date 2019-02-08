@@ -415,12 +415,22 @@ bool MapView::handleEvent(Camera* camera) {
             }
             if( e.button.clicks > 1 ) {
                 if( selected_people_ != nullptr ) {
-                    RobotDialog* dialog = new RobotDialog(selected_people_, sdl_camera->mouse_x(),sdl_camera->mouse_y()+10);
+                    RobotDialog* dialog = camera->findRobotDialog(selected_people_);
+                    if( dialog == nullptr ) {
+                        dialog = new RobotDialog(selected_people_, sdl_camera->mouse_x(),sdl_camera->mouse_y()+10);
+                    } else {
+                        camera->removeView(dialog);
+                    }
                     camera->addView(dialog);
                 } else { // an object is selected ?
                     for( auto position_object : data_->objects() ) {
                         if( tile_x_ == position_object.x && tile_y_ == position_object.y ) {
-                            ObjectDialog* dialog = new ObjectDialog(position_object, sdl_camera->mouse_x(),sdl_camera->mouse_y()+10);
+                            ObjectDialog* dialog = camera->findObjectDialog(position_object.object);
+                            if( dialog == nullptr ) {
+                                dialog = new ObjectDialog(position_object, sdl_camera->mouse_x(),sdl_camera->mouse_y()+10);
+                            } else {
+                                camera->removeView(dialog);
+                            }
                             camera->addView(dialog);
                         }
                     }
@@ -851,6 +861,7 @@ void SDLCamera::handleEvent() {
         // put dialog on top !!
         removeView(cur_dialog);
         addView(cur_dialog);
+        onMouseMove(-1,-1);
         return;
     }
 
@@ -889,7 +900,7 @@ void SDLCamera::handleEvent() {
                     quit_ = true;
                 }
             } else if( event_.key.keysym.sym == SDLK_c ) {
-                // TODO: center view to next robot
+                // center view to next robot
                 PeopleGroup* g = map_view_->group();
                 if( g->group().size() > 0 ) {
                     Character* p = g->getNextRobot();

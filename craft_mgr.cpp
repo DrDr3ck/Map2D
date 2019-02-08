@@ -50,10 +50,22 @@ void CraftMgr::loadCrafts(const std::string& filename) { // TODO
 
     // debug
     Craft* stone_furnace = new Craft("StoneFurnace", Craft::CraftType::OBJECT, 5);
+    stone_furnace->addCountedItem("stone",4);
+    stone_furnace->addCountedItem("sand",1);
     vector<Craft*> crafts;
     crafts.push_back(stone_furnace);
-    crafts_by_machine_.insert( pair<string,vector<Craft*>>("WorkBench", crafts) );
+    crafts_by_machine_.insert( pair<string,vector<Craft*>>("workbench", crafts) );
     // end debug
 
     file.close();
+}
+
+vector<Craft*> CraftMgr::craftsForMachine(const std::string& machine) {
+    auto crafts_iterator = crafts_by_machine_.find(machine);
+    if( crafts_iterator == crafts_by_machine_.end() ) {
+        vector<Craft*> empty;
+        return empty;
+    }
+    auto result = *crafts_iterator;
+    return result.second;
 }

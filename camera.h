@@ -6,6 +6,10 @@
 #include <vector>
 
 class Camera;
+class RobotDialog;
+class ObjectDialog;
+class Character;
+class Object;
 
 /********************************************************************/
 
@@ -29,6 +33,9 @@ public:
 
     void addView(View* view);
     void removeView(View* view);
+
+    RobotDialog* findRobotDialog(Character* robot) const;
+    ObjectDialog* findObjectDialog(Object* object) const;
 
     virtual void render(double delay_in_ms);
     virtual void handleEvent();

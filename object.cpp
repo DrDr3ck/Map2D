@@ -66,6 +66,11 @@ const std::string Object::getNodeValue(int node_index) const {
     return "";
 }
 
+const std::string Object::getNodeString(int node_index) const {
+    std::ignore = node_index;
+    return "";
+}
+
 void Object::setNode(const std::string& node_name, std::vector<std::pair<std::string, std::string>> attributes, const std::string& value) {
     std::ignore = node_name;
     std::ignore = attributes;
@@ -75,6 +80,7 @@ void Object::setNode(const std::string& node_name, std::vector<std::pair<std::st
 /********************************************************************/
 
 Chest::Chest(int size) : Object("objects/chest.png", tr("Chest"), "chest"), max_size_(size) {
+    is_crafter_ = false;
 }
 
 void Chest::setNode(const std::string& node_name, std::vector<Attr> attributes, const std::string& value) {
@@ -111,6 +117,12 @@ const std::string Chest::getAttributeValue(int node_index,int /*attr_index*/) co
 
 const std::string Chest::getNodeValue(int node_index) const {
     return items_[node_index].item().name();
+}
+
+const std::string Chest::getNodeString(int node_index) const {
+    std::string result = items_[node_index].item().name();
+    result = tr(result) + " x " + getAttributeValue(node_index,0);
+    return result;
 }
 
 void Chest::render(SDLCamera* sdl_camera, const SDL_Rect& rect) {
@@ -208,8 +220,9 @@ const std::string Chest::tooltip() const {
         std::string s = tr(item.item().name());
         std::replace(s.begin(), s.end(), '_', ' ');
         text.append(s);
-        text.append("x");
+        text.append("(");
         text.append( Utility::itos(item.count()) );
+        text.append(")");
     }
     return text;
 }

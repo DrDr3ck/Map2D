@@ -1,5 +1,6 @@
 #include "camera.h"
 #include "session.h"
+#include "dialog.h"
 
 #include <iostream>
 
@@ -15,6 +16,26 @@ Camera::Camera(int width, int height) : width_(width), height_(height) {
     scales_ = { 0.5, 0.6, 0.8, 1., 1.2, 1.5, 1.9, 2.4, 2.8 };
     scale_idx_ = 3; // so that scales_[scale_idx_] = 1
     cur_camera = this;
+}
+
+RobotDialog* Camera::findRobotDialog(Character* robot) const {
+    for( auto view : views_ ) {
+        RobotDialog* dialog = dynamic_cast<RobotDialog*>(view);
+        if( dialog != nullptr && dialog->robot() == robot ) {
+            return dialog;
+        }
+    }
+    return nullptr;
+}
+
+ObjectDialog* Camera::findObjectDialog(Object* object) const {
+    for( auto view : views_ ) {
+        ObjectDialog* dialog = dynamic_cast<ObjectDialog*>(view);
+        if( dialog != nullptr && dialog->object() == object ) {
+            return dialog;
+        }
+    }
+    return nullptr;
 }
 
 void Camera::addView(View* view) {
