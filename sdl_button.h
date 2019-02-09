@@ -34,6 +34,7 @@ public:
 
     SDL_Texture* getTexture(SDL_Renderer* renderer);
     const SDL_Rect& rect() const { return rect_; }
+    void setTexture(SDL_Texture* texture);
 
 protected:
     SDL_Surface* surface_;
@@ -64,6 +65,18 @@ public:
     virtual void activate();
 private:
     SDLCamera* camera_;
+};
+
+/********************************************************************/
+
+class SDLTextButton : public SDLButton {
+public:
+    SDLTextButton(SDLCamera* camera, const std::string& text, int x, int y);
+    virtual ~SDLTextButton() {}
+
+private:
+    SDLCamera* camera_;
+    std::string text_;
 };
 
 /********************************************************************/

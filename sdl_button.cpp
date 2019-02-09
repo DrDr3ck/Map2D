@@ -99,6 +99,19 @@ SDL_Texture* SDLButton::getTexture(SDL_Renderer* renderer) {
     return texture_;
 }
 
+void SDLButton::setTexture(SDL_Texture* texture) {
+    if( texture == nullptr ) return;
+    if( texture_ != nullptr ) {
+        SDL_DestroyTexture(texture_);
+    }
+    texture_ = texture;
+    int w, h;
+    SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+    setSize(w,h);
+    rect_.w = w;
+    rect_.h = h;
+}
+
 void SDLButton::activate() {
     Button::activate();
 }
@@ -131,6 +144,21 @@ void SDLButtonMenu::deactivate() {
 
 void SDLQuitButton::activate() {
     camera_->set_quit();
+}
+
+/********************************************************************/
+
+SDLTextButton::SDLTextButton(
+    SDLCamera* camera, const std::string& text, int x, int y
+) : SDLButton("buttons/quit.png", x,y), camera_(camera), text_(text) {
+    // build texture with text
+    SDLText* stext = new SDLText(text);
+    stext->set_position(x,y);
+    SDL_Texture* texture = stext->texture(camera->main_renderer()) ;
+    setTexture(texture);
+    stext->releaseTexture();
+    delete stext;
+    // TODO: get texture from stext and destroy stext
 }
 
 /********************************************************************/
