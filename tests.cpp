@@ -263,7 +263,9 @@ namespace {
 }
 
 bool PerlinTest::do_execute() {
-    //return true;
+    if( true ) {
+        return true;
+    }
     TerrainType terrain[6];
     terrain[0].label = "Sea";
     terrain[0].red = 30;
