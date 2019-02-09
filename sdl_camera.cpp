@@ -92,6 +92,8 @@ void MapView::extractItemJob(int x, int y, int nb) {
     Job* job = nullptr;
     if( cur_tile.background_type() == Tile::ROCK ) {
         job = new ExtractJob(tile_position, "buttons/extract_tool", 5000, nb);
+    } else if( cur_tile.background_type() == Tile::COAL ) {
+        job = new ExtractJob(tile_position, "buttons/extract_tool", 5000, nb);
     } else if( cur_tile.background_type() == Tile::SAND ) {
         job = new ExtractJob(tile_position, "buttons/pelle_tool", 5000, nb);
     }
@@ -238,7 +240,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     float scale = camera->scale();
     SDL_Renderer* main_renderer = sdl_camera->main_renderer();
     if( window_background_ == nullptr ) {
-        SDL_Surface* bg_surface = Utility::IMGLoad("images/background.bmp");
+        SDL_Surface* bg_surface = Utility::IMGLoad("images/background.png");
         window_background_ = SDL_CreateTextureFromSurface(main_renderer, bg_surface);
         SDL_FreeSurface(bg_surface);
     }
@@ -331,7 +333,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
                 // add counted item if any
                 if( !cur.counted_item().isNull() ) {
                     tile_text.append("\n");
-                    tile_text.append(cur.counted_item().item().name());
+                    tile_text.append(tr(cur.counted_item().item().name()));
                     tile_text.append(": ");
                     tile_text.append(Utility::itos(cur.counted_item().count()));
                 }
@@ -523,6 +525,10 @@ namespace {
     }
 }
 
+void SDLText::releaseTexture() {
+    texture_ = nullptr; // enable to not destroy the texture when deleting the SDLText
+}
+
 SDL_Texture* SDLText::texture(SDL_Renderer* renderer) {
     SDL_Rect final_rect = {0,0,0,0};
     if( texture_ == nullptr ) {
@@ -572,7 +578,7 @@ SDL_Texture* SDLText::texture(SDL_Renderer* renderer) {
 SDLCamera::SDLCamera(
     int width, int height
 ) : Camera(width, height), window_(nullptr), main_renderer_(nullptr), tool_(nullptr), map_view_(nullptr) {
-    window_ = SDL_CreateWindow("Tile Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+    window_ = SDL_CreateWindow("Bakhar - Demo 0.1 alpha", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
     main_renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     TTF_Init();
     manager_ = new SDLButtonManager();
@@ -886,15 +892,6 @@ void SDLCamera::handleEvent() {
                 lctrl_down_ = true;
             } else if( event_.key.keysym.sym == SDLK_LCTRL ) {
                 rctrl_down_ = true;
-            } else if( event_.key.keysym.sym == SDLK_d ) { // DEBUG : create a dialog
-                // debug
-                PeopleGroup* g = map_view_->group();
-                if( g->group().size() > 0 ) {
-                    Character* p = g->getNextRobot();
-                    RobotDialog* dialog = new RobotDialog(p, mouse_x_,mouse_y_+10);
-                    addView(dialog);
-                }
-                // end debug
             } else if( event_.key.keysym.sym == SDLK_q ) {
                 if( lctrl_down_ || rctrl_down_ ) {
                     quit_ = true;

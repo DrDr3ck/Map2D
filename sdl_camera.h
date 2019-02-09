@@ -89,6 +89,7 @@ public:
     ~SDLText();
 
     SDL_Texture* texture(SDL_Renderer* renderer);
+    void releaseTexture();
     const SDL_Rect& rect() const { return rect_; }
     void set_position(int x, int y);
 
