@@ -12,7 +12,7 @@ os.makedirs(dest_dir)
 src_dir = "./"
 listOfFiles = os.listdir(src_dir)
 for f in listOfFiles:
-    if f.endswith("png") or f.endswith("TTF") or f.endswith("bmp") or f.endswith("opt"):
+    if f.endswith("png") or f.endswith("TTF") or f.endswith("bmp") or f.endswith("opt") or f.endswith("xml"):
         f = src_dir+f
         print "Copying", f, "..."
         shutil.copy(f, dest_dir)
