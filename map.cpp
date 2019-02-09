@@ -132,6 +132,7 @@ std::string Tile::btypeTileToString(Tile::BType type) {
     if( type == Tile::SAND ) return tr("Sand");
     if( type == Tile::DIRT ) return tr("Dirt");
     if( type == Tile::GRASS ) return tr("Grass");
+    if( type == Tile::COAL ) return tr("Coal");
     if( type == Tile::ROCK ) return tr("Rock");
     Logger::error() << "unable to find string for background type: " << type << Logger::endl;
     return "NONE";
@@ -299,6 +300,15 @@ void MapData::extractItemFromTile(int x,int y) {
             cur.setOccurrences( cur.occurrences()-1 );
             // create an item stone and put it on the 'cur' Tile
             cur.addItem(BasicItem("sand"), 1);
+
+            // TODO should we change sand into dirt if occurrences == 0 ?
+        }
+    } else if( cur.background_type() == Tile::COAL ) {
+        // extraction of a sand
+        if( cur.occurrences() > 0 ) {
+            cur.setOccurrences( cur.occurrences()-1 );
+            // create an item stone and put it on the 'cur' Tile
+            cur.addItem(BasicItem("coal"), 1);
 
             // TODO should we change sand into dirt if occurrences == 0 ?
         }

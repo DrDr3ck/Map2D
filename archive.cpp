@@ -266,6 +266,7 @@ std::string MapDataConverter::btypeTileToString(Tile::BType type) const {
     if( type == Tile::SAND ) return "SAND";
     if( type == Tile::DIRT ) return "DIRT";
     if( type == Tile::GRASS ) return "GRASS";
+    if( type == Tile::COAL ) return "COAL";
     if( type == Tile::ROCK ) return "ROCK";
     Logger::error() << "unable to find string for background type: " << type << Logger::endl;
     return "NONE";
@@ -293,6 +294,7 @@ Tile::BType MapDataConverter::stringTileToBType(const std::string& str) const {
     if( str == "WATER" ) return Tile::WATER;
     if( str == "SAND" ) return Tile::SAND;
     if( str == "DIRT" ) return Tile::DIRT;
+    if( str == "COAL" ) return Tile::COAL;
     if( str == "GRASS" ) return Tile::GRASS;
     if( str == "ROCK" ) return Tile::ROCK;
     Logger::error() << "unable to find background type for string: " << str << Logger::endl;
