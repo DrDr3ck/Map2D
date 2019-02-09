@@ -1,7 +1,8 @@
 # edit at your own risk !!
-# date Fri Feb 08 21:40:42 2019
+# date Sat Feb 09 11:45:09 2019
 
 *camera*height: 960 # no description
 *camera*width: 1200 # no description
 *display_F3: true # no description
-*pause_when_launched: true # if true, automatically pause the game when lauchned
+*language: fr # no description
+*pause_when_launched: true # if true, automatically pause the game when launched

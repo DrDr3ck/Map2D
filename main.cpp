@@ -20,6 +20,8 @@
 #include "tests.h"
 
 int main(int argc, char** argv) {
+    std::ignore = argc;
+    std::ignore = argv;
     // Check tests first
     TestManager* test_manager = TestManager::instance();
     if( !test_manager->execute() ) {
@@ -38,13 +40,9 @@ int main(int argc, char** argv) {
         return -1;
     }
 
-    std::string language = "none";
-    if( argc == 3 ) {
-        if( std::string(argv[1]) == "-language" ) {
-            language = "language/";
-            language.append(argv[2]);
-            language.append(".txt");
-        }
+    std::string language = Session::instance()->getString("*language", "none");
+    if( language != "none" ) {
+        language = "language/" + language + ".txt";
     }
 
     Translator::instance()->readDictionary(language);
@@ -112,7 +110,7 @@ int main(int argc, char** argv) {
     const int FPS = 30;
     double delay_in_us = 1000000 / FPS;
 
-    double second = 0;
+    double microsecond = 0;
     int fps = 0;
     while(!ending) {
 
@@ -129,14 +127,14 @@ int main(int argc, char** argv) {
                 board.animate(delay_clock_us/1000.);
             }
             start_clock = end_clock;
-            second += delay_clock_us;
+            microsecond += delay_clock_us;
             fps++;
 
         }
 
-        if( second > 1000000 ) {
-            //Logger::debug() << "FPS: " << fps << Logger::endl;
-            second = 0;
+        if( microsecond > 1000000 ) {
+            Logger::debug() << "FPS: " << fps << Logger::endl;
+            microsecond = 0;
             fps = 0;
         }
 
