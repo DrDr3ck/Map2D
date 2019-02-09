@@ -69,5 +69,8 @@ const std::string& Translator::translate(const std::string& str) {
     if( it == dictionary_.end() ) {
         return str;
     }
+    if( it->second == "" ) {
+        return str;
+    }
     return it->second;
 }
