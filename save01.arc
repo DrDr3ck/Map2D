@@ -184,7 +184,7 @@
     <ftype value="METAL" />
   </tile>
   <tile x="6" y="2">
-    <id value="8" />
+    <id value="10" />
     <type value="WALL" />
     <occurrence value="0" />
     <btype value="GRASS" />
@@ -193,9 +193,10 @@
   <tile x="7" y="2">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="0" />
-    <btype value="GRASS" />
+    <occurrence value="99" />
+    <btype value="COAL" />
     <ftype value="METAL" />
+    <counteditem name="coal" value="1" />
   </tile>
   <tile x="8" y="2">
     <id value="0" />
@@ -254,8 +255,8 @@
     <ftype value="METAL" />
   </tile>
   <tile x="6" y="3">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="10" />
+    <type value="WALL" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
@@ -324,8 +325,8 @@
     <ftype value="METAL" />
   </tile>
   <tile x="6" y="4">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="8" />
+    <type value="WALL" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
@@ -369,9 +370,10 @@
   <tile x="2" y="5">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="38" />
+    <occurrence value="37" />
     <btype value="ROCK" />
     <ftype value="METAL" />
+    <counteditem name="stone" value="1" />
   </tile>
   <tile x="3" y="5">
     <id value="0" />
@@ -425,14 +427,14 @@
 </mapdata>
 <group>
   <people name="Bob">
-    <position x="1" y="3" />
-    <direction x="1" y="1" />
+    <position x="8" y="3" />
+    <direction x="1" y="0" />
     <activity value="0" />
     <image_id value="0" />
   </people>
   <people name="Bill">
-    <position x="7" y="1" />
-    <direction x="0" y="1" />
+    <position x="2" y="5" />
+    <direction x="-1" y="0" />
     <activity value="0" />
     <image_id value="12" />
   </people>
