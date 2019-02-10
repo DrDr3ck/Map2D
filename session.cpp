@@ -87,6 +87,8 @@ bool Session::getBoolean(const string& label, bool default_value) {
         const string& value = it->second.first;
         if( value == "true" ) {
             return true;
+        } else {
+            return false;
         }
     }
     ValueDesc vd = std::pair<string, string>(default_value?"true":"false", "");
