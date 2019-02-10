@@ -432,9 +432,6 @@ SmelterDialog::SmelterDialog(PositionObject pobject, int mouse_x, int mouse_y) :
 }
 
 SmelterDialog::~SmelterDialog() {
-    delete craft_button_;
-    delete one_button_;
-    delete ten_button_;
 }
 
 void SmelterDialog::execute() {

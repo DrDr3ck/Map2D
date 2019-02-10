@@ -9,6 +9,7 @@
 #include "items.h"
 
 class SDL_Texture;
+class Craft;
 
 /********************************************************************/
 
@@ -35,7 +36,16 @@ public:
         return tr(user_name_);
     }
 
+    bool inPause() const { return in_pause_; }
+    void togglePause(bool value) { in_pause_ = value; }
+
+    bool hasIngredients() const;
+    void checkIngredients();
+
+    virtual void animate(double delta_ms);
+
     bool hasCrafts() const { return is_crafter_; }
+    void addCraft(Craft* craft, int occ=1);
 
     virtual int getNodeCount() const;
     virtual const std::string getNodeName(int node_index) const;
@@ -55,6 +65,11 @@ protected:
     std::string user_name_;
     std::string name_;
     bool is_crafter_ = true;
+    std::vector< std::pair<Craft*, int> > crafts_;
+    Craft* cur_craft_ = nullptr;
+    bool has_ingredients_ = false;
+    int craft_time_ms_ = 0;
+    bool in_pause_ = false;
 };
 
 #define Attr std::pair<std::string,std::string>
@@ -102,13 +117,27 @@ public:
     virtual ~WorkBench() {}
 };
 
-class StoneFurnace : public Object {
+class Furnace : public Object {
+public:
+    Furnace(const std::string& icon_name, const std::string& user_name, const std::string& name);
+    virtual ~Furnace() {}
+
+    virtual void animate(double delta_ms) override;
+
+    bool needFuel();
+    void getFuel();
+private:
+    CountedItem fuel_;
+    int fuel_time_ms_ = 0;
+};
+
+class StoneFurnace : public Furnace {
 public:
     StoneFurnace();
     virtual ~StoneFurnace() {}
 };
 
-class ElectricFurnace : public Object {
+class ElectricFurnace : public Furnace {
 public:
     ElectricFurnace();
     virtual ~ElectricFurnace() {}

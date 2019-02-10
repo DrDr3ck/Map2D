@@ -604,13 +604,14 @@
 	<sstream>
 	<vector>
 
-1549704431 source:d:\games\programs\map2d\translator.cpp
+1549827610 source:d:\games\programs\map2d\translator.cpp
 	"translator.h"
 	"logger.h"
 	<iostream>
 	<fstream>
+	<algorithm>
 
-1548919193 d:\games\programs\map2d\translator.h
+1549827457 d:\games\programs\map2d\translator.h
 	<string>
 	<map>
 
@@ -679,21 +680,21 @@
 	"items.h"
 	"texture_mgr.h"
 
-1549596958 d:\games\programs\map2d\object.h
+1549832372 d:\games\programs\map2d\object.h
 	<vector>
 	<string>
 	"utility.h"
 	"translator.h"
 	"items.h"
 
-1549791142 source:d:\games\programs\map2d\object.cpp
+1549830935 source:d:\games\programs\map2d\object.cpp
 	"object.h"
 	"translator.h"
 	<iostream>
 	<algorithm>
 	"sdl_camera.h"
 
-1549793523 source:d:\games\programs\map2d\dialog.cpp
+1549831197 source:d:\games\programs\map2d\dialog.cpp
 	"dialog.h"
 	"sdl_camera.h"
 	"sdl_button.h"

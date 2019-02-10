@@ -4,6 +4,7 @@
 #include <iostream>
 #include <algorithm>
 #include "sdl_camera.h"
+#include "craft_mgr.h"
 
 /********************************************************************/
 
@@ -75,6 +76,46 @@ void Object::setNode(const std::string& node_name, std::vector<std::pair<std::st
     std::ignore = node_name;
     std::ignore = attributes;
     std::ignore = value;
+}
+
+void Object::addCraft(Craft* craft, int occ) { // TODO
+    std::ignore = craft;
+    std::ignore = occ;
+}
+
+void Object::animate(double delta_ms) { // TODO
+    if( inPause() ) return;
+    if( crafts_.size() == 0 ) return;
+
+    if( cur_craft_ == nullptr ) {
+        has_ingredients_ = false;
+        cur_craft_ = crafts_.at(0).first;
+    }
+
+    if( !hasIngredients() ) {
+        checkIngredients();
+    }
+    if( hasIngredients() ) {
+        if( craft_time_ms_ < delta_ms ) {
+            // TODO: object crafted: store it somewhere
+            craft_time_ms_ = 0;
+        }
+    }
+}
+
+bool Object::hasIngredients() const {
+    return has_ingredients_;
+}
+
+void Object::checkIngredients() { // TODO
+    if( cur_craft_ == nullptr ) return;
+    // get list of ingredients and check that ingredients are available in a chest
+    const std::vector<CountedItem>& items = cur_craft_->getItems();
+    // if ingredients are all present, start craft
+    // remove all ingredients from various chests
+    // has_ingredients_ = true;
+    // craft_time_ms_ = cur_craft_->time()*1000;
+    // otherwise: ask robot to find needed ingredients
 }
 
 /********************************************************************/
@@ -229,7 +270,31 @@ const std::string Chest::tooltip() const {
 
 /********************************************************************/
 
-StoneFurnace::StoneFurnace() : Object("objects/stone_furnace.png", tr("StoneFurnace"), "stone_furnace") {
+Furnace::Furnace(
+     const std::string& icon_name,
+     const std::string& user_name,
+     const std::string& name
+) : Object(icon_name, user_name, name) {
+}
+
+void Furnace::animate(double delta_ms) { // TODO
+    if( inPause() ) return;
+    if( crafts_.size() == 0 ) return;
+
+    if( needFuel() ) {
+        getFuel();
+    }
+    Object::animate(delta_ms);
+}
+
+bool Furnace::needFuel() {
+    return true;
+}
+
+void Furnace::getFuel() {
+}
+
+StoneFurnace::StoneFurnace() : Furnace("objects/stone_furnace.png", tr("StoneFurnace"), "stone_furnace") {
 }
 
 Breaker::Breaker() : Object("objects/breaker.png", tr("Breaker"), "breaker") {
@@ -238,7 +303,7 @@ Breaker::Breaker() : Object("objects/breaker.png", tr("Breaker"), "breaker") {
 WorkBench::WorkBench() : Object("objects/workbench.png", tr("WorkBench"), "workbench") {
 }
 
-ElectricFurnace::ElectricFurnace() : Object("objects/electric_furnace.png", tr("ElectricFurnace"), "electric_furnace") {
+ElectricFurnace::ElectricFurnace() : Furnace("objects/electric_furnace.png", tr("ElectricFurnace"), "electric_furnace") {
 }
 
 /********************************************************************/
