@@ -75,7 +75,6 @@ public:
     virtual Position tilePosition() const override;
 
     virtual void do_render(Camera* camera, double delay_in_ms) override;
-    virtual bool handleEvent(Camera* camera) override;
 
     static ObjectDialog* createDialog(PositionObject object, int x, int y);
 
@@ -87,9 +86,23 @@ protected:
 
 private:
     PositionObject pobject_;
-    SDLTextButton* one_button_;
-    SDLTextButton* ten_button_;
-    SDLTextButton* craft_button_;
+};
+
+class SmelterDialog : public ObjectDialog {
+public:
+    SmelterDialog(PositionObject pobject, int mouse_x = 50, int mouse_y = 50);
+    virtual ~SmelterDialog();
+
+    virtual void do_render(Camera* camera, double delay_in_ms) override;
+    virtual bool handleEvent(Camera* camera) override;
+
+protected:
+    virtual void execute() override;
+
+private:
+    SDLTextButton* one_button_ = nullptr;
+    SDLTextButton* ten_button_ = nullptr;
+    SDLTextButton* craft_button_ = nullptr;
 };
 
 /********************************************************************/

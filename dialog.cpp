@@ -195,16 +195,9 @@ ObjectDialog::ObjectDialog(PositionObject pobject, int mouse_x, int mouse_y) : D
     pobject_ = pobject;
     SDL_Color bgcolor = {211,211,255,255};
     setBackgroundColor(bgcolor);
-
-    craft_button_ = nullptr;
-    one_button_ = nullptr;
-    ten_button_ = nullptr;
 }
 
 ObjectDialog::~ObjectDialog() {
-    delete one_button_;
-    delete ten_button_;
-    delete craft_button_;
 }
 
 Position ObjectDialog::tilePosition() const {
@@ -257,9 +250,47 @@ void ObjectDialog::do_render(Camera* camera, double delay_in_ms) {
     text.set_position(9+x_,25+y_);
     text.setBackgroundColor(getBackgroundColor());
     sdl_camera->displayText(text, false);
+}
+
+bool ObjectDialog::buttonClicked(SDLButton* button, Position mouse_position) {
+    if( button == nullptr ) return false;
+    const SDL_Rect& button_rect = button->rect();
+    return Utility::contains(button_rect, mouse_position.x, mouse_position.y);
+}
+
+// create dedicated ObjectDialog if needed
+// (i.e. SmelterDialog, CrafterDialog, ...)
+ObjectDialog* ObjectDialog::createDialog(PositionObject pobject, int x, int y) {
+    if( pobject.object == nullptr ) return nullptr;
+    std::string object_name = pobject.object->name();
+    std::cout << "create object dialog for " << pobject.object->name() << std::endl;
+    if( Utility::endsWith(object_name, "furnace") ) {
+        return new SmelterDialog(pobject,x,y);
+    }
+    return new ObjectDialog(pobject,x,y);
+}
+
+void ObjectDialog::execute() {
+}
+
+/**************************************/
+
+SmelterDialog::SmelterDialog(PositionObject pobject, int mouse_x, int mouse_y) : ObjectDialog(pobject, mouse_x, mouse_y) {
+
+}
+
+SmelterDialog::~SmelterDialog() {
+    delete craft_button_;
+    delete one_button_;
+    delete ten_button_;
+}
+
+void SmelterDialog::do_render(Camera* camera, double delay_in_ms) {
+    ObjectDialog::do_render(camera, delay_in_ms);
+    SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
 
     if( craft_button_ == nullptr ) {
-        craft_button_ = new SDLTextButton(sdl_camera, "Craft", x_, y_);
+        craft_button_ = new SDLTextButton(sdl_camera, "Smelt", x_, y_);
         one_button_ = new SDLTextButton(sdl_camera, "+1", x_, y_);
         ten_button_ = new SDLTextButton(sdl_camera, "+10", x_, y_);
     }
@@ -275,13 +306,7 @@ void ObjectDialog::do_render(Camera* camera, double delay_in_ms) {
     sdl_camera->displayButton(ten_button_);
 }
 
-bool ObjectDialog::buttonClicked(SDLButton* button, Position mouse_position) {
-    if( button == nullptr ) return false;
-    const SDL_Rect& button_rect = button->rect();
-    return Utility::contains(button_rect, mouse_position.x, mouse_position.y);
-}
-
-bool ObjectDialog::handleEvent(Camera* camera) {
+bool SmelterDialog::handleEvent(Camera* camera) {
     if( craft_button_ == nullptr ) return false;
     SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
     const SDL_Event& event = sdl_camera->event();
@@ -305,15 +330,7 @@ bool ObjectDialog::handleEvent(Camera* camera) {
     return Dialog::handleEvent(camera);
 }
 
-// create dedicated ObjectDialog if needed
-// (i.e. SmelterDialog, CrafterDialog, ...)
-ObjectDialog* ObjectDialog::createDialog(PositionObject pobject, int x, int y) {
-    if( pobject.object == nullptr ) return nullptr;
-    std::cout << "create object dialog for " << pobject.object->name() << std::endl;
-    return new ObjectDialog(pobject,x,y);
-}
-
-void ObjectDialog::execute() {
+void SmelterDialog::execute() {
 }
 
 /**************************************/

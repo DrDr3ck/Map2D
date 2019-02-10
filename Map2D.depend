@@ -702,7 +702,7 @@
 	"craft_mgr.h"
 	<tuple>
 
-1549781249 d:\games\programs\map2d\dialog.h
+1549781801 d:\games\programs\map2d\dialog.h
 	"camera.h"
 	"object.h"
 	<SDL2/SDL.h>
