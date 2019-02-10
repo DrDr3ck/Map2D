@@ -6,7 +6,7 @@
 
 /********************************************************************/
 
-const std::string& tr(const std::string& str);
+std::string tr(const std::string& str);
 
 class Translator {
 private:

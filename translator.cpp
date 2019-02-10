@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 // Initialize singleton_ to nullptr
 Translator* Translator::singleton_ = nullptr;
@@ -59,8 +60,10 @@ void Translator::readDictionary(const std::string& filename) {
     empty_ = (dictionary_.size() == 0);
 }
 
-const std::string& tr(const std::string& str) {
-    return Translator::instance()->translate(str);
+std::string tr(const std::string& str) {
+    std::string result = Translator::instance()->translate(str);
+    std::replace(result.begin(), result.end(), '%', '\n');
+    return result;
 }
 
 const std::string& Translator::translate(const std::string& str) {
