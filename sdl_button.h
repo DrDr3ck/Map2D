@@ -24,6 +24,7 @@ public:
 class SDLButton : public Button {
 public:
     SDLButton(std::string icon_name, int x, int y);
+    SDLButton(int x, int y);
     virtual ~SDLButton();
 
     virtual void activate() override;

@@ -7,6 +7,8 @@
 
 class SDL_Surface;
 class Character;
+class SDLButton;
+class SDLTextButton;
 
 /********************************************************************/
 
@@ -66,7 +68,6 @@ private:
 
 class ObjectDialog : public Dialog {
 public:
-    ObjectDialog(PositionObject pobject, int mouse_x = 50, int mouse_y = 50);
     virtual ~ObjectDialog();
 
     Object* object() const { return pobject_.object; }
@@ -74,8 +75,21 @@ public:
     virtual Position tilePosition() const override;
 
     virtual void do_render(Camera* camera, double delay_in_ms) override;
+    virtual bool handleEvent(Camera* camera) override;
+
+    static ObjectDialog* createDialog(PositionObject object, int x, int y);
+
+protected:
+    ObjectDialog(PositionObject pobject, int mouse_x = 50, int mouse_y = 50);
+    virtual void execute();
+
+    bool buttonClicked(SDLButton* button, Position mouse_position);
+
 private:
     PositionObject pobject_;
+    SDLTextButton* one_button_;
+    SDLTextButton* ten_button_;
+    SDLTextButton* craft_button_;
 };
 
 /********************************************************************/

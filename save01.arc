@@ -428,7 +428,7 @@
 <group>
   <people name="Bob">
     <position x="8" y="3" />
-    <direction x="1" y="0" />
+    <direction x="-1" y="0" />
     <activity value="0" />
     <image_id value="0" />
   </people>

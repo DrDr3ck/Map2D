@@ -130,6 +130,7 @@ private:
 
 class SDLTool;
 class SDLButtonManager;
+class SDLButton;
 
 class SDLCamera : public Camera {
 public:
@@ -153,6 +154,7 @@ public:
 
     void displayTexture(SDL_Texture* texture, const SDL_Rect* rect, const SDL_Rect* dest = NULL);
     void displayText(SDLText& text, bool background=false);
+    void displayButton(SDLButton* button);
 
     void getSize(int& screen_width, int& screen_height);
     SDL_Window* window() const { return window_; }

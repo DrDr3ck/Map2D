@@ -429,7 +429,7 @@ bool MapView::handleEvent(Camera* camera) {
                         if( tile_x_ == position_object.x && tile_y_ == position_object.y ) {
                             ObjectDialog* dialog = camera->findObjectDialog(position_object.object);
                             if( dialog == nullptr ) {
-                                dialog = new ObjectDialog(position_object, sdl_camera->mouse_x(),sdl_camera->mouse_y()+10);
+                                dialog = ObjectDialog::createDialog(position_object, sdl_camera->mouse_x(),sdl_camera->mouse_y()+10);
                             } else {
                                 camera->removeView(dialog);
                             }
@@ -788,11 +788,15 @@ void SDLCamera::render(double delay_in_ms) {
     SDL_RenderPresent(main_renderer_);
 }
 
-void SDLCamera::displayTexture(SDL_Texture* texture, const SDL_Rect* rect, const SDL_Rect* dest) {
-    int check = SDL_RenderCopy(main_renderer_, texture, dest, rect);
+void SDLCamera::displayTexture(SDL_Texture* texture, const SDL_Rect* rect, const SDL_Rect* source) {
+    int check = SDL_RenderCopy(main_renderer_, texture, source, rect);
     if( check != 0 ) {
-        Logger::error() << "Check = " << check << "  " << SDL_GetError() << Logger::endl;
+        Logger::error() << "Error in displayTexture: " << SDL_GetError() << Logger::endl;
     }
+}
+void SDLCamera::displayButton(SDLButton* button) {
+    if( button == nullptr ) return;
+    displayTexture(button->getTexture(main_renderer()), &button->rect());
 }
 
 void SDLCamera::displayText(SDLText& text, bool background) {
