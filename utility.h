@@ -114,10 +114,14 @@ public:
 
     static SDL_Surface* IMGLoad(const std::string& filename) {
         Logger::debug() << "Load image " << filename << Logger::endl;
+        if( filename.empty() ) {
+            Logger::error() << "IMG_Load(empty name): " << Logger::endl;
+            return nullptr;
+        }
         SDL_Surface* bg_surface = IMG_Load(filename.c_str());
         if(!bg_surface) {
             // handle error
-            Logger::error() << "IMG_Load: " << IMG_GetError() << Logger::endl;
+            Logger::error() << "IMG_Load(" << filename << "): " << IMG_GetError() << Logger::endl;
         }
         return bg_surface;
     }

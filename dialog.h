@@ -9,6 +9,7 @@ class SDL_Surface;
 class Character;
 class SDLButton;
 class SDLTextButton;
+class Craft;
 
 /********************************************************************/
 
@@ -80,29 +81,50 @@ public:
 
 protected:
     ObjectDialog(PositionObject pobject, int mouse_x = 50, int mouse_y = 50);
-    virtual void execute();
 
     bool buttonClicked(SDLButton* button, Position mouse_position);
 
-private:
+protected:
     PositionObject pobject_;
 };
 
-class SmelterDialog : public ObjectDialog {
+struct CraftOccButton {
+    Craft* craft;
+    int occurrence;
+    SDLButton* button;
+};
+
+class CrafterDialog : public ObjectDialog {
 public:
-    SmelterDialog(PositionObject pobject, int mouse_x = 50, int mouse_y = 50);
-    virtual ~SmelterDialog();
+    CrafterDialog(PositionObject pobject, int mouse_x = 50, int mouse_y = 50);
+    virtual ~CrafterDialog();
 
     virtual void do_render(Camera* camera, double delay_in_ms) override;
     virtual bool handleEvent(Camera* camera) override;
 
 protected:
-    virtual void execute() override;
+    virtual void execute();
+    void addCraft(int occ=1);
+    void selectCraft(Craft* craft);
 
-private:
+protected:
+    std::string craft_button_label_;
     SDLTextButton* one_button_ = nullptr;
     SDLTextButton* ten_button_ = nullptr;
     SDLTextButton* craft_button_ = nullptr;
+    Craft* selected_craft_ = nullptr;
+    std::vector< std::pair<Craft*,SDLButton*> > recipe_buttons_;
+    std::vector< CraftOccButton > craft_buttons_;
+};
+
+class SmelterDialog : public CrafterDialog {
+public:
+    SmelterDialog(PositionObject pobject, int mouse_x = 50, int mouse_y = 50);
+    virtual ~SmelterDialog();
+
+protected:
+    virtual void execute() override;
+
 };
 
 /********************************************************************/

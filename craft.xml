@@ -1,19 +1,17 @@
 <WorkBench>
-	<object name="StoneFurnace">
+	<object name="stone_furnace">
 		<item name="stone" occ=4/>
         <item name="sand" occ=1/>
 		<time>5</time>
 	</object>
-    <object name="Breaker">
+    <object name="chest">
+		<item name="iron_ingot" occ=8/>
+		<time>5</time>
+	</object>
+    <object name="breaker">
 		<item name="stone" occ=4/>
         <item name="glass" occ=2/>
 		<time>10</time>
-	</object>
-	<object name="Assembleur">
-	    <item name="iron ingot" occ=4/>
-		<item name="copper ingot" occ=2/>
-		<item name="glass" occ=2/>
-		<time>25</time>
 	</object>
 </WorkBench>
 <Breaker>
@@ -27,31 +25,31 @@
 		<item name="sand" occ=1/>
 		<time>10</time>
 	</finalItem>
-	<finalItem name="iron ingot" occ=1>
-		<item name="iron ore" occ=1/>
+	<finalItem name="iron_ingot" occ=1>
+		<item name="iron_ore" occ=1/>
 		<time>35</time>
 	</finalItem>
-	<finalItem name="copper ingot" occ=1>
-		<item name="copper ore" occ=1/>
+	<finalItem name="copper_ingot" occ=1>
+		<item name="copper_ore" occ=1/>
 		<time>35</time>
 	</finalItem>
 </Stone_Furnace>
 <Assembleur>
-	<finalItem name="iron gear wheel" occ=1>
-		<item name="iron ingot" occ=2/>
+	<finalItem name="iron_gear_wheel" occ=1>
+		<item name="iron_ingot" occ=2/>
 		<time>5</time>
 	</finalItem>
-	<finalItem name="iron stick" occ=2>
-		<item name="iron ingot" occ=1/>
+	<finalItem name="iron_stick" occ=2>
+		<item name="iron_ingot" occ=1/>
 		<time>5</time>
 	</finalItem>
-	<finalItem name="copper cable" occ=2>
-		<item name="copper ingot" occ=1/>
+	<finalItem name="copper_cable" occ=2>
+		<item name="copper_ingot" occ=1/>
 		<time>5</time>
 	</finalItem>
-	<finalItem name="electronic circuit" occ=1>
-		<item name="copper cable" occ=3/>
-		<item name="iron ingot" occ=1/>
+	<finalItem name="electronic_circuit" occ=1>
+		<item name="copper_cable" occ=3/>
+		<item name="iron_ingot" occ=1/>
 		<time>5</time>
 	</finalItem>
 </Assembleur>

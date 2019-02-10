@@ -142,7 +142,6 @@ void SDLBuildObjectTool::mousePressed(int button) {
     if( camera()->mapView()->getCurTile(x,y) ) {
         // TODO check that an object is not already here !!
         camera()->mapView()->addObjectJob(object_name_,x,y);
-        std::cout << "add object " << object_name_ << std::endl;
     }
 }
 

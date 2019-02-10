@@ -4,7 +4,6 @@
 #include <math.h>
 #include <string>
 
-#include "sdl_camera.h"
 #include "sdl_tool.h"
 
 /********************************************************************/
@@ -73,13 +72,23 @@ void SDLButtonManager::do_render(Camera* camera, double /*delay_in_ms*/) {
 
 /********************************************************************/
 
-SDLButton::SDLButton(std::string name, int x, int y) : Button(name,x,y) {
-    surface_ = Utility::IMGLoad(name.c_str());
+SDLButton::SDLButton(const std::string& icon_name, int x, int y) : Button(icon_name,x,y) {
+    surface_ = Utility::IMGLoad(icon_name.c_str());
     int w = surface_->w;
     int h = surface_->h;
     setSize(w,h);
     rect_ = {x,y,w,h};
     texture_ = nullptr;
+}
+
+SDLButton::SDLButton(const std::string& icon_name, const std::string& text, int x, int y) : Button(icon_name,x,y) {
+    surface_ = Utility::IMGLoad(icon_name.c_str());
+    int w = surface_->w;
+    int h = surface_->h;
+    setSize(w,h);
+    rect_ = {x,y,w,h};
+    texture_ = nullptr;
+    text_ = text;
 }
 
 SDLButton::SDLButton(int x, int y) : Button("none",x,y) {
@@ -150,6 +159,8 @@ void SDLButtonMenu::deactivate() {
     SDLButton::deactivate();
 }
 
+/********************************************************************/
+
 void SDLQuitButton::activate() {
     camera_->set_quit();
 }
@@ -157,10 +168,14 @@ void SDLQuitButton::activate() {
 /********************************************************************/
 
 SDLTextButton::SDLTextButton(
-    SDLCamera* camera, const std::string& text, int x, int y
+    SDLCamera* camera,
+    const std::string& text,
+    int x, int y,
+    const SDL_Color& color,
+    const SDL_Color& bgcolor
 ) : SDLButton(x,y), camera_(camera), text_(text) {
     // build texture with text
-    SDLText stext(text);
+    SDLText stext(text, "pixel11", 16, color, bgcolor);
     stext.set_position(x,y);
     SDL_Texture* texture = stext.texture(camera->main_renderer()) ;
     setTexture(texture);

@@ -54,6 +54,14 @@ namespace {
     }
 }
 
+std::string CraftMgr::getPixmapName(Craft* craft) {
+    std::string craft_name;
+    craft_name = "items/" + craft->name() + "_item.png";
+    std::replace(craft_name.begin(), craft_name.end(), ' ', '_');
+    return craft_name;
+}
+
+
 void CraftMgr::loadCrafts(const std::string& filename) { // TODO
     std::ifstream file(filename);
     if (!file) {

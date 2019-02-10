@@ -484,13 +484,14 @@ SDLText::SDLText(
     const std::string& text,
     const std::string& family,
     int font_size,
-    const SDL_Color& color
+    const SDL_Color& color,
+    const SDL_Color& background_color
 ) : text_(text), family_(family), size_(font_size), texture_(nullptr), color_(color) {
     rect_.w = 0;
     rect_.h = 0;
     rect_.x = 0;
     rect_.y = 0;
-    background_color_ = SDLText::white();
+    background_color_ = background_color;
 }
 
 SDLText::~SDLText() {
@@ -536,6 +537,7 @@ SDL_Texture* SDLText::texture(SDL_Renderer* renderer) {
         std::vector<std::string> texts = split(text_, '\n');
         std::vector<SDL_Surface*> surfaces;
         for( auto text : texts ) {
+            if( text.empty() ) continue;
             TTF_Font* font = FontLib::instance()->getFont(family_, size_);
             TTF_SizeText(font,text.c_str(),&rect_.w,&rect_.h);
             SDL_Surface* texte = TTF_RenderText_Solid(font, text.c_str(), color_);
@@ -777,7 +779,7 @@ void SDLCamera::render(double delay_in_ms) {
             i--;
         } else if( max_terminal_strings > 0 ) {
             // display logger string
-            SDLText text(log.full_string(), "pixel11", 14, (log.type() == "Info") ? SDLText::yellow() : ((log.type() == "Error") ? SDLText::red() : SDLText::black()));
+            SDLText text(log.full_string(), "pixel11", 14, (log.type() == "Info") ? SDLText::green() : ((log.type() == "Error") ? SDLText::red() : SDLText::black()));
             text.set_position(30,Camera::cur_camera->height()-50-text_offset);
             this->displayText(text, true);
             max_terminal_strings--;

@@ -46,6 +46,8 @@ public:
 
     std::vector<Craft*> craftsForMachine(const std::string& machine);
 
+    static std::string getPixmapName(Craft* craft);
+
 private:
     static CraftMgr* singleton_;
     std::map<std::string, std::vector<Craft*> > crafts_by_machine_;

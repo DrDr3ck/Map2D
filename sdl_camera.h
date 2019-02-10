@@ -85,7 +85,10 @@ private:
 
 class SDLText {
 public:
-    SDLText(const std::string& text, const std::string& family = "pixel11", int font_size = 16, const SDL_Color& color = SDLText::black());
+    SDLText(
+        const std::string& text, const std::string& family = "pixel11", int font_size = 16,
+        const SDL_Color& color = SDLText::black(), const SDL_Color& background_color = SDLText::white()
+    );
     ~SDLText();
 
     SDL_Texture* texture(SDL_Renderer* renderer);
@@ -108,6 +111,11 @@ public:
 
     static SDL_Color& yellow() { // royal
         static SDL_Color red = {250, 218, 94, 255};
+        return red;
+    }
+
+    static SDL_Color& green() {
+        static SDL_Color red = {0, 128, 0, 255};
         return red;
     }
 

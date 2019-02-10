@@ -133,7 +133,7 @@ int main(int argc, char** argv) {
         }
 
         if( microsecond > 1000000 ) {
-            Logger::debug() << "FPS: " << fps << Logger::endl;
+            //Logger::debug() << "FPS: " << fps << Logger::endl;
             microsecond = 0;
             fps = 0;
         }
@@ -149,6 +149,6 @@ int main(int argc, char** argv) {
 
     delete camera;
 
-    std::cout << "\n *** Game correctly ended ***" << std::endl;
+    Logger::debug() << "\n *** Game correctly ended ***" << Logger::endl;
     return 0;
 }

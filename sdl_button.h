@@ -2,10 +2,8 @@
 #define sdl_button_h
 
 #include "button.h"
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include "sdl_camera.h"
 
-class SDLCamera;
 class SDLTool;
 
 /********************************************************************/
@@ -23,7 +21,8 @@ public:
 
 class SDLButton : public Button {
 public:
-    SDLButton(std::string icon_name, int x, int y);
+    SDLButton(const std::string& icon_name, int x, int y);
+    SDLButton(const std::string& icon_name, const std::string& text, int x, int y);
     SDLButton(int x, int y);
     virtual ~SDLButton();
 
@@ -41,6 +40,7 @@ protected:
     SDL_Surface* surface_;
     SDL_Texture* texture_;
     SDL_Rect rect_;
+    std::string text_;
 };
 
 /********************************************************************/
@@ -72,7 +72,13 @@ private:
 
 class SDLTextButton : public SDLButton {
 public:
-    SDLTextButton(SDLCamera* camera, const std::string& text, int x, int y);
+    SDLTextButton(
+        SDLCamera* camera,
+        const std::string& text,
+        int x, int y,
+        const SDL_Color& color = SDLText::black(),
+        const SDL_Color& background_color = SDLText::white()
+    );
     virtual ~SDLTextButton() {}
 
 private:
