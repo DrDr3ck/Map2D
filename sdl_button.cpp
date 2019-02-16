@@ -59,8 +59,7 @@ void SDLButtonManager::do_render(Camera* camera, double /*delay_in_ms*/) {
             continue;
         }
         SDLButton* button = dynamic_cast<SDLButton*>(b);
-        SDL_Texture* texture = button->getTexture(main_renderer);
-        sdl_camera->displayTexture(texture, &button->rect());
+        sdl_camera->displayButton(button);
 
         // display white rectangle if button has focus
         if( button->hasFocus() ) {

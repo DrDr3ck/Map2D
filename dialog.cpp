@@ -13,6 +13,13 @@ Dialog::Dialog(int x, int y, int width, int height) : View(), x_(x), y_(y), widt
     surface_ = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
     SDL_Color bgcolor = {211,211,211,255};
     setBackgroundColor(bgcolor);
+    // try to put the dialog in the window (no part outside)
+    if( x_ + width_ > Camera::cur_camera->width() ) {
+        x_ = Camera::cur_camera->width() - width_;
+    }
+    if( y_ + height_ > Camera::cur_camera->height() ) {
+        y_ = Camera::cur_camera->height() - height_;
+    }
 }
 
 Dialog::~Dialog() {
@@ -363,10 +370,6 @@ void CrafterDialog::do_render(Camera* camera, double delay_in_ms) {
         button->setPosition(x, y-5-button->rect().h);
         x += button->rect().w;
         sdl_camera->displayButton(button);
-        int occ = craft_button.occurrence;
-        SDLText occ_text( Utility::itos(occ), "pixel11", 10);
-        occ_text.set_position(button->rect().x+button->rect().w, button->rect().y);
-        sdl_camera->displayText(occ_text, true);
     }
 }
 

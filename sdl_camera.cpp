@@ -624,7 +624,7 @@ SDLCamera::SDLCamera(
 
     // Add Wall menu
     int max_column = 4;
-    MenuButton* build_menu = new MenuButton(max_column, 10, 75);
+    MenuButton* build_menu = new MenuButton(max_column, 15, 90);
 
     SDLBuildTool* wall_tool = new SDLBuildTool(this, "buttons/wall_tool.png", WALLTOOL);
     SDLButton* wall_button_tool = new SDLToolButton(wall_tool, "buttons/wall_tool.png", 0, 0);
@@ -646,11 +646,13 @@ SDLCamera::SDLCamera(
     manager_->addButton(demolish_foundation_button_tool);
     build_menu->addButton(demolish_foundation_button_tool);
 
-    manager_->addButton( new SDLButtonMenu(build_menu, "buttons/build.png", 10,10) );
+    SDLButtonMenu* build_button = new SDLButtonMenu(build_menu, "buttons/build.png", build_menu->x(),10);
+    build_button->setText( tr("Foundations") );
+    manager_->addButton( build_button );
     manager_->addMenuButton( build_menu );
 
     // Add excavation menu
-    MenuButton* excavation_menu = new MenuButton(max_column, 70, 75);
+    MenuButton* excavation_menu = new MenuButton(max_column, 90, 90);
     SDLExtractTool* extract_tool = new SDLExtractTool(this, "buttons/extract_tool.png", 1);
     SDLButton* extract_button_tool = new SDLToolButton(extract_tool, "buttons/extract_tool.png", 0, 0);
     manager_->addButton(extract_button_tool);
@@ -676,13 +678,13 @@ SDLCamera::SDLCamera(
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
-
-
-    manager_->addButton( new SDLButtonMenu(excavation_menu, "buttons/excavation.png", 70,10) );
+    SDLButtonMenu* excavation_button = new SDLButtonMenu(excavation_menu, "buttons/excavation.png", excavation_menu->x(),10);
+    excavation_button->setText( tr("Tools") );
+    manager_->addButton( excavation_button );
     manager_->addMenuButton( excavation_menu );
 
     // Add Object menu
-    MenuButton* object_menu = new MenuButton(max_column, 130, 75);
+    MenuButton* object_menu = new MenuButton(max_column, 165, 90);
 
     SDLBuildObjectTool* workbench_tool = new SDLBuildObjectTool(this, "objects/workbench.png", "workbench");
     SDLButton* workbench_button_tool = new SDLToolButton(workbench_tool, "objects/workbench.png", 0, 0);
@@ -704,7 +706,9 @@ SDLCamera::SDLCamera(
     manager_->addButton(stone_furnace_button_tool);
     object_menu->addButton(stone_furnace_button_tool);
 
-    manager_->addButton( new SDLButtonMenu(object_menu, "buttons/object.png", object_menu->x(), 10) );
+    SDLButtonMenu* object_button = new SDLButtonMenu(object_menu, "buttons/object.png", object_menu->x(),10);
+    object_button->setText( tr("Objects") );
+    manager_->addButton( object_button );
     manager_->addMenuButton( object_menu );
 
     // Add Quit Button
@@ -836,7 +840,19 @@ void SDLCamera::displayTexture(SDL_Texture* texture, const SDL_Rect* rect, const
 }
 void SDLCamera::displayButton(SDLButton* button) {
     if( button == nullptr ) return;
-    displayTexture(button->getTexture(main_renderer()), &button->rect());
+    SDL_Texture* button_texture = button->getTexture(main_renderer());
+    displayTexture(button_texture, &button->rect());
+    if( !button->text().empty()) {
+        SDLText button_text( button->text(), "pixel11", 9);
+        if( button->bottomPosition() ) {
+            button_text.texture(main_renderer());
+            SDL_Rect text_rect = button_text.rect();
+            button_text.set_position(button->rect().x +button->rect().w/2 - text_rect.w/2 , button->rect().y+button->rect().h);
+        } else {
+            button_text.set_position(button->rect().x+button->rect().w, button->rect().y);
+        }
+        displayText(button_text, true);
+    }
 }
 
 void SDLCamera::displayText(SDLText& text, bool background) {

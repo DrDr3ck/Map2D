@@ -29,6 +29,11 @@ public:
     virtual void activate() override;
     virtual void deactivate() override;
 
+    void setText(const std::string& text) { text_ = text; }
+    const std::string& text() const { return text_; }
+
+    bool bottomPosition() const { return bottom_position_; }
+
     virtual void setSize(int w, int h) override;
     virtual void setPosition(int x,int y) override;
 
@@ -41,13 +46,16 @@ protected:
     SDL_Texture* texture_;
     SDL_Rect rect_;
     std::string text_;
+    bool bottom_position_ = false;
 };
 
 /********************************************************************/
 
 class SDLButtonMenu : public SDLButton {
 public:
-    SDLButtonMenu(MenuButton* menu, std::string name, int x, int y) : SDLButton(name, x,y), menu_(menu) {}
+    SDLButtonMenu(MenuButton* menu, std::string name, int x, int y) : SDLButton(name, x,y), menu_(menu) {
+        bottom_position_ = true;
+    }
     virtual ~SDLButtonMenu() {}
 
     virtual void activate() override;
