@@ -49,7 +49,8 @@ public:
     BType background_type() const;
     FType floor_type() const;
     int occurrences() const;
-    CountedItem counted_item() const { return counted_item_; }
+    const std::vector<CountedItem>& counted_items() const { return counted_items_; }
+    std::vector<CountedItem>& counted_items() { return counted_items_; }
 
     void setTile(int id, Type cell_type, BType background_type, FType floor_type);
     void setCellTile(int id, Type cell_type);
@@ -65,14 +66,14 @@ public:
     static bool isFloor(const Tile& tile);
 
     void addItem(const BasicItem& item, int nb=1);
-    std::string removeItem(int nb);
+    std::string removeItem(const BasicItem& item, int nb=1);
 private:
     int id_;
     Type cell_type_;
     int occurrences_;
     BType background_type_;
     FType floor_type_;
-    CountedItem counted_item_;
+    std::vector<CountedItem> counted_items_;
 };
 
 /********************************************************************/
@@ -106,6 +107,7 @@ public:
     bool transferItems(Character* people);
     void transferItems(Character* people, Chest* chest);
     Object* getNearestChest(Position position);
+    Object* getAssociatedChest(Position position);
 
     static void createMap(MapData* data);
 private:

@@ -46,8 +46,7 @@ private:
     int tile_id_;
     Tile::Type tile_type_ = Tile::BLOCK;
     int occurrences_;
-    std::string item_name_;
-    int item_count_;
+    std::vector< std::pair<std::string,int> > items_;
     Tile::BType tile_btype_ = Tile::NONE;
     Tile::FType tile_ftype_ = Tile::METAL;
     bool inTile_ = false;

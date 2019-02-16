@@ -165,11 +165,21 @@ void MapView::setTile(int tile_x, int tile_y) {
     tile_y_ = tile_y;
 }
 
-void MapView::store(const BasicItem& item, Position tile_position) {
-    Object* obj = data()->getNearestChest(tile_position);
-    if( obj == nullptr ) return; // TODO: put item on the floor or keep it in the furnace ?
+bool MapView::store(const BasicItem& item, Position tile_position) {
+    Object* obj = data()->getAssociatedChest(tile_position);
+    if( obj == nullptr ) { // put item on the floor
+        Tile& tile = data()->tile(tile_position.x, tile_position.y);
+        tile.addItem(item, 1); // TODO or keep it in the furnace ?
+        return false;
+    }
     Chest* chest = static_cast<Chest*>(obj);
-    chest->addItem(item, 1);
+    int not_added = chest->addItem(item, 1);
+    if( not_added > 0 ) {
+        // put the item on the floor
+        Tile& tile = data()->tile(tile_position.x, tile_position.y);
+        tile.addItem(item, 1);
+    }
+    return true;
 }
 
 /*!
@@ -294,6 +304,10 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     Position bottomright = onTile(camera->width()+Utility::tileSize*camera->scale(),camera->height()+Utility::tileSize*camera->scale());
     if( bottomright.x < 0 ) bottomright.x = data_->width();
     if( bottomright.y < 0 ) bottomright.y = data_->height();
+
+    std::vector< SDL_Texture* > items_to_display;
+    std::vector< SDL_Rect > items_to_dest;
+
     for( int w = topleft.x ; w < bottomright.x; w++ ) {
         for( int h = topleft.y ; h < bottomright.y; h++ ) {
             const Tile& cur = data_->tile(w,h);
@@ -307,15 +321,16 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
                 sdl_camera->displayTexture(small, &dest);
             }
             // display item
-            if( !cur.counted_item().isNull() ) {
-                SDL_Texture* item_texture = cur.counted_item().texture();
+            if( cur.counted_items().size() > 0 ) {
+                SDL_Texture* item_texture = cur.counted_items().at(0).texture(); // only display the first element
                 SDL_Rect dest;
                 int half_scaled_tile_size = scaled_tile_size_/2;
                 dest.x = w*scaled_tile_size_ + scaled_start_x_ + half_scaled_tile_size/2;
                 dest.y = h*scaled_tile_size_ + scaled_start_y_ + half_scaled_tile_size/2;
                 dest.w = half_scaled_tile_size;
                 dest.h = half_scaled_tile_size;
-                sdl_camera->displayTexture(item_texture, &dest);
+                items_to_display.push_back( item_texture );
+                items_to_dest.push_back( dest );
             }
             // display white square over the onTile cursor
             if( tile_x_ == w && tile_y_ == h ) {
@@ -343,17 +358,26 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
                 tile_text.append(" ");
                 tile_text.append(Utility::itos(h));
                 // add counted item if any
-                if( !cur.counted_item().isNull() ) {
-                    tile_text.append("\n");
-                    tile_text.append(tr(cur.counted_item().item().name()));
-                    tile_text.append(": ");
-                    tile_text.append(Utility::itos(cur.counted_item().count()));
+                if( cur.counted_items().size() > 0 ) {
+                    for( auto counted_item : cur.counted_items() ) {
+                        tile_text.append("\n");
+                        tile_text.append(tr(counted_item.item().name()));
+                        tile_text.append(": ");
+                        tile_text.append(Utility::itos(counted_item.count()));
+                    }
                 }
             }
         }
     }
 
     renderObjects(sdl_camera, tile_text);
+
+    // render items
+    for( int i=0; i < int(items_to_display.size()); i++ ) {
+        SDL_Texture* item_texture = items_to_display.at(i);
+        SDL_Rect dest = items_to_dest.at(i);
+        sdl_camera->displayTexture(item_texture, &dest);
+    }
 
     renderJobs(sdl_camera);
 
@@ -739,6 +763,7 @@ void SDLCamera::render(double delay_in_ms) {
         option_list.push_back( tr("Press c to center a robot") );
         option_list.push_back( tr("Left click to select a robot") );
         option_list.push_back( tr("Right click to move it") );
+        option_list.push_back( tr("Double click on object to popup info") );
         std::string options;
         for( auto opt : option_list ) {
             if( options.length() != 0 ) {

@@ -45,7 +45,7 @@ public:
 
     PeopleGroup* group() const;
 
-    void store(const BasicItem& item, Position tile_position);
+    bool store(const BasicItem& item, Position tile_position);
 
     static MapView* cur_map;
 

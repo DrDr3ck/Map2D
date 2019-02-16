@@ -139,25 +139,32 @@ std::string Tile::btypeTileToString(Tile::BType type) {
 }
 
 void Tile::addItem(const BasicItem& item, int nb) {
-    if( item.name() == counted_item_.item().name() ) {
-        counted_item_.addItem(nb);
-        return;
+    for( auto& counted_item : counted_items_ ) {
+        if( item.name() == counted_item.item().name() ) {
+            counted_item.addItem(nb);
+            return;
+        }
     }
-    if( counted_item_.isNull() ) {
-        counted_item_ = CountedItem(item, nb);
-    }
+    counted_items_.push_back(CountedItem(item, nb));
 }
 
-std::string Tile::removeItem(int nb) {
-    if( counted_item_.isNull() ) {
+std::string Tile::removeItem(const BasicItem& item, int nb) {
+    if( counted_items_.size() == 0 ) {
         return "none";
     }
-    counted_item_.removeItem(nb);
-    std::string item_name = counted_item_.item().name();
-    if( counted_item_.count() == 0 ) {
-        counted_item_ = CountedItem();
+    int index = 0;
+    for( auto& counted_item : counted_items_ ) {
+        if( item.name() == counted_item.item().name() ) {
+            counted_item.removeItem(nb);
+            std::string item_name = counted_item.item().name();
+            if( counted_item.count() == 0 ) {
+                counted_items_.erase(counted_items_.begin() + index);
+            }
+            return item_name;
+        }
+        index++;
     }
-    return item_name;
+    return "none";
 }
 
 /********************************************************************/
@@ -268,18 +275,19 @@ void MapData::removeFloor(int x, int y) {
 
 void MapData::cleanItemFromTile(int x,int y,Character* people) {
     Tile& cur = tile(x,y);
-    if( cur.counted_item().isNull() ) {
+    if( cur.counted_items().size() == 0 ) {
         // nothing to do, no counted item on this tile
         return;
     }
-    int max_carry = people->maxCarriable(cur.counted_item().item()); // get the maximum of item the robot can carry
-    int max_items = cur.counted_item().count();
+    CountedItem& counted_item = cur.counted_items().at(0);
+    int max_carry = people->maxCarriable(counted_item.item()); // get the maximum of item the robot can carry
+    int max_items = counted_item.count();
     if( max_items >= max_carry ) {
-        people->carryItem(cur.counted_item().item(), max_carry);
-        cur.counted_item().removeItem(max_carry);
+        people->carryItem(counted_item.item(), max_carry);
+        counted_item.removeItem(max_carry);
     } else {
-        people->carryItem(cur.counted_item().item(), max_items);
-        cur.counted_item().removeItem(max_items);
+        people->carryItem(counted_item.item(), max_items);
+        counted_item.removeItem(max_items);
     }
 }
 
@@ -317,8 +325,13 @@ void MapData::extractItemFromTile(int x,int y) {
 
 bool MapData::transferItems(Character* people) {
     Tile& tile = this->tile(people->tilePosition().x, people->tilePosition().y);
-    int max_item = std::min(people->maxCarriable(), tile.counted_item().count());
-    people->carryItem( tile.removeItem(max_item), max_item );
+    if( tile.counted_items().size() == 0 ) {
+        return false; // tile has no items
+    }
+    CountedItem counted_item = tile.counted_items().at(0);
+    int max_item = std::min(people->maxCarriable(), counted_item.count());
+    people->carryItem( tile.removeItem(counted_item.item(), max_item), max_item );
+    // todo: can carry more !!
     return max_item > 0;
 }
 
@@ -327,6 +340,18 @@ void MapData::transferItems(Character* people, Chest* chest) {
         BasicItem item = people->dropItem();
         chest->addItem( item );
     }
+}
+
+Object* MapData::getAssociatedChest(Position position) {
+    // find a chest at distance == 1 !!
+    Object* object = getNearestChest(position);
+    if( object == nullptr ) return nullptr;
+    Position chest_position = object->tilePosition();
+    float dist = Utility::distance(chest_position, position);
+    if( dist < 2.0f ) {
+        return object;
+    }
+    return nullptr;
 }
 
 Object* MapData::getNearestChest(Position position) {

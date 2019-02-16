@@ -208,8 +208,7 @@ void MapDataConverter::load(const std::string& str) {
             y_ = atoi(y_str.c_str());
             inTile_ = true;
             occurrences_ = 0;
-            item_name_ = "none";
-            item_count_ = 0;
+            items_.clear();
         }
     }
     if( inTile_ ) {
@@ -226,9 +225,10 @@ void MapDataConverter::load(const std::string& str) {
             occurrences_ = atoi(value_str.c_str());
         }
         if( isTag(str, "counteditem") ) {
-            item_name_ = getAttribute(str, "name");
+            std::string item_name = getAttribute(str, "name");
             std::string value_str = getAttribute(str, "value");
-            item_count_ = atoi(value_str.c_str());
+            int item_count = atoi(value_str.c_str());
+            items_.push_back( std::pair<std::string, int>(item_name, item_count));
         }
         if( isTag(str, "btype") ) {
             std::string value_str = getAttribute(str, "value");
@@ -242,8 +242,12 @@ void MapDataConverter::load(const std::string& str) {
             Tile& cur_tile = data_->tile(x_,y_);
             cur_tile.setTile(tile_id_, tile_type_, tile_btype_, tile_ftype_);
             cur_tile.setOccurrences(occurrences_);
-            if( item_name_ != "none" && item_count_ > 0 ) {
-                cur_tile.addItem(BasicItem(item_name_), item_count_);
+            for( auto item : items_ ) {
+                std::string item_name = item.first;
+                int item_count = item.second;
+                if( item_name != "none" && item_count > 0 ) {
+                    cur_tile.addItem(BasicItem(item_name), item_count);
+                }
             }
             inTile_ = false;
         }
@@ -319,8 +323,10 @@ void MapDataConverter::save(std::ofstream& file) {
             file << "    <occurrence value=\"" << Utility::itos(cur.occurrences()) << "\" />" << std::endl;
             file << "    <btype value=\"" << btypeTileToString(cur.background_type()) << "\" />" << std::endl;
             file << "    <ftype value=\"" << ftypeTileToString(cur.floor_type()) << "\" />" << std::endl;
-            if( !cur.counted_item().isNull() ) {
-                file << "    <counteditem name=\"" << cur.counted_item().item().name() << "\" value=\"" << cur.counted_item().count() << "\" />" << std::endl;
+            for( auto counted_item : cur.counted_items() ) {
+                if( !counted_item.isNull() ) {
+                    file << "    <counteditem name=\"" << counted_item.item().name() << "\" value=\"" << counted_item.count() << "\" />" << std::endl;
+                }
             }
             file << "  </tile>" << std::endl;
         }
@@ -438,7 +444,7 @@ void ObjectConverter::load(const std::string& str) {
     if( isEndTag(str, "object") ) {
         Object* object = nullptr;
         if( name == "chest" ) {
-            object = new Chest(4);
+            object = new Chest(8);
         } else if( name == "workbench" ) {
             object = new WorkBench();
         } else if( name == "breaker" ) {

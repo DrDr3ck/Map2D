@@ -112,7 +112,7 @@ void Object::animate(double delta_ms) { // TODO
             int occ = crafts_.at(0).second;
             std::cout << "adding object " << cur_craft_->name() << occ << std::endl;
             MapView* map_view = MapView::cur_map;
-            map_view->store(BasicItem(cur_craft_->name()), tilePosition());
+            map_view->store(BasicItem(cur_craft_->name()), tilePosition()); // TODO keep item in the furnace if store returns false ?
             if( occ > 1) {
                 crafts_.at(0).second = occ - 1;
             } else {
@@ -224,7 +224,7 @@ int Chest::addItem(const BasicItem& item, int count) {
         }
     }
     // there are still some items to add...
-    while( max_size_ >= int(items_.size()) ) {
+    while( max_size_ > int(items_.size()) ) {
         int c = total_count;
         if( total_count > 99 ) {
             c = 99;

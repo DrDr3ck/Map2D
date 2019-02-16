@@ -19,7 +19,7 @@ Job::Job(
 
 Object* BuildObjectJob::getObject() const {
     if( object_name_ == "chest" ) {
-        return new Chest(4);
+        return new Chest(8);
     } else if( object_name_ == "workbench" ) {
         return new WorkBench();
     } else if( object_name_ == "breaker" ) {
