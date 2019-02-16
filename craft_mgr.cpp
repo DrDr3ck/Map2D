@@ -153,3 +153,19 @@ vector<Craft*> CraftMgr::craftsForMachine(const std::string& machine) {
     auto result = *crafts_iterator;
     return result.second;
 }
+
+Craft* CraftMgr::findCraft(const std::string& craft_name, const std::string& machine) const {
+    auto crafts_iterator = crafts_by_machine_.find(machine);
+    if( crafts_iterator == crafts_by_machine_.end() ) {
+        Logger::debug() << "Machine " << machine << " does not exist" << Logger::endl;
+        return nullptr;
+    }
+    auto result = *crafts_iterator;
+    for( auto craft : result.second ) {
+        if( craft->name() == craft_name ) {
+            return craft;
+        }
+    }
+    Logger::debug() << "Unable to find craft " << craft_name << " in machine " << machine << Logger::endl;
+    return nullptr;
+}

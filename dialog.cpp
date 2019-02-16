@@ -192,8 +192,8 @@ void RobotDialog::do_render(Camera* camera, double delay_in_ms) {
 
 /**************************************/
 
-ObjectDialog::ObjectDialog(PositionObject pobject, int mouse_x, int mouse_y) : Dialog(mouse_x, mouse_y, 300, 400) {
-    pobject_ = pobject;
+ObjectDialog::ObjectDialog(Object* object, int mouse_x, int mouse_y) : Dialog(mouse_x, mouse_y, 300, 400) {
+    object_ = object;
     SDL_Color bgcolor = {211,211,255,255};
     setBackgroundColor(bgcolor);
 }
@@ -202,17 +202,15 @@ ObjectDialog::~ObjectDialog() {
 }
 
 Position ObjectDialog::tilePosition() const {
-    Position position = {pobject_.x, pobject_.y};
-    return position;
+    return object_->tilePosition();
 }
 
 void ObjectDialog::do_render(Camera* camera, double delay_in_ms) {
     Dialog::do_render(camera, delay_in_ms);
     SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
-    Object* object = pobject_.object;
 
     std::string title_str(" - ");
-    title_str.append( object->userName() );
+    title_str.append( object_->userName() );
     SDLText title(title_str, "pixel11", 11);
     title.set_position(3+x_,3+y_);
     SDL_Color title_bgcolor = getBackgroundColor();
@@ -227,13 +225,13 @@ void ObjectDialog::do_render(Camera* camera, double delay_in_ms) {
     }
 
     std::string str = tr("Name: ");
-    str+=object->userName();
-    str+="\n" + tr("Tile: ") + Utility::itos(pobject_.x) + " " + Utility::itos(pobject_.y);
+    str+=object_->userName();
+    str+="\n" + tr("Tile: ") + Utility::itos(object_->tilePosition().x) + " " + Utility::itos(object_->tilePosition().y);
 
     // get object nodes
-    int node_count = object->getNodeCount();
+    int node_count = object_->getNodeCount();
     for( int node_index=0; node_index < node_count; node_index++ ) {
-        std::string node_string = object->getNodeString(node_index);
+        std::string node_string = object_->getNodeString(node_index);
         str+="\n" + tr(node_string);
     }
 
@@ -251,21 +249,27 @@ bool ObjectDialog::buttonClicked(SDLButton* button, Position mouse_position) {
 
 // create dedicated ObjectDialog according to object
 // (i.e. SmelterDialog, CrafterDialog, ...)
-ObjectDialog* ObjectDialog::createDialog(PositionObject pobject, int x, int y) {
-    if( pobject.object == nullptr ) return nullptr;
-    std::string object_name = pobject.object->name();
+ObjectDialog* ObjectDialog::createDialog(Object* object, int x, int y) {
+    if( object == nullptr ) return nullptr;
+    std::string object_name = object->name();
     if( Utility::endsWith(object_name, "furnace") ) {
-        return new SmelterDialog(pobject,x,y);
+        return new SmelterDialog(object,x,y);
     } else if( Utility::endsWith(object_name, "chest") ) {
-        return new ObjectDialog(pobject,x,y);
+        return new ObjectDialog(object,x,y);
     }
-    return new CrafterDialog(pobject,x,y);
+    return new CrafterDialog(object,x,y);
 }
 
 /**************************************/
 
-CrafterDialog::CrafterDialog(PositionObject pobject, int mouse_x, int mouse_y) : ObjectDialog(pobject, mouse_x, mouse_y) {
+CrafterDialog::CrafterDialog(Object* object, int mouse_x, int mouse_y) : ObjectDialog(object, mouse_x, mouse_y) {
     craft_button_label_ = "Craft";
+    std::cout << object->getCrafts().size() << std::endl;
+    for( auto co : object->getCrafts() ) {
+        selected_craft_ = co.first;
+        addCraft(co.second);
+    }
+    selected_craft_ = nullptr;
 }
 
 CrafterDialog::~CrafterDialog() {
@@ -277,10 +281,9 @@ CrafterDialog::~CrafterDialog() {
 void CrafterDialog::do_render(Camera* camera, double delay_in_ms) {
     Dialog::do_render(camera, delay_in_ms);
     SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
-    Object* object = pobject_.object;
 
     std::string title_str(" - ");
-    title_str.append( object->userName() );
+    title_str.append( object_->userName() );
     SDLText title(title_str, "pixel11", 11);
     title.set_position(3+x_,3+y_);
     SDL_Color title_bgcolor = getBackgroundColor();
@@ -298,7 +301,7 @@ void CrafterDialog::do_render(Camera* camera, double delay_in_ms) {
 
     if( recipe_buttons_.size() == 0 ) {
         // get list of crafts
-        std::vector<Craft*> crafts = CraftMgr::instance()->craftsForMachine(object->name());
+        std::vector<Craft*> crafts = CraftMgr::instance()->craftsForMachine(object_->name());
         for( Craft* craft : crafts) {
             SDLButton* button = new SDLButton(CraftMgr::getPixmapName(craft), x_, y_);
             recipe_buttons_.push_back( std::make_pair(craft, button) );
@@ -409,6 +412,14 @@ bool CrafterDialog::handleEvent(Camera* camera) {
 }
 
 void CrafterDialog::execute() {
+    // move crafts in object and close the dialog
+    kill_me_ = true;
+    for( auto cob : craft_buttons_ ) {
+        Craft* craft = cob.craft;
+        int occ = cob.occurrence;
+        object()->addCraft(craft, occ);
+    }
+    std::cout << object_->getCrafts().size() << std::endl;
 }
 
 void CrafterDialog::addCraft(int occ) {
@@ -427,7 +438,7 @@ void CrafterDialog::selectCraft(Craft* craft) {
 
 /**************************************/
 
-SmelterDialog::SmelterDialog(PositionObject pobject, int mouse_x, int mouse_y) : CrafterDialog(pobject, mouse_x, mouse_y) {
+SmelterDialog::SmelterDialog(Object* object, int mouse_x, int mouse_y) : CrafterDialog(object, mouse_x, mouse_y) {
     craft_button_label_ = "Smelt";
 }
 
@@ -435,6 +446,7 @@ SmelterDialog::~SmelterDialog() {
 }
 
 void SmelterDialog::execute() {
+    CrafterDialog::execute();
 }
 
 /**************************************/

@@ -97,7 +97,7 @@ public:
     void cleanItemFromTile(int x,int y,Character* people);
 
     void addObject(Object* object, int x, int y);
-    std::vector<PositionObject>& objects() { return objects_; }
+    std::vector<Object*>& objects() { return objects_; }
 
     void reset(int width, int height);
     int width() const { return width_; }
@@ -105,14 +105,14 @@ public:
 
     bool transferItems(Character* people);
     void transferItems(Character* people, Chest* chest);
-    PositionObject getNearestChest(Position position);
+    Object* getNearestChest(Position position);
 
     static void createMap(MapData* data);
 private:
     int width_;
     int height_;
     Tile* tiles_;
-    std::vector<PositionObject> objects_;
+    std::vector<Object*> objects_;
 };
 
 /********************************************************************/

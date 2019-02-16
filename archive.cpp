@@ -479,9 +479,9 @@ void ObjectConverter::save_nodes(std::ofstream& file, Object* object) {
 
 void ObjectConverter::save(std::ofstream& file) {
     file << "<position_objects>" << std::endl;
-    for( PositionObject position_object : data_->objects() ) {
-        Object* object = position_object.object;
+    for( Object* object : data_->objects() ) {
         file << "  <object name=\"" << object->name() << "\">" << std::endl;
+        Position position_object = object->tilePosition();
         file << "    <position x=\"" << position_object.x << "\" y=\"" << position_object.y << "\" />" << std::endl;
         // save nodes of object
         save_nodes(file, object);

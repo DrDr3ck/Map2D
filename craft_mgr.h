@@ -46,6 +46,8 @@ public:
 
     std::vector<Craft*> craftsForMachine(const std::string& machine);
 
+    Craft* findCraft(const std::string& craft_name, const std::string& machine) const;
+
     static std::string getPixmapName(Craft* craft);
 
 private:

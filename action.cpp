@@ -322,9 +322,9 @@ void CleanAction::preAction() {
                 return; // end of cleaning action
             }
             // then move to the nearest non full chest
-            PositionObject pobject = game_board_->data()->getNearestChest(people_->tilePosition());
+            Object* object = game_board_->data()->getNearestChest(people_->tilePosition());
             PathFinding path(game_board_->data());
-            Position end_position = {pobject.x,pobject.y};
+            Position end_position = object->tilePosition();
             std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
             if( positions.size() == 0 ) {
                 // cannot achieve the job
@@ -347,9 +347,9 @@ void CleanAction::preAction() {
         }
     } else {
         // robot is full
-        PositionObject pobject = game_board_->data()->getNearestChest(people_->tilePosition());
-        if( people_->tilePosition().x == pobject.x && people_->tilePosition().y == pobject.y ) { // robot is over the chest: drop items
-            Chest* chest = static_cast<Chest*>(pobject.object);
+        Object* object = game_board_->data()->getNearestChest(people_->tilePosition());
+        if( people_->tilePosition().x == object->tilePosition().x && people_->tilePosition().y == object->tilePosition().y ) { // robot is over the chest: drop items
+            Chest* chest = static_cast<Chest*>(object);
             game_board_->data()->transferItems(people_, chest); // transfer all items from robot to chest
             // then move to the tile, again !
             PathFinding path(game_board_->data());
@@ -366,7 +366,7 @@ void CleanAction::preAction() {
             }
         } else { // move robot over the chest
             PathFinding path(game_board_->data());
-            Position end_position = {pobject.x,pobject.y};
+            Position end_position = object->tilePosition();
             std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
             if( positions.size() == 0 ) {
                 // cannot achieve the job

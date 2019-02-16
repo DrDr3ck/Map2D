@@ -36,6 +36,13 @@ public:
         return tr(user_name_);
     }
 
+    void setTilePosition(Position position) {
+        tile_position_ = position;
+    }
+    Position tilePosition() {
+        return tile_position_;
+    }
+
     bool inPause() const { return in_pause_; }
     void togglePause(bool value) { in_pause_ = value; }
 
@@ -46,6 +53,7 @@ public:
 
     bool hasCrafts() const { return is_crafter_; }
     void addCraft(Craft* craft, int occ=1);
+    std::vector< std::pair<Craft*, int> > getCrafts() const { return crafts_;}
 
     virtual int getNodeCount() const;
     virtual const std::string getNodeName(int node_index) const;
@@ -70,6 +78,7 @@ protected:
     bool has_ingredients_ = false;
     int craft_time_ms_ = 0;
     bool in_pause_ = false;
+    Position tile_position_;
 };
 
 #define Attr std::pair<std::string,std::string>
@@ -124,7 +133,6 @@ public:
 
     virtual void animate(double delta_ms) override;
 
-    bool needFuel();
     void getFuel();
 private:
     CountedItem fuel_;
@@ -147,14 +155,6 @@ class Breaker : public Object {
 public:
     Breaker();
     virtual ~Breaker() {}
-};
-
-/********************************************************************/
-
-struct PositionObject {
-    int x;
-    int y;
-    Object* object;
 };
 
 /********************************************************************/

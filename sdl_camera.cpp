@@ -46,6 +46,8 @@ void SDL_RenderDrawCircle(SDL_Renderer* renderer, const SDL_Rect& dest) {
 }
 
 /********************************************************************/
+// the static approach: https://www.youtube.com/watch?v=HgMNjIZnQhM&t=2s
+MapView* MapView::cur_map = nullptr;
 
 MapView::MapView(SDLCamera* camera, MapData* data, PeopleGroup* group, JobMgr* manager) : data_(data), group_(group), job_manager_(manager),
     map_background_(nullptr), window_background_(nullptr), camera_(camera),
@@ -60,6 +62,8 @@ MapView::MapView(SDLCamera* camera, MapData* data, PeopleGroup* group, JobMgr* m
     camera->getSize(center_x_, center_y_);
     center_x_ /= 2;
     center_y_ /= 2;
+
+    cur_map = this;
 }
 
 MapView::~MapView() {
@@ -161,6 +165,13 @@ void MapView::setTile(int tile_x, int tile_y) {
     tile_y_ = tile_y;
 }
 
+void MapView::store(const BasicItem& item, Position tile_position) {
+    Object* obj = data()->getNearestChest(tile_position);
+    if( obj == nullptr ) return; // TODO: put item on the floor or keep it in the furnace ?
+    Chest* chest = static_cast<Chest*>(obj);
+    chest->addItem(item, 1);
+}
+
 /*!
  * \return the rectangle of the \p people depending of its position.
  */
@@ -194,13 +205,14 @@ SDL_Rect MapView::getTileRect(int tile_x, int tile_y) const {
 
 // render objects
 void MapView::renderObjects(SDLCamera* sdl_camera, std::string& tile_text) {
-    for( auto position_object : data_->objects() ) {
+    for( auto object : data_->objects() ) {
+        Position position_object = object->tilePosition();
         SDL_Rect dest = getTileRect(position_object.x,position_object.y);
-        position_object.object->render(sdl_camera, dest);
+        object->render(sdl_camera, dest);
         if( tile_x_ == position_object.x && tile_y_ == position_object.y ) {
             // add object name on tile tooltip
             tile_text.append("\n");
-            tile_text.append(position_object.object->tooltip());
+            tile_text.append(object->tooltip());
         }
     }
 }
@@ -425,11 +437,12 @@ bool MapView::handleEvent(Camera* camera) {
                     }
                     camera->addView(dialog);
                 } else { // an object is selected ?
-                    for( auto position_object : data_->objects() ) {
+                    for( auto object : data_->objects() ) {
+                        Position position_object = object->tilePosition();
                         if( tile_x_ == position_object.x && tile_y_ == position_object.y ) {
-                            ObjectDialog* dialog = camera->findObjectDialog(position_object.object);
+                            ObjectDialog* dialog = camera->findObjectDialog(object);
                             if( dialog == nullptr ) {
-                                dialog = ObjectDialog::createDialog(position_object, sdl_camera->mouse_x(),sdl_camera->mouse_y()+10);
+                                dialog = ObjectDialog::createDialog(object, sdl_camera->mouse_x(),sdl_camera->mouse_y()+10);
                             } else {
                                 camera->removeView(dialog);
                             }

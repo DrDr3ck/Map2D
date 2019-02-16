@@ -37,34 +37,35 @@ void Object::render(SDLCamera* camera, const SDL_Rect& original_rect) {
 }
 
 int Object::getNodeCount() const {
-    return 0;
+    return crafts_.size();
 }
 
+// <craft nb="10">glass</craft>
 const std::string Object::getNodeName(int node_index) const {
     std::ignore = node_index;
-    return "";
+    return "craft";
 }
 
 int Object::getAttributeCount(int node_index) const {
     std::ignore = node_index;
-    return 0;
+    return 1; // nb
 }
 
 const std::string Object::getAttributeName(int node_index,int attr_index) const {
     std::ignore = node_index;
     std::ignore = attr_index;
-    return "";
+    return "nb";
 }
 
 const std::string Object::getAttributeValue(int node_index,int attr_index) const {
-    std::ignore = node_index;
     std::ignore = attr_index;
-    return "";
+    int occ = crafts_[node_index].second;
+    return Utility::itos(occ);
 }
 
 const std::string Object::getNodeValue(int node_index) const {
-    std::ignore = node_index;
-    return "";
+    Craft* craft = crafts_[node_index].first;
+    return craft->name();
 }
 
 const std::string Object::getNodeString(int node_index) const {
@@ -73,19 +74,27 @@ const std::string Object::getNodeString(int node_index) const {
 }
 
 void Object::setNode(const std::string& node_name, std::vector<std::pair<std::string, std::string>> attributes, const std::string& value) {
-    std::ignore = node_name;
-    std::ignore = attributes;
-    std::ignore = value;
+    if( node_name == "craft" ) {
+        if( attributes.size() != 1 ) return;
+        if( attributes[0].first != "nb" ) return;
+
+        std::string nb_str = attributes[0].second;
+        Craft* craft = CraftMgr::instance()->findCraft(value, this->name());
+        addCraft(craft,atoi( nb_str.c_str() ));
+    }
 }
 
-void Object::addCraft(Craft* craft, int occ) { // TODO
-    std::ignore = craft;
-    std::ignore = occ;
+void Object::addCraft(Craft* craft, int occ) {
+    crafts_.push_back(std::pair<Craft*,int>(craft, occ));
 }
 
 void Object::animate(double delta_ms) { // TODO
     if( inPause() ) return;
     if( crafts_.size() == 0 ) return;
+
+    if( has_ingredients_ && cur_craft_ != nullptr && craft_time_ms_ > delta_ms ) {
+        craft_time_ms_ -= delta_ms;
+    }
 
     if( cur_craft_ == nullptr ) {
         has_ingredients_ = false;
@@ -95,10 +104,21 @@ void Object::animate(double delta_ms) { // TODO
     if( !hasIngredients() ) {
         checkIngredients();
     }
+
     if( hasIngredients() ) {
-        if( craft_time_ms_ < delta_ms ) {
+        if( craft_time_ms_ <= delta_ms ) {
             // TODO: object crafted: store it somewhere
             craft_time_ms_ = 0;
+            int occ = crafts_.at(0).second;
+            std::cout << "adding object " << cur_craft_->name() << occ << std::endl;
+            MapView* map_view = MapView::cur_map;
+            map_view->store(BasicItem(cur_craft_->name()), tilePosition());
+            if( occ > 1) {
+                crafts_.at(0).second = occ - 1;
+            } else {
+                crafts_.erase(crafts_.begin());
+            }
+            cur_craft_ = nullptr;
         }
     }
 }
@@ -113,8 +133,8 @@ void Object::checkIngredients() { // TODO
     const std::vector<CountedItem>& items = cur_craft_->getItems();
     // if ingredients are all present, start craft
     // remove all ingredients from various chests
-    // has_ingredients_ = true;
-    // craft_time_ms_ = cur_craft_->time()*1000;
+    has_ingredients_ = true;
+    craft_time_ms_ = cur_craft_->time()*1000;
     // otherwise: ask robot to find needed ingredients
 }
 
@@ -277,21 +297,24 @@ Furnace::Furnace(
 ) : Object(icon_name, user_name, name) {
 }
 
-void Furnace::animate(double delta_ms) { // TODO
+void Furnace::animate(double delta_ms) {
     if( inPause() ) return;
     if( crafts_.size() == 0 ) return;
 
-    if( needFuel() ) {
+    if( fuel_time_ms_ == 0 ) {
         getFuel();
     }
     Object::animate(delta_ms);
+
+    if( fuel_time_ms_ > delta_ms ) {
+        fuel_time_ms_ -= delta_ms;
+    } else {
+        fuel_time_ms_ = 0;
+    }
 }
 
-bool Furnace::needFuel() {
-    return true;
-}
-
-void Furnace::getFuel() {
+void Furnace::getFuel() { // TODO
+    // find fuel in the nearest chest or ask a robot to get fuel
 }
 
 StoneFurnace::StoneFurnace() : Furnace("objects/stone_furnace.png", tr("StoneFurnace"), "stone_furnace") {

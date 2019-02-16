@@ -329,17 +329,16 @@ void MapData::transferItems(Character* people, Chest* chest) {
     }
 }
 
-PositionObject MapData::getNearestChest(Position position) {
-    PositionObject nearest_chest;
-    nearest_chest.object = nullptr;
+Object* MapData::getNearestChest(Position position) {
+    Object* nearest_chest = nullptr;
     float distance = 10000.f;
-    for( PositionObject pobject : objects() ) {
-        if( pobject.object->name() != "chest" ) continue;
-        Position chest_position = {pobject.x, pobject.y};
+    for( Object* object : objects() ) {
+        if( object->name() != "chest" ) continue;
+        Position chest_position = object->tilePosition();
         float dist = Utility::distance(chest_position, position);
         if( dist < distance ) {
             distance = dist;
-            nearest_chest = pobject;
+            nearest_chest = object;
         }
     }
     return nearest_chest;
@@ -363,12 +362,10 @@ void MapData::removeGround(int x, int y) {
     cur.setBackgroundTile(cur.id(), Tile::NONE);
 }
 
-void MapData::addObject(Object* object, int x, int y) {
-    PositionObject position_object;
-    position_object.x = x;
-    position_object.y = y;
-    position_object.object = object;
-    objects_.push_back( position_object );
+void MapData::addObject(Object* object, int tile_x, int tile_y) {
+    Position cur_position = {tile_x,tile_y};
+    object->setTilePosition(cur_position);
+    objects_.push_back( object );
 }
 
 const Tile& MapData::tile(int x,int y) const {
@@ -540,6 +537,9 @@ GameBoard::~GameBoard() {
 void GameBoard::animate(double delay_ms) {
     group_->animate(this, delay_ms);
     //data_->animate(delay_ms);
+    for( auto object : data_->objects() ) {
+        object->animate(delay_ms);
+    }
     LoggerMgr::instance()->animate(delay_ms);
 }
 

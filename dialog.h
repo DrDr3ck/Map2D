@@ -71,21 +71,21 @@ class ObjectDialog : public Dialog {
 public:
     virtual ~ObjectDialog();
 
-    Object* object() const { return pobject_.object; }
+    Object* object() const { return object_; }
 
     virtual Position tilePosition() const override;
 
     virtual void do_render(Camera* camera, double delay_in_ms) override;
 
-    static ObjectDialog* createDialog(PositionObject object, int x, int y);
+    static ObjectDialog* createDialog(Object* object, int x, int y);
 
 protected:
-    ObjectDialog(PositionObject pobject, int mouse_x = 50, int mouse_y = 50);
+    ObjectDialog(Object* object, int mouse_x = 50, int mouse_y = 50);
 
     bool buttonClicked(SDLButton* button, Position mouse_position);
 
 protected:
-    PositionObject pobject_;
+    Object* object_;
 };
 
 struct CraftOccButton {
@@ -96,7 +96,7 @@ struct CraftOccButton {
 
 class CrafterDialog : public ObjectDialog {
 public:
-    CrafterDialog(PositionObject pobject, int mouse_x = 50, int mouse_y = 50);
+    CrafterDialog(Object* object, int mouse_x = 50, int mouse_y = 50);
     virtual ~CrafterDialog();
 
     virtual void do_render(Camera* camera, double delay_in_ms) override;
@@ -119,7 +119,7 @@ protected:
 
 class SmelterDialog : public CrafterDialog {
 public:
-    SmelterDialog(PositionObject pobject, int mouse_x = 50, int mouse_y = 50);
+    SmelterDialog(Object* object, int mouse_x = 50, int mouse_y = 50);
     virtual ~SmelterDialog();
 
 protected:

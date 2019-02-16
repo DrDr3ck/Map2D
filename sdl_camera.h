@@ -45,6 +45,10 @@ public:
 
     PeopleGroup* group() const;
 
+    void store(const BasicItem& item, Position tile_position);
+
+    static MapView* cur_map;
+
 protected:
     SDL_Rect getPeopleRect(Character* people) const;
     SDL_Rect getTileRect(int tile_x, int tile_y) const;

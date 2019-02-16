@@ -428,13 +428,13 @@
 <group>
   <people name="Bob">
     <position x="5" y="2" />
-    <direction x="1" y="0" />
+    <direction x="1" y="1" />
     <activity value="0" />
     <image_id value="0" />
   </people>
   <people name="Bill">
     <position x="2" y="2" />
-    <direction x="-1" y="0" />
+    <direction x="1" y="0" />
     <activity value="0" />
     <image_id value="12" />
   </people>
@@ -446,9 +446,11 @@
     <counted_item nb="3">sand</counted_item>
     <counted_item nb="2">copper_cable</counted_item>
     <counted_item nb="10">coal</counted_item>
+    <counted_item nb="3">iron_ingot</counted_item>
   </object>
   <object name="stone_furnace">
     <position x="4" y="1" />
+    <craft nb="5">iron_ingot</craft>
   </object>
   <object name="workbench">
     <position x="2" y="1" />
