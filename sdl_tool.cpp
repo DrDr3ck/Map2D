@@ -139,9 +139,12 @@ SDL_Texture* SDLBuildObjectTool::getTexture(SDL_Renderer* renderer) {
 void SDLBuildObjectTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
-    if( camera()->mapView()->getCurTile(x,y) ) {
-        // TODO check that an object is not already here !!
-        camera()->mapView()->addObjectJob(object_name_,x,y);
+    MapView* map_view = camera()->mapView();
+    if( map_view->getCurTile(x,y) ) {
+        // check that an object is not already here !!
+        if( map_view->getObject(x,y) == nullptr ) {
+            map_view->addObjectJob(object_name_,x,y);
+        }
     }
 }
 

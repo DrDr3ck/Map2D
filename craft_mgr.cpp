@@ -54,6 +54,9 @@ namespace {
     }
 }
 
+/*!
+ * \return the pixmap name of the given \p craft
+ */
 std::string CraftMgr::getPixmapName(Craft* craft) {
     std::string craft_name;
     craft_name = "items/" + craft->name() + "_item.png";
@@ -61,8 +64,10 @@ std::string CraftMgr::getPixmapName(Craft* craft) {
     return craft_name;
 }
 
-
-void CraftMgr::loadCrafts(const std::string& filename) { // TODO
+/*!
+ * Loads crafts defined in \p filename
+ */
+void CraftMgr::loadCrafts(const std::string& filename) {
     std::ifstream file(filename);
     if (!file) {
         Logger::error() << tr("Cannot load craft, unable to open file: ") << filename << Logger::endl;

@@ -107,10 +107,8 @@ void Object::animate(double delta_ms) { // TODO
 
     if( hasIngredients() ) {
         if( craft_time_ms_ <= delta_ms ) {
-            // TODO: object crafted: store it somewhere
             craft_time_ms_ = 0;
             int occ = crafts_.at(0).second;
-            std::cout << "adding object " << cur_craft_->name() << occ << std::endl;
             MapView* map_view = MapView::cur_map;
             map_view->store(BasicItem(cur_craft_->name()), tilePosition()); // TODO keep item in the furnace if store returns false ?
             if( occ > 1) {
@@ -132,6 +130,9 @@ void Object::checkIngredients() { // TODO
     // get list of ingredients and check that ingredients are available in a chest
     const std::vector<CountedItem>& items = cur_craft_->getItems();
     // if ingredients are all present, start craft
+    for( auto counted_item : items ) {
+
+    }
     // remove all ingredients from various chests
     has_ingredients_ = true;
     craft_time_ms_ = cur_craft_->time()*1000;
@@ -301,11 +302,16 @@ void Furnace::animate(double delta_ms) {
     if( inPause() ) return;
     if( crafts_.size() == 0 ) return;
 
-    if( fuel_time_ms_ == 0 ) {
+    // no fuel in furnace or no storage : get fuel
+    if( fuel_time_ms_ == 0 || fuel_.count() == 0 ) {
         getFuel();
     }
-    Object::animate(delta_ms);
+    if( fuel_time_ms_ > 0 ) {
+        Object::animate(delta_ms);
+    }
 
+    // do not use coal if craft is not ready
+    if( !has_ingredients_ ) return;
     if( fuel_time_ms_ > delta_ms ) {
         fuel_time_ms_ -= delta_ms;
     } else {
@@ -313,8 +319,110 @@ void Furnace::animate(double delta_ms) {
     }
 }
 
-void Furnace::getFuel() { // TODO
-    // find fuel in the nearest chest or ask a robot to get fuel
+const std::string Furnace::tooltip() const {
+    std::string text = Object::tooltip();
+    if( fuel_time_ms_ > 0 ) {
+        text.append("\n");
+        text.append( tr("fuel time (in sec): ") ) ;
+        text.append( Utility::itos(int(fuel_time_ms_/1000)) );
+    }
+    return text;
+}
+
+void Furnace::getFuel() {
+    if( fuel_time_ms_ == 0 && !fuel_.isNull() ) {
+        fuel_time_ms_ = 80000;
+        fuel_.removeItem(1);
+    }
+    // find fuel in the nearest chest
+    // or ask a robot to get fuel : TODO
+    MapView* map_view = MapView::cur_map;
+    Chest* chest = static_cast<Chest*>(map_view->data()->getAssociatedChest(tilePosition()));
+    if( chest == nullptr ) { return; }
+    // find coal in chest
+    if( chest->removeItem(BasicItem("coal"), 1) == 0 ) {
+        // coal has been found and removed from the chest,
+        // furnace can use it
+        if( fuel_time_ms_ == 0 ) {
+            fuel_time_ms_ = 80000;
+        } else {
+            if( fuel_.isNull() ) {
+                fuel_ = CountedItem(BasicItem("coal"));
+            } else {
+                fuel_.addItem(1);
+            }
+        }
+    }
+}
+
+// save also fuel and fuel_time_ms
+int Furnace::getNodeCount() const {
+    return Object::getNodeCount() + 1;
+}
+
+// <craft nb="10">glass</craft>
+const std::string Furnace::getNodeName(int node_index) const {
+    if( node_index == Object::getNodeCount() ) {
+        return "fuel";
+    }
+    return "craft";
+}
+
+int Furnace::getAttributeCount(int node_index) const {
+    if( node_index == Object::getNodeCount() ) {
+        return 1; // time in ms
+    }
+    return 1; // nb
+}
+
+const std::string Furnace::getAttributeName(int node_index,int attr_index) const {
+    if( node_index == Object::getNodeCount() ) {
+        return "fuel_time_ms";
+    }
+    std::ignore = attr_index;
+    return "nb";
+}
+
+const std::string Furnace::getAttributeValue(int node_index,int attr_index) const {
+    std::ignore = attr_index;
+    if( node_index == Object::getNodeCount() ) {
+        return Utility::itos(fuel_time_ms_);
+    }
+    int occ = crafts_[node_index].second;
+    return Utility::itos(occ);
+}
+
+const std::string Furnace::getNodeValue(int node_index) const {
+    if( node_index == Object::getNodeCount() ) {
+        return Utility::itos( fuel_.count() ); // nb fuel item
+    }
+    Craft* craft = crafts_[node_index].first;
+    return craft->name();
+}
+
+void Furnace::setNode(const std::string& node_name, std::vector<std::pair<std::string, std::string>> attributes, const std::string& value) {
+    if( node_name == "craft" ) {
+        if( attributes.size() != 1 ) return;
+        if( attributes[0].first != "nb" ) return;
+
+        std::string nb_str = attributes[0].second;
+        Craft* craft = CraftMgr::instance()->findCraft(value, this->name());
+        addCraft(craft,atoi( nb_str.c_str() ));
+    } else if( node_name == "fuel" ) {
+        if( attributes.size() != 1 ) return;
+        if( attributes[0].first != "fuel_time_ms" ) return;
+
+        std::string nb_str = attributes[0].second;
+        // value is the number of fuel
+        // attr is the fuel time in ms
+        int nb_fuel = atoi(value.c_str());
+        if( nb_fuel == 0 ) {
+            fuel_ = CountedItem();
+        } else {
+            fuel_ = CountedItem(BasicItem("coal"), nb_fuel);
+        }
+        fuel_time_ms_ = atoi(nb_str.c_str());
+    }
 }
 
 StoneFurnace::StoneFurnace() : Furnace("objects/stone_furnace.png", tr("StoneFurnace"), "stone_furnace") {

@@ -34,6 +34,8 @@ public:
     void cleanItemJob(int x, int y);
     void addObjectJob(const std::string& object_name, int x, int y);
 
+    Object* getObject(int x,int y) const;
+
     Position onTile(int mouse_x, int mouse_y) const;
     void setTile(int tile_x, int tile_y);
     const SDL_Rect& onTileRect() const { return ontile_rect_; }

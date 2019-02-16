@@ -104,6 +104,7 @@
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
+    <counteditem name="copper_ingot" value="1" />
   </tile>
   <tile x="5" y="1">
     <id value="0" />
@@ -324,7 +325,7 @@
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
-    <counteditem name="chest" value="1" />
+    <counteditem name="chest" value="2" />
   </tile>
   <tile x="6" y="4">
     <id value="8" />
@@ -429,14 +430,14 @@
 </mapdata>
 <group>
   <people name="Bob">
-    <position x="5" y="4" />
-    <direction x="0" y="-1" />
+    <position x="3" y="4" />
+    <direction x="1" y="0" />
     <activity value="0" />
     <image_id value="0" />
   </people>
   <people name="Bill">
     <position x="8" y="2" />
-    <direction x="-1" y="0" />
+    <direction x="0" y="1" />
     <activity value="0" />
     <image_id value="12" />
   </people>
@@ -447,7 +448,7 @@
     <counted_item nb="8">stone</counted_item>
     <counted_item nb="3">sand</counted_item>
     <counted_item nb="2">copper_cable</counted_item>
-    <counted_item nb="10">coal</counted_item>
+    <counted_item nb="3">coal</counted_item>
     <counted_item nb="8">iron_ingot</counted_item>
     <counted_item nb="1">chest</counted_item>
     <counted_item nb="1">stone_furnace</counted_item>
@@ -455,6 +456,8 @@
   </object>
   <object name="stone_furnace">
     <position x="4" y="1" />
+    <craft nb="1">copper_ingot</craft>
+    <fuel fuel_time_ms="58281">1</fuel>
   </object>
   <object name="workbench">
     <position x="2" y="1" />

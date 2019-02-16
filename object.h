@@ -79,6 +79,7 @@ protected:
     int craft_time_ms_ = 0;
     bool in_pause_ = false;
     Position tile_position_;
+    std::vector<CountedItem> ingredient_items_;
 };
 
 #define Attr std::pair<std::string,std::string>
@@ -132,6 +133,17 @@ public:
     virtual ~Furnace() {}
 
     virtual void animate(double delta_ms) override;
+
+    virtual const std::string tooltip() const override;
+
+    virtual int getNodeCount() const override;
+    virtual const std::string getNodeName(int node_index) const override;
+    virtual int getAttributeCount(int node_index) const override;
+    virtual const std::string getAttributeName(int node_index,int attr_index) const override;
+    virtual const std::string getAttributeValue(int node_index,int attr_index) const override;
+    virtual const std::string getNodeValue(int node_index) const override;
+
+    virtual void setNode(const std::string& node_name, std::vector<Attr> attributes, const std::string& value) override;
 
     void getFuel();
 private:

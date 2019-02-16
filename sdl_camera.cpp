@@ -142,6 +142,18 @@ void MapView::addObjectJob(const std::string& object_name, int x, int y) {
 }
 
 /*!
+ * \return the object that is at tile position \p x, \p y or nullptr if no object.
+ */
+Object* MapView::getObject(int x,int y) const {
+    for( auto object : data()->objects() ) {
+        if( object->tilePosition().x == x && object->tilePosition().y == y ) {
+            return object;
+        }
+    }
+    return nullptr;
+}
+
+/*!
  * \return true and the tile position according to the mouse position
  * or false if unreached
  */
