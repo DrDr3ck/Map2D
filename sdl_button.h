@@ -68,7 +68,9 @@ private:
 
 class SDLQuitButton : public SDLButton {
 public:
-    SDLQuitButton(SDLCamera* camera, int x, int y) : SDLButton("buttons/quit.png", x,y), camera_(camera) {}
+    SDLQuitButton(SDLCamera* camera, int x, int y) : SDLButton("buttons/quit.png", tr("Quit"),x,y), camera_(camera) {
+        bottom_position_ = true;
+    }
     virtual ~SDLQuitButton() {}
 
     virtual void activate();

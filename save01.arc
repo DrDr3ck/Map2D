@@ -194,10 +194,10 @@
   <tile x="7" y="2">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="99" />
+    <occurrence value="98" />
     <btype value="COAL" />
     <ftype value="METAL" />
-    <counteditem name="coal" value="1" />
+    <counteditem name="coal" value="2" />
   </tile>
   <tile x="8" y="2">
     <id value="0" />
@@ -429,14 +429,14 @@
 </mapdata>
 <group>
   <people name="Bob">
-    <position x="4" y="4" />
-    <direction x="-1" y="0" />
+    <position x="5" y="4" />
+    <direction x="0" y="-1" />
     <activity value="0" />
     <image_id value="0" />
   </people>
   <people name="Bill">
-    <position x="2" y="2" />
-    <direction x="0" y="0" />
+    <position x="8" y="2" />
+    <direction x="-1" y="0" />
     <activity value="0" />
     <image_id value="12" />
   </people>

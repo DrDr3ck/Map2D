@@ -99,7 +99,7 @@ void MapView::extractItemJob(int x, int y, int nb) {
     } else if( cur_tile.background_type() == Tile::COAL ) {
         job = new ExtractJob(tile_position, "buttons/extract_tool", 5000, nb);
     } else if( cur_tile.background_type() == Tile::SAND ) {
-        job = new ExtractJob(tile_position, "buttons/pelle_tool", 5000, nb);
+        job = new ExtractJob(tile_position, "buttons/dig_tool", 5000, nb);
     }
     if( job != nullptr ) {
         job_manager_->addJob(job);
@@ -622,7 +622,7 @@ SDLCamera::SDLCamera(
     TTF_Init();
     manager_ = new SDLButtonManager();
 
-    // Add Wall menu
+    // Add foundation menu
     int max_column = 4;
     MenuButton* build_menu = new MenuButton(max_column, 15, 90);
 
@@ -651,15 +651,15 @@ SDLCamera::SDLCamera(
     manager_->addButton( build_button );
     manager_->addMenuButton( build_menu );
 
-    // Add excavation menu
-    MenuButton* excavation_menu = new MenuButton(max_column, 90, 90);
+    // Add tools menu
+    MenuButton* excavation_menu = new MenuButton(max_column, 85, 90);
     SDLExtractTool* extract_tool = new SDLExtractTool(this, "buttons/extract_tool.png", 1);
     SDLButton* extract_button_tool = new SDLToolButton(extract_tool, "buttons/extract_tool.png", 0, 0);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
-    extract_tool = new SDLExtractTool(this, "buttons/pelle_tool.png", 1);
-    extract_button_tool = new SDLToolButton(extract_tool, "buttons/pelle_tool.png", 0, 0);
+    extract_tool = new SDLExtractTool(this, "buttons/dig_tool.png", 1);
+    extract_button_tool = new SDLToolButton(extract_tool, "buttons/dig_tool.png", 0, 0);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
@@ -673,8 +673,8 @@ SDLCamera::SDLCamera(
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
-    extract_tool = new SDLExtractTool(this, "buttons/pelle_tool_10.png", 10);
-    extract_button_tool = new SDLToolButton(extract_tool, "buttons/pelle_tool_10.png", 0, 0);
+    extract_tool = new SDLExtractTool(this, "buttons/dig_tool_10.png", 10);
+    extract_button_tool = new SDLToolButton(extract_tool, "buttons/dig_tool_10.png", 0, 0);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
@@ -683,8 +683,8 @@ SDLCamera::SDLCamera(
     manager_->addButton( excavation_button );
     manager_->addMenuButton( excavation_menu );
 
-    // Add Object menu
-    MenuButton* object_menu = new MenuButton(max_column, 165, 90);
+    // Add Objects menu
+    MenuButton* object_menu = new MenuButton(max_column, 155, 90);
 
     SDLBuildObjectTool* workbench_tool = new SDLBuildObjectTool(this, "objects/workbench.png", "workbench");
     SDLButton* workbench_button_tool = new SDLToolButton(workbench_tool, "objects/workbench.png", 0, 0);
