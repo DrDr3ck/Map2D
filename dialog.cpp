@@ -3,6 +3,7 @@
 #include "sdl_camera.h"
 #include "sdl_button.h"
 #include "craft_mgr.h"
+#include "session.h"
 
 #include <tuple>
 #include <algorithm>
@@ -174,7 +175,7 @@ void RobotDialog::do_render(Camera* camera, double delay_in_ms) {
     SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
 
     std::string title_str = tr(" - Robot");
-    SDLText title(title_str, "pixel11", 11);
+    SDLText title(title_str, Session::fontFamily(), 11);
     title.set_position(3+x_,2+y_);
     SDL_Color title_bgcolor = getBackgroundColor();
     title_bgcolor.r = title_bgcolor.r*0.9;
@@ -191,7 +192,7 @@ void RobotDialog::do_render(Camera* camera, double delay_in_ms) {
     str+=robot_->name();
     str+= "\n" + tr("Slot: ") + Utility::itos(robot_->maxCarry()-robot_->maxCarriable()) + "/" + Utility::itos(robot_->maxCarry());
     str+="\n" + robot_->actionDescription();
-    SDLText text(str);
+    SDLText text(str, Session::fontFamily());
     text.set_position(9+x_,25+y_);
     text.setBackgroundColor(getBackgroundColor());
     sdl_camera->displayText(text, false, true);
@@ -218,7 +219,7 @@ void ObjectDialog::do_render(Camera* camera, double delay_in_ms) {
 
     std::string title_str(" - ");
     title_str.append( object_->userName() );
-    SDLText title(title_str, "pixel11", 11);
+    SDLText title(title_str, Session::fontFamily(), 11);
     title.set_position(3+x_,3+y_);
     SDL_Color title_bgcolor = getBackgroundColor();
     title_bgcolor.r = title_bgcolor.r*0.9;
@@ -242,7 +243,7 @@ void ObjectDialog::do_render(Camera* camera, double delay_in_ms) {
         str+="\n" + tr(node_string);
     }
 
-    SDLText text(str);
+    SDLText text(str, Session::fontFamily());
     text.set_position(9+x_,25+y_);
     text.setBackgroundColor(getBackgroundColor());
     sdl_camera->displayText(text, false, true);
@@ -291,7 +292,7 @@ void CrafterDialog::do_render(Camera* camera, double delay_in_ms) {
 
     std::string title_str(" - ");
     title_str.append( object_->userName() );
-    SDLText title(title_str, "pixel11", 11);
+    SDLText title(title_str, Session::fontFamily(), 11);
     title.set_position(3+x_,3+y_);
     SDL_Color title_bgcolor = getBackgroundColor();
     title_bgcolor.r = title_bgcolor.r*0.9;
@@ -335,7 +336,7 @@ void CrafterDialog::do_render(Camera* camera, double delay_in_ms) {
             str+="\n * " + tr(item.item().name()) + " x " + Utility::itos(item.count());
         }
     }
-    SDLText text(str);
+    SDLText text(str, Session::fontFamily());
     text.set_position(9+x_,25+y_+50);
     text.setBackgroundColor(getBackgroundColor());
     sdl_camera->displayText(text, false, true);

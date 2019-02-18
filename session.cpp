@@ -149,4 +149,8 @@ string Session::getString(const string& label, string default_value) {
     return value;
 }
 
+std::string Session::fontFamily() {
+    return Session::instance()->getString("*font*family", "pixel11");
+}
+
 

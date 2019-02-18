@@ -92,7 +92,7 @@ private:
 class SDLText {
 public:
     SDLText(
-        const std::string& text, const std::string& family = "pixel11", int font_size = 16,
+        const std::string& text, const std::string& family, int font_size = 16,
         const SDL_Color& color = SDLText::black(), const SDL_Color& background_color = SDLText::white()
     );
     ~SDLText();

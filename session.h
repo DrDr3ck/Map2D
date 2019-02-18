@@ -28,6 +28,8 @@ public:
     void setBoolean(const std::string& label, bool value);
     void setInteger(const std::string& label, int value);
 
+    static std::string fontFamily();
+
 private:
     static Session* singleton_;
     std::map< std::string, ValueDesc > dictionary_;
