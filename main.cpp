@@ -101,6 +101,22 @@ int main(int argc, char** argv) {
     FontLib* font_manager = FontLib::instance();
     camera->init();
 
+    CommandCenter* cc = nullptr;
+    std::vector<Chest*> chests;
+    for( auto object : data.objects() ) {
+        Chest* chest = dynamic_cast<Chest*>(object);
+        if( chest != nullptr ) {
+            chests.push_back(chest);
+            continue;
+        }
+        if( cc == nullptr ) {
+            cc = dynamic_cast<CommandCenter*>(object);
+        }
+    }
+    if( cc != nullptr ) {
+        CommandCenter::init(cc, chests);
+    }
+
     // Main loop
     std::chrono::steady_clock::time_point start_clock = std::chrono::steady_clock::now();
     bool ending = false;
