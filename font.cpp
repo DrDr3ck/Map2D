@@ -57,7 +57,7 @@ int FontLib::fontTitleSize() {
 }
 
 int FontLib::fontSize() {
-    return Session::instance()->getInteger("*font*size", 12);
+    return Session::instance()->getInteger("*font*size", 16);
 }
 
 // Initialize singleton_ to nullptr

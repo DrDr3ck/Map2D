@@ -108,6 +108,9 @@ SDLButton::~SDLButton() {
 
 SDL_Texture* SDLButton::getTexture(SDL_Renderer* renderer) {
     if( texture_ == nullptr ) {
+        // Transparency with green color
+        Uint32 key = SDL_MapRGB(surface_->format, 0, 255, 0);
+        SDL_SetColorKey(surface_ , SDL_TRUE, key);
         texture_ = SDL_CreateTextureFromSurface(renderer, surface_);
         if( texture_ == nullptr ) {
             Logger::error() << "CreateRGBSurface failed: " << SDL_GetError() << Logger::endl;

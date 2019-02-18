@@ -3,7 +3,7 @@
 *camera*width: 1200 # no description
 *display_F3: false # no description
 *font*family: FreePixel # no description
-*font*size: 12 # no description
+*font*size: 16 # no description
 *font*title*size: 12 # no description
 *language: fr # no description
 *pause_when_launched: false # if true, automatically pause the game when launched

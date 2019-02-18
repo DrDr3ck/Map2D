@@ -111,6 +111,8 @@ SDL_Texture* JobMgr::getTexture(const std::string& icon_type) {
         map_of_jobs_[icon_type] = texture;
         return texture;
     }
+    Uint32 key = SDL_MapRGB(icon_surface->format, 0, 255, 0);
+    SDL_SetColorKey(icon_surface , SDL_TRUE, key);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer_, icon_surface);
     SDL_SetTextureAlphaMod( texture, 192 );
     map_of_jobs_[icon_type] = texture;

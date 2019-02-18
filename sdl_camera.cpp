@@ -238,6 +238,7 @@ void MapView::renderObjects(SDLCamera* sdl_camera, std::string& tile_text) {
     }
 }
 
+// render jobs
 void MapView::renderJobs(SDLCamera* sdl_camera) {
     // display jobs (in semi transparency)
     for( auto job : job_manager_->jobs() ) {

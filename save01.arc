@@ -357,9 +357,10 @@
   <tile x="0" y="5">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="23" />
+    <occurrence value="22" />
     <btype value="ROCK" />
     <ftype value="METAL" />
+    <counteditem name="stone" value="1" />
   </tile>
   <tile x="1" y="5">
     <id value="0" />
@@ -430,13 +431,13 @@
 <group>
   <people name="Bob">
     <position x="5" y="2" />
-    <direction x="1" y="0" />
+    <direction x="-1" y="1" />
     <activity value="0" />
     <image_id value="0" />
   </people>
   <people name="Bill">
-    <position x="6" y="5" />
-    <direction x="0" y="1" />
+    <position x="0" y="5" />
+    <direction x="-1" y="1" />
     <activity value="0" />
     <image_id value="12" />
   </people>

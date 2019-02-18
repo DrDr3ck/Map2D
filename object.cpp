@@ -18,6 +18,9 @@ Object::Object(
 SDL_Texture* Object::getTexture(SDLCamera* camera, int /*index*/) {
     if( images_.size() == 0 ) {
         SDL_Surface* surface = Utility::IMGLoad(icon_name_);
+        // Transparency with green color
+        Uint32 key = SDL_MapRGB(surface->format, 0, 255, 0);
+        SDL_SetColorKey(surface , SDL_TRUE, key);
         width_ = surface->w;
         height_ = surface->h;
         SDL_Renderer* main_renderer = camera->main_renderer();
