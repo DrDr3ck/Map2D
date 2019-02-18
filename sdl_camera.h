@@ -6,6 +6,7 @@
 #include "job.h"
 #include "camera.h"
 #include "button.h"
+#include "font.h"
 #include <string>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -92,7 +93,7 @@ private:
 class SDLText {
 public:
     SDLText(
-        const std::string& text, const std::string& family, int font_size = 16,
+        const std::string& text, const std::string& family, int font_size = FontLib::fontSize(),
         const SDL_Color& color = SDLText::black(), const SDL_Color& background_color = SDLText::white()
     );
     ~SDLText();

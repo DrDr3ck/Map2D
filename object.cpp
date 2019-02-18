@@ -434,10 +434,55 @@ Breaker::Breaker() : Object("objects/breaker.png", tr("Breaker"), "breaker") {
 WorkBench::WorkBench() : Object("objects/workbench.png", tr("WorkBench"), "workbench") {
 }
 
+ElectricFurnace::ElectricFurnace() : Furnace("objects/electric_furnace.png", tr("ElectricFurnace"), "electric_furnace") {
+}
+
+/********************************************************************/
+
 CommandCenter::CommandCenter() : Object("objects/command_center.png", tr("CommandCenter"), "command_center") {
 }
 
-ElectricFurnace::ElectricFurnace() : Furnace("objects/electric_furnace.png", tr("ElectricFurnace"), "electric_furnace") {
+const std::vector<CountedItem>& CommandCenter::storedItems() const {
+    return stored_items_;
+}
+
+void CommandCenter::addItems(const BasicItem& item, int nb) {
+    for( auto& counted_item : stored_items_ ) {
+        if( counted_item.item().name() == item.name() ) {
+            counted_item.addItem(nb);
+            return;
+        }
+    }
+    stored_items_.push_back( CountedItem(item, nb) );
+}
+
+/*!
+ * \return the number of items not removed. if 0, all items have been removed
+ */
+int CommandCenter::removeItems(const BasicItem& item, int nb) {
+    int total = nb;
+    for( auto& counted_item : stored_items_ ) {
+        if( counted_item.item().name() == item.name() ) {
+            if( nb <= counted_item.count() ) {
+                counted_item.removeItem(nb);
+                total = 0;
+            } else {
+                total = total - counted_item.count();
+                counted_item.removeItem(counted_item.count());
+            }
+        }
+    }
+    return total;
+}
+
+void CommandCenter::init(CommandCenter* cc, std::vector<Chest*> chests) {
+    if( cc == nullptr ) { return; }
+    for( auto chest : chests ) {
+        const std::vector<CountedItem>& counted_items = chest->items();
+        for( auto counted_item : counted_items ) {
+            cc->addItems(counted_item.item(), counted_item.count());
+        }
+    }
 }
 
 /********************************************************************/

@@ -131,6 +131,15 @@ class CommandCenter : public Object {
 public:
     CommandCenter();
     virtual ~CommandCenter() {}
+
+    const std::vector<CountedItem>& storedItems() const;
+    void addItems(const BasicItem& item, int nb=1);
+    int removeItems(const BasicItem& item, int nb=1);
+
+    static void init(CommandCenter* cc, std::vector<Chest*> chests);
+
+protected:
+    std::vector<CountedItem> stored_items_;
 };
 
 class Furnace : public Object {

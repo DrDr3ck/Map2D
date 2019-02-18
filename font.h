@@ -17,6 +17,10 @@ public:
 
     TTF_Font* getFont(std::string family, int font_size);
 
+    static std::string fontFamily();
+    static int fontTitleSize();
+    static int fontSize();
+
 private:
     static FontLib* singleton_;
     std::map<std::string, TTF_Font*> familyToFont_;

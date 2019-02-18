@@ -4,7 +4,6 @@
 #include <math.h>
 #include <string>
 
-#include "font.h"
 #include "path_finding.h"
 #include "sdl_button.h"
 #include "sdl_tool.h"
@@ -409,7 +408,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
 
     // Display the tooltip of the tile
     if( !tile_text.empty() ) {
-        SDLText text(tile_text, Session::fontFamily(), 14, SDLText::black());
+        SDLText text(tile_text, FontLib::fontFamily(), FontLib::fontSize(), SDLText::black());
         text.set_position(camera->mouse_x()+30,camera->mouse_y()+10);
         sdl_camera->displayText(text, true);
     }
@@ -792,7 +791,7 @@ void SDLCamera::render(double delay_in_ms) {
             }
             options.append(opt);
         }
-        SDLText text(options, Session::fontFamily(), 16, SDLText::black());
+        SDLText text(options, FontLib::fontFamily(), FontLib::fontSize(), SDLText::black());
         text.set_position(0,0);
         SDL_SetRenderDrawColor( main_renderer_, 250, 250, 250, 255 );
         text.texture(main_renderer_); // need to create texture in order to get correct text dimension
@@ -807,7 +806,7 @@ void SDLCamera::render(double delay_in_ms) {
         mouse_position.append(Utility::itos(mouse_x()));
         mouse_position.append(" ");
         mouse_position.append(Utility::itos(mouse_y()));
-        SDLText text(mouse_position, Session::fontFamily(), 14, SDLText::red());
+        SDLText text(mouse_position, FontLib::fontFamily(), FontLib::fontSize(), SDLText::red());
         text.set_position(10,Camera::cur_camera->height()-30);
         displayText(text);
     }
@@ -838,7 +837,7 @@ void SDLCamera::render(double delay_in_ms) {
             i--;
         } else if( max_terminal_strings > 0 ) {
             // display logger string
-            SDLText text(log.full_string(), Session::fontFamily(), 14, (log.type() == "Info") ? SDLText::green() : ((log.type() == "Error") ? SDLText::red() : SDLText::black()));
+            SDLText text(log.full_string(), FontLib::fontFamily(), FontLib::fontSize(), (log.type() == "Info") ? SDLText::green() : ((log.type() == "Error") ? SDLText::red() : SDLText::black()));
             text.set_position(30,Camera::cur_camera->height()-50-text_offset);
             this->displayText(text, true);
             max_terminal_strings--;
@@ -860,7 +859,7 @@ void SDLCamera::displayButton(SDLButton* button) {
     SDL_Texture* button_texture = button->getTexture(main_renderer());
     displayTexture(button_texture, &button->rect());
     if( !button->text().empty()) {
-        SDLText button_text( button->text(), Session::fontFamily(), 9);
+        SDLText button_text( button->text(), FontLib::fontFamily(), FontLib::fontTitleSize());
         if( button->bottomPosition() ) {
             button_text.texture(main_renderer());
             SDL_Rect text_rect = button_text.rect();

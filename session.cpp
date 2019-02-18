@@ -68,11 +68,10 @@ void Session::saveSession() {
 
     Logger::info() << tr("Saving ") << option_filename << "..." << Logger::endl;
 
-    time_t now = time(0);
-    char* date = ctime(&now);
-
     file << "# edit at your own risk !!" << std::endl;
-    file << "# date " << date << std::endl;
+    //time_t now = time(0);
+    //char* date = ctime(&now);
+    //file << "# date " << date << std::endl;
 
     for( auto attr : dictionary_ ) {
         file << attr.first << ": " << attr.second.first << " " << attr.second.second << std::endl;
@@ -147,10 +146,6 @@ string Session::getString(const string& label, string default_value) {
     ValueDesc vd = std::pair<string, string>(default_value, "");
     dictionary_.insert(std::pair<string,ValueDesc>(label, vd));
     return value;
-}
-
-std::string Session::fontFamily() {
-    return Session::instance()->getString("*font*family", "pixel11");
 }
 
 

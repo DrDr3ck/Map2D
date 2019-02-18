@@ -1,5 +1,5 @@
 #include "sdl_button.h"
-#include "session.h"
+#include "font.h"
 
 #include <iostream>
 #include <math.h>
@@ -175,7 +175,7 @@ SDLTextButton::SDLTextButton(
     const SDL_Color& bgcolor
 ) : SDLButton(x,y), camera_(camera), text_(text) {
     // build texture with text
-    SDLText stext(text, Session::fontFamily(), 16, color, bgcolor);
+    SDLText stext(text, FontLib::fontFamily(), FontLib::fontSize(), color, bgcolor);
     stext.set_position(x,y);
     SDL_Texture* texture = stext.texture(camera->main_renderer()) ;
     setTexture(texture);

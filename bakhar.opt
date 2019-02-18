@@ -1,8 +1,11 @@
 # edit at your own risk !!
-# date Sat Feb 16 11:54:57 2019
-
 *camera*height: 960 # no description
 *camera*width: 1200 # no description
-*display_F3: true # no description
+*display_F3: false # no description
+*font*family: FreePixel # no description
+*font*size: 12 # no description
+*font*title*size: 12 # no description
 *language: fr # no description
 *pause_when_launched: false # if true, automatically pause the game when launched
+*second_test: false # no description
+*test: true # no description

@@ -93,6 +93,7 @@ public:
     CommandCenterDialog(Object* object, int mouse_x = 50, int mouse_y = 50);
     virtual ~CommandCenterDialog();
 
+    virtual void do_render(Camera* camera, double delay_in_ms) override;
 };
 
 struct CraftOccButton {

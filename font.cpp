@@ -1,6 +1,7 @@
 #include "font.h"
 #include "map.h"
 #include "logger.h"
+#include "session.h"
 
 #include <iostream>
 
@@ -38,10 +39,25 @@ TTF_Font* FontLib::getFont(std::string family, int font_size) {
     key.append(Utility::itos(font_size));
     if(familyToFont_.find(key) == familyToFont_.end()) {
         TTF_Font* font = TTF_OpenFont(family.append(".ttf").c_str(), font_size);
+        if( font == nullptr ) {
+            font = TTF_OpenFont("pixel11.ttf", font_size);
+        }
         familyToFont_[key] = font;
     }
 
     return familyToFont_[key];
+}
+
+std::string FontLib::fontFamily() {
+    return Session::instance()->getString("*font*family", "pixel11");
+}
+
+int FontLib::fontTitleSize() {
+    return Session::instance()->getInteger("*font*title*size", 12);
+}
+
+int FontLib::fontSize() {
+    return Session::instance()->getInteger("*font*size", 12);
 }
 
 // Initialize singleton_ to nullptr

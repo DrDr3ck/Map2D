@@ -427,7 +427,7 @@
 	"map.h"
 	<string>
 
-1550485559 source:d:\games\programs\map2d\sdl_camera.cpp
+1550489621 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -443,12 +443,13 @@
 	"session.h"
 	"dialog.h"
 
-1550482293 d:\games\programs\map2d\sdl_camera.h
+1550489653 d:\games\programs\map2d\sdl_camera.h
 	"character.h"
 	"map.h"
 	"job.h"
 	"camera.h"
 	"button.h"
+	"font.h"
 	<string>
 	<SDL2/SDL.h>
 	<SDL2/SDL_ttf.h>
@@ -462,19 +463,20 @@
 	"camera.h"
 	<list>
 
-1547713057 source:d:\games\programs\map2d\font.cpp
+1550489549 source:d:\games\programs\map2d\font.cpp
 	"font.h"
 	"map.h"
 	"logger.h"
+	"session.h"
 	<iostream>
 
-1522766398 d:\games\programs\map2d\font.h
+1550489457 d:\games\programs\map2d\font.h
 	<SDL2/SDL_ttf.h>
 	<map>
 
-1550485845 source:d:\games\programs\map2d\sdl_button.cpp
+1550489560 source:d:\games\programs\map2d\sdl_button.cpp
 	"sdl_button.h"
-	"session.h"
+	"font.h"
 	<iostream>
 	<math.h>
 	<string>
@@ -621,7 +623,7 @@
 	<string>
 	<map>
 
-1550482178 source:d:\games\programs\map2d\session.cpp
+1550489483 source:d:\games\programs\map2d\session.cpp
 	"session.h"
 	"logger.h"
 	"translator.h"
@@ -682,14 +684,14 @@
 	"items.h"
 	"texture_mgr.h"
 
-1550485544 d:\games\programs\map2d\object.h
+1550487800 d:\games\programs\map2d\object.h
 	<vector>
 	<string>
 	"utility.h"
 	"translator.h"
 	"items.h"
 
-1550485258 source:d:\games\programs\map2d\object.cpp
+1550487818 source:d:\games\programs\map2d\object.cpp
 	"object.h"
 	"translator.h"
 	<iostream>
@@ -697,16 +699,16 @@
 	"sdl_camera.h"
 	"craft_mgr.h"
 
-1550482323 source:d:\games\programs\map2d\dialog.cpp
+1550489511 source:d:\games\programs\map2d\dialog.cpp
 	"dialog.h"
 	"sdl_camera.h"
 	"sdl_button.h"
 	"craft_mgr.h"
-	"session.h"
+	"font.h"
 	<tuple>
 	<algorithm>
 
-1550486644 d:\games\programs\map2d\dialog.h
+1550486729 d:\games\programs\map2d\dialog.h
 	"camera.h"
 	"object.h"
 	<SDL2/SDL.h>
