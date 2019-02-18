@@ -169,7 +169,7 @@ public:
 
     void displayTexture(SDL_Texture* texture, const SDL_Rect* rect, const SDL_Rect* dest = NULL);
     void displayText(SDLText& text, bool background=false, bool croppable=false);
-    void displayButton(SDLButton* button);
+    void displayButton(SDLButton* button, int offset_x=0, int offset_y=0);
 
     void getSize(int& screen_width, int& screen_height);
     SDL_Window* window() const { return window_; }

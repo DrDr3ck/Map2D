@@ -855,18 +855,21 @@ void SDLCamera::displayTexture(SDL_Texture* texture, const SDL_Rect* rect, const
         Logger::error() << "Error in displayTexture: " << SDL_GetError() << Logger::endl;
     }
 }
-void SDLCamera::displayButton(SDLButton* button) {
+void SDLCamera::displayButton(SDLButton* button, int offset_x, int offset_y) {
     if( button == nullptr ) return;
     SDL_Texture* button_texture = button->getTexture(main_renderer());
-    displayTexture(button_texture, &button->rect());
+    SDL_Rect rect = button->rect();
+    rect.x = rect.x+offset_x;
+    rect.y = rect.y+offset_y;
+    displayTexture(button_texture, &rect);
     if( !button->text().empty()) {
-        SDLText button_text( button->text(), FontLib::fontFamily(), FontLib::fontTitleSize());
+        SDLText button_text( button->text(), FontLib::fontFamily(), FontLib::fontButtonSize());
         if( button->bottomPosition() ) {
             button_text.texture(main_renderer());
             SDL_Rect text_rect = button_text.rect();
-            button_text.set_position(button->rect().x +button->rect().w/2 - text_rect.w/2 , button->rect().y+button->rect().h);
+            button_text.set_position(button->rect().x +button->rect().w/2 - text_rect.w/2 + offset_x, button->rect().y+button->rect().h + offset_y);
         } else {
-            button_text.set_position(button->rect().x+button->rect().w, button->rect().y);
+            button_text.set_position(button->rect().x+button->rect().w + offset_x, button->rect().y + offset_y);
         }
         displayText(button_text, true);
     }

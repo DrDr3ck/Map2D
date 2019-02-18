@@ -94,6 +94,9 @@ public:
     virtual ~CommandCenterDialog();
 
     virtual void do_render(Camera* camera, double delay_in_ms) override;
+protected:
+    std::vector<SDLButton*> buttons_;
+    CommandCenter* command_center_;
 };
 
 struct CraftOccButton {

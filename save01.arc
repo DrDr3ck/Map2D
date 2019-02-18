@@ -431,7 +431,7 @@
 <group>
   <people name="Bob">
     <position x="5" y="2" />
-    <direction x="1" y="0" />
+    <direction x="-1" y="1" />
     <activity value="0" />
     <image_id value="0" />
   </people>

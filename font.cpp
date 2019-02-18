@@ -53,7 +53,11 @@ std::string FontLib::fontFamily() {
 }
 
 int FontLib::fontTitleSize() {
-    return Session::instance()->getInteger("*font*title*size", 12);
+    return Session::instance()->getInteger("*font*title*size", 14);
+}
+
+int FontLib::fontButtonSize() {
+    return Session::instance()->getInteger("*font*button*size", 12);
 }
 
 int FontLib::fontSize() {

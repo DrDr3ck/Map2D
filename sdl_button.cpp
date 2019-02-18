@@ -106,6 +106,27 @@ SDLButton::~SDLButton() {
     }
 }
 
+void SDLButton::setIcon(const std::string& icon_name) {
+    if( icon_name == buttonName() ) {
+        return; // icon is already set
+    }
+    setButtonName(icon_name);
+    if( surface_ != nullptr ) {
+        SDL_FreeSurface(surface_);
+        surface_ = nullptr;
+    }
+    if( texture_ != nullptr )  {
+        SDL_DestroyTexture(texture_);
+        texture_ = nullptr;
+    }
+    surface_ = Utility::IMGLoad(icon_name.c_str());
+    int w = surface_->w;
+    int h = surface_->h;
+    setSize(w,h);
+    rect_.w = w;
+    rect_.h = h;
+}
+
 SDL_Texture* SDLButton::getTexture(SDL_Renderer* renderer) {
     if( texture_ == nullptr ) {
         // Transparency with green color

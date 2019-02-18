@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1550306986 source:d:\games\programs\map2d\main.cpp
+1550496644 source:d:\games\programs\map2d\main.cpp
 	<SDL2/SDL.h>
 	<SDL2/SDL_mixer.h>
 	<iostream>
@@ -427,7 +427,7 @@
 	"map.h"
 	<string>
 
-1550490614 source:d:\games\programs\map2d\sdl_camera.cpp
+1550528830 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -442,7 +442,7 @@
 	"session.h"
 	"dialog.h"
 
-1550489653 d:\games\programs\map2d\sdl_camera.h
+1550528509 d:\games\programs\map2d\sdl_camera.h
 	"character.h"
 	"map.h"
 	"job.h"
@@ -458,7 +458,7 @@
 	"button.h"
 	<iostream>
 
-1522766399 d:\games\programs\map2d\button.h
+1550528223 d:\games\programs\map2d\button.h
 	"camera.h"
 	<list>
 
@@ -469,11 +469,11 @@
 	"session.h"
 	<iostream>
 
-1550489457 d:\games\programs\map2d\font.h
+1550529331 d:\games\programs\map2d\font.h
 	<SDL2/SDL_ttf.h>
 	<map>
 
-1550490947 source:d:\games\programs\map2d\sdl_button.cpp
+1550528245 source:d:\games\programs\map2d\sdl_button.cpp
 	"sdl_button.h"
 	"font.h"
 	<iostream>
@@ -481,7 +481,7 @@
 	<string>
 	"sdl_tool.h"
 
-1550333616 d:\games\programs\map2d\sdl_button.h
+1550528995 d:\games\programs\map2d\sdl_button.h
 	"button.h"
 	"sdl_camera.h"
 
@@ -698,7 +698,7 @@
 	"sdl_camera.h"
 	"craft_mgr.h"
 
-1550489511 source:d:\games\programs\map2d\dialog.cpp
+1550529103 source:d:\games\programs\map2d\dialog.cpp
 	"dialog.h"
 	"sdl_camera.h"
 	"sdl_button.h"
@@ -706,8 +706,9 @@
 	"font.h"
 	<tuple>
 	<algorithm>
+	<cmath>
 
-1550486729 d:\games\programs\map2d\dialog.h
+1550527321 d:\games\programs\map2d\dialog.h
 	"camera.h"
 	"object.h"
 	<SDL2/SDL.h>

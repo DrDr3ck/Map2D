@@ -33,7 +33,8 @@ public:
     int w() const { return w_; }
     int h() const { return h_; }
 
-    const std::string& button_name() const { return button_name_; }
+    const std::string& buttonName() const { return button_name_; }
+    void setButtonName(const std::string& name) { button_name_ = name; }
 
 private:
     bool active_;

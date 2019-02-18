@@ -19,6 +19,7 @@ public:
 
     static std::string fontFamily();
     static int fontTitleSize();
+    static int fontButtonSize();
     static int fontSize();
 
 private:

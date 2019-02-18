@@ -7,6 +7,7 @@
 
 #include <tuple>
 #include <algorithm>
+#include <cmath>
 
 /***********************************/
 
@@ -275,6 +276,14 @@ ObjectDialog* ObjectDialog::createDialog(Object* object, int x, int y) {
 CommandCenterDialog::CommandCenterDialog(
     Object* object, int mouse_x, int mouse_y
 ) : ObjectDialog(object, mouse_x, mouse_y) {
+    command_center_ = dynamic_cast<CommandCenter*>(object);
+    for( int j=0; j < 5; j++ ) {
+        for( int i=0; i < 3; i++ ) {
+            SDLButton* button = new SDLButton("none.png", "none", 30+90*i, 50*j);
+            button->setBottomPosition(true);
+            buttons_.push_back( button );
+        }
+    }
 }
 
 CommandCenterDialog::~CommandCenterDialog() {
@@ -297,6 +306,23 @@ void CommandCenterDialog::do_render(Camera* camera, double delay_in_ms) {
 
     if( minimized_ ) {
         return;
+    }
+
+    // std::vector<CountedItem> stored_items_;
+    int maxI = std::min(command_center_->storedItems().size(),buttons_.size());
+    const std::vector<CountedItem>& stored_items = command_center_->storedItems();
+    for( int i=0; i < maxI; i++ ) {
+        CountedItem item = stored_items.at(i);
+        SDLButton* button = buttons_.at(i);
+        std::string icon_name("items/");
+        icon_name.append(item.item().name());
+        icon_name.append("_item.png");
+        button->setIcon(icon_name);
+        std::string text = tr(item.item().name());
+        text.append("x");
+        text.append(Utility::itos(item.count()));
+        button->setText(text);
+        sdl_camera->displayButton(button,x_+5,y_+25);
     }
 }
 

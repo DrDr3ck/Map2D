@@ -32,7 +32,10 @@ public:
     void setText(const std::string& text) { text_ = text; }
     const std::string& text() const { return text_; }
 
+    void setIcon(const std::string& icon_name);
+
     bool bottomPosition() const { return bottom_position_; }
+    void setBottomPosition(bool position) { bottom_position_ = position; }
 
     virtual void setSize(int w, int h) override;
     virtual void setPosition(int x,int y) override;
