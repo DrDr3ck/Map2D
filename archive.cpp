@@ -451,6 +451,8 @@ void ObjectConverter::load(const std::string& str) {
             object = new Breaker();
         } else if( name == "stone_furnace" ) {
             object = new StoneFurnace();
+        } else if( name == "command_center" ) {
+            object = new CommandCenter();
         } else if( name == "electric_furnace" ) {
             object = new ElectricFurnace();
         }

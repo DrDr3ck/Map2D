@@ -88,6 +88,13 @@ protected:
     Object* object_;
 };
 
+class CommandCenterDialog : public ObjectDialog {
+public:
+    CommandCenterDialog(Object* object, int mouse_x = 50, int mouse_y = 50);
+    virtual ~CommandCenterDialog();
+
+};
+
 struct CraftOccButton {
     Craft* craft;
     int occurrence;

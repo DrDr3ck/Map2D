@@ -434,6 +434,9 @@ Breaker::Breaker() : Object("objects/breaker.png", tr("Breaker"), "breaker") {
 WorkBench::WorkBench() : Object("objects/workbench.png", tr("WorkBench"), "workbench") {
 }
 
+CommandCenter::CommandCenter() : Object("objects/command_center.png", tr("CommandCenter"), "command_center") {
+}
+
 ElectricFurnace::ElectricFurnace() : Furnace("objects/electric_furnace.png", tr("ElectricFurnace"), "electric_furnace") {
 }
 

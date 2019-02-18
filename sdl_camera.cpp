@@ -698,6 +698,11 @@ SDLCamera::SDLCamera(
     // Add Objects menu
     MenuButton* object_menu = new MenuButton(max_column, 155, 90);
 
+    SDLBuildObjectTool* command_center_tool = new SDLBuildObjectTool(this, "objects/command_center.png", "command_center");
+    SDLButton* command_center_button_tool = new SDLToolButton(command_center_tool, "objects/command_center.png", 0, 0);
+    manager_->addButton(command_center_button_tool);
+    object_menu->addButton(command_center_button_tool);
+
     SDLBuildObjectTool* workbench_tool = new SDLBuildObjectTool(this, "objects/workbench.png", "workbench");
     SDLButton* workbench_button_tool = new SDLToolButton(workbench_tool, "objects/workbench.png", 0, 0);
     manager_->addButton(workbench_button_tool);

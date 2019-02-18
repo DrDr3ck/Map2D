@@ -264,8 +264,20 @@ ObjectDialog* ObjectDialog::createDialog(Object* object, int x, int y) {
         return new SmelterDialog(object,x,y);
     } else if( Utility::endsWith(object_name, "chest") ) {
         return new ObjectDialog(object,x,y);
+    } else if( Utility::endsWith(object_name, "center") ) {
+        return new CommandCenterDialog(object,x,y);
     }
     return new CrafterDialog(object,x,y);
+}
+
+/**************************************/
+
+CommandCenterDialog::CommandCenterDialog(
+    Object* object, int mouse_x, int mouse_y
+) : ObjectDialog(object, mouse_x, mouse_y) {
+}
+
+CommandCenterDialog::~CommandCenterDialog() {
 }
 
 /**************************************/

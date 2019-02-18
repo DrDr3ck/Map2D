@@ -28,6 +28,8 @@ Object* BuildObjectJob::getObject() const {
         return new ElectricFurnace();
     } else if( object_name_ == "stone_furnace" ) {
         return new StoneFurnace();
+    } else if( object_name_ == "command_center" ) {
+        return new CommandCenter();
     }
     return nullptr;
 }
@@ -118,7 +120,11 @@ SDL_Texture* JobMgr::getTexture(const std::string& icon_type) {
 
 void JobMgr::render(const Job& job, SDLCamera* camera, const SDL_Rect& rect) {
     SDL_Texture* texture = getTexture(job.iconType());
-    camera->displayTexture(texture, &rect);
+    SDL_Rect texture_rect = rect;
+    //if( texture->height() > texture_rect.h ) { // TODO - iconType may be greater than 64x64
+    //    texture_rect.y = texture_rect.y - (texture->rect().h-texture_rect.h);
+    //}
+    camera->displayTexture(texture, &texture_rect);
 }
 
 

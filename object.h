@@ -127,6 +127,12 @@ public:
     virtual ~WorkBench() {}
 };
 
+class CommandCenter : public Object {
+public:
+    CommandCenter();
+    virtual ~CommandCenter() {}
+};
+
 class Furnace : public Object {
 public:
     Furnace(const std::string& icon_name, const std::string& user_name, const std::string& name);
