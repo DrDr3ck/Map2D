@@ -7,6 +7,7 @@
 #include "xml_document.h"
 #include "logger.h"
 #include "action.h"
+#include "session.h"
 #include "translator.h"
 #include "craft_mgr.h"
 #include <stdio.h>
@@ -226,6 +227,23 @@ bool ChestTest::do_execute() {
     return true;
 }
 
+/*******************************************/
+
+bool SessionTest::do_execute() {
+    Session* instance = Session::instance();
+    instance->setBoolean("*test", true);
+    bool res1 = instance->getBoolean("*test");
+    CHECK_EQUAL( res1, true, return false; );
+    bool res2 = instance->getBoolean("*test", false);
+    CHECK_EQUAL( res2, true, return false; );
+    bool res3 = instance->getBoolean("*second_test", false);
+    CHECK_EQUAL( res3, false, return false; );
+    Session::kill();
+    return true;
+}
+
+/*******************************************/
+
 namespace {
     // create and export surface
     void create_export_surface(
@@ -406,6 +424,7 @@ TestManager::TestManager() {
     addTest(new CharacterTest());
     addTest(new JobTest());
     addTest(new ChestTest());
+    addTest(new SessionTest());
     addTest(new PerlinTest());
     addTest(new XMLTest());
     addTest(new TranslatorTest());

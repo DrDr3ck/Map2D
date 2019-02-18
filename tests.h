@@ -77,6 +77,13 @@ public:
     virtual bool do_execute() override;
 };
 
+class SessionTest : public Test {
+public:
+    SessionTest() : Test("SessionTest") {}
+
+    virtual bool do_execute() override;
+};
+
 class PerlinTest : public Test {
 public:
     PerlinTest() : Test("PerlinTest") {}
