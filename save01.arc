@@ -104,7 +104,6 @@
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
-    <counteditem name="copper_ingot" value="1" />
   </tile>
   <tile x="5" y="1">
     <id value="0" />
@@ -215,15 +214,15 @@
     <ftype value="METAL" />
   </tile>
   <tile x="0" y="3">
-    <id value="8" />
+    <id value="12" />
     <type value="WALL" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
   </tile>
   <tile x="1" y="3">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="1" />
+    <type value="WALL" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
@@ -328,15 +327,15 @@
     <counteditem name="chest" value="2" />
   </tile>
   <tile x="6" y="4">
-    <id value="8" />
+    <id value="12" />
     <type value="WALL" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
   </tile>
   <tile x="7" y="4">
-    <id value="0" />
-    <type value="EMPTY" />
+    <id value="1" />
+    <type value="WALL" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
@@ -358,7 +357,7 @@
   <tile x="0" y="5">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="24" />
+    <occurrence value="23" />
     <btype value="ROCK" />
     <ftype value="METAL" />
   </tile>
@@ -431,13 +430,13 @@
 <group>
   <people name="Bob">
     <position x="3" y="4" />
-    <direction x="1" y="0" />
+    <direction x="0" y="1" />
     <activity value="0" />
     <image_id value="0" />
   </people>
   <people name="Bill">
-    <position x="8" y="2" />
-    <direction x="0" y="1" />
+    <position x="4" y="4" />
+    <direction x="0" y="0" />
     <activity value="0" />
     <image_id value="12" />
   </people>
@@ -445,7 +444,7 @@
 <position_objects>
   <object name="chest">
     <position x="3" y="1" />
-    <counted_item nb="8">stone</counted_item>
+    <counted_item nb="9">stone</counted_item>
     <counted_item nb="3">sand</counted_item>
     <counted_item nb="2">copper_cable</counted_item>
     <counted_item nb="3">coal</counted_item>
@@ -456,8 +455,7 @@
   </object>
   <object name="stone_furnace">
     <position x="4" y="1" />
-    <craft nb="1">copper_ingot</craft>
-    <fuel fuel_time_ms="58281">1</fuel>
+    <fuel fuel_time_ms="11704">1</fuel>
   </object>
   <object name="workbench">
     <position x="2" y="1" />
@@ -467,5 +465,8 @@
   </object>
   <object name="workbench">
     <position x="5" y="4" />
+  </object>
+  <object name="chest">
+    <position x="1" y="1" />
   </object>
 </position_objects>

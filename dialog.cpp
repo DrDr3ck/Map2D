@@ -181,7 +181,7 @@ void RobotDialog::do_render(Camera* camera, double delay_in_ms) {
     title_bgcolor.g = title_bgcolor.g*0.9;
     title_bgcolor.b = title_bgcolor.b*0.9;
     title.setBackgroundColor(title_bgcolor);
-    sdl_camera->displayText(title, false);
+    sdl_camera->displayText(title, false, true);
 
     if( minimized_ ) {
         return;
@@ -194,7 +194,7 @@ void RobotDialog::do_render(Camera* camera, double delay_in_ms) {
     SDLText text(str);
     text.set_position(9+x_,25+y_);
     text.setBackgroundColor(getBackgroundColor());
-    sdl_camera->displayText(text, false);
+    sdl_camera->displayText(text, false, true);
 }
 
 /**************************************/
@@ -225,7 +225,7 @@ void ObjectDialog::do_render(Camera* camera, double delay_in_ms) {
     title_bgcolor.g = title_bgcolor.g*0.9;
     title_bgcolor.b = title_bgcolor.b*0.9;
     title.setBackgroundColor(title_bgcolor);
-    sdl_camera->displayText(title, false);
+    sdl_camera->displayText(title, false, true);
 
     if( minimized_ ) {
         return;
@@ -245,7 +245,7 @@ void ObjectDialog::do_render(Camera* camera, double delay_in_ms) {
     SDLText text(str);
     text.set_position(9+x_,25+y_);
     text.setBackgroundColor(getBackgroundColor());
-    sdl_camera->displayText(text, false);
+    sdl_camera->displayText(text, false, true);
 }
 
 bool ObjectDialog::buttonClicked(SDLButton* button, Position mouse_position) {
@@ -298,7 +298,7 @@ void CrafterDialog::do_render(Camera* camera, double delay_in_ms) {
     title_bgcolor.g = title_bgcolor.g*0.9;
     title_bgcolor.b = title_bgcolor.b*0.9;
     title.setBackgroundColor(title_bgcolor);
-    sdl_camera->displayText(title, false);
+    sdl_camera->displayText(title, false, true);
 
     if( minimized_ ) {
         return;
@@ -338,7 +338,7 @@ void CrafterDialog::do_render(Camera* camera, double delay_in_ms) {
     SDLText text(str);
     text.set_position(9+x_,25+y_+50);
     text.setBackgroundColor(getBackgroundColor());
-    sdl_camera->displayText(text, false);
+    sdl_camera->displayText(text, false, true);
 
     if( craft_button_ == nullptr ) {
         craft_button_ = new SDLTextButton(sdl_camera, craft_button_label_, x_, y_);

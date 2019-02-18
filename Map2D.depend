@@ -442,7 +442,7 @@
 	"session.h"
 	"dialog.h"
 
-1550334324 d:\games\programs\map2d\sdl_camera.h
+1550481765 d:\games\programs\map2d\sdl_camera.h
 	"character.h"
 	"map.h"
 	"job.h"
@@ -687,7 +687,7 @@
 	"translator.h"
 	"items.h"
 
-1550312947 source:d:\games\programs\map2d\object.cpp
+1550336722 source:d:\games\programs\map2d\object.cpp
 	"object.h"
 	"translator.h"
 	<iostream>

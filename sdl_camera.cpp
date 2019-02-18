@@ -867,10 +867,10 @@ void SDLCamera::displayButton(SDLButton* button) {
     }
 }
 
-void SDLCamera::displayText(SDLText& text, bool background) {
+void SDLCamera::displayText(SDLText& text, bool background, bool croppable) {
     SDL_Texture* texture = text.texture(main_renderer_);
-    // if text length is greater than window size, translate the text position
-    {
+    if( !croppable ) {
+        // if text length is greater than window size, translate the text position
         SDL_Rect rect = text.rect();
         if( rect.x + rect.w > Camera::cur_camera->width() ) {
             int x = rect.x;
