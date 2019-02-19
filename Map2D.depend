@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1550496644 source:d:\games\programs\map2d\main.cpp
+1550600925 source:d:\games\programs\map2d\main.cpp
 	<SDL2/SDL.h>
 	<SDL2/SDL_mixer.h>
 	<iostream>
@@ -474,7 +474,7 @@
 	<SDL2/SDL_ttf.h>
 	<map>
 
-1550528245 source:d:\games\programs\map2d\sdl_button.cpp
+1550565318 source:d:\games\programs\map2d\sdl_button.cpp
 	"sdl_button.h"
 	"font.h"
 	<iostream>
@@ -684,14 +684,14 @@
 	"items.h"
 	"texture_mgr.h"
 
-1550487800 d:\games\programs\map2d\object.h
+1550601118 d:\games\programs\map2d\object.h
 	<vector>
 	<string>
 	"utility.h"
 	"translator.h"
 	"items.h"
 
-1550490170 source:d:\games\programs\map2d\object.cpp
+1550600833 source:d:\games\programs\map2d\object.cpp
 	"object.h"
 	"translator.h"
 	<iostream>

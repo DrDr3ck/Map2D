@@ -133,10 +133,13 @@ public:
     virtual ~CommandCenter() {}
 
     const std::vector<CountedItem>& storedItems() const;
-    void addItems(const BasicItem& item, int nb=1);
-    int removeItems(const BasicItem& item, int nb=1);
+    std::vector<CountedItem>& storedItems();
+    static void addItems(const BasicItem& item, int nb=1);
+    static int removeItems(const BasicItem& item, int nb=1);
 
     static void init(CommandCenter* cc, std::vector<Chest*> chests);
+
+    static CommandCenter* cur_command_center;
 
 protected:
     std::vector<CountedItem> stored_items_;

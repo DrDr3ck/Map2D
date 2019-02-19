@@ -222,6 +222,7 @@ int Chest::addItem(const BasicItem& item, int count) {
     for( auto& counted_item : items_ ) {
         if( counted_item.item() == item ) {
             total_count = counted_item.addItem(total_count);
+            CommandCenter::addItems(item, count-total_count);
             if( total_count == 0 ) {
                 return 0;
             }
@@ -234,6 +235,7 @@ int Chest::addItem(const BasicItem& item, int count) {
             c = 99;
         }
         items_.push_back(CountedItem(item, c));
+        CommandCenter::addItems(item, c);
         total_count -= c;
         if( total_count == 0 ) {
             return 0;
@@ -250,6 +252,7 @@ int Chest::removeItem(const BasicItem& item, int count) {
     for( auto& counted_item : items_ ) {
         if( counted_item.item() == item ) {
             total_count = counted_item.removeItem(total_count);
+            CommandCenter::removeItems(item, count-total_count);
             if( total_count == 0 ) {
                 break;
             }
@@ -442,21 +445,45 @@ ElectricFurnace::ElectricFurnace() : Furnace("objects/electric_furnace.png", tr(
 
 /********************************************************************/
 
+CommandCenter* CommandCenter::cur_command_center = nullptr;
+
 CommandCenter::CommandCenter() : Object("objects/command_center.png", tr("CommandCenter"), "command_center") {
+    if( cur_command_center == nullptr ) {
+        cur_command_center = this;
+        MapView* map_view = MapView::cur_map;
+        if( map_view == nullptr ) return;
+        std::vector<Chest*> chests;
+        for( auto object : map_view->data()->objects() ) {
+            Chest* chest = dynamic_cast<Chest*>(object);
+            if( chest != nullptr ) {
+                chests.push_back(chest);
+                continue;
+            }
+        }
+
+        CommandCenter::init(cur_command_center, chests);
+    }
 }
 
 const std::vector<CountedItem>& CommandCenter::storedItems() const {
     return stored_items_;
 }
 
+std::vector<CountedItem>& CommandCenter::storedItems() {
+    return stored_items_;
+}
+
 void CommandCenter::addItems(const BasicItem& item, int nb) {
-    for( auto& counted_item : stored_items_ ) {
+    CommandCenter* cc = CommandCenter::cur_command_center;
+    if( cc == nullptr ) return;
+    std::vector<CountedItem>& stored_items = cc->storedItems();
+    for( auto& counted_item : stored_items ) {
         if( counted_item.item().name() == item.name() ) {
             counted_item.addItem(nb);
             return;
         }
     }
-    stored_items_.push_back( CountedItem(item, nb) );
+    stored_items.push_back( CountedItem(item, nb) );
 }
 
 /*!
@@ -464,7 +491,10 @@ void CommandCenter::addItems(const BasicItem& item, int nb) {
  */
 int CommandCenter::removeItems(const BasicItem& item, int nb) {
     int total = nb;
-    for( auto& counted_item : stored_items_ ) {
+    CommandCenter* cc = CommandCenter::cur_command_center;
+    if( cc == nullptr ) return total;
+    std::vector<CountedItem>& stored_items = cc->storedItems();
+    for( auto& counted_item : stored_items ) {
         if( counted_item.item().name() == item.name() ) {
             if( nb <= counted_item.count() ) {
                 counted_item.removeItem(nb);
