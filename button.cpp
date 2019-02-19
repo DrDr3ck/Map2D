@@ -23,6 +23,12 @@ bool Button::mouseOverButton(int mouse_x, int mouse_y) const {
 
 /**************************************/
 
+void ButtonManager::connectButton(Button* button, void(&f)()) {
+    connections_.insert( std::pair<Button*, PtrFunc>(button, PtrFunc(f)) );
+}
+
+/**************************************/
+
 MenuButton::MenuButton(int max_column, int x, int y)
  : max_column_(max_column), x_(x), y_(y), visible_(false), width_(10), height_(10)
 {

@@ -126,6 +126,11 @@ public:
         return red;
     }
 
+    static SDL_Color& blue() {
+        static SDL_Color blue = {50, 50, 250, 255};
+        return blue;
+    }
+
     static SDL_Color& white() {
         static SDL_Color white = {250, 250, 250, 255};
         return white;
@@ -175,6 +180,8 @@ public:
     SDL_Window* window() const { return window_; }
     SDL_Renderer* main_renderer() const { return main_renderer_; }
     const SDL_Event& event() const { return event_; }
+
+    static void openOptionsDialog();
 
 private:
     SDL_Event event_;

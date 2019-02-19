@@ -28,6 +28,9 @@ bool SDLButtonManager::handleEvent(Camera* camera) {
                     button->deactivate();
                 } else {
                     button->activate();
+                    if( connections_.find(button) != connections_.end()) {
+                        (*connections_[button])();
+                    }
                 }
             }
         } else {

@@ -729,7 +729,12 @@ SDLCamera::SDLCamera(
     manager_->addMenuButton( object_menu );
 
     // Add Quit Button
-    manager_->addButton( new SDLQuitButton(this, Camera::cur_camera->width()-50,10) );
+    SDLButton* quit_button = new SDLQuitButton(this, Camera::cur_camera->width()-50,10);
+    manager_->addButton( quit_button );
+    SDLButton* options_button = new SDLButton("buttons/options.png", tr("Options"), Camera::cur_camera->width()-50-20-quit_button->rect().w,10);
+    options_button->setBottomPosition(true);
+    manager_->addButton( options_button );
+    manager_->connectButton( options_button, openOptionsDialog);
 }
 
 SDLCamera::~SDLCamera() {
@@ -747,6 +752,10 @@ SDLCamera::~SDLCamera() {
 
 void SDLCamera::init() {
     addView(manager_);
+}
+
+void SDLCamera::openOptionsDialog() {
+    std::cout << "open options dialog" << std::endl; // TODO
 }
 
 /*!

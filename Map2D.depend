@@ -427,7 +427,7 @@
 	"map.h"
 	<string>
 
-1550528830 source:d:\games\programs\map2d\sdl_camera.cpp
+1550564768 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -442,7 +442,7 @@
 	"session.h"
 	"dialog.h"
 
-1550528509 d:\games\programs\map2d\sdl_camera.h
+1550564759 d:\games\programs\map2d\sdl_camera.h
 	"character.h"
 	"map.h"
 	"job.h"
@@ -454,15 +454,16 @@
 	<SDL2/SDL_ttf.h>
 	<SDL2/SDL_image.h>
 
-1550317714 source:d:\games\programs\map2d\button.cpp
+1550565170 source:d:\games\programs\map2d\button.cpp
 	"button.h"
 	<iostream>
 
-1550528223 d:\games\programs\map2d\button.h
+1550565170 d:\games\programs\map2d\button.h
 	"camera.h"
 	<list>
+	<map>
 
-1550489956 source:d:\games\programs\map2d\font.cpp
+1550529331 source:d:\games\programs\map2d\font.cpp
 	"font.h"
 	"map.h"
 	"logger.h"

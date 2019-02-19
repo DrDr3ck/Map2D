@@ -3,6 +3,7 @@
 
 #include "camera.h"
 #include <list>
+#include <map>
 
 class Camera;
 
@@ -80,6 +81,8 @@ private:
 
 /********************************************************************/
 
+typedef void (*PtrFunc)();
+
 class ButtonManager : public View {
 public:
     ButtonManager() {}
@@ -87,6 +90,7 @@ public:
 
     void addButton(Button* button) { buttons_.push_back(button); }
     void removeButton(Button* button) { buttons_.remove(button); }
+    void connectButton(Button* button, void(&f)());
 
     void addMenuButton(MenuButton* menu) { menus_.push_back(menu); }
     void removeMenuButton(MenuButton* menu) { menus_.remove(menu); }
@@ -94,6 +98,7 @@ public:
 protected:
     std::list<Button*> buttons_;
     std::list<MenuButton*> menus_;
+    std::map<Button*,PtrFunc> connections_;
 };
 
 /********************************************************************/
