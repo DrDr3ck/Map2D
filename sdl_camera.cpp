@@ -633,6 +633,18 @@ SDL_Texture* SDLText::texture(SDL_Renderer* renderer) {
 
 /********************************************************************/
 
+namespace {
+    void add_object_in_menu(const std::string& object_name, SDLCamera* camera, SDLButtonManager* manager, MenuButton* object_menu) {
+        std::string icon_name("objects/");
+        icon_name.append( object_name );
+        icon_name.append( ".png" );
+        SDLBuildObjectTool* tool = new SDLBuildObjectTool(camera, icon_name, object_name);
+        SDLButton* button_tool = new SDLToolButton(tool, icon_name, 0, 0);
+        manager->addButton(button_tool);
+        object_menu->addButton(button_tool);
+    }
+}
+
 SDLCamera::SDLCamera(
     int width, int height
 ) : Camera(width, height), window_(nullptr), main_renderer_(nullptr), tool_(nullptr), map_view_(nullptr) {
@@ -705,30 +717,12 @@ SDLCamera::SDLCamera(
     // Add Objects menu
     MenuButton* object_menu = new MenuButton(max_column, 155, 90);
 
-    SDLBuildObjectTool* command_center_tool = new SDLBuildObjectTool(this, "objects/command_center.png", "command_center");
-    SDLButton* command_center_button_tool = new SDLToolButton(command_center_tool, "objects/command_center.png", 0, 0);
-    manager_->addButton(command_center_button_tool);
-    object_menu->addButton(command_center_button_tool);
-
-    SDLBuildObjectTool* workbench_tool = new SDLBuildObjectTool(this, "objects/workbench.png", "workbench");
-    SDLButton* workbench_button_tool = new SDLToolButton(workbench_tool, "objects/workbench.png", 0, 0);
-    manager_->addButton(workbench_button_tool);
-    object_menu->addButton(workbench_button_tool);
-
-    SDLBuildObjectTool* chest_tool = new SDLBuildObjectTool(this, "objects/chest.png", "chest");
-    SDLButton* chest_button_tool = new SDLToolButton(chest_tool, "objects/chest.png", 0, 0);
-    manager_->addButton(chest_button_tool);
-    object_menu->addButton(chest_button_tool);
-
-    SDLBuildObjectTool* breaker_tool = new SDLBuildObjectTool(this, "objects/breaker.png", "breaker");
-    SDLButton* breaker_button_tool = new SDLToolButton(breaker_tool, "objects/breaker.png", 0, 0);
-    manager_->addButton(breaker_button_tool);
-    object_menu->addButton(breaker_button_tool);
-
-    SDLBuildObjectTool* stone_furnace_tool = new SDLBuildObjectTool(this, "objects/stone_furnace.png", "stone_furnace");
-    SDLButton* stone_furnace_button_tool = new SDLToolButton(stone_furnace_tool, "objects/stone_furnace.png", 0, 0);
-    manager_->addButton(stone_furnace_button_tool);
-    object_menu->addButton(stone_furnace_button_tool);
+    add_object_in_menu("command_center", this, manager_, object_menu);
+    add_object_in_menu("workbench", this, manager_, object_menu);
+    add_object_in_menu("chest", this, manager_, object_menu);
+    add_object_in_menu("breaker", this, manager_, object_menu);
+    add_object_in_menu("stone_furnace", this, manager_, object_menu);
+    add_object_in_menu("assembler", this, manager_, object_menu);
 
     SDLButtonMenu* object_button = new SDLButtonMenu(object_menu, "buttons/object.png", object_menu->x(),10);
     object_button->setText( tr("Objects") );

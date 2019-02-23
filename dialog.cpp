@@ -279,7 +279,7 @@ CommandCenterDialog::CommandCenterDialog(
     command_center_ = dynamic_cast<CommandCenter*>(object);
     const std::vector<CountedItem>& stored_items = command_center_->storedItems();
     int index = 0;
-    for( int j=0; j < 5; j++ ) {
+    for( int j=0; j < 6; j++ ) {
         for( int i=0; i < 3; i++ ) {
             SDLButton* button = nullptr;
             if( index < int(stored_items.size()) ) {
@@ -289,7 +289,7 @@ CommandCenterDialog::CommandCenterDialog(
                 icon_name.append("_item.png");
                 button = new SDLButton(icon_name, "TBD", 35+90*i, 50*j);
             } else {
-                button = new SDLButton("none.png", "none", 35+90*i, 50*j);
+                button = new SDLButton(35+90*i, 50*j);
             }
             index++;
             button->setBottomPosition(true);

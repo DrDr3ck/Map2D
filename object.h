@@ -127,6 +127,12 @@ public:
     virtual ~WorkBench() {}
 };
 
+class Assembler : public Object {
+public:
+    Assembler();
+    virtual ~Assembler() {}
+};
+
 class CommandCenter : public Object {
 public:
     CommandCenter();

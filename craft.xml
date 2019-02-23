@@ -13,6 +13,21 @@
         <item name="glass" occ=2/>
 		<time>10</time>
 	</object>
+    <object name="assembler">
+		<item name="copper_ingot" occ=4/>
+        <item name="iron_ingot" occ=2/>
+		<time>15</time>
+	</object>
+    <finalItem name="wall" occ=5>
+		<item name="stone" occ=4/>
+        <item name="powder" occ=1/>
+		<time>20</time>
+	</finalItem>
+    <finalItem name="floor" occ=5>
+		<item name="copper_ingot" occ=1/>
+        <item name="powder" occ=1/>
+		<time>10</time>
+	</finalItem>
 </WorkBench>
 <Breaker>
 	<finalItem name="powder" occ=5>
@@ -34,7 +49,7 @@
 		<time>35</time>
 	</finalItem>
 </Stone_Furnace>
-<Assembleur>
+<Assembler>
 	<finalItem name="iron_gear_wheel" occ=1>
 		<item name="iron_ingot" occ=2/>
 		<time>5</time>
@@ -52,4 +67,4 @@
 		<item name="iron_ingot" occ=1/>
 		<time>5</time>
 	</finalItem>
-</Assembleur>
+</Assembler>

@@ -28,6 +28,8 @@ Object* BuildObjectJob::getObject() const {
         return new ElectricFurnace();
     } else if( object_name_ == "stone_furnace" ) {
         return new StoneFurnace();
+    } else if( object_name_ == "assembler" ) {
+        return new Assembler();
     } else if( object_name_ == "command_center" ) {
         return new CommandCenter();
     }

@@ -112,8 +112,10 @@ public:
         return str.find(suffix) == (str.length()-suffix.length());
     }
 
-    static SDL_Surface* IMGLoad(const std::string& filename) {
-        Logger::debug() << "Load image " << filename << Logger::endl;
+    static SDL_Surface* IMGLoad(const std::string& filename, bool verbose=true) {
+        if( verbose ) {
+            Logger::debug() << "Load image " << filename << Logger::endl;
+        }
         if( filename.empty() ) {
             Logger::error() << "IMG_Load(empty name): " << Logger::endl;
             return nullptr;

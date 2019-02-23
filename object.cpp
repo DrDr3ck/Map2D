@@ -440,6 +440,9 @@ Breaker::Breaker() : Object("objects/breaker.png", tr("Breaker"), "breaker") {
 WorkBench::WorkBench() : Object("objects/workbench.png", tr("WorkBench"), "workbench") {
 }
 
+Assembler::Assembler() : Object("objects/assembler.png", tr("Assembler"), "assembler") {
+}
+
 ElectricFurnace::ElectricFurnace() : Furnace("objects/electric_furnace.png", tr("ElectricFurnace"), "electric_furnace") {
 }
 
