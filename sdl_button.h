@@ -21,6 +21,8 @@ public:
 
 class SDLButton : public Button {
 public:
+    enum class TooltipPosition {BOTTOM, RIGHT, OVER};
+public:
     SDLButton(const std::string& icon_name, int x, int y);
     SDLButton(const std::string& icon_name, const std::string& text, int x, int y);
     SDLButton(int x, int y);
@@ -30,12 +32,12 @@ public:
     virtual void deactivate() override;
 
     void setText(const std::string& text) { text_ = text; }
-    const std::string& text() const { return text_; }
+    virtual const std::string& text() const { return text_; }
 
     void setIcon(const std::string& icon_name);
 
-    bool bottomPosition() const { return bottom_position_; }
-    void setBottomPosition(bool position) { bottom_position_ = position; }
+    TooltipPosition tooltipPosition() const { return tooltip_position_; }
+    void setTooltipPosition(TooltipPosition position) { tooltip_position_ = position; }
 
     virtual void setSize(int w, int h) override;
     virtual void setPosition(int x,int y) override;
@@ -49,7 +51,7 @@ protected:
     SDL_Texture* texture_;
     SDL_Rect rect_;
     std::string text_;
-    bool bottom_position_ = false;
+    TooltipPosition tooltip_position_ = TooltipPosition::RIGHT;
 };
 
 /********************************************************************/
@@ -57,7 +59,7 @@ protected:
 class SDLButtonMenu : public SDLButton {
 public:
     SDLButtonMenu(MenuButton* menu, std::string name, int x, int y) : SDLButton(name, x,y), menu_(menu) {
-        bottom_position_ = true;
+        tooltip_position_ = TooltipPosition::BOTTOM;
     }
     virtual ~SDLButtonMenu() {}
 
@@ -72,7 +74,7 @@ private:
 class SDLQuitButton : public SDLButton {
 public:
     SDLQuitButton(SDLCamera* camera, int x, int y) : SDLButton("buttons/quit.png", tr("Quit"),x,y), camera_(camera) {
-        bottom_position_ = true;
+        tooltip_position_ = TooltipPosition::BOTTOM;
     }
     virtual ~SDLQuitButton() {}
 
@@ -108,9 +110,21 @@ public:
 
     virtual void activate() override;
     virtual void deactivate() override;
+    SDLTool* getTool() const { return tool_; }
 
 private:
     SDLTool* tool_;
+};
+
+class SDLItemToolButton : public SDLToolButton {
+public:
+    SDLItemToolButton(const BasicItem& item, SDLTool* tool, std::string icon_name, int x, int y);
+    virtual ~SDLItemToolButton() = default;
+
+    virtual const std::string& text() const override;
+
+private:
+    BasicItem item_;
 };
 
 /********************************************************************/

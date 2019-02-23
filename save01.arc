@@ -193,10 +193,10 @@
   <tile x="7" y="2">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="97" />
+    <occurrence value="96" />
     <btype value="COAL" />
     <ftype value="METAL" />
-    <counteditem name="coal" value="3" />
+    <counteditem name="coal" value="4" />
   </tile>
   <tile x="8" y="2">
     <id value="0" />
@@ -296,6 +296,7 @@
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
+    <counteditem name="iron_gear_wheel" value="2" />
   </tile>
   <tile x="2" y="4">
     <id value="0" />
@@ -429,14 +430,14 @@
 </mapdata>
 <group>
   <people name="Bob">
-    <position x="5" y="3" />
+    <position x="5" y="2" />
     <direction x="1" y="0" />
     <activity value="0" />
     <image_id value="0" />
   </people>
   <people name="Bill">
-    <position x="2" y="2" />
-    <direction x="-1" y="0" />
+    <position x="7" y="3" />
+    <direction x="1" y="1" />
     <activity value="0" />
     <image_id value="12" />
   </people>
@@ -446,7 +447,7 @@
     <position x="1" y="1" />
     <counted_item nb="1">breaker</counted_item>
     <counted_item nb="1">stone</counted_item>
-    <counted_item nb="1">wall</counted_item>
+    <counted_item nb="7">wall</counted_item>
     <counted_item nb="1">copper_ore</counted_item>
     <counted_item nb="2">copper_ingot</counted_item>
     <counted_item nb="1">floor</counted_item>
@@ -458,6 +459,7 @@
   </object>
   <object name="workbench">
     <position x="2" y="1" />
+    <craft nb="4">wall</craft>
   </object>
   <object name="chest">
     <position x="3" y="1" />

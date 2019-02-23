@@ -292,7 +292,7 @@ CommandCenterDialog::CommandCenterDialog(
                 button = new SDLButton(35+90*i, 50*j);
             }
             index++;
-            button->setBottomPosition(true);
+            button->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
             buttons_.push_back( button );
         }
     }

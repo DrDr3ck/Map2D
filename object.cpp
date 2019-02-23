@@ -508,6 +508,15 @@ void CommandCenter::addItems(const BasicItem& item, int nb) {
     stored_items.push_back( CountedItem(item, nb) );
 }
 
+int CommandCenter::countedItems(const BasicItem& item) const {
+    for( auto& counted_item : storedItems() ) {
+        if( counted_item.item().name() == item.name() ) {
+            return counted_item.count();
+        }
+    }
+    return 0;
+}
+
 /*!
  * \return the number of items not removed. if 0, all items have been removed
  */

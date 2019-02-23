@@ -639,7 +639,7 @@ namespace {
         icon_name.append( object_name );
         icon_name.append( ".png" );
         SDLBuildObjectTool* tool = new SDLBuildObjectTool(camera, icon_name, object_name);
-        SDLButton* button_tool = new SDLToolButton(tool, icon_name, 0, 0);
+        SDLButton* button_tool = new SDLItemToolButton(BasicItem(object_name), tool, icon_name, 0, 0);
         manager->addButton(button_tool);
         object_menu->addButton(button_tool);
     }
@@ -658,7 +658,7 @@ SDLCamera::SDLCamera(
     MenuButton* build_menu = new MenuButton(max_column, 15, 90);
 
     SDLBuildTool* wall_tool = new SDLBuildTool(this, "buttons/wall_tool.png", WALLTOOL);
-    SDLButton* wall_button_tool = new SDLToolButton(wall_tool, "buttons/wall_tool.png", 0, 0);
+    SDLButton* wall_button_tool = new SDLItemToolButton(BasicItem("wall"),wall_tool, "buttons/wall_tool.png", 0, 0);
     manager_->addButton(wall_button_tool);
     build_menu->addButton(wall_button_tool);
 
@@ -668,7 +668,7 @@ SDLCamera::SDLCamera(
     build_menu->addButton(demolish_button_tool);
 
     SDLBuildTool* foundation_tool = new SDLBuildTool(this, "buttons/foundation_tool.png", FLOORTOOL);
-    SDLButton* foundation_button_tool = new SDLToolButton(foundation_tool, "buttons/foundation_tool.png", 0, 0);
+    SDLButton* foundation_button_tool = new SDLItemToolButton(BasicItem("floor"),foundation_tool, "buttons/foundation_tool.png", 0, 0);
     manager_->addButton(foundation_button_tool);
     build_menu->addButton(foundation_button_tool);
 
@@ -733,7 +733,7 @@ SDLCamera::SDLCamera(
     SDLButton* quit_button = new SDLQuitButton(this, Camera::cur_camera->width()-50,10);
     manager_->addButton( quit_button );
     SDLButton* options_button = new SDLButton("buttons/options.png", tr("Options"), Camera::cur_camera->width()-50-20-quit_button->rect().w,10);
-    options_button->setBottomPosition(true);
+    options_button->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
     manager_->addButton( options_button );
     manager_->connectButton( options_button, openOptionsDialog);
 }
@@ -874,14 +874,18 @@ void SDLCamera::displayButton(SDLButton* button, int offset_x, int offset_y) {
     displayTexture(button_texture, &rect);
     if( !button->text().empty()) {
         SDLText button_text( button->text(), FontLib::fontFamily(), FontLib::fontButtonSize());
-        if( button->bottomPosition() ) {
+        if( button->tooltipPosition() == SDLButton::TooltipPosition::BOTTOM ) {
             button_text.texture(main_renderer());
             SDL_Rect text_rect = button_text.rect();
             button_text.set_position(button->rect().x +button->rect().w/2 - text_rect.w/2 + offset_x, button->rect().y+button->rect().h + offset_y);
+        } else if( button->tooltipPosition() == SDLButton::TooltipPosition::OVER ) {
+            button_text.texture(main_renderer());
+            SDL_Rect text_rect = button_text.rect();
+            button_text.set_position(button->rect().x +button->rect().w/2 - text_rect.w/2 + offset_x, button->rect().y + offset_y );
         } else {
             button_text.set_position(button->rect().x+button->rect().w + offset_x, button->rect().y + offset_y);
         }
-        displayText(button_text, true);
+        displayText(button_text, true, true);
     }
 }
 

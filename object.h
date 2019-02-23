@@ -148,6 +148,8 @@ public:
     static void addItems(const BasicItem& item, int nb=1);
     static int removeItems(const BasicItem& item, int nb=1);
 
+    int countedItems(const BasicItem& item) const;
+
     static void init(CommandCenter* cc, std::vector<Chest*> chests);
 
     static CommandCenter* cur_command_center;

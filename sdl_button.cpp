@@ -234,3 +234,31 @@ void SDLToolButton::deactivate() {
 }
 
 /********************************************************************/
+
+SDLItemToolButton::SDLItemToolButton(
+    const BasicItem& item, SDLTool* tool, std::string icon_name, int x, int y
+) : SDLToolButton(tool, icon_name, x, y), item_(item) {
+    setTooltipPosition(TooltipPosition::OVER);
+}
+
+/*!
+ * \return the number of items available in the Command Center
+ */
+const std::string& SDLItemToolButton::text() const {
+    CommandCenter* cc = CommandCenter::cur_command_center;
+    SDLItemToolButton* non_const_this = const_cast<SDLItemToolButton*>(this);
+    if( cc == nullptr ) {
+        non_const_this->setText(std::string());
+    } else {
+        // get number of items in Command Center
+        int nb = cc->countedItems(item_);
+        if( nb == 0 ) {
+            non_const_this->setText("-");
+        } else {
+            non_const_this->setText(Utility::itos(nb));
+        }
+    }
+    return SDLToolButton::text();
+}
+
+/********************************************************************/
