@@ -38,7 +38,7 @@ struct TileItem {
 class Tile {
 public:
     enum Type { BLOCK, DOOR, FLOOR, EMPTY, WALL };
-    enum BType { NONE, WATER, SAND, DIRT, GRASS, ROCK, COAL };
+    enum BType { NONE, WATER, SAND, DIRT, GRASS, ROCK, COAL, COPPER, IRON };
     enum FType { METAL, PLASTIC };
 public:
     Tile(int id=0, Type cell_type=EMPTY, BType background_type=NONE, FType floor_type=METAL);

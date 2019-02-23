@@ -277,9 +277,21 @@ CommandCenterDialog::CommandCenterDialog(
     Object* object, int mouse_x, int mouse_y
 ) : ObjectDialog(object, mouse_x, mouse_y) {
     command_center_ = dynamic_cast<CommandCenter*>(object);
+    const std::vector<CountedItem>& stored_items = command_center_->storedItems();
+    int index = 0;
     for( int j=0; j < 5; j++ ) {
         for( int i=0; i < 3; i++ ) {
-            SDLButton* button = new SDLButton("none.png", "none", 30+90*i, 50*j);
+            SDLButton* button = nullptr;
+            if( index < int(stored_items.size()) ) {
+                const CountedItem& item = stored_items.at(index);
+                std::string icon_name("items/");
+                icon_name.append(item.item().name());
+                icon_name.append("_item.png");
+                button = new SDLButton(icon_name, "TBD", 35+90*i, 50*j);
+            } else {
+                button = new SDLButton("none.png", "none", 35+90*i, 50*j);
+            }
+            index++;
             button->setBottomPosition(true);
             buttons_.push_back( button );
         }
@@ -308,9 +320,8 @@ void CommandCenterDialog::do_render(Camera* camera, double delay_in_ms) {
         return;
     }
 
-    // std::vector<CountedItem> stored_items_;
-    int maxI = std::min(command_center_->storedItems().size(),buttons_.size());
     const std::vector<CountedItem>& stored_items = command_center_->storedItems();
+    int maxI = std::min(stored_items.size(),buttons_.size());
     for( int i=0; i < maxI; i++ ) {
         CountedItem item = stored_items.at(i);
         SDLButton* button = buttons_.at(i);

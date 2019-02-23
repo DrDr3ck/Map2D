@@ -130,6 +130,8 @@ std::string Tile::btypeTileToString(Tile::BType type) {
     if( type == Tile::NONE ) return tr("None");
     if( type == Tile::WATER ) return tr("Water");
     if( type == Tile::SAND ) return tr("Sand");
+    if( type == Tile::COPPER ) return tr("Copper");
+    if( type == Tile::IRON ) return tr("Iron");
     if( type == Tile::DIRT ) return tr("Dirt");
     if( type == Tile::GRASS ) return tr("Grass");
     if( type == Tile::COAL ) return tr("Coal");
@@ -311,6 +313,24 @@ void MapData::extractItemFromTile(int x,int y) {
 
             // TODO should we change rock into dirt if occurrences == 0 ?
         }
+    } else if( cur.background_type() == Tile::COPPER ) {
+        // extraction of copper
+        if( cur.occurrences() > 0 ) {
+            cur.setOccurrences( cur.occurrences()-1 );
+            // create an item stone and put it on the 'cur' Tile
+            cur.addItem(BasicItem("copper_ore"), 1);
+
+            // TODO should we change sand into dirt if occurrences == 0 ?
+        }
+    } else if( cur.background_type() == Tile::IRON ) {
+        // extraction of iron
+        if( cur.occurrences() > 0 ) {
+            cur.setOccurrences( cur.occurrences()-1 );
+            // create an item stone and put it on the 'cur' Tile
+            cur.addItem(BasicItem("iron_ore"), 1);
+
+            // TODO should we change sand into dirt if occurrences == 0 ?
+        }
     } else if( cur.background_type() == Tile::SAND ) {
         // extraction of a sand
         if( cur.occurrences() > 0 ) {
@@ -321,7 +341,7 @@ void MapData::extractItemFromTile(int x,int y) {
             // TODO should we change sand into dirt if occurrences == 0 ?
         }
     } else if( cur.background_type() == Tile::COAL ) {
-        // extraction of a sand
+        // extraction of coal
         if( cur.occurrences() > 0 ) {
             cur.setOccurrences( cur.occurrences()-1 );
             // create an item stone and put it on the 'cur' Tile

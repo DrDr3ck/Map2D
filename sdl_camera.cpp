@@ -93,13 +93,20 @@ void MapView::extractItemJob(int x, int y, int nb) {
     Position tile_position = {x,y};
     Tile cur_tile = data_->tile(x,y);
     Job* job = nullptr;
-    if( cur_tile.background_type() == Tile::ROCK ) {
-        job = new ExtractJob(tile_position, "buttons/extract_tool", 5000, nb);
-    } else if( cur_tile.background_type() == Tile::COAL ) {
-        job = new ExtractJob(tile_position, "buttons/extract_tool", 5000, nb);
-    } else if( cur_tile.background_type() == Tile::SAND ) {
-        job = new ExtractJob(tile_position, "buttons/dig_tool", 5000, nb);
+    switch(cur_tile.background_type()) {
+        case Tile::ROCK:
+        case Tile::COPPER:
+        case Tile::IRON:
+        case Tile::COAL:
+            job = new ExtractJob(tile_position, "buttons/extract_tool", 5000, nb);
+            break;
+        case Tile::SAND:
+            job = new ExtractJob(tile_position, "buttons/dig_tool", 5000, nb);
+            break;
+        default:
+            break;
     }
+
     if( job != nullptr ) {
         job_manager_->addJob(job);
     }

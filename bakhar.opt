@@ -1,7 +1,7 @@
 # edit at your own risk !!
 *camera*height: 960 # height of window
 *camera*width: 1200 # width of window
-*display_F3: false # no description
+*display_F3: true # no description
 *font*button*size: 12 # button size
 *font*family: FreePixel # no description
 *font*size: 16 # font size
