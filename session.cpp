@@ -21,10 +21,12 @@ Session* Session::instance() {
     return singleton_;
 }
 
-void Session::kill() {
+void Session::kill(bool save) {
     if( singleton_ != nullptr ) {
         Logger::debug() << "destroying Session singleton" << Logger::endl;
-        singleton_->saveSession();
+        if( save ) {
+            singleton_->saveSession();
+        }
         delete singleton_;
         singleton_ = nullptr;
     }

@@ -49,6 +49,8 @@ public:
     bool hasIngredients() const;
     void checkIngredients();
 
+    int percentageAccomplished() const;
+
     virtual void animate(double delta_ms);
 
     bool hasCrafts() const { return is_crafter_; }
@@ -76,7 +78,8 @@ protected:
     std::vector< std::pair<Craft*, int> > crafts_;
     Craft* cur_craft_ = nullptr;
     bool has_ingredients_ = false;
-    int craft_time_ms_ = 0;
+    int cur_craft_time_ms_ = 0;
+    int max_craft_time_ms_ = 0;
     bool in_pause_ = false;
     Position tile_position_;
     std::vector<CountedItem> ingredient_items_;
@@ -137,6 +140,8 @@ class CommandCenter : public Object {
 public:
     CommandCenter();
     virtual ~CommandCenter() {}
+
+    void reset();
 
     const std::vector<CountedItem>& storedItems() const;
     std::vector<CountedItem>& storedItems();

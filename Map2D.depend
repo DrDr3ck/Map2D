@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1550888287 source:d:\games\programs\map2d\main.cpp
+1550921402 source:d:\games\programs\map2d\main.cpp
 	<SDL2/SDL.h>
 	<SDL2/SDL_mixer.h>
 	<iostream>
@@ -352,7 +352,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1550895018 source:d:\games\programs\map2d\map.cpp
+1550920770 source:d:\games\programs\map2d\map.cpp
 	"map.h"
 	<cmath>
 	"SDL2/SDL_image.h"
@@ -363,6 +363,7 @@
 	"translator.h"
 	<iostream>
 	<fstream>
+	<algorithm>
 
 1550895020 d:\games\programs\map2d\map.h
 	"object.h"
@@ -381,7 +382,7 @@
 	<list>
 	<string>
 
-1550482665 source:d:\games\programs\map2d\tests.cpp
+1550921820 source:d:\games\programs\map2d\tests.cpp
 	"tests.h"
 	"archive.h"
 	"font.h"
@@ -427,7 +428,7 @@
 	"map.h"
 	<string>
 
-1550897865 source:d:\games\programs\map2d\sdl_camera.cpp
+1550921524 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -515,7 +516,7 @@
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 
-1549557874 source:d:\games\programs\map2d\character.cpp
+1550920881 source:d:\games\programs\map2d\character.cpp
 	"character.h"
 	"sdl_camera.h"
 	"path_finding.h"
@@ -619,11 +620,11 @@
 	<string>
 	<map>
 
-1550482178 d:\games\programs\map2d\session.h
+1550921804 d:\games\programs\map2d\session.h
 	<string>
 	<map>
 
-1550489483 source:d:\games\programs\map2d\session.cpp
+1550921798 source:d:\games\programs\map2d\session.cpp
 	"session.h"
 	"logger.h"
 	"translator.h"
@@ -684,14 +685,14 @@
 	"items.h"
 	"texture_mgr.h"
 
-1550897759 d:\games\programs\map2d\object.h
+1550921402 d:\games\programs\map2d\object.h
 	<vector>
 	<string>
 	"utility.h"
 	"translator.h"
 	"items.h"
 
-1550897739 source:d:\games\programs\map2d\object.cpp
+1550921496 source:d:\games\programs\map2d\object.cpp
 	"object.h"
 	"translator.h"
 	<iostream>
@@ -699,7 +700,7 @@
 	"sdl_camera.h"
 	"craft_mgr.h"
 
-1550896795 source:d:\games\programs\map2d\dialog.cpp
+1550921496 source:d:\games\programs\map2d\dialog.cpp
 	"dialog.h"
 	"sdl_camera.h"
 	"sdl_button.h"

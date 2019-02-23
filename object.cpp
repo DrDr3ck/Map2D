@@ -37,6 +37,22 @@ void Object::render(SDLCamera* camera, const SDL_Rect& original_rect) {
     rect.h = pixel_height()*camera->scale();
     rect.y = rect.y + Utility::tileSize*camera->scale() - rect.h;
     camera->displayTexture( texture, &rect);
+    // object toolbar when crafting
+    if( percentageAccomplished() != -1 ) {
+        int activity_percent = percentageAccomplished();
+        static int offset = 3;
+        static int toolbar_height = 9;
+        SDL_Rect activity_rect = {rect.x+offset,rect.y+rect.h-offset-toolbar_height,0,0};
+        SDL_SetRenderDrawColor( camera->main_renderer(), 0, 0, 250, 255 );
+        int width = activity_percent / 100.0 * (Utility::tileSize*camera->scale()-2*offset);
+        activity_rect.w = width;
+        activity_rect.h = toolbar_height;
+        SDL_RenderFillRect( camera->main_renderer(), &activity_rect );
+        SDL_SetRenderDrawColor( camera->main_renderer(), 0, 128, 255, 255 );
+        activity_rect.w = Utility::tileSize*camera->scale()-2*offset;
+        activity_rect.h = toolbar_height;
+        SDL_RenderDrawRect( camera->main_renderer(), &activity_rect );
+    }
 }
 
 int Object::getNodeCount() const {
@@ -95,8 +111,8 @@ void Object::animate(double delta_ms) { // TODO
     if( inPause() ) return;
     if( crafts_.size() == 0 ) return;
 
-    if( has_ingredients_ && cur_craft_ != nullptr && craft_time_ms_ > delta_ms ) {
-        craft_time_ms_ -= delta_ms;
+    if( has_ingredients_ && cur_craft_ != nullptr && cur_craft_time_ms_ > delta_ms ) {
+        cur_craft_time_ms_ -= delta_ms;
     }
 
     if( cur_craft_ == nullptr ) {
@@ -109,8 +125,8 @@ void Object::animate(double delta_ms) { // TODO
     }
 
     if( hasIngredients() ) {
-        if( craft_time_ms_ <= delta_ms ) {
-            craft_time_ms_ = 0;
+        if( cur_craft_time_ms_ <= delta_ms ) {
+            cur_craft_time_ms_ = 0;
             int occ = crafts_.at(0).second;
             MapView* map_view = MapView::cur_map;
             map_view->store(BasicItem(cur_craft_->name()), tilePosition()); // TODO keep item in the furnace if store returns false ?
@@ -138,8 +154,23 @@ void Object::checkIngredients() { // TODO
     }
     // remove all ingredients from various chests
     has_ingredients_ = true;
-    craft_time_ms_ = cur_craft_->time()*1000;
-    // otherwise: ask robot to find needed ingredients
+    cur_craft_time_ms_ = cur_craft_->time()*1000;
+    max_craft_time_ms_ = cur_craft_time_ms_;
+    // otherwise: do not start the craft !!
+}
+
+/*!
+ * if an item is currently crafted, returns the percentage of accomplishement between 0 and 100
+ * if no craft, returns -1
+ */
+int Object::percentageAccomplished() const {
+    if( cur_craft_ == nullptr ) {
+        return -1;
+    }
+    if( max_craft_time_ms_ == 0 ) {
+        return -1;
+    }
+    return (cur_craft_time_ms_*100/max_craft_time_ms_);
 }
 
 /********************************************************************/
@@ -453,18 +484,6 @@ CommandCenter* CommandCenter::cur_command_center = nullptr;
 CommandCenter::CommandCenter() : Object("objects/command_center.png", tr("CommandCenter"), "command_center") {
     if( cur_command_center == nullptr ) {
         cur_command_center = this;
-        MapView* map_view = MapView::cur_map;
-        if( map_view == nullptr ) return;
-        std::vector<Chest*> chests;
-        for( auto object : map_view->data()->objects() ) {
-            Chest* chest = dynamic_cast<Chest*>(object);
-            if( chest != nullptr ) {
-                chests.push_back(chest);
-                continue;
-            }
-        }
-
-        CommandCenter::init(cur_command_center, chests);
     }
 }
 
@@ -519,6 +538,10 @@ void CommandCenter::init(CommandCenter* cc, std::vector<Chest*> chests) {
             cc->addItems(counted_item.item(), counted_item.count());
         }
     }
+}
+
+void CommandCenter::reset() {
+    stored_items_.clear();
 }
 
 /********************************************************************/

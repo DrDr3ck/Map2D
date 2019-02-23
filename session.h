@@ -15,7 +15,7 @@ private:
 
 public:
     static Session* instance();
-    static void kill();
+    static void kill(bool save=true);
 
     void loadSession();
     void saveSession();

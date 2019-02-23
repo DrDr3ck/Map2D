@@ -10,6 +10,7 @@
 #include "translator.h"
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 /********************************************************************/
 
@@ -451,10 +452,23 @@ void MapData::removeGround(int x, int y) {
     cur.setBackgroundTile(cur.id(), Tile::NONE);
 }
 
+namespace {
+    bool compare_object_position(Object* o1, Object* o2) {
+        Position p1 = o1->tilePosition();
+        Position p2 = o2->tilePosition();
+        if( p1.x == p2.x ) {
+            return p1.y < p2.y;
+        }
+        return p1.x < p2.x;
+    }
+}
+
 void MapData::addObject(Object* object, int tile_x, int tile_y) {
     Position cur_position = {tile_x,tile_y};
     object->setTilePosition(cur_position);
     objects_.push_back( object );
+    // sort objects according to their position
+    std::sort(objects_.begin(), objects_.end(), compare_object_position);
 }
 
 const Tile& MapData::tile(int x,int y) const {

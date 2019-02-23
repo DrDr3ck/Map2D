@@ -279,7 +279,7 @@ CommandCenterDialog::CommandCenterDialog(
     command_center_ = dynamic_cast<CommandCenter*>(object);
     const std::vector<CountedItem>& stored_items = command_center_->storedItems();
     int index = 0;
-    for( int j=0; j < 6; j++ ) {
+    for( int j=0; j < 7; j++ ) {
         for( int i=0; i < 3; i++ ) {
             SDLButton* button = nullptr;
             if( index < int(stored_items.size()) ) {
@@ -341,7 +341,6 @@ void CommandCenterDialog::do_render(Camera* camera, double delay_in_ms) {
 
 CrafterDialog::CrafterDialog(Object* object, int mouse_x, int mouse_y) : ObjectDialog(object, mouse_x, mouse_y) {
     craft_button_label_ = "Craft";
-    std::cout << object->getCrafts().size() << std::endl;
     for( auto co : object->getCrafts() ) {
         selected_craft_ = co.first;
         addCraft(co.second);
@@ -492,7 +491,6 @@ void CrafterDialog::execute() {
         int occ = cob.occurrence;
         object()->addCraft(craft, occ);
     }
-    std::cout << object_->getCrafts().size() << std::endl;
 }
 
 void CrafterDialog::addCraft(int occ) {

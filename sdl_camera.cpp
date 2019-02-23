@@ -756,7 +756,7 @@ void SDLCamera::init() {
 }
 
 void SDLCamera::openOptionsDialog() {
-    std::cout << "open options dialog" << std::endl; // TODO
+    Logger::debug() << "open options dialog" << Logger::endl; // TODO
 }
 
 /*!

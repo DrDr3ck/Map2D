@@ -102,6 +102,7 @@ int main(int argc, char** argv) {
     FontLib* font_manager = FontLib::instance();
     camera->init();
 
+    // initialize command center with items of all chests
     CommandCenter* cc = nullptr;
     std::vector<Chest*> chests;
     for( auto object : data.objects() ) {
@@ -114,7 +115,8 @@ int main(int argc, char** argv) {
             cc = dynamic_cast<CommandCenter*>(object);
         }
     }
-    if( cc != nullptr && cc->storedItems().size() == 0 ) {
+    if( cc != nullptr && chests.size() > 0 ) {
+        cc->reset();
         CommandCenter::init(cc, chests);
     }
 

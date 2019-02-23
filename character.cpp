@@ -69,16 +69,17 @@ void Character::render(SDLCamera* camera, const SDL_Rect& rect) {
         camera->displayTexture( images_[0], &rect);
     }
 
+    // character toolbar when working
     if( activity_percent_ > 0 ) {
         static int offset = 3;
         SDL_Rect activity_rect = {rect.x+offset,rect.y+offset,0,0};
         SDL_SetRenderDrawColor( camera->main_renderer(), 0, 250, 0, 255 );
-        int width = activity_percent_ / 100.0 * (Utility::tileSize-2*offset);
+        int width = activity_percent_ / 100.0 * (Utility::tileSize*camera->scale()-2*offset);
         activity_rect.w = width;
         activity_rect.h = 9;
         SDL_RenderFillRect( camera->main_renderer(), &activity_rect );
         SDL_SetRenderDrawColor( camera->main_renderer(), 0, 255, 128, 255 );
-        activity_rect.w = Utility::tileSize-2*offset;
+        activity_rect.w = Utility::tileSize*camera->scale()-2*offset;
         activity_rect.h = 9;
         SDL_RenderDrawRect( camera->main_renderer(), &activity_rect );
     }

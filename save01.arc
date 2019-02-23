@@ -193,10 +193,10 @@
   <tile x="7" y="2">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="98" />
+    <occurrence value="97" />
     <btype value="COAL" />
     <ftype value="METAL" />
-    <counteditem name="coal" value="2" />
+    <counteditem name="coal" value="3" />
   </tile>
   <tile x="8" y="2">
     <id value="0" />
@@ -372,10 +372,10 @@
   <tile x="2" y="5">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="37" />
+    <occurrence value="36" />
     <btype value="ROCK" />
     <ftype value="METAL" />
-    <counteditem name="stone" value="1" />
+    <counteditem name="stone" value="2" />
   </tile>
   <tile x="3" y="5">
     <id value="0" />
@@ -429,43 +429,19 @@
 </mapdata>
 <group>
   <people name="Bob">
-    <position x="1" y="2" />
+    <position x="5" y="3" />
     <direction x="1" y="0" />
     <activity value="0" />
     <image_id value="0" />
   </people>
   <people name="Bill">
-    <position x="4" y="2" />
-    <direction x="0" y="1" />
+    <position x="2" y="2" />
+    <direction x="-1" y="0" />
     <activity value="0" />
     <image_id value="12" />
   </people>
 </group>
 <position_objects>
-  <object name="chest">
-    <position x="3" y="1" />
-    <counted_item nb="9">stone</counted_item>
-    <counted_item nb="3">sand</counted_item>
-    <counted_item nb="2">copper_cable</counted_item>
-    <counted_item nb="2">coal</counted_item>
-    <counted_item nb="8">iron_ingot</counted_item>
-    <counted_item nb="3">chest</counted_item>
-    <counted_item nb="1">stone_furnace</counted_item>
-    <counted_item nb="3">powder</counted_item>
-  </object>
-  <object name="stone_furnace">
-    <position x="4" y="1" />
-    <fuel fuel_time_ms="21678">1</fuel>
-  </object>
-  <object name="workbench">
-    <position x="2" y="1" />
-  </object>
-  <object name="breaker">
-    <position x="3" y="2" />
-  </object>
-  <object name="workbench">
-    <position x="5" y="4" />
-  </object>
   <object name="chest">
     <position x="1" y="1" />
     <counted_item nb="1">breaker</counted_item>
@@ -475,11 +451,42 @@
     <counted_item nb="2">copper_ingot</counted_item>
     <counted_item nb="1">floor</counted_item>
     <counted_item nb="1">iron_ore</counted_item>
+    <counted_item nb="2">glass</counted_item>
+  </object>
+  <object name="assembler">
+    <position x="1" y="4" />
+  </object>
+  <object name="workbench">
+    <position x="2" y="1" />
+  </object>
+  <object name="chest">
+    <position x="3" y="1" />
+    <counted_item nb="9">stone</counted_item>
+    <counted_item nb="3">sand</counted_item>
+    <counted_item nb="2">copper_cable</counted_item>
+    <counted_item nb="10">iron_ingot</counted_item>
+    <counted_item nb="3">chest</counted_item>
+    <counted_item nb="1">stone_furnace</counted_item>
+    <counted_item nb="4">powder</counted_item>
+    <counted_item nb="2">copper_ingot</counted_item>
+  </object>
+  <object name="breaker">
+    <position x="3" y="2" />
+  </object>
+  <object name="stone_furnace">
+    <position x="4" y="1" />
+    <fuel fuel_time_ms="64918">0</fuel>
   </object>
   <object name="command_center">
     <position x="5" y="1" />
   </object>
-  <object name="assembler">
-    <position x="1" y="4" />
+  <object name="chest">
+    <position x="5" y="3" />
+    <counted_item nb="1">electronic_circuit</counted_item>
+    <counted_item nb="1">iron_gear_wheel</counted_item>
+    <counted_item nb="1">iron_stick</counted_item>
+  </object>
+  <object name="workbench">
+    <position x="5" y="4" />
   </object>
 </position_objects>

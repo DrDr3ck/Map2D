@@ -231,14 +231,17 @@ bool ChestTest::do_execute() {
 
 bool SessionTest::do_execute() {
     Session* instance = Session::instance();
+    // set 'test' to true
     instance->setBoolean("*test", true);
     bool res1 = instance->getBoolean("*test");
+    // check result, it should be true
     CHECK_EQUAL( res1, true, return false; );
     bool res2 = instance->getBoolean("*test", false);
     CHECK_EQUAL( res2, true, return false; );
+    // get value of unknown 'second_test' that should be 'false' by default
     bool res3 = instance->getBoolean("*second_test", false);
     CHECK_EQUAL( res3, false, return false; );
-    Session::kill();
+    Session::kill(false); // do not save these values
     return true;
 }
 
