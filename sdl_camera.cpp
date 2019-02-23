@@ -279,7 +279,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         SDL_FreeSurface(bg_surface);
     }
     if( map_background_ == nullptr ) {
-        SDL_Surface* bg_surface = Utility::IMGLoad("out.png");
+        SDL_Surface* bg_surface = Utility::IMGLoad(data()->getMapImageName());
         map_background_ = SDL_CreateTextureFromSurface(main_renderer, bg_surface);
         SDL_FreeSurface(bg_surface);
     }

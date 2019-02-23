@@ -54,7 +54,8 @@ int main(int argc, char** argv) {
 
     PeopleGroup group;
 
-    std::string filename("save01.arc");
+    std::string filename = Session::instance()->getString("*save*filename", "save01.arc");
+
     MapData data(10,6);
     JobMgr job_mgr(camera->main_renderer());
 
@@ -113,7 +114,7 @@ int main(int argc, char** argv) {
             cc = dynamic_cast<CommandCenter*>(object);
         }
     }
-    if( cc != nullptr ) {
+    if( cc != nullptr && cc->storedItems().size() == 0 ) {
         CommandCenter::init(cc, chests);
     }
 

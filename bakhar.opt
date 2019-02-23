@@ -8,5 +8,6 @@
 *font*title*size: 14 # title size
 *language: fr # translation
 *pause_when_launched: false # if true, automatically pause the game when launched
+*save*filename: save01.arc # no description
 *second_test: false # no description
 *test: true # no description

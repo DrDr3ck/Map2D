@@ -199,6 +199,8 @@ void MapDataConverter::load(const std::string& str) {
         std::string height_str = getAttribute(str, "height");
         int height = atoi(height_str.c_str());
         data_->reset(width,height);
+        std::string map_name = getAttribute(str, "image");
+        data_->setMapImageName(map_name);
     }
     if( !inTile_ ) {
         if( isTag(str, "tile") ) {
@@ -313,7 +315,7 @@ Tile::FType MapDataConverter::stringTileToFType(const std::string& str) const {
 }
 
 void MapDataConverter::save(std::ofstream& file) {
-    file << "<mapdata width=\"" << data_->width() << "\" height=\"" << data_->height() << "\">" << std::endl;
+    file << "<mapdata width=\"" << data_->width() << "\" height=\"" << data_->height() << "\" image=\"" << data_->getMapImageName() << "\">" << std::endl;
     for( int j = 0 ; j < data_->height(); j++ ) {
         for( int i = 0 ; i < data_->width(); i++ ) {
             const Tile& cur = data_->tile(i,j);

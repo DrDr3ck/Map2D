@@ -1,4 +1,4 @@
-<mapdata width="10" height="6">
+<mapdata width="10" height="6" image="test_version_1.png">
   <tile x="0" y="0">
     <id value="6" />
     <type value="WALL" />
@@ -437,7 +437,7 @@
   </people>
   <people name="Bill">
     <position x="2" y="3" />
-    <direction x="-1" y="0" />
+    <direction x="0" y="1" />
     <activity value="0" />
     <image_id value="12" />
   </people>

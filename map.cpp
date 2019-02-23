@@ -171,6 +171,7 @@ std::string Tile::removeItem(const BasicItem& item, int nb) {
 
 MapData::MapData(int width, int height) : width_(width), height_(height) {
     tiles_ = new Tile[width*height];
+    map_image_name_ = "out.png";
 }
 
 MapData::~MapData() {
@@ -182,6 +183,14 @@ void MapData::reset(int width, int height) {
     width_ = width;
     height_ = height;
     tiles_ = new Tile[width*height];
+}
+
+void MapData::setMapImageName(const std::string& map_image_name) {
+    map_image_name_ = map_image_name;
+}
+
+const std::string& MapData::getMapImageName() const {
+    return map_image_name_;
 }
 
 void MapData::addWall(int x, int y) {

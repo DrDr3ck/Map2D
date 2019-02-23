@@ -104,6 +104,9 @@ public:
     int width() const { return width_; }
     int height() const { return height_; }
 
+    void setMapImageName(const std::string& map_image_name);
+    const std::string& getMapImageName() const;
+
     bool transferItems(Character* people);
     void transferItems(Character* people, Chest* chest);
     Object* getNearestChest(Position position);
@@ -113,6 +116,7 @@ public:
 private:
     int width_;
     int height_;
+    std::string map_image_name_;
     Tile* tiles_;
     std::vector<Object*> objects_;
 };
