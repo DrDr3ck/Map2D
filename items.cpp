@@ -29,15 +29,15 @@ CountedItem::~CountedItem() {
 // Cannot contain more than 99 items in a slot
 // return the number of items not added in this CountedItem
 int CountedItem::addItem(int count) {
-    if( count_ == 99 ) {
+    if( count_ == CountedItem::maxCount() ) {
         return count;
     }
-    if( count + count_ <= 99 ) {
+    if( count + count_ <= CountedItem::maxCount() ) {
         count_ += count;
         return 0;
     }
-    int item_added = 99 - count_;
-    count_ = 99;
+    int item_added = CountedItem::maxCount() - count_;
+    count_ = CountedItem::maxCount();
     return count - item_added;
 }
 

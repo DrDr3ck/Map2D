@@ -322,7 +322,7 @@ void CleanAction::preAction() {
                 return; // end of cleaning action
             }
             // then move to the nearest non full chest
-            Object* object = game_board_->data()->getNearestChest(people_->tilePosition());
+            Object* object = game_board_->data()->getNearestEmptyChest(people_->tilePosition(), people_->carriedItems().at(0));
             PathFinding path(game_board_->data());
             Position end_position = object->tilePosition();
             std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
@@ -346,8 +346,8 @@ void CleanAction::preAction() {
             }
         }
     } else {
-        // robot is full
-        Object* object = game_board_->data()->getNearestChest(people_->tilePosition());
+        // robot is full, need to move to nearest none full chest
+        Object* object = game_board_->data()->getNearestEmptyChest(people_->tilePosition(), people_->carriedItems().at(0));
         if( people_->tilePosition().x == object->tilePosition().x && people_->tilePosition().y == object->tilePosition().y ) { // robot is over the chest: drop items
             Chest* chest = static_cast<Chest*>(object);
             game_board_->data()->transferItems(people_, chest); // transfer all items from robot to chest

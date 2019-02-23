@@ -37,6 +37,8 @@ public:
     CountedItem(const BasicItem& item, int count = 0);
     ~CountedItem();
 
+    static int maxCount() { return 99; }
+
     int addItem(int count = 1);
     int removeItem(int count = 1);
 

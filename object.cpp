@@ -231,8 +231,8 @@ int Chest::addItem(const BasicItem& item, int count) {
     // there are still some items to add...
     while( max_size_ > int(items_.size()) ) {
         int c = total_count;
-        if( total_count > 99 ) {
-            c = 99;
+        if( total_count > CountedItem::maxCount() ) {
+            c = CountedItem::maxCount();
         }
         items_.push_back(CountedItem(item, c));
         CommandCenter::addItems(item, c);

@@ -110,6 +110,7 @@ public:
     bool transferItems(Character* people);
     void transferItems(Character* people, Chest* chest);
     Object* getNearestChest(Position position);
+    Object* getNearestEmptyChest(Position position, const BasicItem& item);
     Object* getAssociatedChest(Position position);
 
     static void createMap(MapData* data);

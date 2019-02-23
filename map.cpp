@@ -378,6 +378,41 @@ Object* MapData::getNearestChest(Position position) {
     return nearest_chest;
 }
 
+/*!
+ * \return a Chest that can store item
+ */
+Object* MapData::getNearestEmptyChest(Position position, const BasicItem& item) {
+    Object* nearest_chest = nullptr;
+    float distance = 10000.f;
+    for( Object* object : objects() ) {
+        if( object->name() != "chest" ) continue;
+        Chest* chest = static_cast<Chest*>(object);
+        // check if chest can store item
+        bool full = true;
+        if( chest->sizeAvailable() > 0 ) {
+            full = false;
+        } else {
+            const std::vector<CountedItem>& items = chest->items();
+            for( auto cur_item : items ) {
+                if( cur_item.item().name() == item.name() ) {
+                    if( cur_item.count() < CountedItem::maxCount() ) {
+                        full = false;
+                        break;
+                    }
+                }
+            }
+        }
+        if( full ) continue;
+        Position chest_position = object->tilePosition();
+        float dist = Utility::distance(chest_position, position);
+        if( dist < distance ) {
+            distance = dist;
+            nearest_chest = object;
+        }
+    }
+    return nearest_chest;
+}
+
 void MapData::addGround(int x, int y) {
     if( tile(x,y).background_type() != Tile::NONE ) {
         // already a floor
