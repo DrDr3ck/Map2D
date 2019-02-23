@@ -2,6 +2,7 @@
 #include "character.h"
 #include "job.h"
 #include "path_finding.h"
+#include "sdl_camera.h"
 #include "translator.h"
 
 #include <iostream>
@@ -192,23 +193,36 @@ void BuildAction::postAction() {
     Position position = job_->tilePosition();
     if( game_board_->jobManager()->findJobAt(position) ) {
         game_board_->jobManager()->cancelJob(position);
+        MapData* data = game_board_->data();
         if( job_->name() == DEMOLISHWALL ) {
-            game_board_->data()->removeWall(position.x,position.y);
+            data->removeWall(position.x,position.y);
+            // put item in associated chest or put it on the floor
+            MapView* map_view = MapView::cur_map;
+            map_view->store(BasicItem("wall"), position);
         } else if( job_->name() == BUILDWALL ) {
-            game_board_->data()->addWall(position.x,position.y);
+            if( data->removeItemFromChest(position, BasicItem("wall")) ) {
+                data->addWall(position.x,position.y);
+            }
         } else if( job_->name() == BUILDFLOOR ) {
-            game_board_->data()->addFloor(position.x,position.y);
+            if( data->removeItemFromChest(position, BasicItem("floor")) ) {
+                data->addFloor(position.x,position.y);
+            }
         } else if( job_->name() == DEMOLISHFLOOR ) {
-            game_board_->data()->removeFloor(position.x,position.y);
+            data->removeFloor(position.x,position.y);
+            // put item in associated chest or put it on the floor
+            MapView* map_view = MapView::cur_map;
+            map_view->store(BasicItem("floor"), position);
         } else if( job_->name() == BUILDOBJECT ) {
             BuildObjectJob* bjob = static_cast<BuildObjectJob*>(job_);
             Object* object = bjob->getObject();
             if( object != nullptr ) {
-                game_board_->data()->addObject(object,position.x,position.y);
+                if( data->removeItemFromChest(position, BasicItem(object->name())) ) {
+                    data->addObject(object,position.x,position.y);
+                }
             } else {
                 Logger::error() << "Cannot create object " << bjob->objectName() << Logger::endl;
             }
-        }
+        } // TODO remove object
     }
 }
 

@@ -122,6 +122,7 @@ public:
     virtual ~SDLItemToolButton() = default;
 
     virtual const std::string& text() const override;
+    virtual void activate() override;
 
 private:
     BasicItem item_;

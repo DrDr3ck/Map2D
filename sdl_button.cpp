@@ -236,7 +236,8 @@ void SDLToolButton::deactivate() {
 /********************************************************************/
 
 SDLItemToolButton::SDLItemToolButton(
-    const BasicItem& item, SDLTool* tool, std::string icon_name, int x, int y
+    const BasicItem& item, SDLTool* tool,
+    std::string icon_name, int x, int y
 ) : SDLToolButton(tool, icon_name, x, y), item_(item) {
     setTooltipPosition(TooltipPosition::OVER);
 }
@@ -245,8 +246,12 @@ SDLItemToolButton::SDLItemToolButton(
  * \return the number of items available in the Command Center
  */
 const std::string& SDLItemToolButton::text() const {
-    CommandCenter* cc = CommandCenter::cur_command_center;
     SDLItemToolButton* non_const_this = const_cast<SDLItemToolButton*>(this);
+    if( item_.name() == "workbench" ) {
+        non_const_this->setText("+oo");
+        return SDLToolButton::text();
+    }
+    CommandCenter* cc = CommandCenter::cur_command_center;
     if( cc == nullptr ) {
         non_const_this->setText(std::string());
     } else {
@@ -259,6 +264,14 @@ const std::string& SDLItemToolButton::text() const {
         }
     }
     return SDLToolButton::text();
+}
+
+void SDLItemToolButton::activate() {
+    if( text() == "-" ) {
+        Logger::warning() << tr("No such item: please create this item before using this tool.") << Logger::endl;
+    } else {
+        SDLToolButton::activate();
+    }
 }
 
 /********************************************************************/

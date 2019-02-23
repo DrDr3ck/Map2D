@@ -110,6 +110,7 @@ public:
     bool transferItems(Character* people);
     void transferItems(Character* people, Chest* chest);
     Object* getNearestChest(Position position);
+    bool removeItemFromChest(Position position, const BasicItem& item);
     Object* getNearestEmptyChest(Position position, const BasicItem& item);
     Object* getAssociatedChest(Position position);
 

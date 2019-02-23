@@ -881,7 +881,7 @@ void SDLCamera::displayButton(SDLButton* button, int offset_x, int offset_y) {
         } else if( button->tooltipPosition() == SDLButton::TooltipPosition::OVER ) {
             button_text.texture(main_renderer());
             SDL_Rect text_rect = button_text.rect();
-            button_text.set_position(button->rect().x +button->rect().w/2 - text_rect.w/2 + offset_x, button->rect().y + offset_y );
+            button_text.set_position(button->rect().x +button->rect().w/2 - text_rect.w/2 + offset_x, button->rect().y + offset_y + 5);
         } else {
             button_text.set_position(button->rect().x+button->rect().w + offset_x, button->rect().y + offset_y);
         }

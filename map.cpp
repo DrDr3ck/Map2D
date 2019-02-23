@@ -399,6 +399,31 @@ Object* MapData::getNearestChest(Position position) {
     return nearest_chest;
 }
 
+bool MapData::removeItemFromChest(Position position, const BasicItem& item) {
+    if( item.name() == "workbench") return true;
+    Chest* nearest_chest_with_item = nullptr;
+    float distance = 10000.f;
+    for( Object* object : objects() ) {
+        if( object->name() != "chest" ) continue;
+        Chest* chest = static_cast<Chest*>(object);
+        const std::vector<CountedItem>& items = chest->items();
+        for( auto cur_item : items ) {
+            if( cur_item.item().name() == item.name() ) {
+                Position chest_position = object->tilePosition();
+                float dist = Utility::distance(chest_position, position);
+                if( dist < distance ) {
+                    distance = dist;
+                    nearest_chest_with_item = chest;
+                }
+                break;
+            }
+        }
+    }
+    if( nearest_chest_with_item == nullptr ) return false;
+    nearest_chest_with_item->removeItem(item);
+    return true;
+}
+
 /*!
  * \return a Chest that can store item
  */
