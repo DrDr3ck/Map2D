@@ -1,13 +1,14 @@
 # edit at your own risk !!
 *camera*height: 960 # height of window
 *camera*width: 1200 # width of window
-*display_F3: true # no description
+*display_F3: false # no description
 *font*button*size: 12 # button size
 *font*family: FreePixel # no description
 *font*size: 16 # font size
 *font*title*size: 14 # title size
 *language: fr # translation
 *pause_when_launched: false # if true, automatically pause the game when launched
+*save*automatic: 10 # automatic save every 10 minutes
 *save*filename: save01.arc # no description
 *second_test: false # no description
 *test: true # no description

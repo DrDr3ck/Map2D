@@ -118,7 +118,9 @@ int main(int argc, char** argv) {
         CommandCenter::init(cc, chests);
     }
 
-    // Main loop
+    // automatic save
+    std::chrono::steady_clock::time_point automatic_save_clock = std::chrono::steady_clock::now();
+
     std::chrono::steady_clock::time_point start_clock = std::chrono::steady_clock::now();
     bool ending = false;
 
@@ -129,6 +131,7 @@ int main(int argc, char** argv) {
 
     double microsecond = 0;
     int fps = 0;
+    // Main loop
     while(!ending) {
 
         camera->handleEvent();
@@ -149,8 +152,19 @@ int main(int argc, char** argv) {
 
         }
 
+        double automatic_clock_s = std::chrono::duration_cast<std::chrono::microseconds>(end_clock - automatic_save_clock).count() / 1000000.f;
+        int automatic_save_delay = Session::instance()->getInteger("*save*automatic", 10);
+        if( automatic_clock_s > automatic_save_delay*60 ) {
+            // save automatically
+            ArchiveConverter::save(&board, filename);
+            // reset time for next automatic save
+            automatic_save_clock = std::chrono::steady_clock::now();
+        }
+
         if( microsecond > 1000000 ) {
-            //Logger::debug() << "FPS: " << fps << Logger::endl;
+            if( Session::instance()->getBoolean("*display_F3", true) ) {
+                Logger::debug() << "FPS: " << fps << Logger::endl;
+            }
             microsecond = 0;
             fps = 0;
         }
