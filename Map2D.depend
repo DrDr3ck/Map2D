@@ -414,7 +414,7 @@
 	<list>
 	<vector>
 
-1551015673 source:d:\games\programs\map2d\archive.cpp
+1551038840 source:d:\games\programs\map2d\archive.cpp
 	"archive.h"
 	"character.h"
 	"logger.h"
@@ -516,7 +516,7 @@
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 
-1551000274 source:d:\games\programs\map2d\character.cpp
+1551037051 source:d:\games\programs\map2d\character.cpp
 	"character.h"
 	"sdl_camera.h"
 	"path_finding.h"
@@ -528,7 +528,7 @@
 	<cmath>
 	"SDL2/SDL_image.h"
 
-1549557856 d:\games\programs\map2d\character.h
+1551037067 d:\games\programs\map2d\character.h
 	"utility.h"
 	"items.h"
 	<SDL2/SDL.h>
@@ -693,7 +693,7 @@
 	"translator.h"
 	"items.h"
 
-1551015590 source:d:\games\programs\map2d\object.cpp
+1551037207 source:d:\games\programs\map2d\object.cpp
 	"object.h"
 	"translator.h"
 	<iostream>
@@ -701,7 +701,7 @@
 	"sdl_camera.h"
 	"craft_mgr.h"
 
-1550929400 source:d:\games\programs\map2d\dialog.cpp
+1551039257 source:d:\games\programs\map2d\dialog.cpp
 	"dialog.h"
 	"sdl_camera.h"
 	"sdl_button.h"
@@ -711,7 +711,7 @@
 	<algorithm>
 	<cmath>
 
-1550527321 d:\games\programs\map2d\dialog.h
+1551039901 d:\games\programs\map2d\dialog.h
 	"camera.h"
 	"object.h"
 	<SDL2/SDL.h>

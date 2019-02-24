@@ -1,7 +1,7 @@
 # edit at your own risk !!
 *camera*height: 960 # height of window
 *camera*width: 1200 # width of window
-*display_F3: false # display some debug data (cursor position, FPS, ...)
+*display_F3: false # no description
 *font*button*size: 12 # button size
 *font*family: FreePixel # name of default font family
 *font*size: 16 # font size

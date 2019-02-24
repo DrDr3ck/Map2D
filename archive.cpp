@@ -403,8 +403,8 @@ void CharacterConverter::save(std::ofstream& file) {
         file << "    <image_id value=\"" << people->imageIdForArchive() << "\" />" << std::endl;
         const std::vector<BasicItem>& carried_items = people->carriedItems();
         for( unsigned int i=0; i < carried_items.size(); i++ ) {
-            const BasicItem& item = carried_items[i];
-            file << "    <carried_item>" << item.name() << "</carried_item>" << std::endl;
+            const BasicItem& item = carried_items.at(i);
+            file << "    <carried_item name=\"" << item.name() << "\" />" << std::endl;
         }
         file << "  </people>" << std::endl;
     }

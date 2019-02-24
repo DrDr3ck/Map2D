@@ -344,10 +344,8 @@ void Chest::releaseItems() {
     MapData* data = map_view->data();
     Position tile_position = this->tilePosition();
     Tile& tile = data->tile(tile_position.x, tile_position.y);
-    std::cout << "release items " << items_.size() << std::endl;
     for( auto counted_item : items_ ) {
         tile.addItem(counted_item.item(), counted_item.count());
-        std::cout << "release " << counted_item.item().name() << std::endl;
     }
     items_.clear();
 }

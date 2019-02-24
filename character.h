@@ -109,6 +109,7 @@ public:
     void carryItem(const BasicItem& item, int nb=1);
     BasicItem dropItem();
     const std::vector<BasicItem>& carriedItems() const { return carried_items_; }
+    void releaseItems();
 
 protected:
     Direction direction_;

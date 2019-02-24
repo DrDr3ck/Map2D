@@ -36,6 +36,9 @@ public:
     SDL_Rect getCenterRect() const;
 
 protected:
+    bool buttonClicked(SDLButton* button, Position mouse_position);
+
+protected:
     int x_;
     int y_;
     int width_;
@@ -61,8 +64,12 @@ public:
     virtual Position tilePosition() const override;
 
     virtual void do_render(Camera* camera, double delay_in_ms) override;
+    virtual bool handleEvent(Camera* camera) override;
+
 private:
-    Character* robot_;
+    Character* robot_ = nullptr;
+    SDLTextButton* drop_button_ = nullptr;
+    std::vector<SDLButton*> buttons_;
 };
 
 /********************************************************************/
@@ -81,8 +88,6 @@ public:
 
 protected:
     ObjectDialog(Object* object, int mouse_x = 50, int mouse_y = 50);
-
-    bool buttonClicked(SDLButton* button, Position mouse_position);
 
 protected:
     Object* object_;

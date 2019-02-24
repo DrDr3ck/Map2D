@@ -155,20 +155,64 @@ bool Dialog::handleEvent(Camera* camera) {
     return true; // event has been handled
 }
 
+bool Dialog::buttonClicked(SDLButton* button, Position mouse_position) {
+    if( button == nullptr ) return false;
+    const SDL_Rect& button_rect = button->rect();
+    std::cout << button_rect.x << std::endl;
+    std::cout << mouse_position.x << std::endl;
+    return Utility::contains(button_rect, mouse_position.x, mouse_position.y);
+}
+
 /**************************************/
 
 RobotDialog::RobotDialog(Character* robot, int mouse_x, int mouse_y) : Dialog(mouse_x, mouse_y, 250, 200) {
     robot_ = robot;
     SDL_Color bgcolor = {255,211,211,255};
     setBackgroundColor(bgcolor);
+    const std::vector<BasicItem>& carried_items = robot_->carriedItems();
+    for( int i = 0; i < robot_->maxCarry(); i++ ) {
+        SDLButton* button = nullptr;
+        int x = i%2;
+        int y = int(i/2);
+        if( i < int(carried_items.size()) ) {
+            const BasicItem& item = carried_items.at(i);
+            std::string icon_name("items/");
+            icon_name.append(item.name());
+            icon_name.append("_item.png");
+            button = new SDLButton(icon_name, "TBD", 35+100*x, 60+50*y);
+        } else {
+            button = new SDLButton(35+100*x, 60+50*y);
+        }
+        button->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
+        buttons_.push_back( button );
+    }
 }
 
 RobotDialog::~RobotDialog() {
     robot_ = nullptr;
+    buttons_.erase(buttons_.begin(), buttons_.end());
+    buttons_.clear();
 }
 
 Position RobotDialog::tilePosition() const {
     return robot_->tilePosition();
+}
+
+bool RobotDialog::handleEvent(Camera* camera) {
+    if( drop_button_ == nullptr ) return false;
+    SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
+    const SDL_Event& event = sdl_camera->event();
+    Position mouse_position = {sdl_camera->mouse_x(), sdl_camera->mouse_y()};
+    switch( event.type ) {
+    case SDL_MOUSEBUTTONDOWN:
+        if( event.button.button == SDL_BUTTON_LEFT ) {
+            if( buttonClicked(drop_button_, mouse_position) ) {
+                robot_->releaseItems();
+            }
+        }
+        break;
+    }
+    return Dialog::handleEvent(camera);
 }
 
 void RobotDialog::do_render(Camera* camera, double delay_in_ms) {
@@ -197,6 +241,26 @@ void RobotDialog::do_render(Camera* camera, double delay_in_ms) {
     text.set_position(9+x_,25+y_);
     text.setBackgroundColor(getBackgroundColor());
     sdl_camera->displayText(text, false, true);
+
+    if( drop_button_ == nullptr ) {
+        drop_button_ = new SDLTextButton(sdl_camera, tr("drop all"), 9+9, 25);
+    }
+    drop_button_->setPosition(9+text.rect().w+9+x_, 25+int(text.rect().h/3)+y_);
+    sdl_camera->displayButton(drop_button_);
+
+    const std::vector<BasicItem>& carried_items = robot_->carriedItems();
+    int maxI = std::min(carried_items.size(),buttons_.size());
+    for( int i=0; i < maxI; i++ ) {
+        BasicItem item = carried_items.at(i);
+        SDLButton* button = buttons_.at(i);
+        std::string icon_name("items/");
+        icon_name.append(item.name());
+        icon_name.append("_item.png");
+        button->setIcon(icon_name);
+        std::string text = tr(item.name());
+        button->setText(text);
+        sdl_camera->displayButton(button,x_+5,y_+25);
+    }
 }
 
 /**************************************/
@@ -250,12 +314,6 @@ void ObjectDialog::do_render(Camera* camera, double delay_in_ms) {
     sdl_camera->displayText(text, false, true);
 }
 
-bool ObjectDialog::buttonClicked(SDLButton* button, Position mouse_position) {
-    if( button == nullptr ) return false;
-    const SDL_Rect& button_rect = button->rect();
-    return Utility::contains(button_rect, mouse_position.x, mouse_position.y);
-}
-
 // create dedicated ObjectDialog according to object
 // (i.e. SmelterDialog, CrafterDialog, ...)
 ObjectDialog* ObjectDialog::createDialog(Object* object, int x, int y) {
@@ -299,6 +357,8 @@ CommandCenterDialog::CommandCenterDialog(
 }
 
 CommandCenterDialog::~CommandCenterDialog() {
+    buttons_.erase(buttons_.begin(), buttons_.end());
+    buttons_.clear();
 }
 
 void CommandCenterDialog::do_render(Camera* camera, double delay_in_ms) {

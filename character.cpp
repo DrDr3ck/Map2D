@@ -99,12 +99,18 @@ int Character::maxCarriable(const BasicItem& /*item*/) const {
     return max_carry_ - cur_carry;
 }
 
+/*!
+ * Adds an item
+ */
 void Character::carryItem(const BasicItem& item, int nb) {
     for( int i= 0; i < nb ; i++ ) {
         carried_items_.push_back(item);
     }
 }
 
+/*!
+ * \return an item
+ */
 BasicItem Character::dropItem() {
     int size = carried_items_.size();
     if( size == 0 ) {
@@ -113,6 +119,20 @@ BasicItem Character::dropItem() {
     BasicItem cur_item = carried_items_.at(size-1);
     carried_items_.pop_back();
     return cur_item;
+}
+
+/*!
+ * Drops all items on the floor
+ */
+void Character::releaseItems() {
+    MapView* map_view = MapView::cur_map;
+    MapData* data = map_view->data();
+    Position tile_position = this->tilePosition();
+    Tile& tile = data->tile(tile_position.x, tile_position.y);
+    for( auto item : carried_items_ ) {
+        tile.addItem(item, 1);
+    }
+    carried_items_.clear();
 }
 
 /********************************************************************/

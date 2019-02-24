@@ -5,7 +5,6 @@
     <occurrence value="0" />
     <btype value="WATER" />
     <ftype value="METAL" />
-    <counteditem name="command_center" value="1" />
   </tile>
   <tile x="1" y="0">
     <id value="0" />
@@ -349,7 +348,6 @@
     <occurrence value="30" />
     <btype value="SAND" />
     <ftype value="METAL" />
-    <counteditem name="sand" value="1" />
   </tile>
   <tile x="2" y="3">
     <id value="0" />
@@ -452,9 +450,10 @@
   <tile x="0" y="4">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="11" />
+    <occurrence value="1" />
     <btype value="SAND" />
     <ftype value="METAL" />
+    <counteditem name="sand" value="10" />
   </tile>
   <tile x="1" y="4">
     <id value="0" />
@@ -2006,7 +2005,7 @@
   <tile x="14" y="17">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="34" />
+    <occurrence value="23" />
     <btype value="COAL" />
     <ftype value="METAL" />
   </tile>
@@ -2097,9 +2096,10 @@
   <tile x="11" y="18">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="30" />
+    <occurrence value="19" />
     <btype value="COPPER" />
     <ftype value="METAL" />
+    <counteditem name="copper_ore" value="10" />
   </tile>
   <tile x="12" y="18">
     <id value="0" />
@@ -2244,25 +2244,35 @@
 </mapdata>
 <group>
   <people name="B0b31">
-    <position x="11" y="11" />
+    <position x="11" y="13" />
     <direction x="0" y="1" />
     <activity value="0" />
     <image_id value="0" />
   </people>
   <people name="Bi11">
-    <position x="9" y="13" />
-    <direction x="0" y="1" />
+    <position x="6" y="12" />
+    <direction x="1" y="1" />
     <activity value="0" />
     <image_id value="12" />
   </people>
 </group>
 <position_objects>
+  <object name="chest">
+    <position x="9" y="13" />
+    <counted_item nb="1">iron_chest</counted_item>
+    <counted_item nb="1">stone_furnace</counted_item>
+  </object>
   <object name="workbench">
     <position x="10" y="12" />
   </object>
   <object name="chest">
     <position x="10" y="13" />
-    <counted_item nb="10">stone</counted_item>
+    <counted_item nb="11">stone</counted_item>
     <counted_item nb="7">iron_ore</counted_item>
+  </object>
+  <object name="chest">
+    <position x="11" y="13" />
+    <counted_item nb="1">iron_ore</counted_item>
+    <counted_item nb="11">coal</counted_item>
   </object>
 </position_objects>
