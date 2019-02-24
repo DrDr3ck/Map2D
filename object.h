@@ -89,7 +89,8 @@ protected:
 
 class Chest : public Object {
 public:
-    Chest(int size = 16);
+    Chest(const std::string& icon_name, const std::string& user_name, const std::string& name, int size);
+    Chest(int size = 2);
     virtual ~Chest() {}
 
     virtual void render(SDLCamera* camera, const SDL_Rect& rect) override;
@@ -122,6 +123,12 @@ public:
 protected:
     int max_size_;
     std::vector<CountedItem> items_;
+};
+
+class IronChest : public Chest {
+public:
+    IronChest(int size=8);
+    virtual ~IronChest() {}
 };
 
 class WorkBench : public Object {

@@ -400,7 +400,8 @@ Object* MapData::getNearestChest(Position position) {
 }
 
 bool MapData::removeItemFromChest(Position position, const BasicItem& item) {
-    if( item.name() == "workbench") return true;
+    if( item.name() == "workbench" ) return true;
+    if( item.name() == "chest" ) return true;
     Chest* nearest_chest_with_item = nullptr;
     float distance = 10000.f;
     for( Object* object : objects() ) {

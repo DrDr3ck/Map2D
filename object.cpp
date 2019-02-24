@@ -175,6 +175,15 @@ int Object::percentageAccomplished() const {
 
 /********************************************************************/
 
+Chest::Chest(
+    const std::string& icon_name,
+    const std::string& user_name,
+    const std::string& name,
+    int size
+) : Object(icon_name, user_name, name), max_size_(size) {
+    is_crafter_ = false;
+}
+
 Chest::Chest(int size) : Object("objects/chest.png", tr("Chest"), "chest"), max_size_(size) {
     is_crafter_ = false;
 }
@@ -324,6 +333,11 @@ const std::string Chest::tooltip() const {
         text.append(")");
     }
     return text;
+}
+
+/********************************************************************/
+
+IronChest::IronChest(int size) : Chest("objects/iron_chest.png", tr("IronChest"), "iron_chest", size) {
 }
 
 /********************************************************************/

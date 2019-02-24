@@ -247,7 +247,7 @@ SDLItemToolButton::SDLItemToolButton(
  */
 const std::string& SDLItemToolButton::text() const {
     SDLItemToolButton* non_const_this = const_cast<SDLItemToolButton*>(this);
-    if( item_.name() == "workbench" ) {
+    if( item_.name() == "workbench" || item_.name() == "chest" ) {
         non_const_this->setText("+oo");
         return SDLToolButton::text();
     }

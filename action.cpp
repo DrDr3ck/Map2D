@@ -137,10 +137,16 @@ BuildAction::BuildAction(
     people_ = people;
     job_ = job;
     action_ = nullptr;
-    isValid_ = true;
 }
 
 BuildAction::~BuildAction() {
+}
+
+void BuildAction::reset() {
+    if( job_ != nullptr ) {
+        job_->reset();
+    }
+    is_valid_ = false;
 }
 
 void BuildAction::preAction() {
@@ -152,15 +158,14 @@ void BuildAction::preAction() {
     std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
 
     if( positions.size() == 0 ) {
-        isValid_ = false;
-        job_->reset();
+        reset();
     } else {
         action_ = new MoveAction(people_, positions, Utility::tileSize);
     }
 }
 
 bool BuildAction::spentTime(double time_spent) {
-    if( !isValid_ ) return false;
+    if( !is_valid_ ) return false;
     if( action_ != nullptr ) {
         if( !action_->spentTime(time_spent) ) {
             action_->postAction();
@@ -189,10 +194,10 @@ bool BuildAction::spentTime(double time_spent) {
 
 void BuildAction::postAction() {
     people_->setActivityPercent(0);
-    if( !isValid_ ) return;
     Position position = job_->tilePosition();
     if( game_board_->jobManager()->findJobAt(position) ) {
         game_board_->jobManager()->cancelJob(position);
+        if( !is_valid_ ) return;
         MapData* data = game_board_->data();
         if( job_->name() == DEMOLISHWALL ) {
             data->removeWall(position.x,position.y);
@@ -301,10 +306,10 @@ bool ExtractAction::spentTime(double time_spent) {
 
 void ExtractAction::postAction() {
     people_->setActivityPercent(0);
-    if( !isValid_ ) return;
     Position position = job_->tilePosition();
     if( game_board_->jobManager()->findJobAt(position) ) {
         game_board_->jobManager()->cancelJob(position);
+        if( !isValid_ ) return;
         if( job_->name() == EXTRACT ) {
             game_board_->data()->extractItemFromTile(position.x,position.y);
         }
@@ -342,6 +347,12 @@ void CleanAction::preAction() {
             }
             // then move to the nearest non full chest
             Object* object = game_board_->data()->getNearestEmptyChest(people_->tilePosition(), people_->carriedItems().at(0));
+            if( object == nullptr ) {
+                Logger::warning() << "Not enough space in chests, please create a new one" << Logger::endl;
+                isValid_ = false;
+                job_->reset();
+                return;
+            }
             PathFinding path(game_board_->data());
             Position end_position = object->tilePosition();
             std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
@@ -367,6 +378,12 @@ void CleanAction::preAction() {
     } else {
         // robot is full, need to move to nearest none full chest
         Object* object = game_board_->data()->getNearestEmptyChest(people_->tilePosition(), people_->carriedItems().at(0));
+        if( object == nullptr ) {
+            Logger::warning() << "Not enough space in chest, please create a new one" << Logger::endl;
+            isValid_ = false;
+            job_->reset();
+            return;
+        }
         if( people_->tilePosition().x == object->tilePosition().x && people_->tilePosition().y == object->tilePosition().y ) { // robot is over the chest: drop items
             Chest* chest = static_cast<Chest*>(object);
             game_board_->data()->transferItems(people_, chest); // transfer all items from robot to chest
@@ -422,9 +439,9 @@ bool CleanAction::spentTime(double time_spent) {
 
 void CleanAction::postAction() {
     people_->setActivityPercent(0);
-    if( !isValid_ ) return;
     Position position = job_->tilePosition();
     if( game_board_->jobManager()->findJobAt(position) ) {
         game_board_->jobManager()->cancelJob(position);
+        if( !isValid_ ) return;
     }
 }

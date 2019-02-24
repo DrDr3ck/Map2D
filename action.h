@@ -22,6 +22,7 @@ public:
 
 protected:
     ActionBase* next_action_ = nullptr;
+    bool is_valid_ = true;
 };
 
 /********************************************************************/
@@ -89,12 +90,13 @@ public:
     virtual bool spentTime(double time_spent) override;
     virtual void postAction() override;
 
+    void reset();
+
 private:
     GameBoard* game_board_;
     Character* people_;
     Job* job_;
     ActionBase* action_;
-    bool isValid_;
     std::chrono::steady_clock::time_point start_time_;
 };
 

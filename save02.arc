@@ -346,9 +346,10 @@
   <tile x="1" y="3">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="31" />
+    <occurrence value="30" />
     <btype value="SAND" />
     <ftype value="METAL" />
+    <counteditem name="sand" value="1" />
   </tile>
   <tile x="2" y="3">
     <id value="0" />
@@ -1070,7 +1071,6 @@
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
-    <counteditem name="workbench" value="1" />
   </tile>
   <tile x="9" y="9">
     <id value="0" />
@@ -1183,7 +1183,6 @@
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
-    <counteditem name="workbench" value="1" />
   </tile>
   <tile x="9" y="10">
     <id value="0" />
@@ -1296,7 +1295,6 @@
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
-    <counteditem name="workbench" value="1" />
   </tile>
   <tile x="9" y="11">
     <id value="0" />
@@ -1763,21 +1761,21 @@
   <tile x="11" y="15">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="17" />
+    <occurrence value="11" />
     <btype value="ROCK" />
     <ftype value="METAL" />
   </tile>
   <tile x="12" y="15">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="36" />
+    <occurrence value="35" />
     <btype value="ROCK" />
     <ftype value="METAL" />
   </tile>
   <tile x="13" y="15">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="10" />
+    <occurrence value="7" />
     <btype value="IRON" />
     <ftype value="METAL" />
   </tile>
@@ -1966,7 +1964,7 @@
   <tile x="8" y="17">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="42" />
+    <occurrence value="41" />
     <btype value="COAL" />
     <ftype value="METAL" />
   </tile>
@@ -2099,7 +2097,7 @@
   <tile x="11" y="18">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="31" />
+    <occurrence value="30" />
     <btype value="COPPER" />
     <ftype value="METAL" />
   </tile>
@@ -2246,17 +2244,32 @@
 </mapdata>
 <group>
   <people name="B0b31">
-    <position x="7" y="10" />
-    <direction x="-1" y="1" />
+    <position x="9" y="12" />
+    <direction x="1" y="1" />
     <activity value="0" />
     <image_id value="0" />
   </people>
   <people name="Bi11">
-    <position x="9" y="10" />
-    <direction x="-1" y="1" />
+    <position x="9" y="13" />
+    <direction x="0" y="1" />
     <activity value="0" />
     <image_id value="12" />
   </people>
 </group>
 <position_objects>
+  <object name="chest">
+    <position x="8" y="12" />
+    <counted_item nb="3">workbench</counted_item>
+    <counted_item nb="2">stone</counted_item>
+  </object>
+  <object name="chest">
+    <position x="8" y="13" />
+    <counted_item nb="1">coal</counted_item>
+    <counted_item nb="1">iron_ore</counted_item>
+  </object>
+  <object name="chest">
+    <position x="9" y="12" />
+    <counted_item nb="5">stone</counted_item>
+    <counted_item nb="1">copper_ore</counted_item>
+  </object>
 </position_objects>

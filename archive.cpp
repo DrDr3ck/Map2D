@@ -450,7 +450,9 @@ void ObjectConverter::load(const std::string& str) {
     if( isEndTag(str, "object") ) {
         Object* object = nullptr;
         if( name == "chest" ) {
-            object = new Chest(8);
+            object = new Chest(2);
+        } else if( name == "iron_chest" ) {
+            object = new IronChest(8);
         } else if( name == "workbench" ) {
             object = new WorkBench();
         } else if( name == "breaker" ) {
