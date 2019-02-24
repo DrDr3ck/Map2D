@@ -58,7 +58,8 @@ void SDLTool::mouseMoved(int, int) {
 }
 
 void SDLTool::keyPressed(const std::string& key) {
-    Logger::debug() << "KeyPressed: " << key << Logger::endl;
+    std::ignore = key;
+    //Logger::debug() << "KeyPressed: " << key << Logger::endl;
 }
 
 void SDLTool::mouseReleased(int) {

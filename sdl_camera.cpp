@@ -719,6 +719,7 @@ SDLCamera::SDLCamera(
     add_object_in_menu("command_center", this, manager_, object_menu);
     add_object_in_menu("workbench", this, manager_, object_menu);
     add_object_in_menu("chest", this, manager_, object_menu);
+    add_object_in_menu("iron_chest", this, manager_, object_menu);
     add_object_in_menu("breaker", this, manager_, object_menu);
     add_object_in_menu("stone_furnace", this, manager_, object_menu);
     add_object_in_menu("assembler", this, manager_, object_menu);

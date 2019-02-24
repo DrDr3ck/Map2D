@@ -4,7 +4,7 @@
         <item name="sand" occ=1/>
 		<time>5</time>
 	</object>
-    <object name="chest">
+    <object name="iron_chest">
 		<item name="iron_ingot" occ=8/>
 		<time>5</time>
 	</object>
