@@ -40,6 +40,11 @@ void TextureMgr::loadAllItems(SDL_Renderer* renderer) {
                 Logger::error() << "Cannot open " << filename << Logger::endl;
                 continue;
             }
+
+            // Transparency with green color
+            Uint32 key = SDL_MapRGB(surface->format, 0, 255, 0);
+            SDL_SetColorKey(surface , SDL_TRUE, key);
+
             SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
             SDL_FreeSurface(surface);
             int index = filename.find(suffix);

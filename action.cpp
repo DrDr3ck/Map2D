@@ -197,8 +197,7 @@ void BuildAction::postAction() {
         if( job_->name() == DEMOLISHWALL ) {
             data->removeWall(position.x,position.y);
             // put item in associated chest or put it on the floor
-            MapView* map_view = MapView::cur_map;
-            map_view->store(BasicItem("wall"), position);
+            data->store(BasicItem("wall"), position);
         } else if( job_->name() == BUILDWALL ) {
             if( data->removeItemFromChest(position, BasicItem("wall")) ) {
                 data->addWall(position.x,position.y);
@@ -210,8 +209,7 @@ void BuildAction::postAction() {
         } else if( job_->name() == DEMOLISHFLOOR ) {
             data->removeFloor(position.x,position.y);
             // put item in associated chest or put it on the floor
-            MapView* map_view = MapView::cur_map;
-            map_view->store(BasicItem("floor"), position);
+            data->store(BasicItem("floor"), position);
         } else if( job_->name() == BUILDOBJECT ) {
             BuildObjectJob* bjob = static_cast<BuildObjectJob*>(job_);
             Object* object = bjob->getObject();
@@ -222,7 +220,14 @@ void BuildAction::postAction() {
             } else {
                 Logger::error() << "Cannot create object " << bjob->objectName() << Logger::endl;
             }
-        } // TODO remove object
+        } else if( job_->name() == DEMOLISHOBJECT ) {
+            Object* object = data->getObject(position);
+            if( object != nullptr ) {
+                data->removeObject(position.x, position.y);
+            } else {
+                Logger::error() << "No object on this tile" << Logger::endl;
+            }
+        }
     }
 }
 

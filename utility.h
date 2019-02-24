@@ -20,6 +20,7 @@
 #define BUILDFLOOR "build_floor"
 #define DEMOLISHFLOOR "demolish_floor"
 #define BUILDOBJECT "build_object"
+#define DEMOLISHOBJECT "demolish_object"
 
 #define WALLTOOL 0
 #define FLOORTOOL 1

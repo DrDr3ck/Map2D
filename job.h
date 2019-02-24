@@ -128,6 +128,15 @@ private:
     std::string object_name_;
 };
 
+class UnbuildObjectJob : public Job {
+public:
+    UnbuildObjectJob(
+        Position tile_position, const std::string& icon_type, int build_time_ms
+    ) : Job(DEMOLISHOBJECT, tile_position, icon_type, build_time_ms)
+    {
+    }
+};
+
 /********************************************************************/
 
 class JobMgr {

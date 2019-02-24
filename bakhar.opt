@@ -9,4 +9,4 @@
 *language: fr # translation
 *pause_when_launched: false # if true, automatically pause the game when launched
 *save*automatic: 10 # automatic save every 10 minutes
-*save*filename: save01.arc # last save
+*save*filename: save02.arc # last save

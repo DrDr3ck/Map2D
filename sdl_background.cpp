@@ -32,6 +32,21 @@ Biome::Biome(const std::string& type) {
             surfaces_.push_back(rock_surface);
             heights_.push_back(260);
         }
+        SDL_Surface* coal_surface = IMG_Load("generator/CoalGenerator72_01.png");
+        if( coal_surface != nullptr ) {
+            surfaces_.push_back(coal_surface);
+            heights_.push_back(261);
+        }
+        SDL_Surface* copper_surface = IMG_Load("generator/CopperGenerator72_01.png");
+        if( copper_surface != nullptr ) {
+            surfaces_.push_back(copper_surface);
+            heights_.push_back(262);
+        }
+        SDL_Surface* iron_surface = IMG_Load("generator/IronGenerator72_01.png");
+        if( iron_surface != nullptr ) {
+            surfaces_.push_back(iron_surface);
+            heights_.push_back(263);
+        }
     }
 
     int enlargedtilesize = 72;
@@ -125,9 +140,24 @@ void BackGroundGenerator::execute(const std::string& filename, float** noise_map
     sort(map_tiles.begin(), map_tiles.end(), wayToSortTile);
 
     for( unsigned int index=0; index < map_tiles.size(); index++ ) {
-        int type = biome_->getType(map_tiles[index].value);
         int col = map_tiles[index].x;
         int row = map_tiles[index].y;
+
+        int type = biome_->getType(map_tiles[index].value);
+        if( type == 3 ) { // rock
+            // type 4 = coal, type 5 = copper, type 6 = iron
+            int proba = std::rand() % 100;
+            if( proba < 10 ) {
+                type = 4;
+                noise_map[col][row] = 1.023;
+            } else if( proba < 15 ) {
+                type = 5;
+                noise_map[col][row] = 1.027;
+            } else if( proba < 20 ) {
+                type = 6;
+                noise_map[col][row] = 1.031;
+            }
+        }
         int idx = std::rand() % columns[type];
         int idy = std::rand() % rows[type];
 

@@ -81,6 +81,19 @@ private:
     std::string object_name_;
 };
 
+class SDLUnbuildObjectTool : public SDLTool {
+public:
+    SDLUnbuildObjectTool(SDLCamera* camera, const std::string& icon_name);
+    virtual ~SDLUnbuildObjectTool();
+
+    virtual SDL_Texture* getTexture(SDL_Renderer* renderer) override;
+
+    virtual void mousePressed(int button) override;
+
+private:
+    SDL_Surface* surface_;
+};
+
 /********************************************************************/
 
 class SDLExtractTool : public SDLTool {

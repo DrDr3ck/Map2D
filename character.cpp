@@ -237,6 +237,10 @@ void PeopleGroup::animate(GameBoard* board, double delta_ms) {
                     BuildObjectJob* bjob = static_cast<BuildObjectJob*>(job);
                     people->setAction( new BuildAction(board, people, job), bjob->objectName() );
                     people->action()->preAction();
+                } else if( job->name() == DEMOLISHOBJECT ) {
+                    job->takeJob(people);
+                    people->setAction( new BuildAction(board, people, job), "uninstall an object" );
+                    people->action()->preAction();
                 }
             }
         }

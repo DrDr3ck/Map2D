@@ -496,6 +496,52 @@ void MapData::addObject(Object* object, int tile_x, int tile_y) {
     std::sort(objects_.begin(), objects_.end(), compare_object_position);
 }
 
+Object* MapData::getObject(Position position) {
+    for( auto object : objects_ ) {
+        Position cur_position = object->tilePosition();
+        if( cur_position.x == position.x && cur_position.y == position.y ) {
+            return object;
+        }
+    }
+    return nullptr;
+}
+
+bool MapData::removeObject(int tile_x, int tile_y) {
+    Object* object = nullptr;
+    int index = 0;
+    for( auto cur_object : objects_ ) {
+        Position cur_position = cur_object->tilePosition();
+        if( cur_position.x == tile_x && cur_position.y == tile_y ) {
+            object = cur_object;
+            break;
+        }
+        index++;
+    }
+    if( object == nullptr ) {
+        return false;
+    }
+    store(BasicItem(object->name()), object->tilePosition());
+    objects_.erase(objects_.begin()+index);
+    return true;
+}
+
+bool MapData::store(const BasicItem& item, Position tile_position) {
+    Object* obj = getAssociatedChest(tile_position);
+    if( obj == nullptr ) { // put item on the floor
+        Tile& tile = this->tile(tile_position.x, tile_position.y);
+        tile.addItem(item, 1);
+        return false;
+    }
+    Chest* chest = static_cast<Chest*>(obj);
+    int not_added = chest->addItem(item, 1);
+    if( not_added > 0 ) {
+        // put the item on the floor
+        Tile& tile = this->tile(tile_position.x, tile_position.y);
+        tile.addItem(item, 1);
+    }
+    return true;
+}
+
 const Tile& MapData::tile(int x,int y) const {
     return tiles_[x+y*width_];
 }
@@ -511,7 +557,7 @@ void MapData::createMap(MapData* data) {
     }
     int width = data->width();
     int height = data->height();
-    int seed = 6334;//rand();
+    int seed = 6224;//rand();
     float** noise_map = Noise::generateNoiseMap(width, height, seed, 150, 4, 0.5f, 2.f);
 
     Logger::info() << tr("Generating a new map of dimension: ") << width << " x " << height << Logger::endl;
@@ -521,15 +567,20 @@ void MapData::createMap(MapData* data) {
     std::string filename("_out.png");
     filename.insert(0, Utility::itos(seed));
     Logger::debug() << "Seed is " << seed << Logger::endl;
-    generator.execute(filename);
+    generator.execute(filename, noise_map);
+
+    data->setMapImageName(filename);
+
+    CommandCenter* cc = new CommandCenter();
+    data->addObject(cc,0,0);
+    data->removeObject(0,0);
 
     Logger::info() << tr("Filling terrain...") << Logger::endl;
     for( int col=0; col < width; col++ ) {
         for( int row=0; row < height; row++ ) {
             Tile& tile = data->tile(col,row);
             float value = noise_map[col][row]* 255;
-            int region = biome->getType( value );
-            // TODO change btype according to 'value' (need to be given by Biome ?)
+            int region = biome->getType( value ); // change btype according to 'value' given by Biome
             Tile::BType btype = Tile::GRASS;
             if( region == 0 ) {
                 btype = Tile::WATER;
@@ -537,9 +588,15 @@ void MapData::createMap(MapData* data) {
                 btype = Tile::SAND;
             } else if( region == 3 ) {
                 btype = Tile::ROCK;
+            } else if( region == 4 ) {
+                btype = Tile::COAL;
+            } else if( region == 5 ) {
+                btype = Tile::COPPER;
+            } else if( region == 6 ) {
+                btype = Tile::IRON;
             }
             tile.setBackgroundTile(tile.id(), btype);
-            if( tile.background_type() == Tile::ROCK ) {
+            if( tile.background_type() >= Tile::ROCK || tile.background_type() == Tile::SAND ) {
                 tile.setOccurrences( rand()%40+10 ); // valeur entre 10 et 50
             }
         }

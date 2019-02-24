@@ -115,6 +115,12 @@ void MapView::extractItemJob(int x, int y, int nb) {
 void MapView::cleanItemJob(int x, int y) {
     Position tile_position = {x,y};
     Tile cur_tile = data_->tile(x,y);
+    // first, check if a chest is available
+    Object* object = data()->getNearestChest(tile_position);
+    if( object == nullptr ) {
+        Logger::warning() << "Cannot do cleaning without a chest" << Logger::endl;
+        return;
+    }
     Job* job = new CleanJob(tile_position, "buttons/clean_tool", 0);
     job_manager_->addJob(job);
 }
@@ -144,6 +150,16 @@ void MapView::addObjectJob(const std::string& object_name, int x, int y) {
     Position tile_position = {x,y};
     std::string icon_name = "objects/"+object_name;
     Job* job = new BuildObjectJob(tile_position, icon_name, object_name, 1000);
+    job_manager_->addJob(job);
+}
+
+/*!
+ * Adds an object destruction in the queue of the job manager at (x,y) if possible.
+ */
+void MapView::removeObjectJob(int x, int y) {
+    Position tile_position = {x,y};
+    // TODO check that an object is present on this tile !!
+    Job* job = new UnbuildObjectJob(tile_position, "buttons/uninstall_tool", 1000);
     job_manager_->addJob(job);
 }
 
@@ -181,23 +197,6 @@ Position MapView::onTile(int mouse_x, int mouse_y) const {
 void MapView::setTile(int tile_x, int tile_y) {
     tile_x_ = tile_x;
     tile_y_ = tile_y;
-}
-
-bool MapView::store(const BasicItem& item, Position tile_position) {
-    Object* obj = data()->getAssociatedChest(tile_position);
-    if( obj == nullptr ) { // put item on the floor
-        Tile& tile = data()->tile(tile_position.x, tile_position.y);
-        tile.addItem(item, 1); // TODO or keep it in the furnace ?
-        return false;
-    }
-    Chest* chest = static_cast<Chest*>(obj);
-    int not_added = chest->addItem(item, 1);
-    if( not_added > 0 ) {
-        // put the item on the floor
-        Tile& tile = data()->tile(tile_position.x, tile_position.y);
-        tile.addItem(item, 1);
-    }
-    return true;
 }
 
 /*!
@@ -723,6 +722,11 @@ SDLCamera::SDLCamera(
     add_object_in_menu("breaker", this, manager_, object_menu);
     add_object_in_menu("stone_furnace", this, manager_, object_menu);
     add_object_in_menu("assembler", this, manager_, object_menu);
+
+    SDLUnbuildObjectTool* uninstall_tool = new SDLUnbuildObjectTool(this, "buttons/uninstall_tool.png");
+    SDLButton* uninstall_button_tool = new SDLToolButton(uninstall_tool, "buttons/uninstall_tool.png", 0, 0);
+    manager_->addButton(uninstall_button_tool);
+    object_menu->addButton(uninstall_button_tool);
 
     SDLButtonMenu* object_button = new SDLButtonMenu(object_menu, "buttons/object.png", object_menu->x(),10);
     object_button->setText( tr("Objects") );

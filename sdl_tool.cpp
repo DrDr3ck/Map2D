@@ -150,6 +150,46 @@ void SDLBuildObjectTool::mousePressed(int button) {
 
 /********************************************************************/
 
+SDLUnbuildObjectTool::SDLUnbuildObjectTool(
+    SDLCamera* camera,
+    const std::string& icon_name
+) : SDLTool(camera) {
+    surface_ = Utility::IMGLoad(icon_name.c_str());
+}
+
+SDLUnbuildObjectTool::~SDLUnbuildObjectTool() {
+    if( surface_ != nullptr ) {
+        SDL_FreeSurface(surface_);
+    }
+}
+
+SDL_Texture* SDLUnbuildObjectTool::getTexture(SDL_Renderer* renderer) {
+    if( texture_ == nullptr ) {
+        texture_ = SDL_CreateTextureFromSurface(renderer, surface_);
+        if( texture_ == nullptr ) {
+            Logger::error() << "CreateRGBSurface failed: " << SDL_GetError() << Logger::endl;
+        }
+        SDL_SetTextureAlphaMod( texture_, 192 );
+        SDL_FreeSurface(surface_);
+        surface_ = nullptr;
+    }
+    return texture_;
+}
+
+void SDLUnbuildObjectTool::mousePressed(int button) {
+    SDLTool::mousePressed(button);
+    int x,y;
+    MapView* map_view = camera()->mapView();
+    if( map_view->getCurTile(x,y) ) {
+        // check that an object is already here !!
+        if( map_view->getObject(x,y) != nullptr ) {
+            map_view->removeObjectJob(x,y);
+        }
+    }
+}
+
+/********************************************************************/
+
 SDLExtractTool::SDLExtractTool(
     SDLCamera* camera,
     const std::string& icon_name,

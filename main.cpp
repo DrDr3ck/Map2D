@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
 
     std::string filename = Session::instance()->getString("*save*filename", "save01.arc");
 
-    MapData data(10,6);
+    MapData data(16,20);
     JobMgr job_mgr(camera->main_renderer());
 
     GameBoard board(&group, &data, &job_mgr);
@@ -81,7 +81,7 @@ int main(int argc, char** argv) {
         }
         if( group.group().size() == 1 ) {
             Position position = {1,1};
-            Character* people = new Character("Bill", position, 5);
+            Character* people = new Character("Bill", position, 4);
             people->setDirection(1,0);
             group.add(people);
         }

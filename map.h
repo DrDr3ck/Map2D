@@ -98,6 +98,9 @@ public:
     void cleanItemFromTile(int x,int y,Character* people);
 
     void addObject(Object* object, int x, int y);
+    bool removeObject(int x, int y);
+    Object* getObject(Position tile_position);
+    bool store(const BasicItem& item, Position tile_position);
     std::vector<Object*>& objects() { return objects_; }
 
     void reset(int width, int height);

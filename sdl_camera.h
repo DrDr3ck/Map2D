@@ -34,6 +34,7 @@ public:
     void extractItemJob(int x, int y, int nb=1);
     void cleanItemJob(int x, int y);
     void addObjectJob(const std::string& object_name, int x, int y);
+    void removeObjectJob(int x, int y);
 
     Object* getObject(int x,int y) const;
 
@@ -47,8 +48,6 @@ public:
     void restoreCenterTile(Position position);
 
     PeopleGroup* group() const;
-
-    bool store(const BasicItem& item, Position tile_position);
 
     static MapView* cur_map;
 
