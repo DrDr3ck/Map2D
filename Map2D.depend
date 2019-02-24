@@ -352,7 +352,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1551015734 source:d:\games\programs\map2d\map.cpp
+1551019332 source:d:\games\programs\map2d\map.cpp
 	"map.h"
 	<cmath>
 	"SDL2/SDL_image.h"
@@ -428,7 +428,7 @@
 	"map.h"
 	<string>
 
-1551001125 source:d:\games\programs\map2d\sdl_camera.cpp
+1551017664 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -686,7 +686,7 @@
 	"items.h"
 	"texture_mgr.h"
 
-1551015628 d:\games\programs\map2d\object.h
+1551019729 d:\games\programs\map2d\object.h
 	<vector>
 	<string>
 	"utility.h"

@@ -173,6 +173,10 @@ int Object::percentageAccomplished() const {
     return (cur_craft_time_ms_*100/max_craft_time_ms_);
 }
 
+void Object::releaseItems() {
+    // does nothing
+}
+
 /********************************************************************/
 
 Chest::Chest(
@@ -333,6 +337,19 @@ const std::string Chest::tooltip() const {
         text.append(")");
     }
     return text;
+}
+
+void Chest::releaseItems() {
+    MapView* map_view = MapView::cur_map;
+    MapData* data = map_view->data();
+    Position tile_position = this->tilePosition();
+    Tile& tile = data->tile(tile_position.x, tile_position.y);
+    std::cout << "release items " << items_.size() << std::endl;
+    for( auto counted_item : items_ ) {
+        tile.addItem(counted_item.item(), counted_item.count());
+        std::cout << "release " << counted_item.item().name() << std::endl;
+    }
+    items_.clear();
 }
 
 /********************************************************************/

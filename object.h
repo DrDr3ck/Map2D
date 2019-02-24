@@ -23,6 +23,8 @@ public:
     SDL_Texture* getTexture(SDLCamera* camera, int index = 0);
     virtual void render(SDLCamera* camera, const SDL_Rect& rect);
 
+    virtual void releaseItems();
+
     int pixel_width() const  { return width_; }
     int pixel_height() const  { return height_; }
 
@@ -94,6 +96,8 @@ public:
     virtual ~Chest() {}
 
     virtual void render(SDLCamera* camera, const SDL_Rect& rect) override;
+
+    virtual void releaseItems() override;
 
     const CountedItem& item(int index) const {
         return items_[index];

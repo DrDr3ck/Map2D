@@ -522,6 +522,7 @@ bool MapData::removeObject(int tile_x, int tile_y) {
         return false;
     }
     store(BasicItem(object->name()), object->tilePosition());
+    object->releaseItems();
     objects_.erase(objects_.begin()+index);
     return true;
 }

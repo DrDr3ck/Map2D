@@ -1768,14 +1768,14 @@
   <tile x="12" y="15">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="35" />
+    <occurrence value="25" />
     <btype value="ROCK" />
     <ftype value="METAL" />
   </tile>
   <tile x="13" y="15">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="7" />
+    <occurrence value="0" />
     <btype value="IRON" />
     <ftype value="METAL" />
   </tile>
@@ -2244,32 +2244,25 @@
 </mapdata>
 <group>
   <people name="B0b31">
-    <position x="9" y="12" />
-    <direction x="-1" y="0" />
+    <position x="11" y="11" />
+    <direction x="0" y="1" />
     <activity value="0" />
     <image_id value="0" />
   </people>
   <people name="Bi11">
     <position x="9" y="13" />
-    <direction x="1" y="0" />
+    <direction x="0" y="1" />
     <activity value="0" />
     <image_id value="12" />
   </people>
 </group>
 <position_objects>
-  <object name="chest">
-    <position x="8" y="12" />
-    <counted_item nb="3">workbench</counted_item>
-    <counted_item nb="2">stone</counted_item>
+  <object name="workbench">
+    <position x="10" y="12" />
   </object>
   <object name="chest">
-    <position x="8" y="13" />
-    <counted_item nb="1">coal</counted_item>
-    <counted_item nb="1">iron_ore</counted_item>
-  </object>
-  <object name="chest">
-    <position x="9" y="12" />
-    <counted_item nb="5">stone</counted_item>
-    <counted_item nb="1">copper_ore</counted_item>
+    <position x="10" y="13" />
+    <counted_item nb="10">stone</counted_item>
+    <counted_item nb="7">iron_ore</counted_item>
   </object>
 </position_objects>
