@@ -115,6 +115,21 @@ int main(int argc, char** argv) {
             cc = dynamic_cast<CommandCenter*>(object);
         }
     }
+    if( cc == nullptr ) {
+        int tile_x = std::rand() % data.width();
+        int tile_y = std::rand() % data.height();
+        cc = new CommandCenter();
+        Position position = {tile_x, tile_y};
+        Object* object = data.getObject(position);
+        Tile tile = data.tile(tile_x,tile_y);
+        while( object != nullptr || tile.background_type() != Tile::GRASS) { // find a tile without object
+            tile_x = std::rand() % data.width();
+            tile_y = std::rand() % data.height();
+            position = {tile_x, tile_y};
+            object = data.getObject(position);
+        }
+        data.addObject(cc, tile_x, tile_y);
+    }
     if( cc != nullptr && chests.size() > 0 ) {
         cc->reset();
         CommandCenter::init(cc, chests);
