@@ -6,3 +6,4 @@ bin/Debug/*
 dist/*
 dist.zip
 *.bmp
+build/*

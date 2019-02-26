@@ -26,14 +26,21 @@ void TextureMgr::kill() {
 
 void TextureMgr::loadAllItems(SDL_Renderer* renderer) {
     // get all files that end with 'xxx_item.png' and create an entry named xxx
+#ifdef _WIN32
     DIR* dir = opendir(".\\items\\");
-
+#else
+    DIR* dir = opendir("./items/");
+#endif
     std::string suffix("_item.png");
     struct dirent* file = nullptr;
     while((file = readdir(dir)) != nullptr ) {
         std::string filename(file->d_name);
         if( Utility::endsWith(filename, suffix) ) {
+#ifdef _WIN32
             std::string full_filename(".\\items\\");
+#else
+            std::string full_filename("./items/");
+#endif
             full_filename.append(filename);
             SDL_Surface* surface = Utility::IMGLoad(full_filename);
             if( surface == nullptr ) {
