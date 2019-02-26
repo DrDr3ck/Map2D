@@ -158,8 +158,6 @@ bool Dialog::handleEvent(Camera* camera) {
 bool Dialog::buttonClicked(SDLButton* button, Position mouse_position) {
     if( button == nullptr ) return false;
     const SDL_Rect& button_rect = button->rect();
-    std::cout << button_rect.x << std::endl;
-    std::cout << mouse_position.x << std::endl;
     return Utility::contains(button_rect, mouse_position.x, mouse_position.y);
 }
 

@@ -388,7 +388,7 @@ Object* MapData::getNearestChest(Position position) {
     Object* nearest_chest = nullptr;
     float distance = 10000.f;
     for( Object* object : objects() ) {
-        if( object->name() != "chest" ) continue;
+        if( !Utility::endsWith(object->name(), "chest") ) continue;
         Position chest_position = object->tilePosition();
         float dist = Utility::distance(chest_position, position);
         if( dist < distance ) {
@@ -405,7 +405,7 @@ bool MapData::removeItemFromChest(Position position, const BasicItem& item) {
     Chest* nearest_chest_with_item = nullptr;
     float distance = 10000.f;
     for( Object* object : objects() ) {
-        if( object->name() != "chest" ) continue;
+        if( !Utility::endsWith(object->name(), "chest") ) continue;
         Chest* chest = static_cast<Chest*>(object);
         const std::vector<CountedItem>& items = chest->items();
         for( auto cur_item : items ) {
@@ -432,7 +432,7 @@ Object* MapData::getNearestEmptyChest(Position position, const BasicItem& item) 
     Object* nearest_chest = nullptr;
     float distance = 10000.f;
     for( Object* object : objects() ) {
-        if( object->name() != "chest" ) continue;
+        if( !Utility::endsWith(object->name(), "chest") ) continue;
         Chest* chest = static_cast<Chest*>(object);
         // check if chest can store item
         bool full = true;

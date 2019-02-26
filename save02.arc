@@ -345,9 +345,10 @@
   <tile x="1" y="3">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="30" />
+    <occurrence value="20" />
     <btype value="SAND" />
     <ftype value="METAL" />
+    <counteditem name="sand" value="5" />
   </tile>
   <tile x="2" y="3">
     <id value="0" />
@@ -453,7 +454,6 @@
     <occurrence value="1" />
     <btype value="SAND" />
     <ftype value="METAL" />
-    <counteditem name="sand" value="10" />
   </tile>
   <tile x="1" y="4">
     <id value="0" />
@@ -1427,6 +1427,9 @@
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
+    <counteditem name="glass" value="12" />
+    <counteditem name="powder" value="10" />
+    <counteditem name="iron_chest" value="1" />
   </tile>
   <tile x="12" y="12">
     <id value="0" />
@@ -1511,6 +1514,7 @@
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
+    <counteditem name="chest" value="1" />
   </tile>
   <tile x="8" y="13">
     <id value="0" />
@@ -1963,7 +1967,7 @@
   <tile x="8" y="17">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="41" />
+    <occurrence value="31" />
     <btype value="COAL" />
     <ftype value="METAL" />
   </tile>
@@ -2099,7 +2103,6 @@
     <occurrence value="19" />
     <btype value="COPPER" />
     <ftype value="METAL" />
-    <counteditem name="copper_ore" value="10" />
   </tile>
   <tile x="12" y="18">
     <id value="0" />
@@ -2244,23 +2247,38 @@
 </mapdata>
 <group>
   <people name="B0b31">
-    <position x="11" y="13" />
-    <direction x="0" y="1" />
+    <position x="11" y="12" />
+    <direction x="0" y="0" />
     <activity value="0" />
     <image_id value="0" />
   </people>
   <people name="Bi11">
-    <position x="6" y="12" />
-    <direction x="1" y="1" />
+    <position x="13" y="12" />
+    <direction x="0" y="1" />
     <activity value="0" />
     <image_id value="12" />
   </people>
 </group>
 <position_objects>
+  <object name="command_center">
+    <position x="3" y="14" />
+  </object>
+  <object name="breaker">
+    <position x="8" y="12" />
+  </object>
+  <object name="chest">
+    <position x="8" y="13" />
+    <counted_item nb="5">glass</counted_item>
+    <counted_item nb="10">coal</counted_item>
+  </object>
+  <object name="stone_furnace">
+    <position x="9" y="12" />
+    <fuel fuel_time_ms="49861">1</fuel>
+  </object>
   <object name="chest">
     <position x="9" y="13" />
-    <counted_item nb="1">iron_chest</counted_item>
-    <counted_item nb="1">stone_furnace</counted_item>
+    <counted_item nb="10">copper_ore</counted_item>
+    <counted_item nb="15">sand</counted_item>
   </object>
   <object name="workbench">
     <position x="10" y="12" />
@@ -2273,6 +2291,6 @@
   <object name="chest">
     <position x="11" y="13" />
     <counted_item nb="1">iron_ore</counted_item>
-    <counted_item nb="11">coal</counted_item>
+    <counted_item nb="6">coal</counted_item>
   </object>
 </position_objects>

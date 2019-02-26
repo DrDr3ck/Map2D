@@ -221,6 +221,8 @@ void BuildAction::postAction() {
             if( object != nullptr ) {
                 if( data->removeItemFromChest(position, BasicItem(object->name())) ) {
                     data->addObject(object,position.x,position.y);
+                } else {
+                    Logger::error() << "Cannot remove object " << object->name() << " from chest" << Logger::endl;
                 }
             } else {
                 Logger::error() << "Cannot create object " << bjob->objectName() << Logger::endl;

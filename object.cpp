@@ -403,10 +403,8 @@ void Furnace::getFuel() {
     // find fuel in the nearest chest
     // or ask a robot to get fuel : TODO
     MapView* map_view = MapView::cur_map;
-    Chest* chest = static_cast<Chest*>(map_view->data()->getAssociatedChest(tilePosition()));
-    if( chest == nullptr ) { return; }
     // find coal in chest
-    if( chest->removeItem(BasicItem("coal"), 1) == 0 ) {
+    if( map_view->data()->removeItemFromChest(tilePosition(), BasicItem("coal")) ) {
         // coal has been found and removed from the chest,
         // furnace can use it
         if( fuel_time_ms_ == 0 ) {
@@ -554,16 +552,20 @@ int CommandCenter::removeItems(const BasicItem& item, int nb) {
     CommandCenter* cc = CommandCenter::cur_command_center;
     if( cc == nullptr ) return total;
     std::vector<CountedItem>& stored_items = cc->storedItems();
+    int index = 0;
     for( auto& counted_item : stored_items ) {
         if( counted_item.item().name() == item.name() ) {
             if( nb <= counted_item.count() ) {
                 counted_item.removeItem(nb);
                 total = 0;
+                stored_items.erase(stored_items.begin()+index);
             } else {
                 total = total - counted_item.count();
                 counted_item.removeItem(counted_item.count());
             }
+            return total;
         }
+        index++;
     }
     return total;
 }
