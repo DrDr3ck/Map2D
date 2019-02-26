@@ -264,10 +264,7 @@ void MapView::renderGroup(SDLCamera* sdl_camera) {
 }
 
 void MapView::do_render(Camera* camera, double delay_in_ms) {
-    float scale_speed = camera->scale()*camera->scale();
-    if( camera->scale() < 1 ) {
-        scale_speed = 1./camera->scale() * 1./camera->scale();
-    }
+    float scale_speed = camera->speed();
     if( delta_x_ != 0 ) {
         translate_x_ += delta_x_ * scale_speed * delay_in_ms;
     }

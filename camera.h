@@ -41,6 +41,7 @@ public:
     virtual void handleEvent();
 
     float scale() const { return scales_[scale_idx_]; }
+    float speed() const { return speeds_[scale_idx_]; }
     void zoom(bool up);
 
     int width() const { return width_; }
@@ -74,6 +75,7 @@ protected:
     int wheel_y_;
     int scale_idx_;
     std::vector<float> scales_;
+    std::vector<float> speeds_;
 
     int width_;
     int height_;
