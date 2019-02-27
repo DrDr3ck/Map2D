@@ -12,108 +12,43 @@ os.makedirs(dest_dir)
 src_dir = "./"
 listOfFiles = os.listdir(src_dir)
 for f in listOfFiles:
-    if f.endswith("png") or f.endswith("TTF") or f.endswith("bmp") or f.endswith("opt") or f.endswith("xml"):
+    if f.split(".")[-1] in ("png", "ttf", "bmp", "opt", "xml"):
         f = src_dir+f
         print "Copying", f, "..."
         shutil.copy(f, dest_dir)
-        
-src_dir = "./bin/Debug/"
-listOfFiles = os.listdir(src_dir)
-for f in listOfFiles:
-    if f.endswith("dll") or f.endswith("exe"):
-        f = src_dir+f
-        print "Copying", f, "..."
-        shutil.copy(f, dest_dir)        
-        
-        
-src_dir = "./buttons/"
-dest_dir = "./dist/buttons"
-os.makedirs(dest_dir)
-listOfFiles = os.listdir(src_dir)
-for f in listOfFiles:
-    if f.endswith("png"):
-        f = src_dir+f
-        print "Copying", f, "..."
-        shutil.copy(f, dest_dir)
-        
-src_dir = "./images/"
-dest_dir = "./dist/images"
-os.makedirs(dest_dir)
-listOfFiles = os.listdir(src_dir)
-for f in listOfFiles:
-    if f.endswith("png"):
-        f = src_dir+f
-        print "Copying", f, "..."
-        shutil.copy(f, dest_dir)        
-        
-src_dir = "./items/"
-dest_dir = "./dist/items"
-os.makedirs(dest_dir)
-listOfFiles = os.listdir(src_dir)
-for f in listOfFiles:
-    if f.endswith("png"):
-        f = src_dir+f
-        print "Copying", f, "..."
-        shutil.copy(f, dest_dir)        
-        
-src_dir = "./objects/"
-dest_dir = "./dist/objects"
-os.makedirs(dest_dir)
-listOfFiles = os.listdir(src_dir)
-for f in listOfFiles:
-    if f.endswith("png"):
-        f = src_dir+f
-        print "Copying", f, "..."
-        shutil.copy(f, dest_dir)                
-        
-src_dir = "./language/"
-dest_dir = "./dist/language"
-os.makedirs(dest_dir)
-listOfFiles = os.listdir(src_dir)
-for f in listOfFiles:
-    if f.endswith("txt"):
-        f = src_dir+f
-        print "Copying", f, "..."
-        shutil.copy(f, dest_dir)              
-        
-# ZIP    
-if os.path.exists("dist.zip"):    
-    os.remove("dist.zip")        
-zf = zipfile.ZipFile("dist.zip", mode='w')
-src_dir = "./dist/"
-listOfFiles = os.listdir(src_dir)
-for f in listOfFiles:
-    f = src_dir+f
-    print "Zipping", f, "..."
-    zf.write(f)
-src_dir = "./dist/buttons/"
-listOfFiles = os.listdir(src_dir)
-for f in listOfFiles:
-    f = src_dir+f
-    print "Zipping", f, "..."
-    zf.write(f)    
-src_dir = "./dist/items/"
-listOfFiles = os.listdir(src_dir)
-for f in listOfFiles:
-    f = src_dir+f
-    print "Zipping", f, "..."
-    zf.write(f)      
-src_dir = "./dist/objects/"
-listOfFiles = os.listdir(src_dir)
-for f in listOfFiles:
-    f = src_dir+f
-    print "Zipping", f, "..."
-    zf.write(f)          
-src_dir = "./dist/images/"
-listOfFiles = os.listdir(src_dir)
-for f in listOfFiles:
-    f = src_dir+f
-    print "Zipping", f, "..."
-    zf.write(f)              
-src_dir = "./dist/language/"
-listOfFiles = os.listdir(src_dir)
-for f in listOfFiles:
-    f = src_dir+f
-    print "Zipping", f, "..."
-    zf.write(f)         
-zf.close()
+
+if os.name == "nt":
+    src_dir = "./bin/Debug/"
+    listOfFiles = os.listdir(src_dir)
+    for f in listOfFiles:
+        if f.endswith("dll") or f.endswith("exe"):
+            f = src_dir+f
+            print "Copying", f, "..."
+            shutil.copy(f, dest_dir)
+else:
+    shutil.copy("build/Map2D", dest_dir)
+
+items_to_copy = (
+    ("png", "buttons"),
+    ("png", "images"),
+    ("png", "items"),
+    ("png", "objects"),
+    ("txt", "language"),
+)
+for ext,dir in items_to_copy:
+    src_dir = "./%s/" % dir
+    dest_dir = "./dist/%s" % dir
+    os.makedirs(dest_dir)
+    listOfFiles = os.listdir(src_dir)
+    for f in listOfFiles:
+        if f.endswith(ext):
+            f = src_dir+f
+            print "Copying", f, "..."
+            shutil.copy(f, dest_dir)
+
+
+# ZIP
+if os.path.exists("dist.zip"):
+    os.remove("dist.zip")
+
+shutil.make_archive("dist", 'zip', "./dist/")
