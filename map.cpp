@@ -559,6 +559,7 @@ void MapData::createMap(MapData* data) {
     }
     int width = data->width();
     int height = data->height();
+    srand(time(NULL)); // initialisation de rand
     int seed = std::rand();//6224;
     float** noise_map = Noise::generateNoiseMap(width, height, seed, 150, 4, 0.5f, 2.f);
 

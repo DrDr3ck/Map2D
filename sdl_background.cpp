@@ -10,7 +10,7 @@
 
 /********************************************************************/
 
-Biome::Biome(const std::string& type) {
+Biome::Biome(const std::string& type) : type_(type) {
     if( type == "forest" ) {
         SDL_Surface* water_surface = IMG_Load("generator/WaterGenerator72_01.png");
         if( water_surface != nullptr ) {
