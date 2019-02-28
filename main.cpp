@@ -96,6 +96,10 @@ int main(int argc, char** argv) {
         Character* people = new Character("B0b31", position, 0);
         people->setDirection(1,0);
         group.add(people);
+        position.y = position.y+2;
+        people = new Character("B1ll03", position, 4);
+        people->setDirection(1,0);
+        group.add(people);
     }
 
     MapView mapview(camera, &data, &group, &job_mgr);
@@ -125,6 +129,7 @@ int main(int argc, char** argv) {
         while( object != nullptr || tile.background_type() != Tile::GRASS) { // find a tile without object
             tile_x = std::rand() % data.width();
             tile_y = std::rand() % data.height();
+            tile = data.tile(tile_x,tile_y);
             position = {tile_x, tile_y};
             object = data.getObject(position);
         }

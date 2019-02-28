@@ -559,7 +559,7 @@ void MapData::createMap(MapData* data) {
     }
     int width = data->width();
     int height = data->height();
-    int seed = 6224;//rand();
+    int seed = std::rand();//6224;
     float** noise_map = Noise::generateNoiseMap(width, height, seed, 150, 4, 0.5f, 2.f);
 
     Logger::info() << tr("Generating a new map of dimension: ") << width << " x " << height << Logger::endl;
@@ -568,14 +568,12 @@ void MapData::createMap(MapData* data) {
     BackGroundGenerator generator(width,height,biome);
     std::string filename("_out.png");
     filename.insert(0, Utility::itos(seed));
+    filename.insert(0, "_");
+    filename.insert(0, biome->type());
     Logger::debug() << "Seed is " << seed << Logger::endl;
     generator.execute(filename, noise_map);
 
     data->setMapImageName(filename);
-
-    CommandCenter* cc = new CommandCenter();
-    data->addObject(cc,0,0);
-    data->removeObject(0,0);
 
     Logger::info() << tr("Filling terrain...") << Logger::endl;
     for( int col=0; col < width; col++ ) {
