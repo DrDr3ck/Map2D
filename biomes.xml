@@ -1,6 +1,8 @@
 <biomes>
-  <biome name="Sea">
-    <water min="35%" max="85%"/>
-    <rock min="0%" max="5%"/>
+  <biome name="forest">
+    <water min="0" max="20"/>
+    <sand min="20" max="50"/>
+    <grass min="50" max="200"/>
+    <rock min="200" max="260"/>
   </biome>
 </biomes>

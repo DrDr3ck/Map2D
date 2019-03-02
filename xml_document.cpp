@@ -48,6 +48,18 @@ XMLNode* XMLNode::node(int index) {
     return nodes_.at(index);
 }
 
+XMLNode* XMLNode::getNodeFromName(const std::string& node_name) {
+    for( XMLNode* node : nodes() ) {
+        XMLAttr* attr = node->getAttrFromName("name");
+        if( attr == nullptr ) continue;
+        std::cout << attr->value() << std::endl;
+        if( attr->value() == node_name ) {
+            return node;
+        }
+    }
+    return nullptr;
+}
+
 XMLNode* XMLNode::addValuedNode(const std::string& name, const std::string& value) {
     return new XMLNode(name, value, this);
 }
@@ -76,6 +88,15 @@ XMLAttr* XMLNode::attr(int index) {
         return nullptr;
     }
     return attributes_.at(index);
+}
+
+XMLAttr* XMLNode::getAttrFromName(const std::string& attr_name) {
+    for( XMLAttr* attr : attributes() ) {
+        if( attr->label() == attr_name ) {
+            return attr;
+        }
+    }
+    return nullptr;
 }
 
 

@@ -33,6 +33,8 @@ public:
         return surfaces_[index];
     }
 
+    void addSurfaceHeight(SDL_Surface* surface, int height);
+
     int getType(float value) const;
 
 private:
@@ -43,6 +45,13 @@ private:
     // if surface is composed of 6 images (3 columns, 2 rows for instance)
     std::vector<int> surface_columns_;
     std::vector<int> surface_rows_;
+};
+
+/********************************************************************/
+
+class BiomeReader {
+public:
+    static bool readBiome(Biome& biome);
 };
 
 /********************************************************************/

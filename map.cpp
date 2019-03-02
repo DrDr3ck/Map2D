@@ -559,7 +559,7 @@ void MapData::createMap(MapData* data) {
     }
     int width = data->width();
     int height = data->height();
-    srand(time(NULL)); // initialisation de rand
+    srand(time(NULL)); // initialization of rand
     int seed = std::rand();//6224;
     float** noise_map = Noise::generateNoiseMap(width, height, seed, 150, 4, 0.5f, 2.f);
 
@@ -598,7 +598,11 @@ void MapData::createMap(MapData* data) {
             }
             tile.setBackgroundTile(tile.id(), btype);
             if( tile.background_type() >= Tile::ROCK || tile.background_type() == Tile::SAND ) {
-                tile.setOccurrences( rand()%40+10 ); // valeur entre 10 et 50
+                if( tile.background_type() >= Tile::ROCK ) { // coal copper iron
+                    tile.setOccurrences( rand()%100+50 ); // valeur entre 50 et 150
+                } else {
+                    tile.setOccurrences( rand()%40+10 ); // valeur entre 10 et 50
+                }
             }
         }
     }

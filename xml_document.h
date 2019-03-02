@@ -31,6 +31,9 @@ public:
     int nodeCount() const;
     const XMLNode* node(int index) const;
     XMLNode* node(int index);
+    const std::vector<XMLNode*>& nodes() const { return nodes_; }
+
+    XMLNode* getNodeFromName(const std::string& node_name);
 
     XMLNode* addValuedNode(const std::string& name, const std::string& value);
 
@@ -39,6 +42,9 @@ public:
     int attrCount() const;
     const XMLAttr* attr(int index) const;
     XMLAttr* attr(int index);
+    const std::vector<XMLAttr*>& attributes() const { return attributes_; }
+
+    XMLAttr* getAttrFromName(const std::string& attr_name);
 
     const std::string& name() const;
     bool hasValue() const;

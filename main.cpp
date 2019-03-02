@@ -13,6 +13,7 @@
 #include "sdl_camera.h"
 #include "logger.h"
 #include "translator.h"
+#include "sdl_background.h"
 #include "session.h"
 #include "texture_mgr.h"
 #include "craft_mgr.h"
@@ -60,6 +61,9 @@ int main(int argc, char** argv) {
     JobMgr job_mgr(camera->main_renderer());
 
     GameBoard board(&group, &data, &job_mgr);
+
+    Biome biome("forest");
+    BiomeReader::readBiome(biome);
 
     //if( Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1 ) {
     //    Logger::error() << "Cannot init sound because of " << Mix_GetError() << Logger::endl;

@@ -1,5 +1,7 @@
 #include "sdl_background.h"
 #include "perlin_noise.h"
+#include "xml_document.h"
+#include "translator.h"
 #include "logger.h"
 #include "utility.h"
 
@@ -10,46 +12,78 @@
 
 /********************************************************************/
 
+bool BiomeReader::readBiome(Biome& biome) {
+    std::string filename("biomes.xml");
+    XMLNode* doc = XMLDocument::read_doc(filename);
+    if( doc == nullptr ) {
+        Logger::error() << tr("Cannot read file ") << filename << Logger::endl;
+        return false;
+    }
+    XMLNode* biome_node = doc->getNodeFromName(biome.type());
+    if( biome_node == nullptr ) {
+        Logger::error() << tr("Cannot find biome of type ") << biome.type() << Logger::endl;
+        return false;
+    }
+    for( auto node : biome_node->nodes() ) {
+        std::string name = node->name();
+        XMLAttr* min_attr = node->getAttrFromName("min");
+        XMLAttr* max_attr = node->getAttrFromName("max");
+        if( min_attr == nullptr || max_attr == nullptr ) {
+            Logger::error() << "Type " << name << " of biome " << biome.type() << " is not correctly defined, check min and max attributes" << Logger::endl;
+            continue;
+        }
+        int min = atoi(min_attr->value().c_str());
+        int max = atoi(max_attr->value().c_str());
+        if( max == 0 ) {
+            Logger::error() << "Suspicious max value for type " << name << " of biome " << biome.type() << ", check if value is a valid integer" << Logger::endl;
+            continue;
+        }
+        std::string surface_name("generator/");
+        surface_name.append(biome.type()).append("_generator72_").append(name).append(".png");
+        std::cout << surface_name << min << max << std::endl;
+        //SDL_Surface* surface = IMG_Load("generator/WaterGenerator72_01.png");
+    }
+
+    return true;
+}
+
+/********************************************************************/
+
 Biome::Biome(const std::string& type) : type_(type) {
-    if( type == "forest" ) {
-        SDL_Surface* water_surface = IMG_Load("generator/WaterGenerator72_01.png");
+    bool result = BiomeReader::readBiome(*this);
+    if( !result ) { // if fail, get this dummy biome
+        Logger::error() << tr("Using default biome of type forest") << Logger::endl;
+        SDL_Surface* water_surface = IMG_Load("generator/forest_generator72_water.png");
         if( water_surface != nullptr ) {
-            surfaces_.push_back(water_surface);
-            heights_.push_back(20);
+            addSurfaceHeight(water_surface, 20);
         }
-        SDL_Surface* sand_surface = IMG_Load("generator/SandGenerator72_02.png");
+        SDL_Surface* sand_surface = IMG_Load("generator/forest_generator72_sand.png");
         if( sand_surface != nullptr ) {
-            surfaces_.push_back(sand_surface);
-            heights_.push_back(50);
+            addSurfaceHeight(sand_surface, 50);
         }
-        SDL_Surface* grass_surface = IMG_Load("generator/GrassGenerator72_02.png");
+        SDL_Surface* grass_surface = IMG_Load("generator/forest_generator72_grass.png");
         if( grass_surface != nullptr ) {
-            surfaces_.push_back(grass_surface);
-            heights_.push_back(220);
+            addSurfaceHeight(grass_surface, 220);
         }
-        SDL_Surface* rock_surface = IMG_Load("generator/RockGenerator72_03.png");
+        SDL_Surface* rock_surface = IMG_Load("generator/forest_generator72_rock.png");
         if( rock_surface != nullptr ) {
-            surfaces_.push_back(rock_surface);
-            heights_.push_back(260);
+            addSurfaceHeight(rock_surface, 260);
         }
         SDL_Surface* coal_surface = IMG_Load("generator/CoalGenerator72_01.png");
         if( coal_surface != nullptr ) {
-            surfaces_.push_back(coal_surface);
-            heights_.push_back(261);
+            addSurfaceHeight(coal_surface, 261);
         }
         SDL_Surface* copper_surface = IMG_Load("generator/CopperGenerator72_01.png");
         if( copper_surface != nullptr ) {
-            surfaces_.push_back(copper_surface);
-            heights_.push_back(262);
+            addSurfaceHeight(copper_surface, 262);
         }
         SDL_Surface* iron_surface = IMG_Load("generator/IronGenerator72_01.png");
         if( iron_surface != nullptr ) {
-            surfaces_.push_back(iron_surface);
-            heights_.push_back(263);
+            addSurfaceHeight(iron_surface, 263);
         }
     }
 
-    int enlargedtilesize = 72;
+    const int enlargedtilesize = 72;
     for( auto surf : surfaces_ ) {
         int column = surf->w / enlargedtilesize;
         int row = surf->h / enlargedtilesize;
@@ -64,6 +98,11 @@ Biome::~Biome() {
             SDL_FreeSurface(surf);
         }
     }
+}
+
+void Biome::addSurfaceHeight(SDL_Surface* surface, int height) {
+    surfaces_.push_back(surface);
+    heights_.push_back(height);
 }
 
 int Biome::getType(float value) const {
@@ -144,12 +183,13 @@ void BackGroundGenerator::execute(const std::string& filename, float** noise_map
         int row = map_tiles[index].y;
 
         int type = biome_->getType(map_tiles[index].value);
+        // if type is rock: it may change into coal/copper/iron
         if( type == 3 ) { // rock
             // type 4 = coal, type 5 = copper, type 6 = iron
             int proba = std::rand() % 100;
             if( proba < 10 ) {
                 type = 4;
-                noise_map[col][row] = 1.023;
+                noise_map[col][row] = 1.023; // 261 / 255
             } else if( proba < 15 ) {
                 type = 5;
                 noise_map[col][row] = 1.027;

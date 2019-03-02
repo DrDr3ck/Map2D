@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1551208911 source:d:\games\programs\map2d\main.cpp
+1551516892 source:d:\games\programs\map2d\main.cpp
 	<SDL2/SDL.h>
 	<SDL2/SDL_mixer.h>
 	<iostream>
@@ -14,6 +14,7 @@
 	"sdl_camera.h"
 	"logger.h"
 	"translator.h"
+	"sdl_background.h"
 	"session.h"
 	"texture_mgr.h"
 	"craft_mgr.h"
@@ -352,7 +353,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1551211127 source:d:\games\programs\map2d\map.cpp
+1551514413 source:d:\games\programs\map2d\map.cpp
 	"map.h"
 	<cmath>
 	"SDL2/SDL_image.h"
@@ -382,7 +383,7 @@
 	<list>
 	<string>
 
-1550921820 source:d:\games\programs\map2d\tests.cpp
+1551517237 source:d:\games\programs\map2d\tests.cpp
 	"tests.h"
 	"archive.h"
 	"font.h"
@@ -500,9 +501,11 @@
 	"sdl_camera.h"
 	"sdl_button.h"
 
-1550996903 source:d:\games\programs\map2d\sdl_background.cpp
+1551516905 source:d:\games\programs\map2d\sdl_background.cpp
 	"sdl_background.h"
 	"perlin_noise.h"
+	"xml_document.h"
+	"translator.h"
 	"logger.h"
 	"utility.h"
 	<iostream>
@@ -510,7 +513,7 @@
 	<random>
 	<algorithm>
 
-1550995496 d:\games\programs\map2d\sdl_background.h
+1551516100 d:\games\programs\map2d\sdl_background.h
 	<string>
 	<vector>
 	<SDL2/SDL.h>
@@ -588,11 +591,11 @@
 1546606329 d:\games\programs\map2d\perlin_noise.h
 	<vector>
 
-1546696380 d:\games\programs\map2d\xml_document.h
+1551516235 d:\games\programs\map2d\xml_document.h
 	<string>
 	<vector>
 
-1547715043 source:d:\games\programs\map2d\xml_document.cpp
+1551517083 source:d:\games\programs\map2d\xml_document.cpp
 	"xml_document.h"
 	"utility.h"
 	<stdlib.h>
@@ -634,7 +637,7 @@
 	<fstream>
 	<ctime>
 
-1551001340 source:d:\games\programs\map2d\texture_mgr.cpp
+1551331463 source:d:\games\programs\map2d\texture_mgr.cpp
 	"texture_mgr.h"
 	"logger.h"
 	"utility.h"
