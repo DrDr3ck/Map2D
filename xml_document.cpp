@@ -52,7 +52,6 @@ XMLNode* XMLNode::getNodeFromName(const std::string& node_name) {
     for( XMLNode* node : nodes() ) {
         XMLAttr* attr = node->getAttrFromName("name");
         if( attr == nullptr ) continue;
-        std::cout << attr->value() << std::endl;
         if( attr->value() == node_name ) {
             return node;
         }

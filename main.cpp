@@ -62,9 +62,6 @@ int main(int argc, char** argv) {
 
     GameBoard board(&group, &data, &job_mgr);
 
-    Biome biome("forest");
-    BiomeReader::readBiome(biome);
-
     //if( Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1 ) {
     //    Logger::error() << "Cannot init sound because of " << Mix_GetError() << Logger::endl;
     //}

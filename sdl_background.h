@@ -23,7 +23,7 @@ public:
         return surface_rows_;
     }
 
-    bool is_valid() const;
+    bool isValid() const;
 
     const std::string& type() const {
         return type_;

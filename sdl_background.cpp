@@ -26,13 +26,11 @@ bool BiomeReader::readBiome(Biome& biome) {
     }
     for( auto node : biome_node->nodes() ) {
         std::string name = node->name();
-        XMLAttr* min_attr = node->getAttrFromName("min");
         XMLAttr* max_attr = node->getAttrFromName("max");
-        if( min_attr == nullptr || max_attr == nullptr ) {
+        if( max_attr == nullptr ) {
             Logger::error() << "Type " << name << " of biome " << biome.type() << " is not correctly defined, check min and max attributes" << Logger::endl;
             continue;
         }
-        int min = atoi(min_attr->value().c_str());
         int max = atoi(max_attr->value().c_str());
         if( max == 0 ) {
             Logger::error() << "Suspicious max value for type " << name << " of biome " << biome.type() << ", check if value is a valid integer" << Logger::endl;
@@ -40,8 +38,10 @@ bool BiomeReader::readBiome(Biome& biome) {
         }
         std::string surface_name("generator/");
         surface_name.append(biome.type()).append("_generator72_").append(name).append(".png");
-        std::cout << surface_name << min << max << std::endl;
-        //SDL_Surface* surface = IMG_Load("generator/WaterGenerator72_01.png");
+        SDL_Surface* surface = IMG_Load(surface_name.c_str());
+        if( surface != nullptr ) {
+            biome.addSurfaceHeight(surface, max);
+        }
     }
 
     return true;
@@ -69,15 +69,15 @@ Biome::Biome(const std::string& type) : type_(type) {
         if( rock_surface != nullptr ) {
             addSurfaceHeight(rock_surface, 260);
         }
-        SDL_Surface* coal_surface = IMG_Load("generator/CoalGenerator72_01.png");
+        SDL_Surface* coal_surface = IMG_Load("generator/forest_generator72_coal.png");
         if( coal_surface != nullptr ) {
             addSurfaceHeight(coal_surface, 261);
         }
-        SDL_Surface* copper_surface = IMG_Load("generator/CopperGenerator72_01.png");
+        SDL_Surface* copper_surface = IMG_Load("generator/forest_generator72_copper.png");
         if( copper_surface != nullptr ) {
             addSurfaceHeight(copper_surface, 262);
         }
-        SDL_Surface* iron_surface = IMG_Load("generator/IronGenerator72_01.png");
+        SDL_Surface* iron_surface = IMG_Load("generator/forest_generator72_iron.png");
         if( iron_surface != nullptr ) {
             addSurfaceHeight(iron_surface, 263);
         }
@@ -114,7 +114,7 @@ int Biome::getType(float value) const {
     return heights_.size()-1;
 }
 
-bool Biome::is_valid() const {
+bool Biome::isValid() const {
     if( surfaces_.size() == 0 ) {
         Logger::error() << "Cannot generate background without pictures" << Logger::endl;
         return false;
@@ -148,7 +148,7 @@ namespace {
 }
 
 void BackGroundGenerator::execute(const std::string& filename, float** noise_map) const {
-    if( !biome_->is_valid() ) {
+    if( !biome_->isValid() ) {
         Logger::error() << "biome " << biome_->type() << " is invalid" << Logger::endl;
         return;
     }

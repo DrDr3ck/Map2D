@@ -98,6 +98,13 @@ public:
     virtual bool do_execute() override;
 };
 
+class BiomeTest : public Test {
+public:
+    BiomeTest() : Test("BiomeTest") {}
+
+    virtual bool do_execute() override;
+};
+
 class TranslatorTest : public Test {
 public:
     TranslatorTest() : Test("TranslatorTest") {}

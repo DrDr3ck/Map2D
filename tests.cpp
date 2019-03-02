@@ -5,6 +5,7 @@
 #include "job.h"
 #include "perlin_noise.h"
 #include "xml_document.h"
+#include "sdl_background.h"
 #include "logger.h"
 #include "action.h"
 #include "session.h"
@@ -404,6 +405,13 @@ bool XMLTest::do_execute() {
     return true;
 }
 
+bool BiomeTest::do_execute() {
+    Biome biome("forest");
+    CHECK( biome.isValid(), return false;);
+    CHECK_EQUAL( biome.heights().size(), 7, return false;);
+    return true;
+}
+
 bool TranslatorTest::do_execute() {
     Translator::instance()->readDictionary("language/fr.txt");
     const std::string& result = tr("this is a test");
@@ -432,6 +440,7 @@ TestManager::TestManager() {
     addTest(new SessionTest());
     addTest(new PerlinTest());
     addTest(new XMLTest());
+    addTest(new BiomeTest());
     addTest(new TranslatorTest());
     addTest(new CraftMgrTest());
 }
