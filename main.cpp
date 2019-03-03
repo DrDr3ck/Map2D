@@ -35,9 +35,9 @@ int main(int argc, char** argv) {
     // Create window
     int camera_width = Session::instance()->getInteger("*camera*width", 1000);
     int camera_height = Session::instance()->getInteger("*camera*height", 800);
-    SDLCamera* camera = new SDLCamera(camera_width,camera_height);
-    if( !camera->valid() ) {
-        delete camera;
+    SDLCamera* sdl_camera = new SDLCamera(camera_width,camera_height);
+    if( !sdl_camera->valid() ) {
+        delete sdl_camera;
         return -1;
     }
 
@@ -48,17 +48,17 @@ int main(int argc, char** argv) {
 
     Translator::instance()->readDictionary(language);
 
-    TextureMgr::instance()->loadAllItems(camera->main_renderer());
+    TextureMgr::instance()->loadAllItems(sdl_camera->main_renderer());
 
     TileSetLib* tileset = TileSetLib::instance();
-    CharacterSetLib::instance()->init( camera->main_renderer() );
+    CharacterSetLib::instance()->init( sdl_camera->main_renderer() );
 
     PeopleGroup group;
 
     std::string filename = Session::instance()->getString("*save*filename", "save01.arc");
 
     MapData data(16,20);
-    JobMgr job_mgr(camera->main_renderer());
+    JobMgr job_mgr(sdl_camera->main_renderer());
 
     GameBoard board(&group, &data, &job_mgr);
 
@@ -103,9 +103,9 @@ int main(int argc, char** argv) {
         group.add(people);
     }
 
-    MapView mapview(camera, &data, &group, &job_mgr);
+    MapView mapview(sdl_camera, &data, &group, &job_mgr);
     FontLib* font_manager = FontLib::instance();
-    camera->init();
+    sdl_camera->init();
 
     // initialize command center with items of all chests
     CommandCenter* cc = nullptr;
@@ -157,16 +157,16 @@ int main(int argc, char** argv) {
     // Main loop
     while(!ending) {
 
-        camera->handleEvent();
-        if( camera->quit() ) {
+        sdl_camera->handleEvent();
+        if( sdl_camera->quit() ) {
             ending = true;
         }
 
         std::chrono::steady_clock::time_point end_clock = std::chrono::steady_clock::now();
         double delay_clock_us = std::chrono::duration_cast<std::chrono::microseconds>(end_clock - start_clock).count();
         if( delay_clock_us > delay_in_us ) {
-            camera->render(delay_clock_us/1000.);
-            if( !camera->isInPause() ) {
+            sdl_camera->render(delay_clock_us/1000.);
+            if( !sdl_camera->isInPause() ) {
                 board.animate(delay_clock_us/1000.);
             }
             start_clock = end_clock;
@@ -201,7 +201,7 @@ int main(int argc, char** argv) {
     Session::instance()->kill();
     TextureMgr::instance()->kill();
 
-    delete camera;
+    delete sdl_camera;
 
     Logger::debug() << "\n *** Game correctly ended ***" << Logger::endl;
     return 0;

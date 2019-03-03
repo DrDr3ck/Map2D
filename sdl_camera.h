@@ -160,7 +160,7 @@ public:
 
     virtual bool valid() const override;
     virtual void render(double delay_in_ms) override;
-    virtual void handleEvent() override;
+    virtual bool handleEvent() override;
     virtual void onMouseMove(int x, int y) override;
     virtual void onMouseWheelScroll(int x, int y) override;
 

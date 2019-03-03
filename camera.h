@@ -38,7 +38,7 @@ public:
     ObjectDialog* findObjectDialog(Object* object) const;
 
     virtual void render(double delay_in_ms);
-    virtual void handleEvent();
+    virtual bool handleEvent();
 
     float scale() const { return scales_[scale_idx_]; }
     float speed() const { return speeds_[scale_idx_]; }

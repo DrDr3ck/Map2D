@@ -418,6 +418,9 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     }
 }
 
+/*!
+ * \return true if the event has been handled.
+ */
 bool MapView::handleEvent(Camera* camera) {
     SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
     if( sdl_camera == nullptr ) return false;
@@ -455,6 +458,7 @@ bool MapView::handleEvent(Camera* camera) {
                 if( positions.size() > 0 ) {
                     ActionBase* action = new MoveAction(selected_people_, positions, Utility::tileSize);
                     selected_people_->setAction( action, "Move to new location");
+                    return true;
                 }
             }
         } else if( e.button.button == SDL_BUTTON_LEFT ) {
@@ -466,7 +470,7 @@ bool MapView::handleEvent(Camera* camera) {
                     break;
                 }
             }
-            if( e.button.clicks > 1 ) {
+            if( e.button.clicks > 1 ) { // double click on a robot
                 if( selected_people_ != nullptr ) {
                     RobotDialog* dialog = camera->findRobotDialog(selected_people_);
                     if( dialog == nullptr ) {
@@ -475,6 +479,7 @@ bool MapView::handleEvent(Camera* camera) {
                         camera->removeView(dialog);
                     }
                     camera->addView(dialog);
+                    return true;
                 } else { // an object is selected ?
                     for( auto object : data_->objects() ) {
                         Position position_object = object->tilePosition();
@@ -486,6 +491,7 @@ bool MapView::handleEvent(Camera* camera) {
                                 camera->removeView(dialog);
                             }
                             camera->addView(dialog);
+                            return true;
                         }
                     }
                 }
@@ -493,7 +499,7 @@ bool MapView::handleEvent(Camera* camera) {
         }
         break;
     default:
-        return true;
+        return false;
     }
     return false;
 }
@@ -933,11 +939,11 @@ void SDLCamera::getSize(int& screen_width, int& screen_height) {
 /*!
  * Handle keyboard and mouse event
  */
-void SDLCamera::handleEvent() {
+bool SDLCamera::handleEvent() {
     SDL_GetMouseState(&mouse_x_, &mouse_y_);
 
     if( SDL_PollEvent(&event_) == 0 ) {
-        return;
+        return false;
     }
 
     bool event_handled = false;
@@ -964,13 +970,13 @@ void SDLCamera::handleEvent() {
         removeView(cur_dialog);
         addView(cur_dialog);
         onMouseMove(-1,-1);
-        return;
+        return true;
     }
 
     switch( event_.type ) {
         case SDL_QUIT:
             quit_ = true;
-            return;
+            return true;
         case SDL_KEYUP:
             if( event_.key.keysym.sym == SDLK_LCTRL ) {
                 lctrl_down_ = false;
@@ -1019,14 +1025,15 @@ void SDLCamera::handleEvent() {
             break;
     }
 
-    if( tool_ != nullptr ) {
-        tool_->handleEvent();
-    }
-
     // handle event for all View(s)
     removeView(cur_dialog);
-    Camera::handleEvent();
+    event_handled = Camera::handleEvent();
     addView(cur_dialog);
+
+    if( !event_handled && tool_ != nullptr ) {
+        tool_->handleEvent();
+    }
+    return event_handled;
 }
 
 void SDLCamera::onMouseMove(int mouse_x, int mouse_y) {

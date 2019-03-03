@@ -88,10 +88,13 @@ void Camera::render(double delay_in_ms) {
     }
 }
 
-void Camera::handleEvent() {
+bool Camera::handleEvent() {
     for( auto view : views_ ) {
-        view->handleEvent(this);
+        if( view->handleEvent(this) ) {
+            return true;
+        }
     }
+    return false;
 }
 
 /**************************************/

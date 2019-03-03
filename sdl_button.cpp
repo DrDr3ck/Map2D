@@ -26,17 +26,22 @@ bool SDLButtonManager::handleEvent(Camera* camera) {
             if( button_pressed ) {
                 if( button->isActive() ) {
                     button->deactivate();
+                    return true;
                 } else {
                     button->activate();
                     if( connections_.find(button) != connections_.end()) {
                         (*connections_[button])();
                     }
+                    return true;
                 }
             }
         } else {
             button->hasFocus(false);
             if( button_pressed ) {
-                button->deactivate();
+                if( button->isActive() ) {
+                    button->deactivate();
+                    return true;
+                }
             }
         }
     }
