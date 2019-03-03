@@ -49,13 +49,6 @@ private:
 
 /********************************************************************/
 
-class BiomeReader {
-public:
-    static bool readBiome(Biome& biome);
-};
-
-/********************************************************************/
-
 /*!
  * This class is used to generate background
  */

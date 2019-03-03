@@ -364,9 +364,11 @@ bool XMLTest::do_execute() {
     XMLNode* rock_node = new XMLNode("rock", sea_biome);
     rock_node->addValuedAttr("min", "0%");
     rock_node->addValuedAttr("max", "5%");
-    XMLDocument::write_doc(parent, "biomes_test.xml");
 
-    XMLNode* result = XMLDocument::read_doc("biomes_test.xml");
+    std::string filename("biomes_test.xml");
+    XMLDocument::write_doc(parent, filename);
+
+    XMLNode* result = XMLDocument::read_doc(filename);
     CHECK_POINTER(result, return false;);
     CHECK_STR_EQUAL( result->name(), std::string("biomes"), return false; );
     CHECK_EQUAL( result->attrCount(), 0, return false;);
@@ -400,7 +402,8 @@ bool XMLTest::do_execute() {
     CHECK_STR_EQUAL( rock_node->attr(1)->value(), std::string("5%"), return false; );
     CHECK_EQUAL( rock_node->nodeCount(), 0, return false;);
 
-    // TODO delete file biomes_test.xml
+    //  delete file biomes_test.xml
+    std::remove(filename.c_str());
 
     return true;
 }

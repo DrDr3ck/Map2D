@@ -12,45 +12,47 @@
 
 /********************************************************************/
 
-bool BiomeReader::readBiome(Biome& biome) {
-    std::string filename("biomes.xml");
-    XMLNode* doc = XMLDocument::read_doc(filename);
-    if( doc == nullptr ) {
-        Logger::error() << tr("Cannot read file ") << filename << Logger::endl;
-        return false;
-    }
-    XMLNode* biome_node = doc->getNodeFromName(biome.type());
-    if( biome_node == nullptr ) {
-        Logger::error() << tr("Cannot find biome of type ") << biome.type() << Logger::endl;
-        return false;
-    }
-    for( auto node : biome_node->nodes() ) {
-        std::string name = node->name();
-        XMLAttr* max_attr = node->getAttrFromName("max");
-        if( max_attr == nullptr ) {
-            Logger::error() << "Type " << name << " of biome " << biome.type() << " is not correctly defined, check min and max attributes" << Logger::endl;
-            continue;
+namespace {
+    bool readBiome(Biome& biome) {
+        std::string filename("biomes.xml");
+        XMLNode* doc = XMLDocument::read_doc(filename);
+        if( doc == nullptr ) {
+            Logger::error() << tr("Cannot read file ") << filename << Logger::endl;
+            return false;
         }
-        int max = atoi(max_attr->value().c_str());
-        if( max == 0 ) {
-            Logger::error() << "Suspicious max value for type " << name << " of biome " << biome.type() << ", check if value is a valid integer" << Logger::endl;
-            continue;
+        XMLNode* biome_node = doc->getNodeFromName(biome.type());
+        if( biome_node == nullptr ) {
+            Logger::error() << tr("Cannot find biome of type ") << biome.type() << Logger::endl;
+            return false;
         }
-        std::string surface_name("generator/");
-        surface_name.append(biome.type()).append("_generator72_").append(name).append(".png");
-        SDL_Surface* surface = IMG_Load(surface_name.c_str());
-        if( surface != nullptr ) {
-            biome.addSurfaceHeight(surface, max);
+        for( auto node : biome_node->nodes() ) {
+            std::string name = node->name();
+            XMLAttr* max_attr = node->getAttrFromName("max");
+            if( max_attr == nullptr ) {
+                Logger::error() << "Type " << name << " of biome " << biome.type() << " is not correctly defined, check min and max attributes" << Logger::endl;
+                continue;
+            }
+            int max = atoi(max_attr->value().c_str());
+            if( max == 0 ) {
+                Logger::error() << "Suspicious max value for type " << name << " of biome " << biome.type() << ", check if value is a valid integer" << Logger::endl;
+                continue;
+            }
+            std::string surface_name("generator/");
+            surface_name.append(biome.type()).append("_generator72_").append(name).append(".png");
+            SDL_Surface* surface = IMG_Load(surface_name.c_str());
+            if( surface != nullptr ) {
+                biome.addSurfaceHeight(surface, max);
+            }
         }
-    }
 
-    return true;
+        return true;
+    }
 }
 
 /********************************************************************/
 
 Biome::Biome(const std::string& type) : type_(type) {
-    bool result = BiomeReader::readBiome(*this);
+    bool result = readBiome(*this);
     if( !result ) { // if fail, get this dummy biome
         Logger::error() << tr("Using default biome of type forest") << Logger::endl;
         SDL_Surface* water_surface = IMG_Load("generator/forest_generator72_water.png");
