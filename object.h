@@ -57,6 +57,7 @@ public:
 
     bool hasCrafts() const { return is_crafter_; }
     void addCraft(Craft* craft, int occ=1);
+    void removeCraft(int index);
     std::vector< std::pair<Craft*, int> > getCrafts() const { return crafts_;}
 
     virtual int getNodeCount() const;

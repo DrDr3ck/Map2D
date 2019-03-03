@@ -875,6 +875,7 @@ void SDLCamera::displayTexture(SDL_Texture* texture, const SDL_Rect* rect, const
 }
 void SDLCamera::displayButton(SDLButton* button, int offset_x, int offset_y) {
     if( button == nullptr ) return;
+    if( !button->isVisible() ) return;
     SDL_Texture* button_texture = button->getTexture(main_renderer());
     SDL_Rect rect = button->rect();
     rect.x = rect.x+offset_x;
@@ -1005,6 +1006,8 @@ bool SDLCamera::handleEvent() {
                     Character* p = g->getNextRobot();
                     map_view_->restoreCenterTile( p->tilePosition() );
                 }
+            } else if( event_.key.keysym.sym == SDLK_ESCAPE ) {
+                setTool(nullptr);
             } else if( event_.key.keysym.sym == SDLK_b ) { // DEBUG ONLY
                 BackGroundGenerator generator(100,60); //10,6);
                 generator.execute("new_out.png");

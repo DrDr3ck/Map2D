@@ -40,7 +40,7 @@ bool SDLButtonManager::handleEvent(Camera* camera) {
             if( button_pressed ) {
                 if( button->isActive() ) {
                     button->deactivate();
-                    return true;
+                    //return true;
                 }
             }
         }

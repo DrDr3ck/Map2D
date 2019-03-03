@@ -40,7 +40,7 @@ MenuButton::MenuButton(int max_column, int x, int y)
 void MenuButton::show() {
     visible_ = true;
     for( auto b : buttons_ ) {
-        b->visible(visible_);
+        b->setVisible(visible_);
     }
 }
 
@@ -50,13 +50,13 @@ void MenuButton::show() {
 void MenuButton::hide() {
     visible_ = false;
     for( auto b : buttons_ ) {
-        b->visible(visible_);
+        b->setVisible(visible_);
     }
 }
 
 void MenuButton::addButton(Button* button) {
     buttons_.push_back(button);
-    button->visible( isVisible() );
+    button->setVisible( isVisible() );
     resetButtons();
 }
 

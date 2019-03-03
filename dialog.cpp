@@ -401,7 +401,7 @@ CrafterDialog::CrafterDialog(Object* object, int mouse_x, int mouse_y) : ObjectD
     craft_button_label_ = "Craft";
     for( auto co : object->getCrafts() ) {
         selected_craft_ = co.first;
-        addCraft(co.second);
+        addCraft(co.second, false);
     }
     selected_craft_ = nullptr;
 }
@@ -429,6 +429,27 @@ void CrafterDialog::do_render(Camera* camera, double delay_in_ms) {
 
     if( minimized_ ) {
         return;
+    }
+
+    // display the crafted buttons according to object
+    bool restore_buttons = false;
+    if( craft_buttons_.size() != object()->getCrafts().size() ) {
+        restore_buttons = true;
+    } else if( craft_buttons_.size() > 0 ) {
+        auto co = object()->getCrafts().at(0);
+        auto cbo = craft_buttons_.at(0);
+        if( co.second != cbo.occurrence ) {
+            restore_buttons = true;
+        }
+    }
+    if( restore_buttons ) {
+        Craft* craft = selected_craft_;
+        craft_buttons_.clear();
+        for( auto co : object()->getCrafts() ) {
+            selected_craft_ = co.first;
+            addCraft(co.second, false);
+        }
+        selected_craft_ = craft;
     }
 
     std::string str = tr("Click to get list of ingredient");
@@ -469,6 +490,7 @@ void CrafterDialog::do_render(Camera* camera, double delay_in_ms) {
 
     if( craft_button_ == nullptr ) {
         craft_button_ = new SDLTextButton(sdl_camera, craft_button_label_, x_, y_);
+        craft_button_->setVisible(false);
         SDL_Color button_bgcolor = getBackgroundColor();
         button_bgcolor.r = button_bgcolor.r*0.9;
         button_bgcolor.g = button_bgcolor.g*0.9;
@@ -480,13 +502,18 @@ void CrafterDialog::do_render(Camera* camera, double delay_in_ms) {
     const SDL_Rect& craft_rect = craft_button_->rect();
     craft_button_->setPosition(x_+width_-5-craft_rect.w, y_+height_-5-craft_rect.h);
     sdl_camera->displayButton(craft_button_);
-    SDL_SetRenderDrawColor( sdl_camera->main_renderer(), 255, 55, 55, 255 );
-    SDL_RenderDrawRect( sdl_camera->main_renderer(), &craft_button_->rect() );
+    if( craft_button_->isVisible() ) {
+        SDL_SetRenderDrawColor( sdl_camera->main_renderer(), 255, 55, 55, 255 );
+        SDL_RenderDrawRect( sdl_camera->main_renderer(), &craft_button_->rect() );
+    }
 
+    bool display_buttons = (selected_craft_ != nullptr);
     const SDL_Rect& one_rect = one_button_->rect();
     one_button_->setPosition(x_+5, y_+height_-5-craft_rect.h);
+    one_button_->setVisible(display_buttons);
     sdl_camera->displayButton(one_button_);
     ten_button_->setPosition(x_+5+one_rect.w+5, y_+height_-5-craft_rect.h);
+    ten_button_->setVisible(display_buttons);
     sdl_camera->displayButton(ten_button_);
 
     x = x_;
@@ -530,8 +557,9 @@ bool CrafterDialog::handleEvent(Camera* camera) {
                 for( auto craft_button : craft_buttons_ ) {
                     SDLButton* button = craft_button.button;
                     if( buttonClicked(button, mouse_position) ) {
-                        // remove item index
-                        craft_buttons_.erase( craft_buttons_.begin() + index );
+                        // remove item index from Object
+                        object()->removeCraft(index);
+                        //craft_buttons_.erase( craft_buttons_.begin() + index );
                         break;
                     }
                     index++;
@@ -544,14 +572,9 @@ bool CrafterDialog::handleEvent(Camera* camera) {
 void CrafterDialog::execute() {
     // move crafts in object and close the dialog
     kill_me_ = true;
-    for( auto cob : craft_buttons_ ) {
-        Craft* craft = cob.craft;
-        int occ = cob.occurrence;
-        object()->addCraft(craft, occ);
-    }
 }
 
-void CrafterDialog::addCraft(int occ) {
+void CrafterDialog::addCraft(int occ, bool in_object_too) {
     if( selected_craft_ == nullptr ) return;
     if( craft_buttons_.size() == 5 ) {
         Logger::warning() << tr("Cannot add more items in this crafter") << Logger::endl;
@@ -559,6 +582,9 @@ void CrafterDialog::addCraft(int occ) {
     }
     SDLButton* button = new SDLButton(CraftMgr::getPixmapName(selected_craft_), Utility::itos(occ), x_, y_);
     craft_buttons_.push_back(CraftOccButton{selected_craft_,occ,button});
+    if( in_object_too ) {
+        object()->addCraft(selected_craft_, occ);
+    }
 }
 
 void CrafterDialog::selectCraft(Craft* craft) {

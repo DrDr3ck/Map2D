@@ -120,7 +120,7 @@ public:
 
 protected:
     virtual void execute();
-    void addCraft(int occ=1);
+    void addCraft(int occ=1, bool in_object_too=true);
     void selectCraft(Craft* craft);
 
 protected:

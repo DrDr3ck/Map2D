@@ -19,7 +19,7 @@ public:
     virtual void deactivate() { active_ = false; }
 
     bool isVisible() const { return visible_; }
-    void visible(bool value) { visible_ = value; }
+    void setVisible(bool value) { visible_ = value; }
 
     bool mouseOverButton(int mouse_x, int mouse_y) const;
 

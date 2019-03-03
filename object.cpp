@@ -107,6 +107,16 @@ void Object::addCraft(Craft* craft, int occ) {
     crafts_.push_back(std::pair<Craft*,int>(craft, occ));
 }
 
+void Object::removeCraft(int index) {
+    crafts_.erase( crafts_.begin() + index );
+    if( index == 0 ) {
+        // remove the cur_craft and reset the time if needed
+        cur_craft_ = nullptr;
+        cur_craft_time_ms_ = 0;
+        max_craft_time_ms_ = 0;
+    }
+}
+
 void Object::animate(double delta_ms) { // TODO
     if( inPause() ) return;
     if( crafts_.size() == 0 ) return;
