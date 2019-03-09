@@ -20,6 +20,8 @@ public:
     virtual bool spentTime(double time_spent) = 0;
     virtual void postAction() {}
 
+    virtual void cancelAction() {}
+
 protected:
     ActionBase* next_action_ = nullptr;
     bool is_valid_ = true;
@@ -81,7 +83,20 @@ private:
 class GameBoard;
 class Job;
 
-class BuildAction : public ActionBase {
+class JobActionBase : public ActionBase {
+public:
+    JobActionBase(GameBoard* game_board, Character* people, Job* job);
+    virtual ~JobActionBase();
+
+    virtual void cancelAction() override;
+
+protected:
+    GameBoard* game_board_;
+    Character* people_;
+    Job* job_;
+};
+
+class BuildAction : public JobActionBase {
 public:
     BuildAction(GameBoard* game_board, Character* people, Job* job);
     virtual ~BuildAction();
@@ -93,14 +108,11 @@ public:
     void reset();
 
 private:
-    GameBoard* game_board_;
-    Character* people_;
-    Job* job_;
     ActionBase* action_;
     std::chrono::steady_clock::time_point start_time_;
 };
 
-class ExtractAction : public ActionBase {
+class ExtractAction : public JobActionBase {
 public:
     ExtractAction(GameBoard* game_board, Character* people, Job* job);
     virtual ~ExtractAction();
@@ -110,15 +122,12 @@ public:
     virtual void postAction() override;
 
 private:
-    GameBoard* game_board_;
-    Character* people_;
-    Job* job_;
     ActionBase* action_;
     bool isValid_;
     std::chrono::steady_clock::time_point start_time_;
 };
 
-class CleanAction : public ActionBase {
+class CleanAction : public JobActionBase {
 public:
     CleanAction(GameBoard* game_board, Character* people, Job* job);
     virtual ~CleanAction();
@@ -128,9 +137,6 @@ public:
     virtual void postAction() override;
 
 private:
-    GameBoard* game_board_;
-    Character* people_;
-    Job* job_;
     ActionBase* action_;
     bool isValid_;
     std::chrono::steady_clock::time_point start_time_;

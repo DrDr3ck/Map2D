@@ -130,12 +130,29 @@ Position MoveAction::get_position_in_pixel() {
 
 /********************************************************************/
 
-BuildAction::BuildAction(
-    GameBoard* game_board, Character* people, Job* job
-) {
+JobActionBase::JobActionBase(GameBoard* game_board, Character* people, Job* job) {
     game_board_ = game_board;
     people_ = people;
     job_ = job;
+}
+
+JobActionBase::~JobActionBase() {
+}
+
+void JobActionBase::cancelAction() {
+    if( job_ != nullptr ) {
+        job_->takeJob(nullptr);
+    }
+    if( people_ != nullptr ) {
+        people_->setActivityPercent(0);
+    }
+}
+
+/********************************************************************/
+
+BuildAction::BuildAction(
+    GameBoard* game_board, Character* people, Job* job
+) : JobActionBase(game_board, people, job) {
     action_ = nullptr;
 }
 
@@ -242,10 +259,7 @@ void BuildAction::postAction() {
 
 ExtractAction::ExtractAction(
     GameBoard* game_board, Character* people, Job* job
-) {
-    game_board_ = game_board;
-    people_ = people;
-    job_ = job;
+) : JobActionBase(game_board, people, job) {
     action_ = nullptr;
     isValid_ = true;
 }
@@ -324,10 +338,7 @@ void ExtractAction::postAction() {
 
 CleanAction::CleanAction(
     GameBoard* game_board, Character* people, Job* job
-) {
-    game_board_ = game_board;
-    people_ = people;
-    job_ = job;
+) : JobActionBase(game_board, people, job) {
     action_ = nullptr;
     isValid_ = true;
 }

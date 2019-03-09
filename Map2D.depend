@@ -520,7 +520,7 @@
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 
-1551037051 source:d:\games\programs\map2d\character.cpp
+1552152100 source:d:\games\programs\map2d\character.cpp
 	"character.h"
 	"sdl_camera.h"
 	"path_finding.h"
@@ -649,7 +649,7 @@
 	<map>
 	<string>
 
-1551211412 source:d:\games\programs\map2d\action.cpp
+1552151992 source:d:\games\programs\map2d\action.cpp
 	"action.h"
 	"character.h"
 	"job.h"
@@ -661,7 +661,7 @@
 	<cmath>
 	"SDL2/SDL_image.h"
 
-1551016708 d:\games\programs\map2d\action.h
+1552152061 d:\games\programs\map2d\action.h
 	"utility.h"
 	<SDL2/SDL.h>
 	<map>
@@ -705,7 +705,7 @@
 	"sdl_camera.h"
 	"craft_mgr.h"
 
-1551646888 source:d:\games\programs\map2d\dialog.cpp
+1551647513 source:d:\games\programs\map2d\dialog.cpp
 	"dialog.h"
 	"sdl_camera.h"
 	"sdl_button.h"

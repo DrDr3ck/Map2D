@@ -47,6 +47,9 @@ void DynamicItem::animate(double delta) {
 }
 
 void DynamicItem::setAction(ActionBase* action, std::string description) {
+    if( action_ != nullptr ) {
+        action_->cancelAction();
+    }
     action_ = action;
     action_description_ = description;
 }
