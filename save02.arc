@@ -358,7 +358,7 @@
   </tile>
   <tile x="3" y="3">
     <id value="0" />
-    <type value="EMPTY" />
+    <type value="WALL" />
     <occurrence value="0" />
     <btype value="GRASS" />
     <ftype value="METAL" />
@@ -682,9 +682,10 @@
   <tile x="1" y="6">
     <id value="0" />
     <type value="EMPTY" />
-    <occurrence value="33" />
+    <occurrence value="32" />
     <btype value="ROCK" />
     <ftype value="METAL" />
+    <counteditem name="stone" value="1" />
   </tile>
   <tile x="2" y="6">
     <id value="0" />
@@ -1299,7 +1300,7 @@
     <btype value="GRASS" />
     <ftype value="METAL" />
     <counteditem name="iron_ingot" value="3" />
-    <counteditem name="copper_ingot" value="4" />
+    <counteditem name="copper_ingot" value="6" />
   </tile>
   <tile x="9" y="11">
     <id value="0" />
@@ -2250,14 +2251,14 @@
 </mapdata>
 <group>
   <people name="B0b31">
-    <position x="4" y="11" />
-    <direction x="1" y="0" />
+    <position x="5" y="9" />
+    <direction x="1" y="1" />
     <activity value="0" />
     <image_id value="0" />
   </people>
   <people name="B1ll03">
-    <position x="7" y="11" />
-    <direction x="1" y="0" />
+    <position x="11" y="13" />
+    <direction x="0" y="1" />
     <activity value="0" />
     <image_id value="4" />
   </people>
@@ -2266,28 +2267,33 @@
   <object name="chest">
     <position x="4" y="11" />
     <counted_item nb="10">copper_ore</counted_item>
-    <counted_item nb="7">coal</counted_item>
+    <counted_item nb="4">coal</counted_item>
   </object>
   <object name="chest">
     <position x="4" y="12" />
     <counted_item nb="10">iron_ore</counted_item>
     <counted_item nb="20">stone</counted_item>
   </object>
+  <object name="stone_furnace">
+    <position x="6" y="8" />
+    <fuel fuel_time_ms="0">0</fuel>
+  </object>
   <object name="workbench">
     <position x="6" y="11" />
   </object>
   <object name="stone_furnace">
     <position x="8" y="11" />
-    <craft nb="6">copper_ingot</craft>
-    <fuel fuel_time_ms="70058">1</fuel>
+    <craft nb="4">copper_ingot</craft>
+    <fuel fuel_time_ms="79932">1</fuel>
   </object>
   <object name="chest">
     <position x="11" y="9" />
     <counted_item nb="10">sand</counted_item>
+    <counted_item nb="2">wall</counted_item>
   </object>
   <object name="chest">
     <position x="11" y="10" />
-    <counted_item nb="7">stone_furnace</counted_item>
+    <counted_item nb="6">stone_furnace</counted_item>
     <counted_item nb="10">iron_chest</counted_item>
   </object>
   <object name="command_center">

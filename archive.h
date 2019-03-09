@@ -96,10 +96,23 @@ private:
     std::vector<Node> nodes;
 };
 
-class JobsConverter { // TODO
+class JobsConverter : public DataConverter {
 public:
-    JobsConverter() {}
-    ~JobsConverter() {}
+    JobsConverter(JobMgr* jobs_mgr) : jobs_mgr_(jobs_mgr) {}
+    ~JobsConverter() = default;
+
+    virtual void load(const std::string& str) override;
+    virtual void save(std::ofstream& file) override;
+
+private:
+    JobMgr* jobs_mgr_;
+
+    std::string name;
+    std::string type;
+    int build_time;
+    Position pos = {0,0};
+    int nb = 1;
+    bool inJob = false;
 };
 
 /********************************************************************/

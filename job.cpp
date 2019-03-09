@@ -50,9 +50,12 @@ RepetitiveJob::RepetitiveJob(
 }
 
 bool RepetitiveJob::isRepetitive() {
+    return repetition_ > 1;
+}
+
+void RepetitiveJob::repeat() {
     repetition_--;
     setBuildTime(original_build_time_ms_);
-    return repetition_ > 0;
 }
 
 /**************************************/

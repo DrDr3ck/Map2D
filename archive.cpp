@@ -3,6 +3,7 @@
 #include "character.h"
 #include "logger.h"
 #include "translator.h"
+#include "job.h"
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
@@ -154,6 +155,14 @@ void ArchiveConverter::load(GameBoard* board, const std::string& filename) {
             converter = nullptr;
         }
 
+        if( isTag(str, "jobs") ) {
+            converter = new JobsConverter(board->jobManager());
+        }
+        if( isEndTag(str, "jobs") ) {
+            delete converter;
+            converter = nullptr;
+        }
+
         if( isTag(str, "position_objects") ) {
             converter = new ObjectConverter(board->data());
         }
@@ -186,6 +195,12 @@ void ArchiveConverter::save(GameBoard* board, const std::string& filename) {
 
     ObjectConverter oconverter(board->data());
     oconverter.save(file);
+
+    JobMgr* jmgr = board->jobManager();
+    if( jmgr->jobs().size() > 0 ) {
+        JobsConverter jconverter(jmgr);
+        jconverter.save(file);
+    }
 
     file.close();
 }
@@ -506,5 +521,83 @@ void ObjectConverter::save(std::ofstream& file) {
         file << "  </object>" << std::endl;
     }
     file << "</position_objects>" << std::endl;
+}
+
+/********************************************************************/
+
+void JobsConverter::load(const std::string& str) {
+    if( !inJob ) {
+        if( isTag(str, "jobs") ) {
+            return;
+        }
+        if( isTag(str, "job") ) {
+            name = getAttribute(str, "name");
+            type = getAttribute(str, "type");
+            nb = 1;
+            inJob = true;
+            return;
+        }
+    }
+
+    if( inJob ) {
+        if( isTag(str, "position") ) {
+            std::string x_str = getAttribute(str, "x");
+            int x = atoi(x_str.c_str());
+            std::string y_str = getAttribute(str, "y");
+            int y = atoi(y_str.c_str());
+            pos = {x,y};
+        } else if( isTag(str, "repetition") ) {
+            std::string nb_str = getAttribute(str, "nb");
+            nb = atoi(nb_str.c_str());
+        } else if( isTag(str, "time") ) {
+            std::string time_str = getTagValue(str);
+            build_time = atoi(time_str.c_str());
+        }
+
+        if( isEndTag(str, "job") ) {
+            inJob = false;
+            Job* job = nullptr;
+            if( name == "extract" ) {
+                job = new ExtractJob(pos, type, build_time, nb);
+            } else if( name == "clean" ) {
+                job = new CleanJob(pos, build_time);
+            } else if( name == "build_wall" ) {
+                job = new BuildWallJob(pos, build_time);
+            } else if( name == "demolish_wall" ) {
+                job = new DemolishWallJob(pos, build_time);
+            } else if( name == "build_floor" ) {
+                job = new BuildFloorJob(pos, build_time);
+            } else if( name == "demolish_floor" ) {
+                job = new DemolishFloorJob(pos, build_time);
+            } else if( name == "demolish_object" ) {
+                job = new UnbuildObjectJob(pos, build_time);
+            } else if( name == "build_object" ) {
+                std::string object_name = type; // remove 'objects/' from the type name
+                if( Utility::startsWith(type, "objects/") ) {
+                    object_name = type.substr(8);
+                    job = new BuildObjectJob(pos, object_name, 1000);
+                }
+            }
+            if( job != nullptr ) {
+                jobs_mgr_->addJob(job);
+            }
+        }
+    }
+}
+
+void JobsConverter::save(std::ofstream& file) {
+    file << "<jobs>" << std::endl;
+    for( auto job : jobs_mgr_->jobs() ) {
+        file << "  <job name=\"" << job->name() << "\" type=\"" << job->iconType() << "\">" << std::endl;
+        Position position_object = job->tilePosition();
+        file << "    <position x=\"" << position_object.x << "\" y=\"" << position_object.y << "\" />" << std::endl;
+        file << "    <time unit=\"ms\">" << job->buildTime() << "</time>" << std::endl;
+        if( job->isRepetitive() ) {
+            RepetitiveJob* rjob = static_cast<RepetitiveJob*>(job);
+            file << "    <repetition nb=\"" << rjob->repetition() << "\">" << std::endl;
+        }
+        file << "  </job>" << std::endl;
+    }
+    file << "</jobs>" << std::endl;
 }
 

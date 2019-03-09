@@ -15,8 +15,8 @@
 
 #define EXTRACT "extract"
 #define CLEAN "clean"
-#define BUILDWALL "build"
-#define DEMOLISHWALL "demolish"
+#define BUILDWALL "build_wall"
+#define DEMOLISHWALL "demolish_wall"
 #define BUILDFLOOR "build_floor"
 #define DEMOLISHFLOOR "demolish_floor"
 #define BUILDOBJECT "build_object"

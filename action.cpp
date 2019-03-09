@@ -306,6 +306,7 @@ bool ExtractAction::spentTime(double time_spent) {
         people_->setActivityPercent( std::min(100,int(100.0*delta_time/job_->buildTime())) );
         if( delta_time > job_->buildTime() ) {
             if( job_->isRepetitive() ) {
+                job_->repeat();
                 // repeat action
                 if( job_->name() == EXTRACT ) {
                     Position position = job_->tilePosition();

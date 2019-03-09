@@ -76,7 +76,7 @@ MapView::~MapView() {
  */
 void MapView::addWallJob(int x, int y) {
     Position tile_position = {x,y};
-    Job* job = new BuildJob(tile_position, "buttons/wall_tool", 3500);
+    Job* job = new BuildWallJob(tile_position, 3500);
     job_manager_->addJob(job);
 }
 
@@ -85,7 +85,7 @@ void MapView::addWallJob(int x, int y) {
  */
 void MapView::removeWallJob(int x, int y) {
     Position tile_position = {x,y};
-    Job* job = new DemolishJob(tile_position, "buttons/demolish_tool", 2500);
+    Job* job = new DemolishWallJob(tile_position, 2500);
     job_manager_->addJob(job);
 }
 
@@ -121,7 +121,7 @@ void MapView::cleanItemJob(int x, int y) {
         Logger::warning() << "Cannot do cleaning without a chest" << Logger::endl;
         return;
     }
-    Job* job = new CleanJob(tile_position, "buttons/clean_tool", 0);
+    Job* job = new CleanJob(tile_position, 0);
     job_manager_->addJob(job);
 }
 
@@ -130,7 +130,7 @@ void MapView::cleanItemJob(int x, int y) {
  */
 void MapView::addFloorJob(int x, int y) {
     Position tile_position = {x,y};
-    Job* job = new BuildFloorJob(tile_position, "buttons/foundation_tool", 1500);
+    Job* job = new BuildFloorJob(tile_position, 1500);
     job_manager_->addJob(job);
 }
 
@@ -139,7 +139,7 @@ void MapView::addFloorJob(int x, int y) {
  */
 void MapView::removeFloorJob(int x, int y) {
     Position tile_position = {x,y};
-    Job* job = new DemolishFloorJob(tile_position, "buttons/demolish_foundation_tool", 1000);
+    Job* job = new DemolishFloorJob(tile_position, 1000);
     job_manager_->addJob(job);
 }
 
@@ -148,8 +148,7 @@ void MapView::removeFloorJob(int x, int y) {
  */
 void MapView::addObjectJob(const std::string& object_name, int x, int y) {
     Position tile_position = {x,y};
-    std::string icon_name = "objects/"+object_name;
-    Job* job = new BuildObjectJob(tile_position, icon_name, object_name, 1000);
+    Job* job = new BuildObjectJob(tile_position, object_name, 1000);
     job_manager_->addJob(job);
 }
 
@@ -159,7 +158,7 @@ void MapView::addObjectJob(const std::string& object_name, int x, int y) {
 void MapView::removeObjectJob(int x, int y) {
     Position tile_position = {x,y};
     // TODO check that an object is present on this tile !!
-    Job* job = new UnbuildObjectJob(tile_position, "buttons/uninstall_tool", 1000);
+    Job* job = new UnbuildObjectJob(tile_position, 1000);
     job_manager_->addJob(job);
 }
 
@@ -474,7 +473,7 @@ bool MapView::handleEvent(Camera* camera) {
                         break;
                     }
                 }
-                if( robot->hasAction() ) {
+                if( robot != nullptr && robot->hasAction() ) {
                     robot->cancelAction();
                 }
             }
