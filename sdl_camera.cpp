@@ -837,6 +837,15 @@ void SDLCamera::render(double delay_in_ms) {
         displayText(text);
     }
 
+    if( speed_time_ > 1 ) {
+        std::string speed_time;
+        speed_time.append(tr("Speed time: x"));
+        speed_time.append(Utility::itos(speed_time_));
+        SDLText text(speed_time, FontLib::fontFamily(), FontLib::fontSize(), SDLText::red());
+        text.set_position(Camera::cur_camera->width()/2-text.rect().w,30);
+        displayText(text);
+    }
+
     // F3: display mouse position
     if( Session::instance()->getBoolean("*display_F3", true) ) {
         std::string mouse_position;
@@ -1029,6 +1038,12 @@ bool SDLCamera::handleEvent() {
             } else if( event_.key.keysym.sym == SDLK_b ) { // DEBUG ONLY
                 BackGroundGenerator generator(100,60); //10,6);
                 generator.execute("new_out.png");
+            } else if( event_.key.keysym.sym == SDLK_1 ) {
+                speed_time_ = 1;
+            } else if( event_.key.keysym.sym == SDLK_2 ) {
+                speed_time_ = 2;
+            } else if( event_.key.keysym.sym == SDLK_3 ) {
+                speed_time_ = 4;
             }
             break;
         case SDL_MOUSEMOTION:

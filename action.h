@@ -68,7 +68,7 @@ private:
     Character* character_;
     Position origin_;
     std::vector<Position> path_in_pixel_;
-    std::chrono::steady_clock::time_point start_time_;
+    double cur_time_;
     float speed_;
     float activity_percent_;
     Position destination_;

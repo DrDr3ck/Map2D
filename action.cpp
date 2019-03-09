@@ -41,14 +41,14 @@ MoveAction::MoveAction(Character* character, std::vector<Position>& path_in_tile
     }
     character_->setTimeSpent(0);
     create_animation_path(path_in_tile, tile_size);
-    start_time_ = std::chrono::steady_clock::now();
+    cur_time_ = 0;
     speed_ = 1;
     activity_percent_ = 0;
     destination_ = path_in_tile.at( path_in_tile.size()-1 );
     is_finished_ = false;
 }
 
-bool MoveAction::spentTime(double /*time_spent*/) {
+bool MoveAction::spentTime(double time_spent) {
     Position new_pixel_pos = next_position_;
     Position old_pixel_pos = prev_position_;
     if( new_pixel_pos.x == old_pixel_pos.x ) {
@@ -65,6 +65,7 @@ bool MoveAction::spentTime(double /*time_spent*/) {
     } else if( new_pixel_pos.y > old_pixel_pos.y ) {
         character_->setDirection(character_->direction().x, -1 );
     }
+    cur_time_ = time_spent*1000;
     new_pixel_pos = get_position_in_pixel();
     character_->setPixelPosition(new_pixel_pos.x, new_pixel_pos.y);
     if( is_finished_ ) {
@@ -99,8 +100,7 @@ void MoveAction::create_animation_path(std::vector<Position>& path_in_tile, int 
 }
 
 Position MoveAction::get_position_in_pixel() {
-    std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
-    double cur_time = std::chrono::duration_cast<std::chrono::microseconds>(now - start_time_).count();
+    double cur_time = cur_time_;
     cur_time *= speed_;
     cur_time = cur_time / 1000000.; // time spent in seconds
     activity_percent_ = int(100.0*cur_time/(path_in_pixel_.size()-1));

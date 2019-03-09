@@ -182,6 +182,8 @@ public:
 
     static void openOptionsDialog();
 
+    int speedTime() const { return speed_time_; }
+
 private:
     SDL_Event event_;
     SDL_Window* window_;
@@ -189,6 +191,7 @@ private:
     SDLTool* tool_;
     SDLButtonManager* manager_;
     MapView* map_view_;
+    int speed_time_ = 1;
 };
 
 /********************************************************************/

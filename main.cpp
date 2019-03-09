@@ -163,7 +163,7 @@ int main(int argc, char** argv) {
         }
 
         std::chrono::steady_clock::time_point end_clock = std::chrono::steady_clock::now();
-        double delay_clock_us = std::chrono::duration_cast<std::chrono::microseconds>(end_clock - start_clock).count();
+        double delay_clock_us = std::chrono::duration_cast<std::chrono::microseconds>(end_clock - start_clock).count() * sdl_camera->speedTime();
         if( delay_clock_us > delay_in_us ) {
             sdl_camera->render(delay_clock_us/1000.);
             if( !sdl_camera->isInPause() ) {
