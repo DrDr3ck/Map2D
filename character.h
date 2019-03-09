@@ -69,8 +69,10 @@ public:
         pixel_position_ = {x,y};
     }
 
+    bool hasAction() const { return action_ != nullptr; }
     void setAction(ActionBase* action, std::string description);
     ActionBase* action() const { return action_; }
+    void cancelAction();
     const std::string& actionDescription() const {
         return action_description_;
     }

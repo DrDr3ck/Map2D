@@ -461,6 +461,24 @@ bool MapView::handleEvent(Camera* camera) {
                     return true;
                 }
             }
+            // canceling a job ?
+            // check if a job is on the clicked tile
+            Position position = {tile_x_, tile_y_};
+            if( job_manager_->findJobAt(position) ) {
+                job_manager_->cancelJob(position);
+                // need also to check if a robot was not already doing the job
+                Character* robot = nullptr;
+                for( auto people : group_->group() ) {
+                    if( people->tilePosition().x == tile_x_ && people->tilePosition().y == tile_y_ ) {
+                        robot = people;
+                        break;
+                    }
+                }
+                if( robot->hasAction() ) {
+                    robot->cancelAction();
+                }
+            }
+
         } else if( e.button.button == SDL_BUTTON_LEFT ) {
             selected_people_ = nullptr;
             // select a people if any

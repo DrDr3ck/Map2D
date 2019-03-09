@@ -54,6 +54,10 @@ void DynamicItem::setAction(ActionBase* action, std::string description) {
     action_description_ = description;
 }
 
+void DynamicItem::cancelAction() {
+    setAction(nullptr, "");
+}
+
 /********************************************************************/
 
 Character::Character(
