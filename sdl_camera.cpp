@@ -484,7 +484,7 @@ bool MapView::handleEvent(Camera* camera) {
             // select a people if any
             for( auto people : group_->group() ) {
                 if( people->tilePosition().x == tile_x_ && people->tilePosition().y == tile_y_ ) {
-                    selected_people_ = people;
+                    selectPeople(people);
                     break;
                 }
             }
@@ -1032,6 +1032,7 @@ bool SDLCamera::handleEvent() {
                 if( g->group().size() > 0 ) {
                     Character* p = g->getNextRobot();
                     map_view_->restoreCenterTile( p->tilePosition() );
+                    map_view_->selectPeople(p);
                 }
             } else if( event_.key.keysym.sym == SDLK_ESCAPE ) {
                 setTool(nullptr);

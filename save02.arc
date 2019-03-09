@@ -1263,7 +1263,6 @@
     <occurrence value="22" />
     <btype value="COAL" />
     <ftype value="METAL" />
-    <counteditem name="coal" value="10" />
   </tile>
   <tile x="4" y="11">
     <id value="0" />
@@ -2251,14 +2250,14 @@
 </mapdata>
 <group>
   <people name="B0b31">
-    <position x="8" y="15" />
-    <direction x="0" y="0" />
+    <position x="4" y="11" />
+    <direction x="1" y="0" />
     <activity value="0" />
     <image_id value="0" />
   </people>
   <people name="B1ll03">
-    <position x="9" y="15" />
-    <direction x="0" y="0" />
+    <position x="7" y="11" />
+    <direction x="1" y="0" />
     <activity value="0" />
     <image_id value="4" />
   </people>
@@ -2267,6 +2266,7 @@
   <object name="chest">
     <position x="4" y="11" />
     <counted_item nb="10">copper_ore</counted_item>
+    <counted_item nb="7">coal</counted_item>
   </object>
   <object name="chest">
     <position x="4" y="12" />
@@ -2279,7 +2279,7 @@
   <object name="stone_furnace">
     <position x="8" y="11" />
     <craft nb="6">copper_ingot</craft>
-    <fuel fuel_time_ms="51599">0</fuel>
+    <fuel fuel_time_ms="70058">1</fuel>
   </object>
   <object name="chest">
     <position x="11" y="9" />

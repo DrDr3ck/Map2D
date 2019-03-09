@@ -48,6 +48,7 @@ public:
     void restoreCenterTile(Position position);
 
     PeopleGroup* group() const;
+    void selectPeople(Character* people) { selected_people_ = people; }
 
     static MapView* cur_map;
 
