@@ -66,6 +66,18 @@ bool CheckingTest::do_execute() {
    return true;
 }
 
+bool UtilityTest::do_execute() {
+    std::string original = "test %s test";
+    Utility::replace(original, "%s", "test");
+    CHECK_STR_EQUAL(original, std::string("test test test"), return false;);
+
+    original = "%s test %s";
+    Utility::replace(original, "%s", "test");
+    Utility::replace(original, "%s", "test");
+    CHECK_STR_EQUAL(original, std::string("test test test"), return false;);
+    return true;
+}
+
 bool TileTest::do_execute() {
     Tile tile(10, Tile::BLOCK);
     CHECK_EQUAL(tile.id(), 10, return false;);
@@ -433,6 +445,7 @@ bool CraftMgrTest::do_execute() {
 
 TestManager::TestManager() {
     addTest(new CheckingTest());
+    addTest(new UtilityTest());
     addTest(new TileTest());
     addTest(new MapTest());
     addTest(new FontTest());

@@ -148,7 +148,8 @@ CharacterSetLib::CharacterSetLib() {
     characters_surface_ = Utility::IMGLoad("images/robots.png");
 
     if( characters_surface_ == nullptr ) {
-        Logger::error() << "cannot initialize CharacterSetLib" << Logger::endl;
+        Logger::error() << "Cannot initialize CharacterSetLib: missing robots.png image ?" << Logger::endl;
+        abort();
     }
 }
 
@@ -181,7 +182,7 @@ void CharacterSetLib::init(SDL_Renderer* renderer) {
     dest.h = Utility::tileSize;
     int maxX = surf_source->w / Utility::tileSize;
     int maxY = surf_source->h / Utility::tileSize;
-    Logger::info() << "Loading " << maxY << " robot's skins" << Logger::endl;
+    Logger::debug() << "Loading " << maxY << " robot's skins" << Logger::endl;
     for( int y=0; y<maxY; y++ ) {
         for( int x=0; x<maxX; x++ ) {
             int id = x+y*maxX;

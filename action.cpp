@@ -239,17 +239,21 @@ void BuildAction::postAction() {
                 if( data->removeItemFromChest(position, BasicItem(object->name())) ) {
                     data->addObject(object,position.x,position.y);
                 } else {
-                    Logger::error() << "Cannot remove object " << object->name() << " from chest" << Logger::endl;
+                    std::string error = tr("Cannot remove object %s from chest");
+                    Utility::replace(error, "%s", object->name());
+                    Logger::error() << error << Logger::endl;
                 }
             } else {
-                Logger::error() << "Cannot create object " << bjob->objectName() << Logger::endl;
+                std::string error = tr("Cannot create object %s");
+                Utility::replace(error, "%s", bjob->objectName());
+                Logger::error() << error << Logger::endl;
             }
         } else if( job_->name() == DEMOLISHOBJECT ) {
             Object* object = data->getObject(position);
             if( object != nullptr ) {
                 data->removeObject(position.x, position.y);
             } else {
-                Logger::error() << "No object on this tile" << Logger::endl;
+                Logger::error() << tr("No object on this tile") << Logger::endl;
             }
         }
     }
@@ -362,7 +366,7 @@ void CleanAction::preAction() {
             // then move to the nearest non full chest
             Object* object = game_board_->data()->getNearestEmptyChest(people_->tilePosition(), people_->carriedItems().at(0));
             if( object == nullptr ) {
-                Logger::warning() << "Not enough space in chests, please create a new one" << Logger::endl;
+                Logger::warning() << tr("Not enough space in chests, please create a new one") << Logger::endl;
                 isValid_ = false;
                 job_->reset();
                 return;
@@ -393,7 +397,7 @@ void CleanAction::preAction() {
         // robot is full, need to move to nearest none full chest
         Object* object = game_board_->data()->getNearestEmptyChest(people_->tilePosition(), people_->carriedItems().at(0));
         if( object == nullptr ) {
-            Logger::warning() << "Not enough space in chest, please create a new one" << Logger::endl;
+            Logger::warning() << tr("Not enough space in chests, please create a new one") << Logger::endl;
             isValid_ = false;
             job_->reset();
             return;

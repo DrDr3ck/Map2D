@@ -1,6 +1,7 @@
 #include "xml_document.h"
 
 #include "utility.h"
+#include "translator.h"
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
@@ -199,7 +200,7 @@ namespace {
 XMLNode* XMLDocument::read_doc(const std::string& filename) {
     std::ifstream file(filename);
     if (!file) {
-        Logger::error() << "unable to open file for load: " << filename << Logger::endl;
+        Logger::error() << tr("unable to open file for load: ") << filename << Logger::endl;
         return nullptr;
     }
 
@@ -231,7 +232,7 @@ XMLNode* XMLDocument::read_doc(const std::string& filename) {
 bool XMLDocument::write_doc(const XMLNode* node, const std::string& filename) {
     std::ofstream file(filename);
     if (!file) {
-        Logger::error() << "unable to open file for save: " << filename << Logger::endl;
+        Logger::error() << tr("unable to open file for save: ") << filename << Logger::endl;
         return false;
     }
 

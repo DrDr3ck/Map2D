@@ -118,7 +118,7 @@ void MapView::cleanItemJob(int x, int y) {
     // first, check if a chest is available
     Object* object = data()->getNearestChest(tile_position);
     if( object == nullptr ) {
-        Logger::warning() << "Cannot do cleaning without a chest" << Logger::endl;
+        Logger::warning() << tr("Cannot do cleaning without a chest") << Logger::endl;
         return;
     }
     Job* job = new CleanJob(tile_position, 0);

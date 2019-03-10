@@ -28,6 +28,13 @@ public:
     virtual bool do_execute() override;
 };
 
+class UtilityTest : public Test {
+public:
+    UtilityTest() : Test("UtilityTest") {}
+
+    virtual bool do_execute() override;
+};
+
 class TileTest : public Test {
 public:
     TileTest() : Test("TileTest") {}

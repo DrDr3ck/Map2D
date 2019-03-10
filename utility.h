@@ -113,6 +113,22 @@ public:
         return str.find(suffix) == (str.length()-suffix.length());
     }
 
+    /*!
+     * Replaces substr in original_str by \p by
+     */
+    static bool replace(std::string& original_str, const std::string& substr, const std::string& by) {
+        int index = original_str.find(substr);
+        if( index < 0 ) {
+            return false;
+        }
+        original_str.replace(
+            original_str.begin()+index,
+            original_str.begin()+index+substr.length(),
+            by
+        );
+        return true;
+    }
+
     static SDL_Surface* IMGLoad(const std::string& filename, bool verbose=true) {
         if( verbose ) {
             Logger::debug() << "Load image " << filename << Logger::endl;

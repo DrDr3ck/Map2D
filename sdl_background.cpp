@@ -29,12 +29,18 @@ namespace {
             std::string name = node->name();
             XMLAttr* max_attr = node->getAttrFromName("max");
             if( max_attr == nullptr ) {
-                Logger::error() << "Type " << name << " of biome " << biome.type() << " is not correctly defined, check min and max attributes" << Logger::endl;
+                std::string error = tr("Type %1 of biome %2 is not correctly defined, check min and max attributes");
+                Utility::replace(error, "%1", name);
+                Utility::replace(error, "%2", biome.type());
+                Logger::error() << error << Logger::endl;
                 continue;
             }
             int max = atoi(max_attr->value().c_str());
             if( max == 0 ) {
-                Logger::error() << "Suspicious max value for type " << name << " of biome " << biome.type() << ", check if value is a valid integer" << Logger::endl;
+                std::string error = tr("Suspicious max value for type %1 of biome %2, check if value is a valid integer");
+                Utility::replace(error, "%1", name);
+                Utility::replace(error, "%2", biome.type());
+                Logger::error() << error << Logger::endl;
                 continue;
             }
             std::string surface_name("generator/");
@@ -151,7 +157,9 @@ namespace {
 
 void BackGroundGenerator::execute(const std::string& filename, float** noise_map) const {
     if( !biome_->isValid() ) {
-        Logger::error() << "biome " << biome_->type() << " is invalid" << Logger::endl;
+        std::string error = tr("biome %s is invalid");
+        Utility::replace(error, "%s", biome_->type());
+        Logger::error() << error << Logger::endl;
         return;
     }
 

@@ -132,7 +132,7 @@ std::string getAttribute(const std::string& str, const std::string& attr_origin)
 void ArchiveConverter::load(GameBoard* board, const std::string& filename) {
     std::ifstream file(filename);
     if (!file) {
-        Logger::error() << tr("unable to open file for load: ") << filename << Logger::endl;
+        Logger::debug() << "unable to open file for load: " << filename << Logger::endl;
         return;
     }
 
@@ -181,7 +181,7 @@ void ArchiveConverter::load(GameBoard* board, const std::string& filename) {
 void ArchiveConverter::save(GameBoard* board, const std::string& filename) {
     std::ofstream file(filename);
     if (!file) {
-        Logger::error() << tr("unable to open file for save: ") << filename << Logger::endl;
+        Logger::debug() << "unable to open file for save: " << filename << Logger::endl;
         return;
     }
 
@@ -277,7 +277,7 @@ std::string MapDataConverter::typeTileToString(Tile::Type type) const {
     if( type == Tile::FLOOR ) return "FLOOR";
     if( type == Tile::WALL ) return "WALL";
     if( type == Tile::EMPTY ) return "EMPTY";
-    Logger::error() << "unable to find string for type: " << type << Logger::endl;
+    Logger::debug() << "unable to find string for type: " << type << Logger::endl;
     return "NONE";
 }
 
@@ -291,14 +291,14 @@ std::string MapDataConverter::btypeTileToString(Tile::BType type) const {
     if( type == Tile::ROCK ) return "ROCK";
     if( type == Tile::COPPER ) return "COPPER";
     if( type == Tile::IRON ) return "IRON";
-    Logger::error() << "unable to find string for background type: " << type << Logger::endl;
+    Logger::debug() << "unable to find string for background type: " << type << Logger::endl;
     return "NONE";
 }
 
 std::string MapDataConverter::ftypeTileToString(Tile::FType type) const {
     if( type == Tile::METAL ) return "METAL";
     if( type == Tile::PLASTIC ) return "PLASTIC";
-    Logger::error() << "unable to find string for floor type: " << type << Logger::endl;
+    Logger::debug() << "unable to find string for floor type: " << type << Logger::endl;
     return "METAL";
 }
 
@@ -308,7 +308,7 @@ Tile::Type MapDataConverter::stringTileToType(const std::string& str) const {
     if( str == "FLOOR" ) return Tile::FLOOR;
     if( str == "WALL" ) return Tile::WALL;
     if( str == "EMPTY" ) return Tile::EMPTY;
-    Logger::error() << "unable to find type for string: " << str << Logger::endl;
+    Logger::debug() << "unable to find type for string: " << str << Logger::endl;
     return Tile::BLOCK;
 }
 
@@ -322,14 +322,14 @@ Tile::BType MapDataConverter::stringTileToBType(const std::string& str) const {
     if( str == "COAL" ) return Tile::COAL;
     if( str == "GRASS" ) return Tile::GRASS;
     if( str == "ROCK" ) return Tile::ROCK;
-    Logger::error() << "unable to find background type for string: " << str << Logger::endl;
+    Logger::debug() << "unable to find background type for string: " << str << Logger::endl;
     return Tile::NONE;
 }
 
 Tile::FType MapDataConverter::stringTileToFType(const std::string& str) const {
     if( str == "METAL" ) return Tile::METAL;
     if( str == "PLASTIC" ) return Tile::PLASTIC;
-    Logger::error() << "unable to find floor type for string: " << str << Logger::endl;
+    Logger::debug() << "unable to find floor type for string: " << str << Logger::endl;
     return Tile::METAL;
 }
 
