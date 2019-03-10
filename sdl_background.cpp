@@ -9,6 +9,7 @@
 #include <sstream>
 #include <random>
 #include <algorithm>
+#include <ctime>
 
 /********************************************************************/
 
@@ -29,17 +30,17 @@ namespace {
             std::string name = node->name();
             XMLAttr* max_attr = node->getAttrFromName("max");
             if( max_attr == nullptr ) {
-                std::string error = tr("Type %1 of biome %2 is not correctly defined, check min and max attributes");
-                Utility::replace(error, "%1", name);
-                Utility::replace(error, "%2", biome.type());
+                std::string error = tr("Type $1 of biome $2 is not correctly defined, check min and max attributes");
+                Utility::replace(error, "$1", name);
+                Utility::replace(error, "$2", biome.type());
                 Logger::error() << error << Logger::endl;
                 continue;
             }
             int max = atoi(max_attr->value().c_str());
             if( max == 0 ) {
-                std::string error = tr("Suspicious max value for type %1 of biome %2, check if value is a valid integer");
-                Utility::replace(error, "%1", name);
-                Utility::replace(error, "%2", biome.type());
+                std::string error = tr("Suspicious max value for type $1 of biome $2, check if value is a valid integer");
+                Utility::replace(error, "$1", name);
+                Utility::replace(error, "$2", biome.type());
                 Logger::error() << error << Logger::endl;
                 continue;
             }
@@ -145,6 +146,7 @@ BackGroundGenerator::BackGroundGenerator(
 }
 
 BackGroundGenerator::~BackGroundGenerator() {
+    delete biome_;
 }
 
 namespace {
@@ -161,8 +163,8 @@ namespace {
 
 void BackGroundGenerator::execute(const std::string& filename, float** noise_map) const {
     if( !biome_->isValid() ) {
-        std::string error = tr("biome %s is invalid");
-        Utility::replace(error, "%s", biome_->type());
+        std::string error = tr("biome $1 is invalid");
+        Utility::replace(error, "$1", biome_->type());
         Logger::error() << error << Logger::endl;
         return;
     }
@@ -176,7 +178,9 @@ void BackGroundGenerator::execute(const std::string& filename, float** noise_map
     int fullsize = Utility::tileSize + offset*2;
 
     if( noise_map == nullptr ) {
-        noise_map = Noise::generateNoiseMap(width_, height_, rand(), 150, 4, 0.5f, 2.f);
+        srand(time(NULL)); // initialization of rand
+        int seed = std::rand();
+        noise_map = Noise::generateNoiseMap(width_, height_, seed, 150, 4, 0.5f, 2.f);
     }
 
     std::vector<MapTile> map_tiles;

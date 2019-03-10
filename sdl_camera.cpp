@@ -450,16 +450,7 @@ bool MapView::handleEvent(Camera* camera) {
 
     case SDL_MOUSEBUTTONDOWN:
         if( e.button.button == SDL_BUTTON_RIGHT ) {
-            if( selected_people_ != nullptr ) {
-                PathFinding path(data_);
-                Position end_position = {tile_x_, tile_y_};
-                std::vector<Position> positions = path.findPath(selected_people_->tilePosition(), end_position);
-                if( positions.size() > 0 ) {
-                    ActionBase* action = new MoveAction(selected_people_, positions, Utility::tileSize);
-                    selected_people_->setAction( action, "Move to new location");
-                    return true;
-                }
-            }
+            selected_people_ = nullptr;
             // canceling a job ?
             // check if a job is on the clicked tile
             Position position = {tile_x_, tile_y_};
@@ -479,6 +470,16 @@ bool MapView::handleEvent(Camera* camera) {
             }
 
         } else if( e.button.button == SDL_BUTTON_LEFT ) {
+            if( selected_people_ != nullptr ) {
+                PathFinding path(data_);
+                Position end_position = {tile_x_, tile_y_};
+                std::vector<Position> positions = path.findPath(selected_people_->tilePosition(), end_position);
+                if( positions.size() > 0 ) {
+                    ActionBase* action = new MoveAction(selected_people_, positions, Utility::tileSize);
+                    selected_people_->setAction( action, "Move to new location");
+                    return true;
+                }
+            }
             selected_people_ = nullptr;
             // select a people if any
             for( auto people : group_->group() ) {
@@ -817,8 +818,8 @@ void SDLCamera::render(double delay_in_ms) {
         std::vector<std::string> option_list;
         option_list.push_back( tr("Pause (Press SPACE)") );
         option_list.push_back( tr("Press c to center a robot") );
-        option_list.push_back( tr("Left click to select a robot") );
-        option_list.push_back( tr("Right click to move it") );
+        option_list.push_back( tr("Left click to select a robot and move it") );
+        option_list.push_back( tr("Right click to unselected it") );
         option_list.push_back( tr("Double click on object to popup info") );
         std::string options;
         for( auto opt : option_list ) {

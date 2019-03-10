@@ -361,14 +361,21 @@ bool MapData::transferItems(Character* people) {
     CountedItem counted_item = tile.counted_items().at(0);
     int max_item = std::min(people->maxCarriable(), counted_item.count());
     people->carryItem( tile.removeItem(counted_item.item(), max_item), max_item );
-    // todo: can carry more !!
+    // TODO: can carry more !!
     return max_item > 0;
 }
 
 void MapData::transferItems(Character* people, Chest* chest) {
+    std::vector<BasicItem> items;
     while(people->carriedItems().size() != 0 ) {
         BasicItem item = people->dropItem();
-        chest->addItem( item );
+        int nb = chest->addItem( item );
+        if( nb != 0 ) { // cannot transfer this item in the chest, need to keep it
+            items.push_back(item);
+        }
+    }
+    for( auto item : items ) {
+        people->carryItem(item);
     }
 }
 
@@ -436,6 +443,7 @@ Object* MapData::getNearestEmptyChest(Position position, const BasicItem& item) 
         Chest* chest = static_cast<Chest*>(object);
         // check if chest can store item
         bool full = true;
+        std::cout << "chest in " << chest->tilePosition().x << "," << chest->tilePosition().y << " has " << chest->sizeAvailable() << " slot(s) available" << std::endl;
         if( chest->sizeAvailable() > 0 ) {
             full = false;
         } else {
@@ -443,6 +451,7 @@ Object* MapData::getNearestEmptyChest(Position position, const BasicItem& item) 
             for( auto cur_item : items ) {
                 if( cur_item.item().name() == item.name() ) {
                     if( cur_item.count() < CountedItem::maxCount() ) {
+                        std::cout << "found " << cur_item.count() << " in chest for item " << item.name() << std::endl;
                         full = false;
                         break;
                     }
@@ -452,6 +461,7 @@ Object* MapData::getNearestEmptyChest(Position position, const BasicItem& item) 
         if( full ) continue;
         Position chest_position = object->tilePosition();
         float dist = Utility::distance(chest_position, position);
+        std::cout << "distance " << dist << std::endl;
         if( dist < distance ) {
             distance = dist;
             nearest_chest = object;
@@ -587,20 +597,22 @@ void MapData::createMap(MapData* data) {
                 btype = Tile::WATER;
             } else if( region == 1 ) {
                 btype = Tile::SAND;
-            } else if( region == 3 ) {
-                btype = Tile::ROCK;
+            } else if( region == 2 ) {
+                btype = Tile::DIRT;
             } else if( region == 4 ) {
-                btype = Tile::COAL;
+                btype = Tile::ROCK;
             } else if( region == 5 ) {
-                btype = Tile::COPPER;
+                btype = Tile::COAL;
             } else if( region == 6 ) {
+                btype = Tile::COPPER;
+            } else if( region == 7 ) {
                 btype = Tile::IRON;
             }
             tile.setBackgroundTile(tile.id(), btype);
             if( tile.background_type() >= Tile::ROCK || tile.background_type() == Tile::SAND ) {
                 if( tile.background_type() >= Tile::ROCK ) { // coal copper iron
                     tile.setOccurrences( rand()%100+50 ); // valeur entre 50 et 150
-                } else {
+                } else if( region != 2 ) {
                     tile.setOccurrences( rand()%40+10 ); // valeur entre 10 et 50
                 }
             }

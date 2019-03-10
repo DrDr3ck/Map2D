@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
 
     std::string filename = Session::instance()->getString("*save*filename", "save01.arc");
 
-    MapData data(16,20);
+    MapData data(32,40);
     JobMgr job_mgr(sdl_camera->main_renderer());
 
     GameBoard board(&group, &data, &job_mgr);

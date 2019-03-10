@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1552154783 source:d:\games\programs\map2d\main.cpp
+1552220855 source:d:\games\programs\map2d\main.cpp
 	<SDL2/SDL.h>
 	<SDL2/SDL_mixer.h>
 	<iostream>
@@ -353,7 +353,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1551514413 source:d:\games\programs\map2d\map.cpp
+1552240636 source:d:\games\programs\map2d\map.cpp
 	"map.h"
 	<cmath>
 	"SDL2/SDL_image.h"
@@ -376,14 +376,14 @@
 	<iostream>
 	<sstream>
 
-1552214710 d:\games\programs\map2d\tests.h
+1552239642 d:\games\programs\map2d\tests.h
 	"map.h"
 	"character.h"
 	"object.h"
 	<list>
 	<string>
 
-1552216284 source:d:\games\programs\map2d\tests.cpp
+1552239946 source:d:\games\programs\map2d\tests.cpp
 	"tests.h"
 	"archive.h"
 	"font.h"
@@ -431,7 +431,7 @@
 	"map.h"
 	<string>
 
-1552213898 source:d:\games\programs\map2d\sdl_camera.cpp
+1552221326 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -503,7 +503,7 @@
 	"sdl_camera.h"
 	"sdl_button.h"
 
-1552215027 source:d:\games\programs\map2d\sdl_background.cpp
+1552237745 source:d:\games\programs\map2d\sdl_background.cpp
 	"sdl_background.h"
 	"perlin_noise.h"
 	"xml_document.h"
@@ -514,6 +514,7 @@
 	<sstream>
 	<random>
 	<algorithm>
+	<ctime>
 
 1551600860 d:\games\programs\map2d\sdl_background.h
 	<string>
@@ -615,7 +616,7 @@
 	<sstream>
 	<vector>
 
-1549827610 source:d:\games\programs\map2d\translator.cpp
+1552237745 source:d:\games\programs\map2d\translator.cpp
 	"translator.h"
 	"logger.h"
 	<iostream>
@@ -651,7 +652,7 @@
 	<map>
 	<string>
 
-1552215178 source:d:\games\programs\map2d\action.cpp
+1552240254 source:d:\games\programs\map2d\action.cpp
 	"action.h"
 	"character.h"
 	"job.h"
@@ -692,14 +693,14 @@
 	"items.h"
 	"texture_mgr.h"
 
-1551646940 d:\games\programs\map2d\object.h
+1552239686 d:\games\programs\map2d\object.h
 	<vector>
 	<string>
 	"utility.h"
 	"translator.h"
 	"items.h"
 
-1551647060 source:d:\games\programs\map2d\object.cpp
+1552239642 source:d:\games\programs\map2d\object.cpp
 	"object.h"
 	"translator.h"
 	<iostream>

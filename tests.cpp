@@ -67,14 +67,24 @@ bool CheckingTest::do_execute() {
 }
 
 bool UtilityTest::do_execute() {
-    std::string original = "test %s test";
-    Utility::replace(original, "%s", "test");
+    std::string original = "test $1 test";
+    Utility::replace(original, "$1", "test");
     CHECK_STR_EQUAL(original, std::string("test test test"), return false;);
 
-    original = "%s test %s";
-    Utility::replace(original, "%s", "test");
-    Utility::replace(original, "%s", "test");
+    original = "$1 test $2";
+    Utility::replace(original, "$1", "test");
+    Utility::replace(original, "$2", "test");
     CHECK_STR_EQUAL(original, std::string("test test test"), return false;);
+
+    std::string message = "Missing $1 element(s) of $2 to craft $3";
+    int nb = 5;
+    Utility::replace(message, "$1", Utility::itos(nb));
+    CountedItem counted_item(BasicItem("sand"), 5);
+    Utility::replace(message, "$2", counted_item.item().name());
+    Craft craft("iron chest", Craft::CraftType::OBJECT);
+    Utility::replace(message, "$3", craft.name());
+    CHECK_STR_EQUAL(message, std::string("Missing 5 element(s) of sand to craft iron chest"), return false;);
+
     return true;
 }
 
@@ -237,6 +247,30 @@ bool ChestTest::do_execute() {
     result = chest.removeItem(sand, 60);
     CHECK_EQUAL( result, 10, return false; );
     CHECK_EQUAL( chest.sizeAvailable(), 14, return false; );
+    return true;
+}
+
+bool CommandCenterTest::do_execute() {
+    Chest chest(16);
+    BasicItem stone("stone");
+    int nb_total = 5;
+    chest.addItem(stone, nb_total);
+    std::vector<Chest*> chests;
+    chests.push_back(&chest);
+    CommandCenter* cc = new CommandCenter();
+    CommandCenter::init(cc, chests);
+
+    int stored_item = cc->countedItems(stone);
+    CHECK_EQUAL( stored_item, nb_total, return false; );
+
+    int nb_retract = 2;
+    chest.removeItem(stone, nb_retract);
+    stored_item = cc->countedItems(stone);
+    CHECK_EQUAL( stored_item, nb_total-nb_retract, return false; );
+
+    CommandCenter::destroy();
+    delete cc;
+
     return true;
 }
 
@@ -453,6 +487,7 @@ TestManager::TestManager() {
     addTest(new CharacterTest());
     addTest(new JobTest());
     addTest(new ChestTest());
+    addTest(new CommandCenterTest());
     addTest(new SessionTest());
     addTest(new PerlinTest());
     addTest(new XMLTest());

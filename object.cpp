@@ -111,6 +111,18 @@ void Object::removeCraft(int index) {
     crafts_.erase( crafts_.begin() + index );
     if( index == 0 ) {
         // remove the cur_craft and reset the time if needed
+        if( has_ingredients_ ) {
+            // drop all items
+            MapView* map_view = MapView::cur_map;
+            MapData* data = map_view->data();
+            Position tile_position = this->tilePosition();
+            Tile& tile = data->tile(tile_position.x, tile_position.y);
+            const std::vector<CountedItem>& items = cur_craft_->getItems();
+            for( auto counted_item : items ) {
+                tile.addItem(counted_item.item(), counted_item.count());
+            }
+            has_ingredients_ = false;
+        }
         cur_craft_ = nullptr;
         cur_craft_time_ms_ = 0;
         max_craft_time_ms_ = 0;
@@ -126,8 +138,9 @@ void Object::animate(double delta_ms) { // TODO
     }
 
     if( cur_craft_ == nullptr ) {
-        has_ingredients_ = false;
+        has_ingredients_ = true;
         cur_craft_ = crafts_.at(0).first;
+        checkIngredients();
     }
 
     if( !hasIngredients() ) {
@@ -158,19 +171,53 @@ void Object::checkIngredients() { // TODO
     if( cur_craft_ == nullptr ) return;
     // get list of ingredients and check that ingredients are available in a chest
     const std::vector<CountedItem>& items = cur_craft_->getItems();
+    CommandCenter* cc = CommandCenter::cur_command_center;
     // if ingredients are all present, start craft
     for( auto counted_item : items ) {
-
+        int stored_nb = cc->countedItems(counted_item.item());
+        int nb = counted_item.count();
+        if( stored_nb >= nb ) {
+            continue;
+        } else {
+            // otherwise: do not start the craft !!
+            if( has_ingredients_ ) {
+                std::string message = tr("Missing $1 element(s) of $2 to craft $3");
+                Utility::replace(message, "$1", Utility::itos(nb-stored_nb));
+                Utility::replace(message, "$2", tr(counted_item.item().name()));
+                Utility::replace(message, "$3", tr(cur_craft_->name()));
+                Logger::warning() << message << Logger::endl;
+            }
+            has_ingredients_ = false;
+            return;
+        }
+    }
+    // get list of chests
+    std::vector<Chest*> chests;
+    MapView* mv = MapView::cur_map;
+    for( auto object : mv->data()->objects() ) {
+        Chest* chest = dynamic_cast<Chest*>(object);
+        if( chest != nullptr ) {
+            chests.push_back(chest);
+        }
     }
     // remove all ingredients from various chests
+    for( auto counted_item : items ) {
+        int nb = counted_item.count();
+        for( auto chest : chests ) {
+            nb = chest->removeItem(counted_item.item(), nb);
+            if( nb == 0 ) {
+                break;
+            }
+        }
+    }
     has_ingredients_ = true;
+
     cur_craft_time_ms_ = cur_craft_->time()*1000;
     max_craft_time_ms_ = cur_craft_time_ms_;
-    // otherwise: do not start the craft !!
 }
 
 /*!
- * if an item is currently crafted, returns the percentage of accomplishement between 0 and 100
+ * if an item is currently crafted, returns the percentage of accomplishment between 0 and 100
  * if no craft, returns -1
  */
 int Object::percentageAccomplished() const {
@@ -299,14 +346,16 @@ int Chest::addItem(const BasicItem& item, int count) {
 }
 
 // return the number of items that cannot be removed from the Chest
-int Chest::removeItem(const BasicItem& item, int count) {
+int Chest::removeItem(const BasicItem& item, int item_count) {
     // find item in the chest if any
-    int total_count = count;
+    int total_count = item_count;
     // find item if already in the chest
     for( auto& counted_item : items_ ) {
         if( counted_item.item() == item ) {
+                std::cout << "trying to remove " << total_count << " of " << item.name() << " from a chest" << std::endl;
             total_count = counted_item.removeItem(total_count);
-            CommandCenter::removeItems(item, count-total_count);
+                std::cout << "removing " << (item_count-total_count) << " of " << item.name() << " from CommandCenter" << std::endl;
+            CommandCenter::removeItems(item, item_count-total_count);
             if( total_count == 0 ) {
                 break;
             }
@@ -565,13 +614,14 @@ int CommandCenter::removeItems(const BasicItem& item, int nb) {
     int index = 0;
     for( auto& counted_item : stored_items ) {
         if( counted_item.item().name() == item.name() ) {
-            if( nb <= counted_item.count() ) {
+            // if cc has more items, just remove the wanted number
+            if( nb < counted_item.count() ) {
                 counted_item.removeItem(nb);
                 total = 0;
-                stored_items.erase(stored_items.begin()+index);
-            } else {
+            } else { // otherwise, remove everything and remove the counted item too
                 total = total - counted_item.count();
                 counted_item.removeItem(counted_item.count());
+                stored_items.erase(stored_items.begin()+index);
             }
             return total;
         }
@@ -592,6 +642,10 @@ void CommandCenter::init(CommandCenter* cc, std::vector<Chest*> chests) {
 
 void CommandCenter::reset() {
     stored_items_.clear();
+}
+
+void CommandCenter::destroy() {
+    CommandCenter::cur_command_center = nullptr;
 }
 
 /********************************************************************/

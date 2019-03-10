@@ -84,6 +84,13 @@ public:
     virtual bool do_execute() override;
 };
 
+class CommandCenterTest : public Test {
+public:
+    CommandCenterTest() : Test("CommandCenterTest") {}
+
+    virtual bool do_execute() override;
+};
+
 class SessionTest : public Test {
 public:
     SessionTest() : Test("SessionTest") {}

@@ -239,13 +239,13 @@ void BuildAction::postAction() {
                 if( data->removeItemFromChest(position, BasicItem(object->name())) ) {
                     data->addObject(object,position.x,position.y);
                 } else {
-                    std::string error = tr("Cannot remove object %s from chest");
-                    Utility::replace(error, "%s", object->name());
+                    std::string error = tr("Cannot remove object $1 from chest");
+                    Utility::replace(error, "$1", object->name());
                     Logger::error() << error << Logger::endl;
                 }
             } else {
-                std::string error = tr("Cannot create object %s");
-                Utility::replace(error, "%s", bjob->objectName());
+                std::string error = tr("Cannot create object $1");
+                Utility::replace(error, "$1", bjob->objectName());
                 Logger::error() << error << Logger::endl;
             }
         } else if( job_->name() == DEMOLISHOBJECT ) {
@@ -370,6 +370,8 @@ void CleanAction::preAction() {
                 isValid_ = false;
                 job_->reset();
                 return;
+            } else {
+                std::cout << "found chest in " << object->tilePosition().x << "," << object->tilePosition().y << std::endl;
             }
             PathFinding path(game_board_->data());
             Position end_position = object->tilePosition();
@@ -405,6 +407,7 @@ void CleanAction::preAction() {
         if( people_->tilePosition().x == object->tilePosition().x && people_->tilePosition().y == object->tilePosition().y ) { // robot is over the chest: drop items
             Chest* chest = static_cast<Chest*>(object);
             game_board_->data()->transferItems(people_, chest); // transfer all items from robot to chest
+            // TODO check if robot has still some items to transfer in another chest
             // then move to the tile, again !
             PathFinding path(game_board_->data());
             Position end_position = job_->tilePosition();

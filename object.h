@@ -163,6 +163,7 @@ public:
     int countedItems(const BasicItem& item) const;
 
     static void init(CommandCenter* cc, std::vector<Chest*> chests);
+    static void destroy();
 
     static CommandCenter* cur_command_center;
 
