@@ -188,7 +188,6 @@ bool BuildAction::spentTime(double time_spent) {
             action_->postAction();
             delete action_;
             action_ = nullptr;
-            start_time_ = std::chrono::steady_clock::now();
             if( !game_board_->jobManager()->findJobAt(job_->tilePosition() ) ) {
                 Logger::info() << tr("Job canceled") << Logger::endl;
                 return false; // job has been canceled
@@ -198,9 +197,7 @@ bool BuildAction::spentTime(double time_spent) {
         }
     } else {
         // spent time on construction...
-        std::chrono::steady_clock::time_point cur_time = std::chrono::steady_clock::now();
-        double delay_anim_us = std::chrono::duration_cast<std::chrono::microseconds>(cur_time - start_time_).count();
-        double delta_time = delay_anim_us/1000.;
+        double delta_time = time_spent;
         people_->setActivityPercent( std::min(100,int(100.0*delta_time/job_->buildTime())) );
         if( delta_time > job_->buildTime() ) {
             return false;
@@ -294,7 +291,6 @@ bool ExtractAction::spentTime(double time_spent) {
             action_->postAction();
             delete action_;
             action_ = nullptr;
-            start_time_ = std::chrono::steady_clock::now();
             if( !game_board_->jobManager()->findJobAt(job_->tilePosition() ) ) {
                 Logger::info() << tr("Job canceled") << Logger::endl;
                 return false; // job has been canceled
@@ -304,9 +300,7 @@ bool ExtractAction::spentTime(double time_spent) {
         }
     } else {
         // spent time on extraction...
-        std::chrono::steady_clock::time_point cur_time = std::chrono::steady_clock::now();
-        double delay_anim_us = std::chrono::duration_cast<std::chrono::microseconds>(cur_time - start_time_).count();
-        double delta_time = delay_anim_us/1000.;
+        double delta_time = time_spent;
         people_->setActivityPercent( std::min(100,int(100.0*delta_time/job_->buildTime())) );
         if( delta_time > job_->buildTime() ) {
             if( job_->isRepetitive() ) {
@@ -316,7 +310,7 @@ bool ExtractAction::spentTime(double time_spent) {
                     Position position = job_->tilePosition();
                     game_board_->data()->extractItemFromTile(position.x,position.y);
                 }
-                start_time_ = std::chrono::steady_clock::now();
+                people_->setTimeSpent(0); // reset time for next item
                 return true;
             }
             return false;
@@ -370,8 +364,6 @@ void CleanAction::preAction() {
                 isValid_ = false;
                 job_->reset();
                 return;
-            } else {
-                std::cout << "found chest in " << object->tilePosition().x << "," << object->tilePosition().y << std::endl;
             }
             PathFinding path(game_board_->data());
             Position end_position = object->tilePosition();
@@ -407,19 +399,39 @@ void CleanAction::preAction() {
         if( people_->tilePosition().x == object->tilePosition().x && people_->tilePosition().y == object->tilePosition().y ) { // robot is over the chest: drop items
             Chest* chest = static_cast<Chest*>(object);
             game_board_->data()->transferItems(people_, chest); // transfer all items from robot to chest
-            // TODO check if robot has still some items to transfer in another chest
-            // then move to the tile, again !
-            PathFinding path(game_board_->data());
-            Position end_position = job_->tilePosition();
-            std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
-            if( positions.size() == 0 ) {
-                // cannot achieve the job
-                isValid_ = false;
-                job_->reset();
-            } else {
-                if( cur.counted_items().size() > 0 ) {
+            // check if robot has still some items to transfer in another chest
+            if( people_->carriedItems().size() > 0 ) {
+                Object* object = game_board_->data()->getNearestEmptyChest(people_->tilePosition(), people_->carriedItems().at(0));
+                if( object == nullptr ) {
+                    Logger::warning() << tr("Not enough space in chests, please create a new one") << Logger::endl;
+                    isValid_ = false;
+                    job_->reset();
+                    return;
+                }
+                PathFinding path(game_board_->data());
+                Position end_position = object->tilePosition();
+                std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
+                if( positions.size() == 0 ) {
+                    // cannot achieve the job
+                    isValid_ = false;
+                    job_->reset();
+                } else {
                     action_ = new MoveAction(people_, positions, Utility::tileSize);
-                } // otherwise, end of cleaning action
+                }
+            } else {
+                // or move to the tile, again !
+                PathFinding path(game_board_->data());
+                Position end_position = job_->tilePosition();
+                std::vector<Position> positions = path.findPath(people_->tilePosition(), end_position);
+                if( positions.size() == 0 ) {
+                    // cannot achieve the job
+                    isValid_ = false;
+                    job_->reset();
+                } else {
+                    if( cur.counted_items().size() > 0 ) {
+                        action_ = new MoveAction(people_, positions, Utility::tileSize);
+                    } // otherwise, end of cleaning action
+                }
             }
         } else { // move robot over the chest
             PathFinding path(game_board_->data());
@@ -443,7 +455,6 @@ bool CleanAction::spentTime(double time_spent) {
             action_->postAction();
             delete action_;
             action_ = nullptr;
-            start_time_ = std::chrono::steady_clock::now();
             if( !game_board_->jobManager()->findJobAt(job_->tilePosition() ) ) {
                 Logger::info() << tr("Job canceled") << Logger::endl;
                 return false; // job has been canceled

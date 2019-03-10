@@ -109,7 +109,6 @@ public:
 
 private:
     ActionBase* action_;
-    std::chrono::steady_clock::time_point start_time_;
 };
 
 class ExtractAction : public JobActionBase {
@@ -124,7 +123,6 @@ public:
 private:
     ActionBase* action_;
     bool isValid_;
-    std::chrono::steady_clock::time_point start_time_;
 };
 
 class CleanAction : public JobActionBase {
@@ -139,7 +137,6 @@ public:
 private:
     ActionBase* action_;
     bool isValid_;
-    std::chrono::steady_clock::time_point start_time_;
 };
 
 /********************************************************************/

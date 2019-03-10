@@ -358,11 +358,22 @@ bool MapData::transferItems(Character* people) {
     if( tile.counted_items().size() == 0 ) {
         return false; // tile has no items
     }
-    CountedItem counted_item = tile.counted_items().at(0);
-    int max_item = std::min(people->maxCarriable(), counted_item.count());
-    people->carryItem( tile.removeItem(counted_item.item(), max_item), max_item );
-    // TODO: can carry more !!
-    return max_item > 0;
+    if( people->maxCarriable() == 0 ) {
+        return false; // robot is full
+    }
+    bool can_still_carry = true;
+    while( can_still_carry ) {
+        CountedItem counted_item = tile.counted_items().at(0);
+        int max_item = std::min(people->maxCarriable(), counted_item.count());
+        people->carryItem( tile.removeItem(counted_item.item(), max_item), max_item );
+        if( people->maxCarriable() == 0 ) {
+            can_still_carry = false; // cannot carry more
+        }
+        if( tile.counted_items().size() == 0 ) {
+            can_still_carry = false; // no more items on the tile
+        }
+    }
+    return true;
 }
 
 void MapData::transferItems(Character* people, Chest* chest) {
@@ -412,8 +423,8 @@ bool MapData::removeItemFromChest(Position position, const BasicItem& item) {
     Chest* nearest_chest_with_item = nullptr;
     float distance = 10000.f;
     for( Object* object : objects() ) {
-        if( !Utility::endsWith(object->name(), "chest") ) continue;
-        Chest* chest = static_cast<Chest*>(object);
+        Chest* chest = dynamic_cast<Chest*>(object);
+        if( chest == nullptr ) continue;
         const std::vector<CountedItem>& items = chest->items();
         for( auto cur_item : items ) {
             if( cur_item.item().name() == item.name() ) {
@@ -443,7 +454,6 @@ Object* MapData::getNearestEmptyChest(Position position, const BasicItem& item) 
         Chest* chest = static_cast<Chest*>(object);
         // check if chest can store item
         bool full = true;
-        std::cout << "chest in " << chest->tilePosition().x << "," << chest->tilePosition().y << " has " << chest->sizeAvailable() << " slot(s) available" << std::endl;
         if( chest->sizeAvailable() > 0 ) {
             full = false;
         } else {
@@ -451,7 +461,6 @@ Object* MapData::getNearestEmptyChest(Position position, const BasicItem& item) 
             for( auto cur_item : items ) {
                 if( cur_item.item().name() == item.name() ) {
                     if( cur_item.count() < CountedItem::maxCount() ) {
-                        std::cout << "found " << cur_item.count() << " in chest for item " << item.name() << std::endl;
                         full = false;
                         break;
                     }
@@ -461,7 +470,6 @@ Object* MapData::getNearestEmptyChest(Position position, const BasicItem& item) 
         if( full ) continue;
         Position chest_position = object->tilePosition();
         float dist = Utility::distance(chest_position, position);
-        std::cout << "distance " << dist << std::endl;
         if( dist < distance ) {
             distance = dist;
             nearest_chest = object;

@@ -352,9 +352,7 @@ int Chest::removeItem(const BasicItem& item, int item_count) {
     // find item if already in the chest
     for( auto& counted_item : items_ ) {
         if( counted_item.item() == item ) {
-                std::cout << "trying to remove " << total_count << " of " << item.name() << " from a chest" << std::endl;
             total_count = counted_item.removeItem(total_count);
-                std::cout << "removing " << (item_count-total_count) << " of " << item.name() << " from CommandCenter" << std::endl;
             CommandCenter::removeItems(item, item_count-total_count);
             if( total_count == 0 ) {
                 break;
