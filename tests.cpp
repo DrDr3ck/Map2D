@@ -423,7 +423,7 @@ bool XMLTest::do_execute() {
 bool BiomeTest::do_execute() {
     Biome biome("forest");
     CHECK( biome.isValid(), return false;);
-    CHECK_EQUAL( biome.heights().size(), 7, return false;);
+    CHECK_EQUAL( biome.heights().size(), 8, return false;);
     return true;
 }
 

@@ -69,7 +69,11 @@ Biome::Biome(const std::string& type) : type_(type) {
         if( sand_surface != nullptr ) {
             addSurfaceHeight(sand_surface, 50);
         }
-        SDL_Surface* grass_surface = IMG_Load("generator/forest_generator72_grass.png");
+        SDL_Surface* dirt_surface = IMG_Load("generator/forest_generator72_grass.png");
+        if( dirt_surface != nullptr ) {
+            addSurfaceHeight(dirt_surface, 62);
+        }
+        SDL_Surface* grass_surface = IMG_Load("generator/forest_generator72_dirt.png");
         if( grass_surface != nullptr ) {
             addSurfaceHeight(grass_surface, 220);
         }
@@ -194,17 +198,17 @@ void BackGroundGenerator::execute(const std::string& filename, float** noise_map
 
         int type = biome_->getType(map_tiles[index].value);
         // if type is rock: it may change into coal/copper/iron
-        if( type == 3 ) { // rock
-            // type 4 = coal, type 5 = copper, type 6 = iron
+        if( type == 4 ) { // rock
+            // type 5 = coal, type 6 = copper, type 7 = iron
             int proba = std::rand() % 100;
             if( proba < 10 ) {
-                type = 4;
+                type = 5;
                 noise_map[col][row] = 1.023; // 261 / 255
             } else if( proba < 15 ) {
-                type = 5;
+                type = 6;
                 noise_map[col][row] = 1.027;
             } else if( proba < 20 ) {
-                type = 6;
+                type = 7;
                 noise_map[col][row] = 1.031;
             }
         }
