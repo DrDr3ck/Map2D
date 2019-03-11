@@ -73,6 +73,9 @@ bool Tile::isWall(const Tile& tile) {
 bool Tile::isFloor(const Tile& tile) {
     return tile.cell_type() == Tile::FLOOR;
 }
+bool Tile::isDoor(const Tile& tile) {
+    return tile.cell_type() == Tile::DOOR;
+}
 
 Tile::Type Tile::cell_type() const {
     return cell_type_;
@@ -283,6 +286,24 @@ void MapData::removeFloor(int x, int y) {
     }
     Tile& cur = tile(x,y);
     cur.setCellTile(cur.id(), Tile::EMPTY);
+}
+
+void MapData::addDoor(int x, int y) {
+    if( Tile::isDoor(tile(x,y)) || Tile::isWall(tile(x,y)) ) { // cannot build floor on a wall
+        // already a door
+        return;
+    }
+    Tile& cur = tile(x,y);
+    cur.setCellTile(cur.id(), Tile::DOOR);
+}
+
+void MapData::removeDoor(int x, int y) {
+    if( !Tile::isDoor(tile(x,y)) ) {
+        // already empty
+        return;
+    }
+    Tile& cur = tile(x,y);
+    cur.setCellTile(cur.id(), Tile::FLOOR);
 }
 
 void MapData::cleanItemFromTile(int x,int y,Character* people) {
@@ -634,6 +655,7 @@ void MapData::createMap(MapData* data) {
 TileSetLib::TileSetLib() {
     tiles_surface_ = Utility::IMGLoad("images/tiles.png");
     walls_surface_ = Utility::IMGLoad("images/walls01.png");
+    doors_surface_ = Utility::IMGLoad("images/doors01.png");
     grounds_surface_ = Utility::IMGLoad("images/grounds01.png");
     if( tiles_surface_ == nullptr || walls_surface_ == nullptr ) {
         Logger::error() << "cannot initialize TileSetLib" << Logger::endl;
@@ -643,6 +665,7 @@ TileSetLib::TileSetLib() {
 TileSetLib::~TileSetLib() {
     SDL_FreeSurface(tiles_surface_);
     SDL_FreeSurface(walls_surface_);
+    SDL_FreeSurface(doors_surface_);
     SDL_FreeSurface(grounds_surface_);
 }
 
@@ -668,6 +691,7 @@ void TileSetLib::kill() {
 SDL_Texture* TileSetLib::getTextureFromTile(const Tile& tile, SDL_Renderer* renderer) {
     auto map_of_tiles = TileSetLib::instance()->mapOfTiles();
     auto map_of_walls = TileSetLib::instance()->mapOfWalls();
+    auto map_of_doors = TileSetLib::instance()->mapOfDoors();
     auto map_of_grounds = TileSetLib::instance()->mapOfGrounds();
     int id = tile.id();
     int max = 5;
@@ -685,6 +709,11 @@ SDL_Texture* TileSetLib::getTextureFromTile(const Tile& tile, SDL_Renderer* rend
     } else if( Tile::isWall(tile) ) {
         if(map_of_walls.find(id) != map_of_walls.end()) {
             return map_of_walls[id];
+        }
+        max = 4;
+    } else if( Tile::isDoor(tile) ) {
+        if(map_of_doors.find(id) != map_of_doors.end()) {
+            return map_of_doors[id];
         }
         max = 4;
     } else {
@@ -713,6 +742,9 @@ SDL_Texture* TileSetLib::getTextureFromTile(const Tile& tile, SDL_Renderer* rend
     if( Tile::isWall(tile) ) {
         surf_source = TileSetLib::instance()->walls();
     }
+    if( Tile::isDoor(tile) ) {
+        surf_source = TileSetLib::instance()->doors();
+    }
     if( background ) {
         surf_source = TileSetLib::instance()->grounds();
     }
@@ -727,6 +759,8 @@ SDL_Texture* TileSetLib::getTextureFromTile(const Tile& tile, SDL_Renderer* rend
         TileSetLib::instance()->mapOfGrounds()[id] = texture;
     } else if( Tile::isWall(tile) ) {
         TileSetLib::instance()->mapOfWalls()[id] = texture;
+    } else if( Tile::isDoor(tile) ) {
+        TileSetLib::instance()->mapOfDoors()[id] = texture;
     } else {
         TileSetLib::instance()->mapOfTiles()[id] = texture;
     }

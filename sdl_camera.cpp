@@ -360,6 +360,8 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
                     // end debug
                 } else if( Tile::isFloor(cur) ) {
                     tile_text.append(tr("Floor"));
+                } else if( Tile::isDoor(cur) ) {
+                    tile_text.append(tr("Door"));
                 } else {
                     tile_text.append(Tile::btypeTileToString(cur.background_type()));
                     tile_text.append(" (");

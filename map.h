@@ -64,6 +64,7 @@ public:
 
     static bool isWall(const Tile& tile);
     static bool isFloor(const Tile& tile);
+    static bool isDoor(const Tile& tile);
 
     void addItem(const BasicItem& item, int nb=1);
     std::string removeItem(const BasicItem& item, int nb=1);
@@ -90,6 +91,9 @@ public:
 
     void addFloor(int x, int y);
     void removeFloor(int x, int y);
+
+    void addDoor(int x, int y);
+    void removeDoor(int x, int y);
 
     void addGround(int x, int y);
     void removeGround(int x, int y);
@@ -141,17 +145,21 @@ public:
 
     SDL_Surface* tiles() { return tiles_surface_; }
     SDL_Surface* walls() { return walls_surface_; }
+    SDL_Surface* doors() { return doors_surface_; }
     SDL_Surface* grounds() { return grounds_surface_; }
     std::map<int, SDL_Texture*>& mapOfTiles() { return mapOfTiles_; }
     std::map<int, SDL_Texture*>& mapOfWalls() { return mapOfWalls_; }
+    std::map<int, SDL_Texture*>& mapOfDoors() { return mapOfDoors_; }
     std::map<int, SDL_Texture*>& mapOfGrounds() { return mapOfGrounds_; }
 private:
     static TileSetLib* singleton_;
     SDL_Surface* tiles_surface_;
     SDL_Surface* walls_surface_;
+    SDL_Surface* doors_surface_;
     SDL_Surface* grounds_surface_;
     std::map<int, SDL_Texture*> mapOfTiles_;
     std::map<int, SDL_Texture*> mapOfWalls_;
+    std::map<int, SDL_Texture*> mapOfDoors_;
     std::map<int, SDL_Texture*> mapOfGrounds_;
 };
 

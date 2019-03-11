@@ -19,6 +19,8 @@
 #define DEMOLISHWALL "demolish_wall"
 #define BUILDFLOOR "build_floor"
 #define DEMOLISHFLOOR "demolish_floor"
+#define BUILDDOOR "build_door"
+#define DEMOLISHDOOR "demolish_door"
 #define BUILDOBJECT "build_object"
 #define DEMOLISHOBJECT "demolish_object"
 

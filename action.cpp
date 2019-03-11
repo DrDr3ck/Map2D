@@ -229,6 +229,10 @@ void BuildAction::postAction() {
             data->removeFloor(position.x,position.y);
             // put item in associated chest or put it on the floor
             data->store(BasicItem("floor"), position);
+        } else if( job_->name() == BUILDDOOR ) {
+            if( data->removeItemFromChest(position, BasicItem("door")) ) {
+                data->addDoor(position.x,position.y);
+            }
         } else if( job_->name() == BUILDOBJECT ) {
             BuildObjectJob* bjob = static_cast<BuildObjectJob*>(job_);
             Object* object = bjob->getObject();

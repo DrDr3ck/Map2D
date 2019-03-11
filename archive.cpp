@@ -557,21 +557,21 @@ void JobsConverter::load(const std::string& str) {
         if( isEndTag(str, "job") ) {
             inJob = false;
             Job* job = nullptr;
-            if( name == "extract" ) {
+            if( name == EXTRACT ) {
                 job = new ExtractJob(pos, type, build_time, nb);
-            } else if( name == "clean" ) {
+            } else if( name == CLEAN ) {
                 job = new CleanJob(pos, build_time);
-            } else if( name == "build_wall" ) {
+            } else if( name == BUILDWALL ) {
                 job = new BuildWallJob(pos, build_time);
-            } else if( name == "demolish_wall" ) {
+            } else if( name == DEMOLISHWALL ) {
                 job = new DemolishWallJob(pos, build_time);
-            } else if( name == "build_floor" ) {
+            } else if( name == BUILDFLOOR ) {
                 job = new BuildFloorJob(pos, build_time);
-            } else if( name == "demolish_floor" ) {
+            } else if( name == DEMOLISHFLOOR ) {
                 job = new DemolishFloorJob(pos, build_time);
-            } else if( name == "demolish_object" ) {
+            } else if( name == DEMOLISHOBJECT ) {
                 job = new UnbuildObjectJob(pos, build_time);
-            } else if( name == "build_object" ) {
+            } else if( name == BUILDOBJECT ) {
                 std::string object_name = type; // remove 'objects/' from the type name
                 if( Utility::startsWith(type, "objects/") ) {
                     object_name = type.substr(8);
