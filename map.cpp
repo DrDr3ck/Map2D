@@ -289,12 +289,23 @@ void MapData::removeFloor(int x, int y) {
 }
 
 void MapData::addDoor(int x, int y) {
-    if( Tile::isDoor(tile(x,y)) || Tile::isWall(tile(x,y)) ) { // cannot build floor on a wall
+    if( Tile::isDoor(tile(x,y)) || Tile::isWall(tile(x,y)) ) { // cannot build door on a wall or another door
         // already a door
         return;
     }
+    int id = 0;
     Tile& cur = tile(x,y);
-    cur.setCellTile(cur.id(), Tile::DOOR);
+    if( y > 0 ) {
+        if( Tile::isWall(tile(x,y-1)) ) {
+            id=1;
+        }
+    }
+    if( y < height_-1 ) {
+        if( Tile::isWall(tile(x,y+1)) ) {
+            id=1;
+        }
+    }
+    cur.setCellTile(id, Tile::DOOR);
 }
 
 void MapData::removeDoor(int x, int y) {

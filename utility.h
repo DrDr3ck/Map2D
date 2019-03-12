@@ -26,7 +26,8 @@
 
 #define WALLTOOL 0
 #define FLOORTOOL 1
-#define OBJECTTOOL 2
+#define DOORTOOL 2
+#define OBJECTTOOL 3
 
 /********************************************************************/
 

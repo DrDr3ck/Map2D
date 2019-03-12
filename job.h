@@ -70,6 +70,15 @@ public:
     }
 };
 
+class BuildDoorJob : public Job {
+public:
+    BuildDoorJob(
+        Position tile_position, int build_time_ms
+    ) : Job(BUILDDOOR, tile_position, "buttons/door_tool", build_time_ms)
+    {
+    }
+};
+
 class DemolishWallJob : public Job {
 public:
     DemolishWallJob(
@@ -93,6 +102,15 @@ public:
     DemolishFloorJob(
         Position tile_position, int build_time_ms
     ) : Job(DEMOLISHFLOOR, tile_position, "buttons/demolish_foundation_tool", build_time_ms)
+    {
+    }
+};
+
+class DemolishDoorJob : public Job {
+public:
+    DemolishDoorJob(
+        Position tile_position, int build_time_ms
+    ) : Job(DEMOLISHDOOR, tile_position, "buttons/demolish_tool", build_time_ms)
     {
     }
 };

@@ -16,6 +16,7 @@ bool SDLButtonManager::handleEvent(Camera* camera) {
     if( e.type == SDL_MOUSEBUTTONDOWN ) {
         button_pressed = true;
     }
+    bool result = false;
     for( auto button : buttons_ ) {
         // get mouse position
         if( !button->isVisible() ) {
@@ -26,13 +27,13 @@ bool SDLButtonManager::handleEvent(Camera* camera) {
             if( button_pressed ) {
                 if( button->isActive() ) {
                     button->deactivate();
-                    return true;
+                    result = true;
                 } else {
                     button->activate();
                     if( connections_.find(button) != connections_.end()) {
                         (*connections_[button])();
                     }
-                    return true;
+                    result = true;
                 }
             }
         } else {
@@ -45,7 +46,7 @@ bool SDLButtonManager::handleEvent(Camera* camera) {
             }
         }
     }
-    return false;
+    return result;
 }
 
 // remark: the delay_in_ms may be use to display animated buttons

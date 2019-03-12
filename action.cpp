@@ -351,9 +351,8 @@ CleanAction::~CleanAction() {
 
 void CleanAction::preAction() {
     // first check if robot can carry or not
-    int max_carriable = people_->maxCarriable();
     Tile& cur =game_board_->data()->tile(job_->tilePosition().x,job_->tilePosition().y);
-    if( max_carriable > 0 && cur.counted_items().size() > 0 ) {
+    if( people_->maxCarriable() > 0 && cur.counted_items().size() > 0 ) {
         // go to the tile if still not the case
         if( people_->tilePosition().x == job_->tilePosition().x && people_->tilePosition().y == job_->tilePosition().y ) { // robot is over the tile: transfer items to robot
             // take all what you can by transferring max items from Tile to People

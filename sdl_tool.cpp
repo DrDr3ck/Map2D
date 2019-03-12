@@ -103,6 +103,8 @@ void SDLBuildTool::mousePressed(int button) {
             camera()->mapView()->addWallJob(x,y);
         } else if( type_ == FLOORTOOL ) {
             camera()->mapView()->addFloorJob(x,y);
+        } else if( type_ == DOORTOOL ) {
+            camera()->mapView()->addDoorJob(x,y);
         }
     }
 }
@@ -262,8 +264,12 @@ SDL_Texture* SDLCleanTool::getTexture(SDL_Renderer* renderer) {
 void SDLCleanTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
-    if( camera()->mapView()->getCurTile(x,y) ) {
-        camera()->mapView()->cleanItemJob(x,y);
+    MapView* mv = camera()->mapView();
+    if( mv->getCurTile(x,y) ) {
+        const Tile& cur_tile = mv->data()->tile(x,y);
+        if( cur_tile.counted_items().size() > 0 ) {
+            mv->cleanItemJob(x,y);
+        }
     }
 }
 
@@ -280,6 +286,8 @@ void SDLUnbuildTool::mousePressed(int button) {
             camera()->mapView()->removeWallJob(x,y);
         } else if( type() == FLOORTOOL ) {
             camera()->mapView()->removeFloorJob(x,y);
+        } else if( type() == DOORTOOL ) {
+            camera()->mapView()->removeDoorJob(x,y);
         }
     }
 }
