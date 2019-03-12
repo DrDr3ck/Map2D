@@ -577,19 +577,19 @@ bool MapData::removeObject(int tile_x, int tile_y) {
     return true;
 }
 
-bool MapData::store(const BasicItem& item, Position tile_position) {
+bool MapData::store(const BasicItem& item, Position tile_position, int occurrence) {
     Object* obj = getAssociatedChest(tile_position);
     if( obj == nullptr ) { // put item on the floor
         Tile& tile = this->tile(tile_position.x, tile_position.y);
-        tile.addItem(item, 1);
+        tile.addItem(item, occurrence);
         return false;
     }
     Chest* chest = static_cast<Chest*>(obj);
-    int not_added = chest->addItem(item, 1);
+    int not_added = chest->addItem(item, occurrence);
     if( not_added > 0 ) {
         // put the item on the floor
         Tile& tile = this->tile(tile_position.x, tile_position.y);
-        tile.addItem(item, 1);
+        tile.addItem(item, not_added);
     }
     return true;
 }

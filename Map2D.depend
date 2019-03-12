@@ -353,7 +353,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1552340999 source:d:\games\programs\map2d\map.cpp
+1552427278 source:d:\games\programs\map2d\map.cpp
 	"map.h"
 	<cmath>
 	"SDL2/SDL_image.h"
@@ -366,7 +366,7 @@
 	<fstream>
 	<algorithm>
 
-1552340999 d:\games\programs\map2d\map.h
+1552427278 d:\games\programs\map2d\map.h
 	"object.h"
 	"character.h"
 	<SDL2/SDL.h>
@@ -416,7 +416,7 @@
 	<list>
 	<vector>
 
-1552340558 source:d:\games\programs\map2d\archive.cpp
+1552421146 source:d:\games\programs\map2d\archive.cpp
 	"archive.h"
 	"character.h"
 	"logger.h"
@@ -431,7 +431,7 @@
 	"map.h"
 	<string>
 
-1552221326 source:d:\games\programs\map2d\sdl_camera.cpp
+1552421055 source:d:\games\programs\map2d\sdl_camera.cpp
 	"sdl_camera.h"
 	<iostream>
 	<math.h>
@@ -446,7 +446,7 @@
 	"session.h"
 	"dialog.h"
 
-1552155404 d:\games\programs\map2d\sdl_camera.h
+1552421055 d:\games\programs\map2d\sdl_camera.h
 	"character.h"
 	"map.h"
 	"job.h"
@@ -478,7 +478,7 @@
 	<SDL2/SDL_ttf.h>
 	<map>
 
-1551639523 source:d:\games\programs\map2d\sdl_button.cpp
+1552422744 source:d:\games\programs\map2d\sdl_button.cpp
 	"sdl_button.h"
 	"font.h"
 	<iostream>
@@ -494,7 +494,7 @@
 	<SDL2/SDL.h>
 	"camera.h"
 
-1551017580 source:d:\games\programs\map2d\sdl_tool.cpp
+1552422652 source:d:\games\programs\map2d\sdl_tool.cpp
 	"sdl_tool.h"
 	<iostream>
 	<math.h>
@@ -522,7 +522,7 @@
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 
-1552213898 source:d:\games\programs\map2d\character.cpp
+1552421773 source:d:\games\programs\map2d\character.cpp
 	"character.h"
 	"sdl_camera.h"
 	"path_finding.h"
@@ -555,7 +555,7 @@
 	"sdl_camera.h"
 	"logger.h"
 
-1552163917 d:\games\programs\map2d\job.h
+1552421090 d:\games\programs\map2d\job.h
 	"map.h"
 	"character.h"
 	<string>
@@ -572,7 +572,7 @@
 	"utility.h"
 	"items.h"
 
-1552340474 d:\games\programs\map2d\utility.h
+1552420975 d:\games\programs\map2d\utility.h
 	<string>
 	<iostream>
 	<sstream>
@@ -652,7 +652,7 @@
 	<map>
 	<string>
 
-1552340422 source:d:\games\programs\map2d\action.cpp
+1552422444 source:d:\games\programs\map2d\action.cpp
 	"action.h"
 	"character.h"
 	"job.h"
@@ -700,7 +700,7 @@
 	"translator.h"
 	"items.h"
 
-1552245852 source:d:\games\programs\map2d\object.cpp
+1552427278 source:d:\games\programs\map2d\object.cpp
 	"object.h"
 	"translator.h"
 	<iostream>

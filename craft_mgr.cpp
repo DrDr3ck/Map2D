@@ -126,9 +126,9 @@ void CraftMgr::loadCrafts(const std::string& filename) {
                 } else if( Utility::startsWith(str, "<finalItem") ) {
                     std::string name = getName(str);
                     int occ = getOccurrence(str);
-                    craft->setOccurrence(occ);
                     in_finalItem = true;
                     craft = new Craft(name, Craft::CraftType::ITEM);
+                    craft->setOccurrence(occ);
                 } else if( Utility::startsWith(str,end_machine_tag) ) {
                     in_machine = false;
                     std::transform(machine_name.begin(), machine_name.end(), machine_name.begin(), ::tolower);

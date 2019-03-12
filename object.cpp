@@ -152,7 +152,7 @@ void Object::animate(double delta_ms) { // TODO
             cur_craft_time_ms_ = 0;
             int occ = crafts_.at(0).second;
             MapView* map_view = MapView::cur_map;
-            map_view->data()->store(BasicItem(cur_craft_->name()), tilePosition()); // TODO keep item in the furnace if store returns false ?
+            map_view->data()->store(BasicItem(cur_craft_->name()), tilePosition(), cur_craft_->occurrence());
             if( occ > 1) {
                 crafts_.at(0).second = occ - 1;
             } else {
