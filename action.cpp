@@ -392,6 +392,12 @@ void CleanAction::preAction() {
         }
     } else {
         // robot is full, need to move to nearest none full chest
+        if( people_->carriedItems().size() == 0 ) {
+            Logger::error() << tr("Robot is not full") << Logger::endl;
+            isValid_ = false;
+            job_->reset();
+            return;
+        }
         Object* object = game_board_->data()->getNearestEmptyChest(people_->tilePosition(), people_->carriedItems().at(0));
         if( object == nullptr ) {
             Logger::warning() << tr("Not enough space in chests, please create a new one") << Logger::endl;
