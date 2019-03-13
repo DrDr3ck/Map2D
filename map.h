@@ -178,6 +178,8 @@ public:
     PeopleGroup* group() const { return group_; }
     JobMgr* jobManager() const { return job_mgr_; }
 
+    static GameBoard* cur_board;
+
 protected:
     PeopleGroup* group_;
     MapData* data_;

@@ -783,10 +783,14 @@ TileSetLib* TileSetLib::singleton_ = nullptr;
 
 /********************************************************************/
 
+GameBoard* GameBoard::cur_board = nullptr;
+
 GameBoard::GameBoard(PeopleGroup* group, MapData* data, JobMgr* manager) : group_(group), data_(data), job_mgr_(manager) {
+    cur_board = this;
 }
 
 GameBoard::~GameBoard() {
+    cur_board = nullptr;
 }
 
 void GameBoard::animate(double delay_ms) {

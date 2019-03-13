@@ -10,6 +10,7 @@
 #include "sdl_background.h"
 #include "texture_mgr.h"
 #include "translator.h"
+#include "archive.h"
 #include "action.h"
 #include "session.h"
 #include "dialog.h"
@@ -1050,6 +1051,11 @@ bool SDLCamera::handleEvent() {
             } else if( event_.key.keysym.sym == SDLK_q ) {
                 if( lctrl_down_ || rctrl_down_ ) {
                     quit_ = true;
+                }
+            } else if( event_.key.keysym.sym == SDLK_s ) {
+                if( lctrl_down_ ) {
+                    std::string filename = Session::instance()->getString("*save*filename", "save01.arc");
+                    ArchiveConverter::save(GameBoard::cur_board, filename);
                 }
             } else if( event_.key.keysym.sym == SDLK_c ) {
                 // center view to next robot
