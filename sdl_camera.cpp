@@ -1067,6 +1067,10 @@ bool SDLCamera::handleEvent() {
                 speed_time_ = 4;
             } else if( event_.key.keysym.sym == SDLK_4 ) {
                 speed_time_ = 8;
+            } else if( event_.key.keysym.sym == SDLK_5 ) {
+                speed_time_ = 16;
+            } else if( event_.key.keysym.sym == SDLK_6 ) {
+                speed_time_ = 32;
             }
             break;
         case SDL_MOUSEMOTION:
