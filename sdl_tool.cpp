@@ -99,12 +99,27 @@ void SDLBuildTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
     if( camera()->mapView()->getCurTile(x,y) ) {
+        Position position = {x,y};
+        const Tile& cur = camera()->mapView()->data()->tile(x,y);
         if( type_ == WALLTOOL ) {
+            if( Tile::isWall(cur) || Tile::isDoor(cur) || camera()->mapView()->data()->getObject(position) != nullptr ) {
+                return;
+            }
             camera()->mapView()->addWallJob(x,y);
         } else if( type_ == FLOORTOOL ) {
+            if( Tile::isWall(cur) || Tile::isFloor(cur) || camera()->mapView()->data()->getObject(position) != nullptr ) {
+                return;
+            }
             camera()->mapView()->addFloorJob(x,y);
         } else if( type_ == DOORTOOL ) {
-            camera()->mapView()->addDoorJob(x,y);
+            if( Tile::isWall(cur) || Tile::isDoor(cur) || camera()->mapView()->data()->getObject(position) != nullptr ) {
+                return;
+            }
+            if( !Tile::isFloor(cur) ) {
+                Logger::info() << tr("First, you need to build a floor in order to put this door") << Logger::endl;
+            } else {
+                camera()->mapView()->addDoorJob(x,y);
+            }
         }
     }
 }
