@@ -236,6 +236,28 @@ void Object::releaseItems() {
 
 /********************************************************************/
 
+void ChestFilter::addFilter(const std::string& basic_item) {
+    if( std::find(filters_.begin(), filters_.end(), basic_item) != filters_.end() ) {
+        return; // already in filter
+    }
+    filters_.push_back(basic_item);
+}
+
+void ChestFilter::removeFilter(const std::string& basic_item) {
+    std::vector<std::string>::iterator it = std::find(filters_.begin(), filters_.end(), basic_item);
+    if( it == filters_.end() ) {
+        return; // already not in filter
+    }
+    int idx = std::distance(filters_.begin(), it);
+    filters_.erase(filters_.begin()+idx);
+}
+
+bool ChestFilter::isFiltered(const std::string& basic_item) const {
+    return std::find(filters_.begin(), filters_.end(), basic_item) != filters_.end();
+}
+
+/********************************************************************/
+
 Chest::Chest(
     const std::string& icon_name,
     const std::string& user_name,

@@ -182,6 +182,17 @@ void SDLButton::setPosition(int x,int y) {
 
 /********************************************************************/
 
+SDLCheckBox::SDLCheckBox(int x, int y) : Button("none",x,y) {
+}
+
+void SDLCheckBox::activate() {
+}
+
+void SDLCheckBox::deactivate() {
+}
+
+/********************************************************************/
+
 void SDLButtonMenu::activate() {
     SDLButton::activate();
     menu_->show();

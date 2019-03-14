@@ -84,6 +84,13 @@ public:
     virtual bool do_execute() override;
 };
 
+class ChestFilterTest : public Test {
+public:
+    ChestFilterTest() : Test("ChestFilterTest") {}
+
+    virtual bool do_execute() override;
+};
+
 class CommandCenterTest : public Test {
 public:
     CommandCenterTest() : Test("CommandCenterTest") {}

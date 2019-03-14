@@ -90,6 +90,20 @@ protected:
 
 #define Attr std::pair<std::string,std::string>
 
+// filter elements in a chest
+class ChestFilter {
+public:
+    ChestFilter() {}
+    ~ChestFilter() = default;
+
+    void addFilter(const std::string& basic_item);
+    void removeFilter(const std::string& basic_item);
+    bool isFiltered(const std::string& basic_item) const;
+
+protected:
+    std::vector<std::string> filters_;
+};
+
 class Chest : public Object {
 public:
     Chest(const std::string& icon_name, const std::string& user_name, const std::string& name, int size);
@@ -99,6 +113,9 @@ public:
     virtual void render(SDLCamera* camera, const SDL_Rect& rect) override;
 
     virtual void releaseItems() override;
+
+    const ChestFilter& filter() const { return filter_; }
+    ChestFilter& filter() { return filter_; }
 
     const CountedItem& item(int index) const {
         return items_[index];
@@ -128,6 +145,7 @@ public:
 protected:
     int max_size_;
     std::vector<CountedItem> items_;
+    ChestFilter filter_;
 };
 
 class IronChest : public Chest {

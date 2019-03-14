@@ -101,6 +101,9 @@ void MapView::removeFoundationJob(int x, int y) {
 void MapView::extractItemJob(int x, int y, int nb) {
     Position tile_position = {x,y};
     Tile cur_tile = data_->tile(x,y);
+    if( cur_tile.occurrences() == 0 ) {
+        return;
+    }
     Job* job = nullptr;
     switch(cur_tile.background_type()) {
         case Tile::ROCK:
@@ -416,7 +419,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         SDL_RenderDrawCircle(main_renderer, dest);
         if( tile_x_ == selected_people_->tilePosition().x && tile_y_ == selected_people_->tilePosition().y ) {
             tile_text.append("\n");
-            tile_text.append( tr("People: "));
+            tile_text.append( tr("Robot: "));
             tile_text.append(selected_people_->name());
         }
     }

@@ -250,6 +250,18 @@ bool ChestTest::do_execute() {
     return true;
 }
 
+bool ChestFilterTest::do_execute() {
+    ChestFilter filter;
+    filter.addFilter("sand");
+    CHECK_EQUAL(filter.isFiltered("sand"), true, return false;);
+    CHECK_EQUAL(filter.isFiltered("stone"), false, return false;);
+    filter.removeFilter("sand");
+    CHECK_EQUAL(filter.isFiltered("sand"), false, return false;);
+    filter.removeFilter("stone"); // nothing should happen
+
+    return true;
+}
+
 bool CommandCenterTest::do_execute() {
     Chest chest(16);
     BasicItem stone("stone");
@@ -487,6 +499,7 @@ TestManager::TestManager() {
     addTest(new CharacterTest());
     addTest(new JobTest());
     addTest(new ChestTest());
+    addTest(new ChestFilterTest());
     addTest(new CommandCenterTest());
     addTest(new SessionTest());
     addTest(new PerlinTest());

@@ -306,7 +306,7 @@ void ObjectDialog::do_render(Camera* camera, double delay_in_ms) {
     int node_count = object_->getNodeCount();
     for( int node_index=0; node_index < node_count; node_index++ ) {
         std::string node_string = object_->getNodeString(node_index);
-        str+="\n" + tr(node_string);
+        str+="\n* " + tr(node_string);
     }
 
     SDLText text(str, FontLib::fontFamily());

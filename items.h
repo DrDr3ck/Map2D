@@ -9,7 +9,7 @@ class SDL_Texture;
 
 class BasicItem {
 public:
-    BasicItem(std::string name) : name_(name), texture_(nullptr) {}
+    BasicItem(const std::string& name) : name_(name), texture_(nullptr) {}
     BasicItem(const BasicItem& item) : name_(item.name()), texture_(nullptr) {}
     ~BasicItem() {}
 

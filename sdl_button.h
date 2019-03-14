@@ -54,6 +54,17 @@ protected:
     TooltipPosition tooltip_position_ = TooltipPosition::RIGHT;
 };
 
+class SDLCheckBox : public Button {
+    SDLCheckBox(int x, int y);
+    virtual ~SDLCheckBox() = default;
+
+    virtual void activate() override;
+    virtual void deactivate() override;
+
+protected:
+    bool value_;
+};
+
 /********************************************************************/
 
 class SDLButtonMenu : public SDLButton {
