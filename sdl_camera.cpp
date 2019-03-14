@@ -82,11 +82,19 @@ void MapView::addWallJob(int x, int y) {
 }
 
 /*!
- * Adds a wall destruction in the queue of the job manager at (x,y) if possible.
+ * Adds a foundation destruction in the queue of the job manager at (x,y) if possible.
  */
-void MapView::removeWallJob(int x, int y) {
+void MapView::removeFoundationJob(int x, int y) {
     Position tile_position = {x,y};
-    Job* job = new DemolishWallJob(tile_position, 2500);
+    // change time according to object that is demolished (2500 for wall, 1000 for floor and 1500 for door)
+    int time_in_ms = 1000;
+    Tile cur_tile = data_->tile(x,y);
+    if( Tile::isWall(cur_tile) ) {
+        time_in_ms = 2500;
+    } else if( Tile::isDoor(cur_tile) ) {
+        time_in_ms = 1500;
+    }
+    Job* job = new DemolishFoundationJob(tile_position, time_in_ms);
     job_manager_->addJob(job);
 }
 
@@ -136,29 +144,11 @@ void MapView::addFloorJob(int x, int y) {
 }
 
 /*!
- * Adds a floor destruction in the queue of the job manager at (x,y) if possible.
- */
-void MapView::removeFloorJob(int x, int y) {
-    Position tile_position = {x,y};
-    Job* job = new DemolishFloorJob(tile_position, 1000);
-    job_manager_->addJob(job);
-}
-
-/*!
  * Adds a door in the queue of the job manager at (x,y) if possible.
  */
 void MapView::addDoorJob(int x, int y) {
     Position tile_position = {x,y};
     Job* job = new BuildDoorJob(tile_position, 1000);
-    job_manager_->addJob(job);
-}
-
-/*!
- * Adds a door destruction in the queue of the job manager at (x,y) if possible.
- */
-void MapView::removeDoorJob(int x, int y) {
-    Position tile_position = {x,y};
-    Job* job = new DemolishDoorJob(tile_position, 1000);
     job_manager_->addJob(job);
 }
 
@@ -715,15 +705,10 @@ SDLCamera::SDLCamera(
     manager_->addButton(foundation_button_tool);
     build_menu->addButton(foundation_button_tool);
 
-    SDLUnbuildTool* demolish_tool = new SDLUnbuildTool(this, "buttons/demolish_tool.png", WALLTOOL);
+    SDLUnbuildTool* demolish_tool = new SDLUnbuildTool(this, "buttons/demolish_tool.png", FOUNDATIONTOOL);
     SDLButton* demolish_button_tool = new SDLToolButton(demolish_tool, "buttons/demolish_tool.png", 0, 0);
     manager_->addButton(demolish_button_tool);
     build_menu->addButton(demolish_button_tool);
-
-    SDLUnbuildTool* demolish_foundation_tool = new SDLUnbuildTool(this, "buttons/demolish_foundation_tool.png", FLOORTOOL);
-    SDLButton* demolish_foundation_button_tool = new SDLToolButton(demolish_foundation_tool, "buttons/demolish_foundation_tool.png", 0, 0);
-    manager_->addButton(demolish_foundation_button_tool);
-    build_menu->addButton(demolish_foundation_button_tool);
 
     SDLButtonMenu* build_button = new SDLButtonMenu(build_menu, "buttons/build.png", build_menu->x(),10);
     build_button->setText( tr("Foundations") );
@@ -849,6 +834,7 @@ void SDLCamera::render(double delay_in_ms) {
         option_list.push_back( tr("Left click to select a robot and move it") );
         option_list.push_back( tr("Right click to unselected it") );
         option_list.push_back( tr("Double click on object to popup info") );
+        option_list.push_back( tr("Press 1, 2, 3 or 4 to speed time") );
         std::string options;
         for( auto opt : option_list ) {
             if( options.length() != 0 ) {
@@ -1079,6 +1065,8 @@ bool SDLCamera::handleEvent() {
                 speed_time_ = 2;
             } else if( event_.key.keysym.sym == SDLK_3 ) {
                 speed_time_ = 4;
+            } else if( event_.key.keysym.sym == SDLK_4 ) {
+                speed_time_ = 8;
             }
             break;
         case SDL_MOUSEMOTION:

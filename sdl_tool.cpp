@@ -297,12 +297,8 @@ void SDLUnbuildTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
     if( camera()->mapView()->getCurTile(x,y) ) {
-        if( type() == WALLTOOL ) {
-            camera()->mapView()->removeWallJob(x,y);
-        } else if( type() == FLOORTOOL ) {
-            camera()->mapView()->removeFloorJob(x,y);
-        } else if( type() == DOORTOOL ) {
-            camera()->mapView()->removeDoorJob(x,y);
+        if( type() == FOUNDATIONTOOL ) {
+            camera()->mapView()->removeFoundationJob(x,y);
         }
     }
 }

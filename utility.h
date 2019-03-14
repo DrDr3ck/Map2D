@@ -15,19 +15,18 @@
 
 #define EXTRACT "extract"
 #define CLEAN "clean"
+#define DEMOLISHFOUNDATION "demolish_foundation"
 #define BUILDWALL "build_wall"
-#define DEMOLISHWALL "demolish_wall"
 #define BUILDFLOOR "build_floor"
-#define DEMOLISHFLOOR "demolish_floor"
 #define BUILDDOOR "build_door"
-#define DEMOLISHDOOR "demolish_door"
 #define BUILDOBJECT "build_object"
 #define DEMOLISHOBJECT "demolish_object"
 
 #define WALLTOOL 0
 #define FLOORTOOL 1
 #define DOORTOOL 2
-#define OBJECTTOOL 3
+#define FOUNDATIONTOOL 3
+#define OBJECTTOOL 4
 
 /********************************************************************/
 

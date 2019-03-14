@@ -3,6 +3,7 @@
 #include "dialog.h"
 
 #include <iostream>
+#include <algorithm>
 
 /***********************************/
 
@@ -13,9 +14,14 @@ Camera::Camera(int width, int height) : width_(width), height_(height) {
     quit_ = false;
     lctrl_down_ = false;
     rctrl_down_ = false;
-    scales_ = { 0.5, 0.6, 0.8, 1., 1.2, 1.5, 1.9, 2.4, 2.8 };
-    scale_idx_ = 3; // so that scales_[scale_idx_] = 1
-    speeds_ = { 1.5, 1.6, 1.8, 2.5, 2.8, 3.0, 3.3, 3.8, 4.0 };
+    scales_ = { 0.4, 0.5, 0.6, 0.8, 1.0, 1.2, 1.5, 1.9, 2.4, 2.8 };
+    scale_idx_ = 3; // by default, use the index 3
+    // find index of element 1.0
+    std::vector<float>::iterator it = std::find(scales_.begin(), scales_.end(), 1.0);
+    if( it != scales_.end() ) {
+        scale_idx_ = std::distance(scales_.begin(), it);
+    }
+    speeds_ = { 5.0, 4.0, 3.5, 3.3, 2.5, 2.8, 3.0, 3.3, 3.8, 4.0 };
     cur_camera = this;
 }
 

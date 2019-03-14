@@ -563,16 +563,12 @@ void JobsConverter::load(const std::string& str) {
                 job = new CleanJob(pos, build_time);
             } else if( name == BUILDWALL ) {
                 job = new BuildWallJob(pos, build_time);
-            } else if( name == DEMOLISHWALL ) {
-                job = new DemolishWallJob(pos, build_time);
             } else if( name == BUILDFLOOR ) {
                 job = new BuildFloorJob(pos, build_time);
             } else if( name == BUILDDOOR ) {
                 job = new BuildDoorJob(pos, build_time);
-            } else if( name == DEMOLISHFLOOR ) {
-                job = new DemolishFloorJob(pos, build_time);
-            } else if( name == DEMOLISHDOOR ) {
-                job = new DemolishDoorJob(pos, build_time);
+            } else if( name == DEMOLISHFOUNDATION ) {
+                job = new DemolishFoundationJob(pos, build_time);
             } else if( name == DEMOLISHOBJECT ) {
                 job = new UnbuildObjectJob(pos, build_time);
             } else if( name == BUILDOBJECT ) {

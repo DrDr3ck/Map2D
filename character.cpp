@@ -240,9 +240,9 @@ void PeopleGroup::animate(GameBoard* board, double delta_ms) {
                     job->takeJob(people);
                     people->setAction( new BuildAction(board, people, job), "building a wall" );
                     people->action()->preAction();
-                } else if( job->name() == DEMOLISHWALL ) {
+                } else if( job->name() == DEMOLISHFOUNDATION ) {
                     job->takeJob(people);
-                    people->setAction( new BuildAction(board, people, job), "demolishing a wall" );
+                    people->setAction( new BuildAction(board, people, job), "demolishing a foundation" );
                     people->action()->preAction();
                 } else if( job->name() == BUILDFLOOR ) {
                     job->takeJob(people);
@@ -251,14 +251,6 @@ void PeopleGroup::animate(GameBoard* board, double delta_ms) {
                 } else if( job->name() == BUILDDOOR ) {
                     job->takeJob(people);
                     people->setAction( new BuildAction(board, people, job), "building a door" );
-                    people->action()->preAction();
-                } else if( job->name() == DEMOLISHFLOOR ) {
-                    job->takeJob(people);
-                    people->setAction( new BuildAction(board, people, job), "demolishing a foundation" );
-                    people->action()->preAction();
-                } else if( job->name() == DEMOLISHDOOR ) {
-                    job->takeJob(people);
-                    people->setAction( new BuildAction(board, people, job), "demolishing a door" );
                     people->action()->preAction();
                 } else if( job->name() == EXTRACT ) {
                     job->takeJob(people);

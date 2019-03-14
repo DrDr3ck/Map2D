@@ -213,11 +213,7 @@ void BuildAction::postAction() {
         game_board_->jobManager()->cancelJob(position);
         if( !is_valid_ ) return;
         MapData* data = game_board_->data();
-        if( job_->name() == DEMOLISHWALL ) {
-            data->removeWall(position.x,position.y);
-            // put item in associated chest or put it on the floor
-            data->store(BasicItem("wall"), position);
-        } else if( job_->name() == BUILDWALL ) {
+        if( job_->name() == BUILDWALL ) {
             if( data->removeItemFromChest(position, BasicItem("wall")) ) {
                 data->addWall(position.x,position.y);
             }
@@ -225,10 +221,22 @@ void BuildAction::postAction() {
             if( data->removeItemFromChest(position, BasicItem("floor")) ) {
                 data->addFloor(position.x,position.y);
             }
-        } else if( job_->name() == DEMOLISHFLOOR ) {
-            data->removeFloor(position.x,position.y);
-            // put item in associated chest or put it on the floor
-            data->store(BasicItem("floor"), position);
+        } else if( job_->name() == DEMOLISHFOUNDATION ) {
+            // demolish WALL or DOOR or FLOOR
+            const Tile& cur_tile = data->tile(position.x, position.y);
+            if( Tile::isWall(cur_tile) ) {
+                data->removeWall(position.x,position.y);
+                // put item in associated chest or put it on the floor
+                data->store(BasicItem("wall"), position);
+            } else if( Tile::isDoor(cur_tile) ) {
+                data->removeDoor(position.x,position.y);
+                // put item in associated chest or put it on the floor
+                data->store(BasicItem("door"), position);
+            } else if( Tile::isFloor(cur_tile) ) {
+                data->removeFloor(position.x,position.y);
+                // put item in associated chest or put it on the floor
+                data->store(BasicItem("floor"), position);
+            }
         } else if( job_->name() == BUILDDOOR ) {
             if( data->removeItemFromChest(position, BasicItem("door")) ) {
                 data->addDoor(position.x,position.y);

@@ -114,11 +114,14 @@ bool Dialog::handleEvent(Camera* camera) {
     const SDL_Event& event = sdl_camera->event();
     int rel_mouse_x = sdl_camera->mouse_x() - x_;
     int rel_mouse_y = sdl_camera->mouse_y() - y_;
+    if( !grabbing_ && (rel_mouse_x < 0 || rel_mouse_x > width_ || rel_mouse_y < 0 || rel_mouse_y > height_) ) {
+        return false; // mouse is not over the dialog
+    }
     switch( event.type ) {
         case SDL_MOUSEBUTTONDOWN:
             if( event.button.button == SDL_BUTTON_LEFT ) {
                 SDL_Rect kill_rect = getKillRect();
-                SDL_Rect window_rect = getTitleRect();
+                SDL_Rect title_rect = getTitleRect();
                 SDL_Rect minimize_rect = getMinimizeRect();
                 SDL_Rect center_rect = getCenterRect();
                 if( Utility::contains(kill_rect, rel_mouse_x, rel_mouse_y) ) {
@@ -130,7 +133,7 @@ bool Dialog::handleEvent(Camera* camera) {
                     // get tile and center it
                     Position position = tilePosition();
                     sdl_camera->mapView()->restoreCenterTile( position );
-                } else if( Utility::contains(window_rect, rel_mouse_x, rel_mouse_y) ) {
+                } else if( Utility::contains(title_rect, rel_mouse_x, rel_mouse_y) ) {
                     grabbing_ = true;
                     rel_grab_x_ = rel_mouse_x;
                     rel_grab_y_ = rel_mouse_y;
@@ -387,9 +390,7 @@ void CommandCenterDialog::do_render(Camera* camera, double delay_in_ms) {
         icon_name.append(item.item().name());
         icon_name.append("_item.png");
         button->setIcon(icon_name);
-        std::string text = tr(item.item().name());
-        text.append("x");
-        text.append(Utility::itos(item.count()));
+        std::string text(Utility::itos(item.count()));
         button->setText(text);
         sdl_camera->displayButton(button,x_+5,y_+25);
     }

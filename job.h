@@ -79,11 +79,11 @@ public:
     }
 };
 
-class DemolishWallJob : public Job {
+class DemolishFoundationJob : public Job {
 public:
-    DemolishWallJob(
+    DemolishFoundationJob(
         Position tile_position, int build_time_ms
-    ) : Job(DEMOLISHWALL, tile_position, "buttons/demolish_tool", build_time_ms)
+    ) : Job(DEMOLISHFOUNDATION, tile_position, "buttons/demolish_tool", build_time_ms)
     {
     }
 };
@@ -93,24 +93,6 @@ public:
     BuildFloorJob(
         Position tile_position, int build_time_ms
     ) : Job(BUILDFLOOR, tile_position, "buttons/foundation_tool", build_time_ms)
-    {
-    }
-};
-
-class DemolishFloorJob : public Job {
-public:
-    DemolishFloorJob(
-        Position tile_position, int build_time_ms
-    ) : Job(DEMOLISHFLOOR, tile_position, "buttons/demolish_foundation_tool", build_time_ms)
-    {
-    }
-};
-
-class DemolishDoorJob : public Job {
-public:
-    DemolishDoorJob(
-        Position tile_position, int build_time_ms
-    ) : Job(DEMOLISHDOOR, tile_position, "buttons/demolish_tool", build_time_ms)
     {
     }
 };

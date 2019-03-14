@@ -28,11 +28,9 @@ public:
     MapData* data() const { return data_; }
 
     void addWallJob(int x, int y);
-    void removeWallJob(int x, int y);
+    void removeFoundationJob(int x, int y);
     void addFloorJob(int x, int y);
-    void removeFloorJob(int x, int y);
     void addDoorJob(int x, int y);
-    void removeDoorJob(int x, int y);
     void extractItemJob(int x, int y, int nb=1);
     void cleanItemJob(int x, int y);
     void addObjectJob(const std::string& object_name, int x, int y);
