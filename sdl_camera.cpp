@@ -502,11 +502,13 @@ bool MapView::handleEvent(Camera* camera) {
                 }
             }
             selected_people_ = nullptr;
-            // select a people if any
-            for( auto people : group_->group() ) {
-                if( people->tilePosition().x == tile_x_ && people->tilePosition().y == tile_y_ ) {
-                    selectPeople(people);
-                    break;
+            if( sdl_camera->tool() == nullptr ) {
+                // select a people if any
+                for( auto people : group_->group() ) {
+                    if( people->tilePosition().x == tile_x_ && people->tilePosition().y == tile_y_ ) {
+                        selectPeople(people);
+                        break;
+                    }
                 }
             }
             if( e.button.clicks > 1 ) { // double click on a robot
@@ -1064,6 +1066,7 @@ bool SDLCamera::handleEvent() {
                     Character* p = g->getNextRobot();
                     map_view_->restoreCenterTile( p->tilePosition() );
                     map_view_->selectPeople(p);
+                    setTool(nullptr);
                 }
             } else if( event_.key.keysym.sym == SDLK_ESCAPE ) {
                 setTool(nullptr);
