@@ -48,6 +48,7 @@ namespace {
 
     int getOccurrence(const std::string& str, bool endtag=false) {
         int begin_index = str.find("occ=");
+        if( begin_index < 0 ) return 1;
         int end_index = endtag ? str.find("/>") : str.find(">");
         std::string sub = str.substr(begin_index+4, end_index-begin_index-4);
         return atoi(sub.c_str());
@@ -123,11 +124,13 @@ void CraftMgr::loadCrafts(const std::string& filename) {
                     object_name = getName(str);
                     in_object = true;
                     craft = new Craft(object_name, Craft::CraftType::OBJECT);
+                    int occ = getOccurrence(str);
+                    craft->setOccurrence(occ);
                 } else if( Utility::startsWith(str, "<finalItem") ) {
                     std::string name = getName(str);
-                    int occ = getOccurrence(str);
                     in_finalItem = true;
                     craft = new Craft(name, Craft::CraftType::ITEM);
+                    int occ = getOccurrence(str);
                     craft->setOccurrence(occ);
                 } else if( Utility::startsWith(str,end_machine_tag) ) {
                     in_machine = false;
