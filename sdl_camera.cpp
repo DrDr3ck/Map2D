@@ -363,15 +363,15 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
                 ontile_rect_ = dest;
                 // build tooltip: add background if no wall/floor
                 if( Tile::isWall(cur) ) {
-                    tile_text.append(tr("Wall"));
+                    tile_text.append( tr("Wall"));
                     // debug
                     //tile_text.append(" - id: ");
                     //tile_text.append(Utility::itos(cur.id()));
                     // end debug
                 } else if( Tile::isFloor(cur) ) {
-                    tile_text.append(tr("Floor"));
+                    tile_text.append( tr("Floor"));
                 } else if( Tile::isDoor(cur) ) {
-                    tile_text.append(tr("Door"));
+                    tile_text.append( tr("Door"));
                 } else {
                     tile_text.append(Tile::btypeTileToString(cur.background_type()));
                     tile_text.append(" (");
@@ -416,7 +416,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
         SDL_RenderDrawCircle(main_renderer, dest);
         if( tile_x_ == selected_people_->tilePosition().x && tile_y_ == selected_people_->tilePosition().y ) {
             tile_text.append("\n");
-            tile_text.append(tr("People: "));
+            tile_text.append( tr("People: "));
             tile_text.append(selected_people_->name());
         }
     }
@@ -708,6 +708,8 @@ SDLCamera::SDLCamera(
 
     SDLUnbuildTool* demolish_tool = new SDLUnbuildTool(this, "buttons/demolish_tool.png", FOUNDATIONTOOL);
     SDLButton* demolish_button_tool = new SDLToolButton(demolish_tool, "buttons/demolish_tool.png", 0, 0);
+    demolish_button_tool->setText( tr("Demolish") );
+    demolish_button_tool->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
     manager_->addButton(demolish_button_tool);
     build_menu->addButton(demolish_button_tool);
 
@@ -720,35 +722,35 @@ SDLCamera::SDLCamera(
     MenuButton* excavation_menu = new MenuButton(max_column, 85, 90);
     SDLExtractTool* extract_tool = new SDLExtractTool(this, "buttons/extract_tool.png", 1);
     SDLButton* extract_button_tool = new SDLToolButton(extract_tool, "buttons/extract_tool.png", 0, 0);
-    extract_button_tool->setText(tr("Extract"));
+    extract_button_tool->setText( tr("Extract") );
     extract_button_tool->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
     extract_tool = new SDLExtractTool(this, "buttons/dig_tool.png", 1);
     extract_button_tool = new SDLToolButton(extract_tool, "buttons/dig_tool.png", 0, 0);
-    extract_button_tool->setText(tr("Dig"));
+    extract_button_tool->setText( tr("Dig") );
     extract_button_tool->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
     extract_tool = new SDLExtractTool(this, "buttons/extract_tool_10.png", 10);
     extract_button_tool = new SDLToolButton(extract_tool, "buttons/extract_tool_10.png", 0, 0);
-    extract_button_tool->setText(tr("Extract%x 10"));
+    extract_button_tool->setText( tr("Extract%x 10") );
     extract_button_tool->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
     extract_tool = new SDLExtractTool(this, "buttons/dig_tool_10.png", 10);
     extract_button_tool = new SDLToolButton(extract_tool, "buttons/dig_tool_10.png", 0, 0);
-    extract_button_tool->setText(tr("Dig%x 10"));
+    extract_button_tool->setText( tr("Dig%x 10") );
     extract_button_tool->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
     SDLCleanTool* clean_tool = new SDLCleanTool(this, "buttons/clean_tool.png");
     SDLToolButton* clean_button_tool = new SDLToolButton(clean_tool, "buttons/clean_tool.png", 0, 0);
-    clean_button_tool->setText(tr("Clean"));
+    clean_button_tool->setText( tr("Clean") );
     clean_button_tool->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
     manager_->addButton(clean_button_tool);
     excavation_menu->addButton(clean_button_tool);
@@ -771,6 +773,8 @@ SDLCamera::SDLCamera(
 
     SDLUnbuildObjectTool* uninstall_tool = new SDLUnbuildObjectTool(this, "buttons/uninstall_tool.png");
     SDLButton* uninstall_button_tool = new SDLToolButton(uninstall_tool, "buttons/uninstall_tool.png", 0, 0);
+    uninstall_button_tool->setText( tr("Remove"));
+    uninstall_button_tool->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
     manager_->addButton(uninstall_button_tool);
     object_menu->addButton(uninstall_button_tool);
 
@@ -845,7 +849,7 @@ void SDLCamera::render(double delay_in_ms) {
         option_list.push_back( tr("Left click to select a robot and move it") );
         option_list.push_back( tr("Right click to unselected it") );
         option_list.push_back( tr("Double click on object to popup info") );
-        option_list.push_back( tr("Press 1, 2, 3 or 4 to speed time") );
+        option_list.push_back( tr("Press 1 2 3 or 4 to speed time") );
         std::string options;
         for( auto opt : option_list ) {
             if( options.length() != 0 ) {
@@ -864,7 +868,7 @@ void SDLCamera::render(double delay_in_ms) {
 
     if( speed_time_ > 1 ) {
         std::string speed_time;
-        speed_time.append(tr("Speed time: x"));
+        speed_time.append( tr("Speed time: x"));
         speed_time.append(Utility::itos(speed_time_));
         SDLText text(speed_time, FontLib::fontFamily(), FontLib::fontSize(), SDLText::red());
         text.set_position(Camera::cur_camera->width()/2-text.rect().w,30);

@@ -253,8 +253,13 @@ SDLItemToolButton::SDLItemToolButton(
  */
 const std::string& SDLItemToolButton::text() const {
     SDLItemToolButton* non_const_this = const_cast<SDLItemToolButton*>(this);
+    std::string text = tr(item_.name());
+    if( text.size() > 9 ) {
+        text = text.substr(0,9);
+    }
     if( item_.name() == "workbench" || item_.name() == "chest" ) {
-        non_const_this->setText("+oo");
+        text.append(" +oo");
+        non_const_this->setText(text);
         return SDLToolButton::text();
     }
     CommandCenter* cc = CommandCenter::cur_command_center;
@@ -264,10 +269,12 @@ const std::string& SDLItemToolButton::text() const {
         // get number of items in Command Center
         int nb = cc->countedItems(item_);
         if( nb == 0 ) {
-            non_const_this->setText("-");
+            text.append(" -");
         } else {
-            non_const_this->setText(Utility::itos(nb));
+            text.append(" x");
+            text.append(Utility::itos(nb));
         }
+        non_const_this->setText(text);
     }
     return SDLToolButton::text();
 }
