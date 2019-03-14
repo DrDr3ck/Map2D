@@ -477,7 +477,7 @@ void CrafterDialog::do_render(Camera* camera, double delay_in_ms) {
     }
 
     if( selected_craft_ != nullptr ) {
-        str = tr(selected_craft_->name()) + " (" + Utility::itos(selected_craft_->time()) + " sec)";
+        str = tr(selected_craft_->name()) + " x " + Utility::itos(selected_craft_->occurrence()) + " (" + Utility::itos(selected_craft_->time()) + " sec)";
         str+= "\n" + tr("Ingredients");
         for( CountedItem item : selected_craft_->getItems() ) {
             str+="\n * " + tr(item.item().name()) + " x " + Utility::itos(item.count());
