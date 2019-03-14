@@ -272,7 +272,8 @@ void MapView::renderGroup(SDLCamera* sdl_camera) {
 }
 
 void MapView::do_render(Camera* camera, double delay_in_ms) {
-    float scale_speed = camera->speed();
+    SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
+    float scale_speed = camera->speed() / sdl_camera->speedTime();
     if( delta_x_ != 0 ) {
         translate_x_ += delta_x_ * scale_speed * delay_in_ms;
     }
@@ -281,7 +282,7 @@ void MapView::do_render(Camera* camera, double delay_in_ms) {
     }
 
     // compute background (one time only)
-    SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
+
     float scale = camera->scale();
     SDL_Renderer* main_renderer = sdl_camera->main_renderer();
     if( window_background_ == nullptr ) {
@@ -719,28 +720,38 @@ SDLCamera::SDLCamera(
     MenuButton* excavation_menu = new MenuButton(max_column, 85, 90);
     SDLExtractTool* extract_tool = new SDLExtractTool(this, "buttons/extract_tool.png", 1);
     SDLButton* extract_button_tool = new SDLToolButton(extract_tool, "buttons/extract_tool.png", 0, 0);
+    extract_button_tool->setText(tr("Extract"));
+    extract_button_tool->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
     extract_tool = new SDLExtractTool(this, "buttons/dig_tool.png", 1);
     extract_button_tool = new SDLToolButton(extract_tool, "buttons/dig_tool.png", 0, 0);
-    manager_->addButton(extract_button_tool);
-    excavation_menu->addButton(extract_button_tool);
-
-    SDLCleanTool* clean_tool = new SDLCleanTool(this, "buttons/clean_tool.png");
-    extract_button_tool = new SDLToolButton(clean_tool, "buttons/clean_tool.png", 0, 0);
+    extract_button_tool->setText(tr("Dig"));
+    extract_button_tool->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
     extract_tool = new SDLExtractTool(this, "buttons/extract_tool_10.png", 10);
     extract_button_tool = new SDLToolButton(extract_tool, "buttons/extract_tool_10.png", 0, 0);
+    extract_button_tool->setText(tr("Extract%x 10"));
+    extract_button_tool->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
 
     extract_tool = new SDLExtractTool(this, "buttons/dig_tool_10.png", 10);
     extract_button_tool = new SDLToolButton(extract_tool, "buttons/dig_tool_10.png", 0, 0);
+    extract_button_tool->setText(tr("Dig%x 10"));
+    extract_button_tool->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);
+
+    SDLCleanTool* clean_tool = new SDLCleanTool(this, "buttons/clean_tool.png");
+    SDLToolButton* clean_button_tool = new SDLToolButton(clean_tool, "buttons/clean_tool.png", 0, 0);
+    clean_button_tool->setText(tr("Clean"));
+    clean_button_tool->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
+    manager_->addButton(clean_button_tool);
+    excavation_menu->addButton(clean_button_tool);
 
     SDLButtonMenu* excavation_button = new SDLButtonMenu(excavation_menu, "buttons/excavation.png", excavation_menu->x(),10);
     excavation_button->setText( tr("Tools") );

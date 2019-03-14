@@ -61,13 +61,14 @@ void MenuButton::addButton(Button* button) {
 }
 
 void MenuButton::resetButtons() {
-    int margin = 5;
-    int max_width_pxl = margin;
-    int max_height_pxl = margin;
+    int wmargin = 15;
+    int hmargin = 20;
+    int max_width_pxl = wmargin;
+    int max_height_pxl = hmargin/2;
     int row = 0;
     int col = 0;
-    int cur_width_pxl = margin;
-    int cur_height_pxl = margin;
+    int cur_width_pxl = wmargin;
+    int cur_height_pxl = hmargin;
     for( Button* button : buttons_ ) {
         if( col == max_column_ ) {
             row++;
@@ -75,20 +76,20 @@ void MenuButton::resetButtons() {
             if( cur_width_pxl > max_width_pxl ) {
                 max_width_pxl = cur_width_pxl;
             }
-            cur_width_pxl = margin;
+            cur_width_pxl = wmargin;
 
             max_height_pxl += cur_height_pxl;
-            cur_height_pxl = margin;
+            cur_height_pxl = hmargin;
         }
         col++;
-        if( cur_height_pxl < margin + button->h() ) {
-            cur_height_pxl = margin + button->h();
+        if( cur_height_pxl < hmargin + button->h() ) {
+            cur_height_pxl = hmargin + button->h();
         }
         button->setPosition(x_+cur_width_pxl, y_+max_height_pxl);
         cur_width_pxl += button->w();
-        cur_width_pxl += margin;
-        if( cur_height_pxl < margin + button->h() ) {
-            cur_height_pxl = margin + button->h();
+        cur_width_pxl += wmargin;
+        if( cur_height_pxl < hmargin + button->h() ) {
+            cur_height_pxl = hmargin + button->h();
         }
     }
 
