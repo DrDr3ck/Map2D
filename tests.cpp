@@ -85,6 +85,11 @@ bool UtilityTest::do_execute() {
     Utility::replace(message, "$3", craft.name());
     CHECK_STR_EQUAL(message, std::string("Missing 5 element(s) of sand to craft iron chest"), return false;);
 
+    bool result = Utility::endsWith("engine", "furnace");
+    CHECK_EQUAL(result, false, return false;);
+    result = Utility::endsWith("stone_furnace", "furnace");
+    CHECK_EQUAL(result, true, return false;);
+
     return true;
 }
 

@@ -112,6 +112,8 @@ public:
         if( !strict ) {
             str = trim(str);
         }
+        if( str.length() < suffix.length() ) return false;
+        if( str.find(suffix) == std::string::npos ) return false;
         return str.find(suffix) == (str.length()-suffix.length());
     }
 
