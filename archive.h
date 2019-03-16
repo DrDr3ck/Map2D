@@ -8,7 +8,8 @@
 
 class ArchiveConverter {
 public:
-    static void load(GameBoard* board, const std::string& filename);
+    static std::string version();
+    static bool load(GameBoard* board, const std::string& filename);
     static void save(GameBoard* board, const std::string& filename);
 };
 

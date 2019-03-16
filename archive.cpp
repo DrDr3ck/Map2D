@@ -129,16 +129,30 @@ std::string getAttribute(const std::string& str, const std::string& attr_origin)
 
 /********************************************************************/
 
-void ArchiveConverter::load(GameBoard* board, const std::string& filename) {
+std::string ArchiveConverter::version() {
+    return "0.1 alpha";
+}
+
+bool ArchiveConverter::load(GameBoard* board, const std::string& filename) {
     std::ifstream file(filename);
     if (!file) {
         Logger::debug() << "unable to open file for load: " << filename << Logger::endl;
-        return;
+        return false;
     }
 
     DataConverter* converter = nullptr;
     std::string str;
     while (std::getline(file, str)) {
+        if( isTag(str, "version") ) {
+            std::string value = getAttribute(str, "value");
+            if( value != ArchiveConverter::version() ) {
+                std::string error_msg = tr("Cannot read this version of archive: '$1'. Game version is '$2'");
+                Utility::replace(error_msg, "$1", value);
+                Utility::replace(error_msg, "$2", ArchiveConverter::version());
+                Logger::error() << error_msg << Logger::endl;
+                return false;
+            }
+        }
         if( isTag(str, "mapdata") ) {
             converter = new MapDataConverter(board->data());
         }
@@ -176,6 +190,7 @@ void ArchiveConverter::load(GameBoard* board, const std::string& filename) {
     }
 
     file.close();
+    return true;
 }
 
 void ArchiveConverter::save(GameBoard* board, const std::string& filename) {
@@ -186,6 +201,8 @@ void ArchiveConverter::save(GameBoard* board, const std::string& filename) {
     }
 
     Logger::info() << tr("Saving ") << filename << "..." << Logger::endl;
+
+    file << "<version value=\"" << ArchiveConverter::version() << "\"/>" << std::endl;
 
     MapDataConverter mconverter(board->data());
     mconverter.save(file);

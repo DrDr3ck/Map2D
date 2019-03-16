@@ -691,8 +691,13 @@ namespace {
 SDLCamera::SDLCamera(
     int width, int height
 ) : Camera(width, height), window_(nullptr), main_renderer_(nullptr), tool_(nullptr), map_view_(nullptr) {
-    window_ = SDL_CreateWindow("Bakhar - Demo 0.1 alpha", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+    std::string title("Bakhar - Demo ");
+    title.append( ArchiveConverter::version() );
+    window_ = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
     main_renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    SDL_Surface* icon = Utility::IMGLoad("icon.png");
+    SDL_SetWindowIcon(window_, icon);
+    SDL_FreeSurface(icon);
     TTF_Init();
 }
 

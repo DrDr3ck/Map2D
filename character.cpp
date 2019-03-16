@@ -235,7 +235,6 @@ void PeopleGroup::animate(GameBoard* board, double delta_ms) {
         if( people->action() == nullptr ) {
             Job* job = board->jobManager()->getFirstAvailableJob();
             if( job != nullptr ) {
-                Logger::debug() << job->name() << Logger::endl;
                 if( job->name() == BUILDWALL ) {
                     job->takeJob(people);
                     people->setAction( new BuildAction(board, people, job), "building a wall" );

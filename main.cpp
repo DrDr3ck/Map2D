@@ -66,7 +66,9 @@ int main(int argc, char** argv) {
     if( f.good() ) {
         Logger::info() << tr("Loading current game") << Logger::endl;
         // if save exists, load it
-        ArchiveConverter::load(&board, filename);
+        if( !ArchiveConverter::load(&board, filename) ) {
+            return -1;
+        }
 
         // test
         if( group.group().size() == 0 ) {
