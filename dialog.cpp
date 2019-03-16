@@ -72,9 +72,21 @@ void Dialog::setBackgroundColor(const SDL_Color& bgcolor) {
     SDL_FillRect(surface_, &center_rect, SDL_MapRGBA(surface_->format, 100, 255, 100, background_color_.a));
 }
 
+void Dialog::drawTitle(SDLCamera* sdl_camera, const std::string& title_str) {
+    SDLText title(title_str, FontLib::fontFamily(), FontLib::fontTitleSize());
+    title.set_position(3+x_,3+y_);
+    SDL_Color title_bgcolor = getBackgroundColor();
+    title_bgcolor.r = title_bgcolor.r*0.9;
+    title_bgcolor.g = title_bgcolor.g*0.9;
+    title_bgcolor.b = title_bgcolor.b*0.9;
+    title.setBackgroundColor(title_bgcolor);
+    sdl_camera->displayText(title, false, true);
+}
+
 void Dialog::do_render(Camera* camera, double delay_in_ms) {
     std::ignore = delay_in_ms;
     SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
+
     SDL_Renderer* main_renderer = sdl_camera->main_renderer();
     SDL_Texture* texture = SDL_CreateTextureFromSurface(main_renderer,surface_);
     SDL_Rect rect = {x_, y_, width_, height_ };
@@ -221,14 +233,7 @@ void RobotDialog::do_render(Camera* camera, double delay_in_ms) {
     SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
 
     std::string title_str = tr(" - Robot");
-    SDLText title(title_str, FontLib::fontFamily(), FontLib::fontTitleSize());
-    title.set_position(3+x_,2+y_);
-    SDL_Color title_bgcolor = getBackgroundColor();
-    title_bgcolor.r = title_bgcolor.r*0.9;
-    title_bgcolor.g = title_bgcolor.g*0.9;
-    title_bgcolor.b = title_bgcolor.b*0.9;
-    title.setBackgroundColor(title_bgcolor);
-    sdl_camera->displayText(title, false, true);
+    drawTitle(sdl_camera, title_str);
 
     if( minimized_ ) {
         return;
@@ -285,14 +290,7 @@ void ObjectDialog::do_render(Camera* camera, double delay_in_ms) {
 
     std::string title_str(" - ");
     title_str.append( object_->userName() );
-    SDLText title(title_str, FontLib::fontFamily(), FontLib::fontTitleSize());
-    title.set_position(3+x_,3+y_);
-    SDL_Color title_bgcolor = getBackgroundColor();
-    title_bgcolor.r = title_bgcolor.r*0.9;
-    title_bgcolor.g = title_bgcolor.g*0.9;
-    title_bgcolor.b = title_bgcolor.b*0.9;
-    title.setBackgroundColor(title_bgcolor);
-    sdl_camera->displayText(title, false, true);
+    drawTitle(sdl_camera, title_str);
 
     if( minimized_ ) {
         return;
@@ -324,13 +322,15 @@ ObjectDialog* ObjectDialog::createDialog(Object* object, int x, int y) {
         return new SmelterDialog(object,x,y);
     } else if( Utility::endsWith(object_name, "chest") ) {
         return new ObjectDialog(object,x,y);
-    } else if( object_name == "motor" ) {
-        return new ObjectDialog(object,x,y);
+    } else if( Utility::endsWith(object_name, "motor") ) {
+        Motor* motor = dynamic_cast<Motor*>(object);
+        return new MotorDialog(motor,x,y);
     } else if( object_name == "engine" ) {
         std::cout << object_name << std::endl;
         return new ObjectDialog(object,x,y);
     } else if( Utility::endsWith(object_name, "center") ) {
-        return new CommandCenterDialog(object,x,y);
+        CommandCenter* cc = CommandCenter::cur_command_center;
+        return new CommandCenterDialog(cc,x,y);
     }
     std::cout << "crafter " << object_name << std::endl;
     return new CrafterDialog(object,x,y);
@@ -338,10 +338,34 @@ ObjectDialog* ObjectDialog::createDialog(Object* object, int x, int y) {
 
 /**************************************/
 
+MotorDialog::MotorDialog(
+    Motor* motor, int mouse_x, int mouse_y
+) : ObjectDialog(motor, mouse_x, mouse_y) {
+    motor_ = motor;
+}
+
+MotorDialog::~MotorDialog() {
+}
+
+void MotorDialog::do_render(Camera* camera, double delay_in_ms) {
+    Dialog::do_render(camera, delay_in_ms);
+
+    SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
+    std::string title_str(" - ");
+    title_str.append( object_->userName() );
+    drawTitle(sdl_camera, title_str);
+
+    if( minimized_ ) {
+        return;
+    }
+}
+
+/**************************************/
+
 CommandCenterDialog::CommandCenterDialog(
-    Object* object, int mouse_x, int mouse_y
-) : ObjectDialog(object, mouse_x, mouse_y) {
-    command_center_ = dynamic_cast<CommandCenter*>(object);
+    CommandCenter* command_center, int mouse_x, int mouse_y
+) : ObjectDialog(command_center, mouse_x, mouse_y) {
+    command_center_ = command_center;
     const std::vector<CountedItem>& stored_items = command_center_->storedItems();
     int index = 0;
     for( int j=0; j < 7; j++ ) {
@@ -370,18 +394,11 @@ CommandCenterDialog::~CommandCenterDialog() {
 
 void CommandCenterDialog::do_render(Camera* camera, double delay_in_ms) {
     Dialog::do_render(camera, delay_in_ms);
-    SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
 
-    std::string title_str = tr(" - ");
+    SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
+    std::string title_str(" - ");
     title_str.append( object_->userName() );
-    SDLText title(title_str, FontLib::fontFamily(), FontLib::fontTitleSize());
-    title.set_position(3+x_,2+y_);
-    SDL_Color title_bgcolor = getBackgroundColor();
-    title_bgcolor.r = title_bgcolor.r*0.9;
-    title_bgcolor.g = title_bgcolor.g*0.9;
-    title_bgcolor.b = title_bgcolor.b*0.9;
-    title.setBackgroundColor(title_bgcolor);
-    sdl_camera->displayText(title, false, true);
+    drawTitle(sdl_camera, title_str);
 
     if( minimized_ ) {
         return;
@@ -425,14 +442,7 @@ void CrafterDialog::do_render(Camera* camera, double delay_in_ms) {
 
     std::string title_str(" - ");
     title_str.append( object_->userName() );
-    SDLText title(title_str, FontLib::fontFamily(), FontLib::fontTitleSize());
-    title.set_position(3+x_,3+y_);
-    SDL_Color title_bgcolor = getBackgroundColor();
-    title_bgcolor.r = title_bgcolor.r*0.9;
-    title_bgcolor.g = title_bgcolor.g*0.9;
-    title_bgcolor.b = title_bgcolor.b*0.9;
-    title.setBackgroundColor(title_bgcolor);
-    sdl_camera->displayText(title, false, true);
+    drawTitle(sdl_camera, title_str);
 
     if( minimized_ ) {
         return;

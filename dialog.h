@@ -22,6 +22,7 @@ public:
     const SDL_Color& getBackgroundColor() const { return background_color_; }
 
     virtual void do_render(Camera* camera, double delay_in_ms) override;
+    void drawTitle(SDLCamera* sdl_camera, const std::string& title);
     virtual bool handleEvent(Camera* camera) override;
 
     bool hasFocus(int mouse_x, int mouse_y);
@@ -93,9 +94,19 @@ protected:
     Object* object_;
 };
 
+class MotorDialog : public ObjectDialog {
+public:
+    MotorDialog(Motor* object, int mouse_x = 50, int mouse_y = 50);
+    virtual ~MotorDialog();
+
+    virtual void do_render(Camera* camera, double delay_in_ms) override;
+protected:
+    Motor* motor_;
+};
+
 class CommandCenterDialog : public ObjectDialog {
 public:
-    CommandCenterDialog(Object* object, int mouse_x = 50, int mouse_y = 50);
+    CommandCenterDialog(CommandCenter* object, int mouse_x = 50, int mouse_y = 50);
     virtual ~CommandCenterDialog();
 
     virtual void do_render(Camera* camera, double delay_in_ms) override;
