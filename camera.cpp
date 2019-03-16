@@ -72,6 +72,11 @@ void Camera::zoom(bool up) {
     }
 }
 
+void Camera::setSize(int width, int height) {
+    width_ = width;
+    height_ = height;
+}
+
 void Camera::onMouseMove(int x, int y) {
     mouse_x_ = x;
     mouse_y_ = y;

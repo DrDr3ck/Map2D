@@ -59,6 +59,7 @@ MapView::MapView(SDLCamera* camera, MapData* data, PeopleGroup* group, JobMgr* m
     selected_people_ = nullptr;
 
     camera->setMapView(this);
+
     camera->getSize(center_x_, center_y_);
     center_x_ /= 2;
     center_y_ /= 2;
@@ -70,6 +71,11 @@ MapView::~MapView() {
     group_ = nullptr;
     data_ = nullptr;
     camera_ = nullptr;
+}
+
+void MapView::resetCenters(int width, int height) {
+    center_x_ = width / 2;
+    center_y_ = height / 2;
 }
 
 /*!
@@ -789,12 +795,12 @@ SDLCamera::SDLCamera(
     manager_->addMenuButton( object_menu );
 
     // Add Quit Button
-    SDLButton* quit_button = new SDLQuitButton(this, Camera::cur_camera->width()-50,10);
-    manager_->addButton( quit_button );
-    SDLButton* options_button = new SDLButton("buttons/options.png", tr("Options"), Camera::cur_camera->width()-50-20-quit_button->rect().w,10);
-    options_button->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
-    manager_->addButton( options_button );
-    manager_->connectButton( options_button, openOptionsDialog);
+    quit_button_ = new SDLQuitButton(this, Camera::cur_camera->width()-50,10);
+    manager_->addButton( quit_button_ );
+    options_button_ = new SDLButton("buttons/options.png", tr("Options"), Camera::cur_camera->width()-50-20-quit_button_->rect().w,10);
+    options_button_->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
+    manager_->addButton( options_button_ );
+    manager_->connectButton( options_button_, openOptionsDialog);
 }
 
 SDLCamera::~SDLCamera() {
@@ -882,7 +888,7 @@ void SDLCamera::render(double delay_in_ms) {
 
     // F3: display mouse position
     if( Session::instance()->getBoolean("*display_F3", true) ) {
-        std::string mouse_position;
+        std::string mouse_position;;
         mouse_position.append(Utility::itos(mouse_x()));
         mouse_position.append(" ");
         mouse_position.append(Utility::itos(mouse_y()));
@@ -1091,6 +1097,23 @@ bool SDLCamera::handleEvent() {
                 speed_time_ = 16;
             } else if( event_.key.keysym.sym == SDLK_6 ) {
                 speed_time_ = 32;
+            } else if( event_.key.keysym.sym == SDLK_F11 ) {
+                int camera_width = Session::instance()->getInteger("*camera*width", 1000);
+                int camera_height = Session::instance()->getInteger("*camera*height", 800);
+                int cur_w = camera_width;
+                int cur_h = camera_height;
+                SDL_GetWindowSize(window(), &cur_w , &cur_h);
+                if( cur_w == camera_width ) {
+                    SDL_MaximizeWindow(window());
+                    SDL_SetWindowFullscreen(window(), true);
+                } else {
+                    SDL_SetWindowFullscreen(window(), false);
+                    SDL_RestoreWindow(window());
+                }
+                SDL_GetWindowSize(window(), &cur_w , &cur_h);
+                setSize(cur_w, cur_h);
+                map_view_->resetCenters(cur_w,cur_h);
+                resetButtons(cur_w,cur_h);
             }
             break;
         case SDL_MOUSEMOTION:
@@ -1117,6 +1140,11 @@ bool SDLCamera::handleEvent() {
         tool_->handleEvent();
     }
     return event_handled;
+}
+
+void SDLCamera::resetButtons(int width, int /*height*/) {
+    quit_button_->setPosition(width-50,10);
+    options_button_->setPosition(width-50-20-quit_button_->rect().w,10);
 }
 
 void SDLCamera::onMouseMove(int mouse_x, int mouse_y) {

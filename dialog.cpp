@@ -326,13 +326,11 @@ ObjectDialog* ObjectDialog::createDialog(Object* object, int x, int y) {
         Motor* motor = dynamic_cast<Motor*>(object);
         return new MotorDialog(motor,x,y);
     } else if( object_name == "engine" ) {
-        std::cout << object_name << std::endl;
         return new ObjectDialog(object,x,y);
     } else if( Utility::endsWith(object_name, "center") ) {
         CommandCenter* cc = CommandCenter::cur_command_center;
         return new CommandCenterDialog(cc,x,y);
     }
-    std::cout << "crafter " << object_name << std::endl;
     return new CrafterDialog(object,x,y);
 }
 

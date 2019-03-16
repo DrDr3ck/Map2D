@@ -12,6 +12,8 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 
+class SDLButton;
+
 /********************************************************************/
 
 class MapData;
@@ -43,6 +45,7 @@ public:
     const SDL_Rect& onTileRect() const { return ontile_rect_; }
 
     bool getCurTile(int& tile_x, int& tile_y);
+    void resetCenters(int width, int height);
 
     Position getCenterTile() const;
     void restoreCenterTile(Position position);
@@ -185,12 +188,16 @@ public:
 
     int speedTime() const { return speed_time_; }
 
+    void resetButtons(int width, int height);
+
 private:
     SDL_Event event_;
     SDL_Window* window_;
     SDL_Renderer* main_renderer_;
     SDLTool* tool_;
     SDLButtonManager* manager_;
+    SDLButton* quit_button_;
+    SDLButton* options_button_;
     MapView* map_view_;
     int speed_time_ = 1;
 };

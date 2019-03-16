@@ -241,8 +241,11 @@ public:
 
 class Motor : public Object {
 public:
-    Motor();
+    Motor(int power = 2);
     virtual ~Motor() {}
+
+protected:
+    int power_;
 };
 
 /********************************************************************/

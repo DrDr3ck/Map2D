@@ -603,7 +603,7 @@ Breaker::Breaker() : Object("objects/breaker.png", tr("Breaker"), "breaker") {
 Engine::Engine() : Object("objects/engine.png", tr("Engine"), "engine") {
 }
 
-Motor::Motor() : Object("objects/motor.png", tr("Motor"), "motor") {
+Motor::Motor(int power) : Object("objects/motor.png", tr("Motor"), "motor"), power_(power) {
 }
 
 WorkBench::WorkBench() : Object("objects/workbench.png", tr("WorkBench"), "workbench") {

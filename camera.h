@@ -46,6 +46,7 @@ public:
 
     int width() const { return width_; }
     int height() const { return height_; }
+    void setSize(int width, int height);
 
     virtual void onMouseMove(int x, int y);
     virtual void onMouseWheelScroll(int x, int y);
