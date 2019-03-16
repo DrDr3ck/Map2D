@@ -100,7 +100,8 @@ void Camera::render(double delay_in_ms) {
 }
 
 bool Camera::handleEvent() {
-    for( auto view : views_ ) {
+    for (std::list<View*>::reverse_iterator rit=views_.rbegin(); rit!=views_.rend(); ++rit) {
+        View* view = *rit;
         if( view->handleEvent(this) ) {
             return true;
         }

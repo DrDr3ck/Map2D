@@ -44,32 +44,27 @@ int main(int argc, char** argv) {
     std::string language = Session::instance()->getString("*language", "none");
     if( language != "none" ) {
         language = "language/" + language + ".txt";
+        Translator::instance()->readDictionary(language);
     }
 
-    Translator::instance()->readDictionary(language);
-
     TextureMgr::instance()->loadAllItems(sdl_camera->main_renderer());
-
-    TileSetLib* tileset = TileSetLib::instance();
     CharacterSetLib::instance()->init( sdl_camera->main_renderer() );
-
-    PeopleGroup group;
-
-    std::string filename = Session::instance()->getString("*save*filename", "save01.arc");
-
-    MapData data(32,40);
-    JobMgr job_mgr(sdl_camera->main_renderer());
-
-    GameBoard board(&group, &data, &job_mgr);
 
     //if( Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1 ) {
     //    Logger::error() << "Cannot init sound because of " << Mix_GetError() << Logger::endl;
     //}
 
+    // init map
+    PeopleGroup group;
+    MapData data(32,40);
+    JobMgr job_mgr(sdl_camera->main_renderer());
+    GameBoard board(&group, &data, &job_mgr);
+
     // check if save already exists
+    std::string filename = Session::instance()->getString("*save*filename", "save01.arc");
     std::ifstream f(filename.c_str());
     if( f.good() ) {
-        Logger::info() << tr("loading existing save") << Logger::endl;
+        Logger::info() << tr("Loading current game") << Logger::endl;
         // if save exists, load it
         ArchiveConverter::load(&board, filename);
 
@@ -104,8 +99,6 @@ int main(int argc, char** argv) {
     }
 
     MapView mapview(sdl_camera, &data, &group, &job_mgr);
-    FontLib* font_manager = FontLib::instance();
-    sdl_camera->init();
 
     // initialize command center with items of all chests
     CommandCenter* cc = nullptr;
@@ -147,13 +140,13 @@ int main(int argc, char** argv) {
     std::chrono::steady_clock::time_point start_clock = std::chrono::steady_clock::now();
     bool ending = false;
 
-    //LoggerMgr::instance()->clear();
-
     const int FPS = 30;
     double delay_in_us = 1000000 / FPS;
 
     double microsecond = 0;
     int fps = 0;
+
+    sdl_camera->initManager();
     // Main loop
     while(!ending) {
 
@@ -197,8 +190,8 @@ int main(int argc, char** argv) {
 
     ArchiveConverter::save(&board, filename);
 
-    tileset->kill();
-    font_manager->kill();
+    TileSetLib::instance()->kill();
+    FontLib::instance()->kill();
     Session::instance()->kill();
     TextureMgr::instance()->kill();
 

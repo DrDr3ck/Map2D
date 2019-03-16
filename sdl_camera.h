@@ -160,7 +160,7 @@ public:
     SDLCamera(int width, int height);
     virtual ~SDLCamera();
 
-    void init();
+    void initManager();
 
     virtual bool valid() const override;
     virtual void render(double delay_in_ms) override;

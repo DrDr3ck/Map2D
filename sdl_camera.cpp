@@ -694,6 +694,9 @@ SDLCamera::SDLCamera(
     window_ = SDL_CreateWindow("Bakhar - Demo 0.1 alpha", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
     main_renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     TTF_Init();
+}
+
+void SDLCamera::initManager() {
     manager_ = new SDLButtonManager();
 
     // Add foundation menu
@@ -801,6 +804,8 @@ SDLCamera::SDLCamera(
     options_button_->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
     manager_->addButton( options_button_ );
     manager_->connectButton( options_button_, openOptionsDialog);
+
+    addView(manager_);
 }
 
 SDLCamera::~SDLCamera() {
@@ -814,10 +819,6 @@ SDLCamera::~SDLCamera() {
     TTF_Quit();
     delete manager_;
     SDL_Quit();
-}
-
-void SDLCamera::init() {
-    addView(manager_);
 }
 
 void SDLCamera::openOptionsDialog() {

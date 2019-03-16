@@ -178,7 +178,7 @@ bool Dialog::buttonClicked(SDLButton* button, Position mouse_position) {
 
 /**************************************/
 
-RobotDialog::RobotDialog(Character* robot, int mouse_x, int mouse_y) : Dialog(mouse_x, mouse_y, 250, 200) {
+RobotDialog::RobotDialog(Character* robot, int mouse_x, int mouse_y) : Dialog(mouse_x, mouse_y, 250, 250) {
     robot_ = robot;
     SDL_Color bgcolor = {255,211,211,255};
     setBackgroundColor(bgcolor);
