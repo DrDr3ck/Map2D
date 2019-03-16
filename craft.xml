@@ -72,4 +72,18 @@
 		<item name="iron_ingot" occ=1/>
 		<time>5</time>
 	</finalItem>
+    <object name="motor">
+		<item name="electronic_circuit" occ=4/>
+        <item name="iron_gear_wheel" occ=2/>
+        <item name="iron_stick" occ=2/>
+        <item name="iron_ingot" occ=8/>
+		<time>100</time>
+	</object>
+    <object name="engine">
+        <item name="iron_gear_wheel" occ=2/>
+        <item name="copper_cable" occ=3/>
+        <item name="iron_stick" occ=2/>
+        <item name="iron_ingot" occ=8/>
+		<time>100</time>
+	</object>
 </Assembler>

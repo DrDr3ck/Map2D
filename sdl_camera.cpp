@@ -773,6 +773,8 @@ SDLCamera::SDLCamera(
     add_object_in_menu("breaker", this, manager_, object_menu);
     add_object_in_menu("stone_furnace", this, manager_, object_menu);
     add_object_in_menu("assembler", this, manager_, object_menu);
+    add_object_in_menu("motor", this, manager_, object_menu);
+    add_object_in_menu("engine", this, manager_, object_menu);
 
     SDLUnbuildObjectTool* uninstall_tool = new SDLUnbuildObjectTool(this, "buttons/uninstall_tool.png");
     SDLButton* uninstall_button_tool = new SDLToolButton(uninstall_tool, "buttons/uninstall_tool.png", 0, 0);

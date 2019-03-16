@@ -70,6 +70,8 @@ public:
 
     virtual void setNode(const std::string& node_name, std::vector<std::pair<std::string, std::string>> attributes, const std::string& value);
 
+    static Object* getObjectFromName(const std::string& object_name);
+
 protected:
     std::string icon_name_;
     std::vector<SDL_Texture*> images_;
@@ -229,6 +231,18 @@ class Breaker : public Object {
 public:
     Breaker();
     virtual ~Breaker() {}
+};
+
+class Engine : public Object {
+public:
+    Engine();
+    virtual ~Engine() {}
+};
+
+class Motor : public Object {
+public:
+    Motor();
+    virtual ~Motor() {}
 };
 
 /********************************************************************/

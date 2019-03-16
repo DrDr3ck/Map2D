@@ -8,5 +8,5 @@
 *font*title*size: 14 # title size
 *language: fr # translation
 *pause_when_launched: false # if true, automatically pause the game when launched
-*save*automatic: 10 # automatic save every 10 minutes
-*save*filename: save02.arc # last save
+*save*automatic: 1 # automatic save every 1 minute
+*save*filename: save05.arc # last save

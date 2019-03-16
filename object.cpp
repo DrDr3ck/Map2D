@@ -103,6 +103,32 @@ void Object::setNode(const std::string& node_name, std::vector<std::pair<std::st
     }
 }
 
+Object* Object::getObjectFromName(const std::string& name) {
+    Object* object = nullptr;
+    if( name == "chest" ) {
+        object = new Chest(2);
+    } else if( name == "iron_chest" ) {
+        object = new IronChest(8);
+    } else if( name == "workbench" ) {
+        object = new WorkBench();
+    } else if( name == "breaker" ) {
+        object = new Breaker();
+    } else if( name == "engine" ) {
+        object = new Engine();
+    } else if( name == "motor" ) {
+        object = new Motor();
+    } else if( name == "stone_furnace" ) {
+        object = new StoneFurnace();
+    } else if( name == "assembler" ) {
+        object = new Assembler();
+    } else if( name == "command_center" ) {
+        object = new CommandCenter();
+    } else if( name == "electric_furnace" ) {
+        object = new ElectricFurnace();
+    }
+    return object;
+}
+
 void Object::addCraft(Craft* craft, int occ) {
     crafts_.push_back(std::pair<Craft*,int>(craft, occ));
 }
@@ -572,6 +598,12 @@ StoneFurnace::StoneFurnace() : Furnace("objects/stone_furnace.png", tr("StoneFur
 }
 
 Breaker::Breaker() : Object("objects/breaker.png", tr("Breaker"), "breaker") {
+}
+
+Engine::Engine() : Object("objects/engine.png", tr("Engine"), "engine") {
+}
+
+Motor::Motor() : Object("objects/motor.png", tr("Motor"), "motor") {
 }
 
 WorkBench::WorkBench() : Object("objects/workbench.png", tr("WorkBench"), "workbench") {

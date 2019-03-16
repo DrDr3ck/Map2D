@@ -324,9 +324,15 @@ ObjectDialog* ObjectDialog::createDialog(Object* object, int x, int y) {
         return new SmelterDialog(object,x,y);
     } else if( Utility::endsWith(object_name, "chest") ) {
         return new ObjectDialog(object,x,y);
+    } else if( object_name == "motor" ) {
+        return new ObjectDialog(object,x,y);
+    } else if( object_name == "engine" ) {
+        std::cout << object_name << std::endl;
+        return new ObjectDialog(object,x,y);
     } else if( Utility::endsWith(object_name, "center") ) {
         return new CommandCenterDialog(object,x,y);
     }
+    std::cout << "crafter " << object_name << std::endl;
     return new CrafterDialog(object,x,y);
 }
 

@@ -463,24 +463,7 @@ void ObjectConverter::load(const std::string& str) {
         }
     }
     if( isEndTag(str, "object") ) {
-        Object* object = nullptr;
-        if( name == "chest" ) {
-            object = new Chest(2);
-        } else if( name == "iron_chest" ) {
-            object = new IronChest(8);
-        } else if( name == "workbench" ) {
-            object = new WorkBench();
-        } else if( name == "breaker" ) {
-            object = new Breaker();
-        } else if( name == "stone_furnace" ) {
-            object = new StoneFurnace();
-        } else if( name == "assembler" ) {
-            object = new Assembler();
-        } else if( name == "command_center" ) {
-            object = new CommandCenter();
-        } else if( name == "electric_furnace" ) {
-            object = new ElectricFurnace();
-        }
+        Object* object = Object::getObjectFromName(name);
         if( object != nullptr ) {
             data_->addObject(object, pos.x, pos.y);
             // add also attributes !!

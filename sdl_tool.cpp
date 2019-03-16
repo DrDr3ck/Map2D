@@ -141,6 +141,17 @@ SDLBuildObjectTool::~SDLBuildObjectTool() {
     }
 }
 
+void SDLBuildObjectTool::activate() {
+    CommandCenter* cc = CommandCenter::cur_command_center;
+    if( cc == nullptr ) return;
+    int nb = cc->countedItems(object_name_);
+    if( nb == 0 ) {
+        Logger::warning() << tr("No such item: please craft this item before using this tool.") << Logger::endl;
+        return;
+    }
+    SDLTool::activate();
+}
+
 SDL_Texture* SDLBuildObjectTool::getTexture(SDL_Renderer* renderer) {
     if( texture_ == nullptr ) {
         texture_ = SDL_CreateTextureFromSurface(renderer, surface_);

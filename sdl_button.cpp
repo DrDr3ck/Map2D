@@ -292,7 +292,7 @@ const std::string& SDLItemToolButton::text() const {
 
 void SDLItemToolButton::activate() {
     if( text() == "-" ) {
-        Logger::warning() << tr("No such item: please create this item before using this tool.") << Logger::endl;
+        Logger::warning() << tr("No such item: please craft this item before using this tool.") << Logger::endl;
     } else {
         SDLToolButton::activate();
     }

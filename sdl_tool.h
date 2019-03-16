@@ -13,8 +13,8 @@ public:
     SDLTool(SDLCamera* camera);
     virtual ~SDLTool();
 
-    void activate();
-    void deactivate();
+    virtual void activate();
+    virtual void deactivate();
 
     virtual void handleEvent() override;
     virtual void mousePressed(int button) override;
@@ -69,6 +69,8 @@ class SDLBuildObjectTool : public SDLTool {
 public:
     SDLBuildObjectTool(SDLCamera* camera, const std::string& icon_name, const std::string& object_name);
     virtual ~SDLBuildObjectTool();
+
+    virtual void activate() override;
 
     virtual SDL_Texture* getTexture(SDL_Renderer* renderer) override;
 
