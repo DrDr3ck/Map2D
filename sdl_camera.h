@@ -19,6 +19,16 @@ class SDLButton;
 class MapData;
 class Camera;
 
+class LoadView : public View {
+public:
+    LoadView();
+    virtual ~LoadView();
+
+    virtual void do_render(Camera* camera, double delay_in_ms) override;
+    virtual bool handleEvent(Camera* camera) override;
+
+};
+
 class MapView : public View {
 public:
     MapView(SDLCamera* camera, MapData* data, PeopleGroup* group, JobMgr* manager);

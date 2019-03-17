@@ -23,12 +23,6 @@
 int main(int argc, char** argv) {
     std::ignore = argc;
     std::ignore = argv;
-    // Check tests first
-    TestManager* test_manager = TestManager::instance();
-    if( !test_manager->execute() ) {
-        return 1;
-    }
-    test_manager->kill();
 
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -50,9 +44,22 @@ int main(int argc, char** argv) {
     TextureMgr::instance()->loadAllItems(sdl_camera->main_renderer());
     CharacterSetLib::instance()->init( sdl_camera->main_renderer() );
 
+    std::chrono::steady_clock::time_point start_load = std::chrono::steady_clock::now();
+    LoadView load;
+    sdl_camera->addView(&load);
+
+    sdl_camera->render(0);
     //if( Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1 ) {
     //    Logger::error() << "Cannot init sound because of " << Mix_GetError() << Logger::endl;
     //}
+
+    // Check tests first
+    TestManager* test_manager = TestManager::instance();
+    if( !test_manager->execute() ) {
+        delete sdl_camera;
+        return 1;
+    }
+    test_manager->kill();
 
     // init map
     PeopleGroup group;
@@ -136,6 +143,11 @@ int main(int argc, char** argv) {
         CommandCenter::init(cc, chests);
     }
 
+    double delay_load_us = 0;
+    while( delay_load_us < 1000000 ) {
+        delay_load_us = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start_load).count();
+    }
+    sdl_camera->removeView(&load);
     // automatic save
     std::chrono::steady_clock::time_point automatic_save_clock = std::chrono::steady_clock::now();
 

@@ -46,6 +46,32 @@ void SDL_RenderDrawCircle(SDL_Renderer* renderer, const SDL_Rect& dest) {
 }
 
 /********************************************************************/
+
+LoadView::LoadView() : View() {
+}
+
+LoadView::~LoadView() {
+}
+
+void LoadView::do_render(Camera* camera, double ) {
+    SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
+    SDL_Rect rect = {0,0,camera->width(), camera->height()};
+    SDL_Color bgcolor = {100,149,237,125};
+    SDL_SetRenderDrawColor( sdl_camera->main_renderer(), bgcolor.r, bgcolor.g, bgcolor.b, bgcolor.a );
+    SDL_RenderFillRect(sdl_camera->main_renderer(), &rect);
+
+    SDLText text("Chargement...", FontLib::fontFamily(), 70);
+    text.setBackgroundColor(bgcolor);
+    text.texture(sdl_camera->main_renderer()); // compute rect size
+    text.set_position(camera->width() - 20 - text.rect().w,camera->height() - 20 - text.rect().h);
+    sdl_camera->displayText(text, false, true);
+}
+
+bool LoadView::handleEvent(Camera*) {
+    return false;
+}
+
+/********************************************************************/
 // the static approach: https://www.youtube.com/watch?v=HgMNjIZnQhM&t=2s
 MapView* MapView::cur_map = nullptr;
 
