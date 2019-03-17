@@ -221,7 +221,7 @@ private:
     SDL_Window* window_;
     SDL_Renderer* main_renderer_;
     SDLTool* tool_;
-    SDLButtonManager* manager_;
+    SDLButtonManager* manager_ = nullptr;
     SDLButton* quit_button_;
     SDLButton* options_button_;
     MapView* map_view_;

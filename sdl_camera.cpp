@@ -883,7 +883,9 @@ SDLCamera::~SDLCamera() {
         SDL_DestroyWindow(window_);
     }
     TTF_Quit();
-    delete manager_;
+    if( manager_ != nullptr ) {
+        delete manager_;
+    }
     SDL_Quit();
 }
 

@@ -45,19 +45,21 @@ int main(int argc, char** argv) {
     LoadView* load = new LoadView(sdl_camera);
     sdl_camera->render(0);
 
+    // Check tests first
+    TestManager* test_manager = TestManager::instance();
+    if( !test_manager->execute() ) {
+        sdl_camera->removeView(load);
+        delete load;
+        delete sdl_camera;
+        return 1;
+    }
+    test_manager->kill();
+
     TextureMgr::instance()->loadAllItems(sdl_camera->main_renderer());
     CharacterSetLib::instance()->init( sdl_camera->main_renderer() );
     //if( Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1 ) {
     //    Logger::error() << "Cannot init sound because of " << Mix_GetError() << Logger::endl;
     //}
-
-    // Check tests first
-    TestManager* test_manager = TestManager::instance();
-    if( !test_manager->execute() ) {
-        delete sdl_camera;
-        return 1;
-    }
-    test_manager->kill();
 
     // init map
     PeopleGroup group;
@@ -180,6 +182,8 @@ int main(int argc, char** argv) {
 
         sdl_camera->handleEvent();
         if( sdl_camera->quit() ) {
+            ArchiveConverter::save(&board, filename);
+            Session::instance()->kill();
             ending = true;
         }
 
@@ -216,11 +220,8 @@ int main(int argc, char** argv) {
 
     }
 
-    ArchiveConverter::save(&board, filename);
-
     TileSetLib::instance()->kill();
     FontLib::instance()->kill();
-    Session::instance()->kill();
     TextureMgr::instance()->kill();
 
     if( load != nullptr ) {
