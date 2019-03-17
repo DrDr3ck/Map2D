@@ -47,15 +47,17 @@ void SDL_RenderDrawCircle(SDL_Renderer* renderer, const SDL_Rect& dest) {
 
 /********************************************************************/
 
-LoadView::LoadView() : View() {
+LoadView::LoadView(SDLCamera* sdl_camera) : View(), sdl_camera_(sdl_camera) {
+    display_splash_screen_ = true;
+    sdl_camera_->addView(this);
 }
 
 LoadView::~LoadView() {
+    sdl_camera_->removeView(manager_);
 }
 
-void LoadView::do_render(Camera* camera, double ) {
-    SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
-    SDL_Rect rect = {0,0,camera->width(), camera->height()};
+void LoadView::renderSplashScreen(SDLCamera* sdl_camera) {
+    SDL_Rect rect = {0,0,sdl_camera->width(), sdl_camera->height()};
     SDL_Color bgcolor = {100,149,237,125};
     SDL_SetRenderDrawColor( sdl_camera->main_renderer(), bgcolor.r, bgcolor.g, bgcolor.b, bgcolor.a );
     SDL_RenderFillRect(sdl_camera->main_renderer(), &rect);
@@ -63,12 +65,45 @@ void LoadView::do_render(Camera* camera, double ) {
     SDLText text("Chargement...", FontLib::fontFamily(), 70);
     text.setBackgroundColor(bgcolor);
     text.texture(sdl_camera->main_renderer()); // compute rect size
-    text.set_position(camera->width() - 20 - text.rect().w,camera->height() - 20 - text.rect().h);
+    text.set_position(sdl_camera->width() - 20 - text.rect().w,sdl_camera->height() - 20 - text.rect().h);
     sdl_camera->displayText(text, false, true);
 }
 
+void LoadView::do_render(Camera* camera, double ) {
+    SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
+    if( display_splash_screen_ ) {
+        renderSplashScreen(sdl_camera);
+    } else {
+        SDL_Rect rect = {0,0,sdl_camera->width(), sdl_camera->height()};
+        SDL_Color bgcolor = {100,149,237,125};
+        SDL_SetRenderDrawColor( sdl_camera->main_renderer(), bgcolor.r, bgcolor.g, bgcolor.b, bgcolor.a );
+        SDL_RenderFillRect(sdl_camera->main_renderer(), &rect);
+    }
+}
+
 bool LoadView::handleEvent(Camera*) {
+    if( continue_game_->isActive() ) {
+        game_selected_ = true;
+    }
     return false;
+}
+
+void LoadView::initButtons() {
+    display_splash_screen_ = false;
+    manager_ = new SDLButtonManager();
+
+    quit_button_ = new SDLQuitButton(sdl_camera_, Camera::cur_camera->width()-50,10);
+    manager_->addButton( quit_button_ );
+
+    continue_game_ = new SDLButton("buttons/continue_game.png", tr("Continue current game"), 100, 100);
+    continue_game_->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
+    manager_->addButton( continue_game_ );
+
+    new_game_ = new SDLButton("buttons/new_game.png", tr("Start new game"), 100+continue_game_->rect().w+100, 100);
+    new_game_->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
+    manager_->addButton( new_game_ );
+
+    sdl_camera_->addView(manager_);
 }
 
 /********************************************************************/
@@ -1198,6 +1233,5 @@ void SDLCamera::setTool(SDLTool* tool) {
 
 void SDLCamera::setMapView(MapView* view) {
     map_view_ = view;
-    addView(map_view_);
 }
 /********************************************************************/

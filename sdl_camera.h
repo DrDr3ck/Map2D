@@ -18,15 +18,31 @@ class SDLButton;
 
 class MapData;
 class Camera;
+class SDLButtonManager;
 
 class LoadView : public View {
 public:
-    LoadView();
+    LoadView(SDLCamera* sdl_camera);
     virtual ~LoadView();
+
+    bool gameSelected() { return game_selected_; };
 
     virtual void do_render(Camera* camera, double delay_in_ms) override;
     virtual bool handleEvent(Camera* camera) override;
 
+    void initButtons();
+
+protected:
+    void renderSplashScreen(SDLCamera* sdl_camera);
+
+private:
+    SDLCamera* sdl_camera_ = nullptr;
+    bool display_splash_screen_ = true;
+    bool game_selected_ = false;
+    SDLButtonManager* manager_ = nullptr;
+    SDLButton* new_game_ = nullptr;
+    SDLButton* continue_game_ = nullptr;
+    SDLButton* quit_button_ = nullptr;
 };
 
 class MapView : public View {

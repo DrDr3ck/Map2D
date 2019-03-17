@@ -41,14 +41,12 @@ int main(int argc, char** argv) {
         Translator::instance()->readDictionary(language);
     }
 
+    // loading...
+    LoadView* load = new LoadView(sdl_camera);
+    sdl_camera->render(0);
+
     TextureMgr::instance()->loadAllItems(sdl_camera->main_renderer());
     CharacterSetLib::instance()->init( sdl_camera->main_renderer() );
-
-    std::chrono::steady_clock::time_point start_load = std::chrono::steady_clock::now();
-    LoadView load;
-    sdl_camera->addView(&load);
-
-    sdl_camera->render(0);
     //if( Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1 ) {
     //    Logger::error() << "Cannot init sound because of " << Mix_GetError() << Logger::endl;
     //}
@@ -71,7 +69,6 @@ int main(int argc, char** argv) {
     std::string filename = Session::instance()->getString("*save*filename", "save01.arc");
     std::ifstream f(filename.c_str());
     if( f.good() ) {
-        Logger::info() << tr("Loading current game") << Logger::endl;
         // if save exists, load it
         if( !ArchiveConverter::load(&board, filename) ) {
             return -1;
@@ -143,16 +140,32 @@ int main(int argc, char** argv) {
         CommandCenter::init(cc, chests);
     }
 
-    double delay_load_us = 0;
-    while( delay_load_us < 1000000 ) {
-        delay_load_us = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start_load).count();
+    // Loading...
+    bool ending = false;
+    bool game_selected = false;
+    load->initButtons();
+    while( !game_selected && !ending ) {
+        sdl_camera->handleEvent();
+        if( sdl_camera->quit() ) {
+            ending = true;
+        }
+        sdl_camera->render(0);
+        if( load->gameSelected() ) {
+            game_selected = true;
+        }
     }
-    sdl_camera->removeView(&load);
+    if( !ending ) {
+        sdl_camera->addView(&mapview);
+        sdl_camera->removeView(load);
+        delete load;
+        load = nullptr;
+    }
+
     // automatic save
     std::chrono::steady_clock::time_point automatic_save_clock = std::chrono::steady_clock::now();
 
     std::chrono::steady_clock::time_point start_clock = std::chrono::steady_clock::now();
-    bool ending = false;
+    //ending = false;
 
     const int FPS = 30;
     double delay_in_us = 1000000 / FPS;
@@ -161,6 +174,7 @@ int main(int argc, char** argv) {
     int fps = 0;
 
     sdl_camera->initManager();
+    Logger::info() << tr("Game loaded") << Logger::endl;
     // Main loop
     while(!ending) {
 
@@ -208,6 +222,10 @@ int main(int argc, char** argv) {
     FontLib::instance()->kill();
     Session::instance()->kill();
     TextureMgr::instance()->kill();
+
+    if( load != nullptr ) {
+        delete load;
+    }
 
     delete sdl_camera;
 
