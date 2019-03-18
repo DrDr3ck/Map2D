@@ -67,6 +67,27 @@ bool CheckingTest::do_execute() {
 }
 
 bool UtilityTest::do_execute() {
+    std::string integer_str = Utility::itos(8);
+    CHECK_STR_EQUAL(integer_str, std::string("8"), return false;);
+
+    std::string float_str = Utility::ftos(8.08,3);
+    CHECK_STR_EQUAL(float_str, std::string("8.08"), return false;);
+    float_str = Utility::ftos(8.08,2);
+    CHECK_STR_EQUAL(float_str, std::string("8.1"), return false;);
+
+    for( int i= 0; i < 1000; i++ ) {
+        int r = Utility::randint(5,8);
+        CHECK_EQUAL((r<=8), true, return false;);
+        CHECK_EQUAL((r>=5), true, return false;);
+    }
+
+    std::string trimmed = Utility::trim("  stone  ");
+    CHECK_STR_EQUAL(trimmed, std::string("stone"), return false;);
+    trimmed = Utility::trim("stone  ");
+    CHECK_STR_EQUAL(trimmed, std::string("stone"), return false;);
+    trimmed = Utility::trim("  stone");
+    CHECK_STR_EQUAL(trimmed, std::string("stone"), return false;);
+
     std::string original = "test $1 test";
     Utility::replace(original, "$1", "test");
     CHECK_STR_EQUAL(original, std::string("test test test"), return false;);
@@ -89,14 +110,32 @@ bool UtilityTest::do_execute() {
     CHECK_EQUAL(result, false, return false;);
     result = Utility::endsWith("stone_furnace", "furnace");
     CHECK_EQUAL(result, true, return false;);
+    result = Utility::startsWith("stone_furnace", "stone");
+    CHECK_EQUAL(result, true, return false;);
+    result = Utility::startsWith("  stone_furnace", "stone");
+    CHECK_EQUAL(result, true, return false;);
+    result = Utility::startsWith("  stone_furnace", "stone", true);
+    CHECK_EQUAL(result, false, return false;);
+    result = Utility::startsWith("stone_furnace", "tone");
+    CHECK_EQUAL(result, false, return false;);
 
     return true;
 }
 
 bool TileTest::do_execute() {
-    Tile tile(10, Tile::BLOCK);
+    Tile tile(10, Tile::BLOCK, Tile::WATER);
     CHECK_EQUAL(tile.id(), 10, return false;);
     CHECK_EQUAL(tile.cell_type(), Tile::BLOCK, return false;);
+    CHECK_EQUAL(tile.background_type(), Tile::WATER, return false;);
+    CHECK_EQUAL(tile.floor_type(), Tile::METAL, return false;);
+    tile.setOccurrences(10);
+    CHECK_EQUAL(tile.occurrences(), 10, return false;);
+    tile.addItem(BasicItem("stone"), 5);
+    tile.removeItem(BasicItem("stone"), 2);
+    const std::vector<CountedItem>& items = tile.counted_items();
+    CHECK_EQUAL(items.size(), 1, return false;);
+    CHECK_STR_EQUAL(items.at(0).item().name(), std::string("stone"), return false;);
+    CHECK_EQUAL(Tile::isWall(tile), false, return false;);
     return true;
 }
 
@@ -180,6 +219,7 @@ bool CharacterTest::do_execute() {
 
     CHECK_EQUAL( people.tilePosition().x, 10, return false; );
     CHECK_EQUAL( people.tilePosition().y, 5, return false; );
+    CHECK_EQUAL( people.maxCarry(), 5, return false; );
     return true;
 }
 
