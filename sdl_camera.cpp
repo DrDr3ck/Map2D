@@ -3,6 +3,7 @@
 #include <iostream>
 #include <math.h>
 #include <string>
+#include <dirent.h>
 
 #include "path_finding.h"
 #include "sdl_button.h"
@@ -115,7 +116,54 @@ bool LoadView::handleEvent(Camera*) {
         file_selected_ = getNextNewGameName();
         return true;
     }
+    for( auto button : save_buttons_ ) {
+        if( button->isActive() ) {
+            file_selected_ = button->text();
+            return true;
+        }
+    }
     return false;
+}
+
+namespace {
+    std::vector<std::string> getListOfGameNames() {
+        std::string current_filename = Session::instance()->getString("*save*filename");
+        std::vector<std::string> filenames;
+        // get list of .arc filenames in root
+        DIR* dir = opendir(".");
+        std::string suffix(".arc");
+        struct dirent* file = nullptr;
+        while((file = readdir(dir)) != nullptr ) {
+            std::string filename(file->d_name);
+            if( filename == current_filename ) continue;
+            if( Utility::endsWith(filename, suffix) ) {
+                filenames.push_back(filename);
+            }
+        }
+        return filenames;
+    }
+}
+
+void LoadView::resetFilenameButtons() {
+    for( auto button : save_buttons_ ) {
+        manager_->removeButton(button);
+        delete button;
+    }
+    save_buttons_.clear();
+    std::vector<std::string> filenames = getListOfGameNames();
+    int i=0;
+    for( auto filename : filenames ) {
+        SDLButton* load_button = new SDLButton("buttons/load_game.png", filename, 100, 350+i*100);
+        load_button->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
+        save_buttons_.push_back(load_button);
+        manager_->addButton( load_button );
+        //SDLCamera* sdl_camera = static_cast<SDLCamera*>(SDLCamera::cur_camera);
+        //SDL_Color bgcolor = {100,149,237,125};
+        //SDLButton* delete_button = new SDLTextButton(sdl_camera, "delete", 320, 360+i*100, SDLText::black(), bgcolor);
+        //manager_->addButton( delete_button );
+        i++;
+        if( i == 5 ) { return; } // TODO: cannot handle too many save games
+    }
 }
 
 void LoadView::initButtons() {
@@ -127,6 +175,7 @@ void LoadView::initButtons() {
 
     std::string filename = Session::instance()->getString("*save*filename");
     if( !filename.empty() ) {
+        Logger::debug() << "Current filename is " << filename << Logger::endl;
         continue_game_ = new SDLButton("buttons/continue_game.png", tr("Continue current game"), 100, 100);
         continue_game_->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
         manager_->addButton( continue_game_ );
@@ -135,6 +184,8 @@ void LoadView::initButtons() {
     new_game_ = new SDLButton("buttons/new_game.png", tr("Start new game"), 100+continue_game_->rect().w+100, 100);
     new_game_->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
     manager_->addButton( new_game_ );
+
+    resetFilenameButtons();
 
     sdl_camera_->addView(manager_);
 }
