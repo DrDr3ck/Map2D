@@ -33,6 +33,7 @@ public:
     XMLNode* node(int index);
     const std::vector<XMLNode*>& nodes() const { return nodes_; }
 
+    XMLNode* getNodeFromTag(const std::string& tag_name);
     XMLNode* getNodeFromName(const std::string& node_name);
 
     XMLNode* addValuedNode(const std::string& name, const std::string& value);
@@ -49,11 +50,13 @@ public:
     const std::string& name() const;
     bool hasValue() const;
     const std::string& value() const;
+    XMLNode* parent() const { return parent_; }
 private:
     std::string name_;
     std::vector<XMLNode*> nodes_;
     std::vector<XMLAttr*> attributes_;
     std::string value_;
+    XMLNode* parent_;
 };
 
 class XMLDocument {

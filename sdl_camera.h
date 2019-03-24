@@ -35,7 +35,6 @@ public:
 
 protected:
     void renderSplashScreen(SDLCamera* sdl_camera);
-    std::string getNextNewGameName() const;
     void resetFilenameButtons();
 
 private:
@@ -47,6 +46,7 @@ private:
     SDLButton* continue_game_ = nullptr;
     SDLButton* quit_button_ = nullptr;
     std::vector<SDLButton*> save_buttons_;
+    std::vector<SDLButton*> delete_buttons_;
 };
 
 class MapView : public View {

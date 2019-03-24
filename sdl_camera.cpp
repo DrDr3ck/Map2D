@@ -15,6 +15,7 @@
 #include "action.h"
 #include "session.h"
 #include "dialog.h"
+#include "xml_document.h"
 
 /********************************************************************/
 
@@ -82,49 +83,6 @@ void LoadView::do_render(Camera* camera, double ) {
     }
 }
 
-std::string LoadView::getNextNewGameName() const {
-    std::string prefix_name("save");
-    std::string suffix_name(".arc");
-    int i = 1;
-    std::string number;
-    if( i < 10 ) {
-        number = "0";
-        number.append(Utility::itos(i));
-    } else {
-        number = Utility::itos(i);
-    }
-    std::string filename = prefix_name + number + suffix_name;
-    while( Utility::fileExists(filename) ) {
-        i++;
-        if( i < 10 ) {
-            number = "0";
-            number.append(Utility::itos(i));
-        } else {
-            number = Utility::itos(i);
-        }
-        filename = prefix_name + number + suffix_name;
-    }
-    return filename;
-}
-
-bool LoadView::handleEvent(Camera*) {
-    if( continue_game_->isActive() ) {
-        file_selected_ = Session::instance()->getString("*save*filename");
-        return true;
-    }
-    if( new_game_->isActive() ) {
-        file_selected_ = getNextNewGameName();
-        return true;
-    }
-    for( auto button : save_buttons_ ) {
-        if( button->isActive() ) {
-            file_selected_ = button->text();
-            return true;
-        }
-    }
-    return false;
-}
-
 namespace {
     std::vector<std::string> getListOfGameNames() {
         std::string current_filename = Session::instance()->getString("*save*filename");
@@ -142,6 +100,85 @@ namespace {
         }
         return filenames;
     }
+
+    std::string getNextNewGameName() {
+        std::string prefix_name("save");
+        std::string suffix_name(".arc");
+        int i = 1;
+        std::string number;
+        if( i < 10 ) {
+            number = "0";
+            number.append(Utility::itos(i));
+        } else {
+            number = Utility::itos(i);
+        }
+        std::string filename = prefix_name + number + suffix_name;
+        while( Utility::fileExists(filename) ) {
+            i++;
+            if( i < 10 ) {
+                number = "0";
+                number.append(Utility::itos(i));
+            } else {
+                number = Utility::itos(i);
+            }
+            filename = prefix_name + number + suffix_name;
+        }
+        return filename;
+    }
+
+    void deleteFilename(const std::string& filename) {
+        // before deleting the file, need to get the associated png file.
+        // its name is in the first line of the arc file.
+        // <mapdata width="16" height="20" image="forest_18129_out.png">
+        XMLNode* save_game = XMLDocument::read_doc(filename);
+        if( save_game == nullptr ) {
+            Logger::debug() << "Cannot read doc" << Logger::endl;
+            Logger::error() << "File " << filename << " is not a valid archive file: cannot delete it properly" << Logger::endl;
+            return;
+        }
+        XMLNode* map_data_node = save_game->getNodeFromTag("mapdata");
+        if( map_data_node == nullptr ) {
+            Logger::debug() << "Cannot get mapdata node" << Logger::endl;
+            Logger::error() << "File " << filename << " is not a valid archive file: cannot delete it properly" << Logger::endl;
+            return;
+        }
+        XMLAttr* image_attr = map_data_node->getAttrFromName("image");
+        if( image_attr == nullptr ) {
+            Logger::debug() << "Cannot get image attr" << Logger::endl;
+            Logger::error() << "File " << filename << " is not a valid archive file: cannot delete it properly" << Logger::endl;
+            return;
+        }
+        std::cout << "delete " << image_attr->value() << std::endl;
+        std::cout << "delete " << filename << std::endl;
+        //std::remove(image_attr->value().c_str());
+        //std::remove(filename.c_str());
+    }
+}
+
+bool LoadView::handleEvent(Camera*) {
+    if( continue_game_->isActive() ) {
+        file_selected_ = Session::instance()->getString("*save*filename");
+        return true;
+    }
+    if( new_game_->isActive() ) {
+        file_selected_ = getNextNewGameName();
+        return true;
+    }
+    for( auto button : save_buttons_ ) {
+        if( button->isActive() ) {
+            file_selected_ = button->text();
+            return true;
+        }
+    }
+    for( auto button : delete_buttons_ ) {
+        if( button->isActive() ) {
+            deleteFilename(button->buttonName());
+            button->deactivate();
+            resetFilenameButtons();
+            return true;
+        }
+    }
+    return false;
 }
 
 void LoadView::resetFilenameButtons() {
@@ -150,6 +187,11 @@ void LoadView::resetFilenameButtons() {
         delete button;
     }
     save_buttons_.clear();
+    for( auto button : delete_buttons_ ) {
+        manager_->removeButton(button);
+        delete button;
+    }
+    delete_buttons_.clear();
     std::vector<std::string> filenames = getListOfGameNames();
     int i=0;
     for( auto filename : filenames ) {
@@ -157,10 +199,12 @@ void LoadView::resetFilenameButtons() {
         load_button->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
         save_buttons_.push_back(load_button);
         manager_->addButton( load_button );
-        //SDLCamera* sdl_camera = static_cast<SDLCamera*>(SDLCamera::cur_camera);
-        //SDL_Color bgcolor = {100,149,237,125};
-        //SDLButton* delete_button = new SDLTextButton(sdl_camera, "delete", 320, 360+i*100, SDLText::black(), bgcolor);
-        //manager_->addButton( delete_button );
+        SDLCamera* sdl_camera = static_cast<SDLCamera*>(SDLCamera::cur_camera);
+        SDL_Color bgcolor = {100,149,237,125};
+        SDLButton* delete_button = new SDLTextButton(sdl_camera, "delete", 320, 360+i*100, SDLText::black(), bgcolor);
+        delete_button->setButtonName(filename);
+        delete_buttons_.push_back(delete_button);
+        manager_->addButton( delete_button );
         i++;
         if( i == 5 ) { return; } // TODO: cannot handle too many save games
     }

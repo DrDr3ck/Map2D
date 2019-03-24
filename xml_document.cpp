@@ -8,7 +8,7 @@
 
 XMLNode::XMLNode(
     const std::string& name, XMLNode* parent
-) : name_(name) {
+) : name_(name), parent_(parent) {
     if( parent != nullptr ) {
         parent->addNode(this);
     }
@@ -16,7 +16,7 @@ XMLNode::XMLNode(
 
 XMLNode::XMLNode(
     const std::string& name, const std::string& value, XMLNode* parent
-) : name_(name), value_(value) {
+) : name_(name), value_(value), parent_(parent) {
     if( parent != nullptr ) {
         parent->addNode(this);
     }
@@ -54,6 +54,15 @@ XMLNode* XMLNode::getNodeFromName(const std::string& node_name) {
         XMLAttr* attr = node->getAttrFromName("name");
         if( attr == nullptr ) continue;
         if( attr->value() == node_name ) {
+            return node;
+        }
+    }
+    return nullptr;
+}
+
+XMLNode* XMLNode::getNodeFromTag(const std::string& tag_name) {
+    for( XMLNode* node : nodes() ) {
+        if( node->name() == tag_name ) {
             return node;
         }
     }
@@ -204,29 +213,33 @@ XMLNode* XMLDocument::read_doc(const std::string& filename) {
         return nullptr;
     }
 
-    XMLNode* parent = nullptr;
-    XMLNode* cur_node = nullptr;
+    XMLNode* doc = new XMLNode("XMLDocument");
+    XMLNode* parent = doc;
+    XMLNode* cur_node = parent;
     std::string str;
     while (std::getline(file, str)) {
         if( Utility::startsWith(str, "</") ) {
             // end tag
+            parent = cur_node->parent();
         } else {
             int begintag = str.find_first_of("<");
             if( begintag >= 0 ) {
                 str = str.substr(begintag+1,str.length() - begintag + 1);
                 bool is_complete = (str.find_first_of("/") != std::string::npos);
                 XMLNode* node = read_node(str, cur_node);
-                if( parent == nullptr ) {
-                    parent = node;
-                    cur_node = parent;
-                }
                 if( !is_complete ) {
+                    parent = node;
                     cur_node = node;
+                } else {
+                    parent = node->parent();
                 }
             }
         }
     }
-    return parent;
+    if( doc->nodeCount() == 1 ) {
+        return doc->node(0);
+    }
+    return doc;
 }
 
 bool XMLDocument::write_doc(const XMLNode* node, const std::string& filename) {
