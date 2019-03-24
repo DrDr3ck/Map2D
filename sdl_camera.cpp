@@ -222,8 +222,9 @@ void LoadView::initButtons() {
 
     std::string filename = Session::instance()->getString("*save*filename");
     if( !filename.empty() ) {
-        Logger::debug() << "Current filename is " << filename << Logger::endl;
-        continue_game_ = new SDLButton("buttons/continue_game.png", tr("Continue current game"), 100, 100);
+        std::string continue_msg = tr("Continue current game: $1");
+        Utility::replace(continue_msg, "$1", filename);
+        continue_game_ = new SDLButton("buttons/continue_game.png", continue_msg, 100, 100);
         continue_game_->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
         manager_->addButton( continue_game_ );
     }
