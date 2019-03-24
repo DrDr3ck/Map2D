@@ -25,7 +25,8 @@ public:
     LoadView(SDLCamera* sdl_camera);
     virtual ~LoadView();
 
-    bool gameSelected() { return game_selected_; };
+    bool gameSelected() { return !file_selected_.empty(); };
+    const std::string& fileSelected() const { return file_selected_; }
 
     virtual void do_render(Camera* camera, double delay_in_ms) override;
     virtual bool handleEvent(Camera* camera) override;
@@ -34,11 +35,12 @@ public:
 
 protected:
     void renderSplashScreen(SDLCamera* sdl_camera);
+    std::string getNextNewGameName() const;
 
 private:
     SDLCamera* sdl_camera_ = nullptr;
     bool display_splash_screen_ = true;
-    bool game_selected_ = false;
+    std::string file_selected_;
     SDLButtonManager* manager_ = nullptr;
     SDLButton* new_game_ = nullptr;
     SDLButton* continue_game_ = nullptr;

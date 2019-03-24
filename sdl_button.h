@@ -76,6 +76,7 @@ public:
 
     virtual void activate() override;
     virtual void deactivate() override;
+    virtual bool checkButtonPressed(bool button_pressed) const override;
 private:
     MenuButton* menu_;
 };

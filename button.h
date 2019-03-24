@@ -17,6 +17,7 @@ public:
     bool isActive() { return active_; }
     virtual void activate() { active_ = true; }
     virtual void deactivate() { active_ = false; }
+    virtual bool checkButtonPressed(bool /*button_pressed*/) const { return true; }
 
     bool isVisible() const { return visible_; }
     void setVisible(bool value) { visible_ = value; }

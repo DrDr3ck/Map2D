@@ -81,9 +81,39 @@ void LoadView::do_render(Camera* camera, double ) {
     }
 }
 
+std::string LoadView::getNextNewGameName() const {
+    std::string prefix_name("save");
+    std::string suffix_name(".arc");
+    int i = 1;
+    std::string number;
+    if( i < 10 ) {
+        number = "0";
+        number.append(Utility::itos(i));
+    } else {
+        number = Utility::itos(i);
+    }
+    std::string filename = prefix_name + number + suffix_name;
+    while( Utility::fileExists(filename) ) {
+        i++;
+        if( i < 10 ) {
+            number = "0";
+            number.append(Utility::itos(i));
+        } else {
+            number = Utility::itos(i);
+        }
+        filename = prefix_name + number + suffix_name;
+    }
+    return filename;
+}
+
 bool LoadView::handleEvent(Camera*) {
     if( continue_game_->isActive() ) {
-        game_selected_ = true;
+        file_selected_ = Session::instance()->getString("*save*filename");
+        return true;
+    }
+    if( new_game_->isActive() ) {
+        file_selected_ = getNextNewGameName();
+        return true;
     }
     return false;
 }
@@ -95,9 +125,12 @@ void LoadView::initButtons() {
     quit_button_ = new SDLQuitButton(sdl_camera_, Camera::cur_camera->width()-50,10);
     manager_->addButton( quit_button_ );
 
-    continue_game_ = new SDLButton("buttons/continue_game.png", tr("Continue current game"), 100, 100);
-    continue_game_->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
-    manager_->addButton( continue_game_ );
+    std::string filename = Session::instance()->getString("*save*filename");
+    if( !filename.empty() ) {
+        continue_game_ = new SDLButton("buttons/continue_game.png", tr("Continue current game"), 100, 100);
+        continue_game_->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
+        manager_->addButton( continue_game_ );
+    }
 
     new_game_ = new SDLButton("buttons/new_game.png", tr("Start new game"), 100+continue_game_->rect().w+100, 100);
     new_game_->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);

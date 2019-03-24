@@ -41,7 +41,8 @@ int main(int argc, char** argv) {
         Translator::instance()->readDictionary(language);
     }
 
-    // loading...
+    // Splash screen: loading...
+    std::chrono::steady_clock::time_point start_load = std::chrono::steady_clock::now();
     LoadView* load = new LoadView(sdl_camera);
     sdl_camera->render(0);
 
@@ -61,7 +62,24 @@ int main(int argc, char** argv) {
     //    Logger::error() << "Cannot init sound because of " << Mix_GetError() << Logger::endl;
     //}
 
-    // Loading...
+    SDL_Cursor* wait_cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_WAIT);
+    SDL_SetCursor(wait_cursor);
+
+    int minimum_time = Session::instance()->getInteger("*splash_screen*minimum_time", 1);
+
+    double delay_clock_us = 0;
+    while( delay_clock_us < minimum_time*1000000 ) {
+        std::chrono::steady_clock::time_point end_load = std::chrono::steady_clock::now();
+        delay_clock_us = std::chrono::duration_cast<std::chrono::microseconds>(end_load - start_load).count();
+    }
+
+    SDL_FreeCursor(wait_cursor);
+
+
+    SDL_Cursor* hand_cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
+    SDL_SetCursor(hand_cursor);
+
+    // Select a game
     bool ending = false;
     bool game_selected = false;
     load->initButtons();
@@ -75,6 +93,7 @@ int main(int argc, char** argv) {
             game_selected = true;
         }
     }
+    SDL_FreeCursor(hand_cursor);
     if( !ending ) {
         // init map
         PeopleGroup group;
@@ -83,7 +102,7 @@ int main(int argc, char** argv) {
         GameBoard board(&group, &data, &job_mgr);
 
         // check if save already exists
-        std::string filename = Session::instance()->getString("*save*filename", "save01.arc");
+        std::string filename = load->fileSelected();
         std::ifstream f(filename.c_str());
         if( f.good() ) {
             // if save exists, load it
@@ -106,20 +125,24 @@ int main(int argc, char** argv) {
             }
             // end test
         } else {
-            Logger::warning() << tr("cannot find save named ") << filename << Logger::endl;
+            Logger::info() << tr("Creating a new game named ") << filename << Logger::endl;
             // otherwise, create a random map
             MapData::createMap(&data);
 
-            // with a robot
-            Position position = {data.width()/2,data.height()/2};
+            // with 2 robots
+            int tile_x, tile_y;
+            data.getEmptyGrassTilePosition(tile_x, tile_y);
+            Position position = {tile_x,tile_y};
             Character* people = new Character("B0b31", position, 0);
             people->setDirection(1,0);
             group.add(people);
-            position.y = position.y+2;
+            data.getEmptyGrassTilePosition(tile_x, tile_y);
+            position = {tile_x,tile_y};
             people = new Character("B1ll03", position, 4);
             people->setDirection(1,0);
             group.add(people);
         }
+        Session::instance()->setString("*save*filename", filename);
 
         MapView mapview(sdl_camera, &data, &group, &job_mgr);
 
@@ -137,19 +160,9 @@ int main(int argc, char** argv) {
             }
         }
         if( cc == nullptr ) {
-            int tile_x = std::rand() % data.width();
-            int tile_y = std::rand() % data.height();
+            int tile_x, tile_y;
+            data.getEmptyGrassTilePosition(tile_x, tile_y);
             cc = new CommandCenter();
-            Position position = {tile_x, tile_y};
-            Object* object = data.getObject(position);
-            Tile tile = data.tile(tile_x,tile_y);
-            while( object != nullptr || tile.background_type() != Tile::GRASS) { // find a tile without object
-                tile_x = std::rand() % data.width();
-                tile_y = std::rand() % data.height();
-                tile = data.tile(tile_x,tile_y);
-                position = {tile_x, tile_y};
-                object = data.getObject(position);
-            }
             data.addObject(cc, tile_x, tile_y);
         }
         if( cc != nullptr && chests.size() > 0 ) {
@@ -166,7 +179,6 @@ int main(int argc, char** argv) {
         std::chrono::steady_clock::time_point automatic_save_clock = std::chrono::steady_clock::now();
 
         std::chrono::steady_clock::time_point start_clock = std::chrono::steady_clock::now();
-        //ending = false;
 
         const int FPS = 30;
         double delay_in_us = 1000000 / FPS;

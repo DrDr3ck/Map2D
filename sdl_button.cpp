@@ -38,11 +38,9 @@ bool SDLButtonManager::handleEvent(Camera* camera) {
             }
         } else {
             button->hasFocus(false);
-            if( button_pressed ) {
-                if( button->isActive() ) {
-                    button->deactivate();
-                    //return true;
-                }
+            if( button->isActive() && button->checkButtonPressed(button_pressed)) {
+                button->deactivate();
+                return true;
             }
         }
     }
@@ -201,6 +199,10 @@ void SDLButtonMenu::activate() {
 void SDLButtonMenu::deactivate() {
     menu_->hide();
     SDLButton::deactivate();
+}
+
+bool SDLButtonMenu::checkButtonPressed(bool button_pressed) const {
+    return button_pressed;
 }
 
 /********************************************************************/

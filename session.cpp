@@ -150,4 +150,13 @@ string Session::getString(const string& label, string default_value) {
     return value;
 }
 
+void Session::setString(const string& label, const std::string& value) {
+    map<string, ValueDesc>::iterator it = dictionary_.find(label);
+    if( it != dictionary_.end() ) {
+        dictionary_.erase(it);
+    }
+    ValueDesc vd = std::pair<string, string>(value, "");
+    dictionary_.insert(std::pair<string,ValueDesc>(label, vd));
+}
+
 

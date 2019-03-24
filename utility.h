@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <cstdlib>
 #include <cmath>
 #include <SDL2/SDL.h>
@@ -162,6 +163,11 @@ public:
         if( y < rect.y ) return false;
         if( y > rect.y+rect.h ) return false;
         return true;
+    }
+
+    static bool fileExists(const std::string& filename) {
+        std::ifstream f(filename.c_str());
+        return f.good();
     }
 
 };

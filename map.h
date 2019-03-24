@@ -121,6 +121,8 @@ public:
     Object* getNearestEmptyChest(Position position, const BasicItem& item);
     Object* getAssociatedChest(Position position);
 
+    void getEmptyGrassTilePosition(int& tile_x, int& tile_y);
+
     static void createMap(MapData* data);
 private:
     int width_;

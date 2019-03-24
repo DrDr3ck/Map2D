@@ -434,6 +434,21 @@ Object* MapData::getAssociatedChest(Position position) {
     return nullptr;
 }
 
+void MapData::getEmptyGrassTilePosition(int& tile_x, int& tile_y) {
+    tile_x = std::rand() % width();
+    tile_y = std::rand() % height();
+    Tile tile = this->tile(tile_x,tile_y);
+    Position position = {tile_x, tile_y};
+    Object* object = getObject(position);
+    while( object != nullptr || tile.background_type() != Tile::GRASS) { // find a tile without object
+        tile_x = std::rand() % width();
+        tile_y = std::rand() % height();
+        tile = this->tile(tile_x,tile_y);
+        position = {tile_x, tile_y};
+        object = getObject(position);
+    }
+}
+
 Object* MapData::getNearestChest(Position position) {
     Object* nearest_chest = nullptr;
     float distance = 10000.f;

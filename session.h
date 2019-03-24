@@ -27,6 +27,7 @@ public:
 
     void setBoolean(const std::string& label, bool value);
     void setInteger(const std::string& label, int value);
+    void setString(const std::string& label, const std::string& value);
 
     static std::string fontFamily();
 
