@@ -148,6 +148,9 @@ namespace {
             Logger::error() << "File " << filename << " is not a valid archive file: cannot delete it properly" << Logger::endl;
             return;
         }
+        ModalDialog* dialog = new ModalDialog(tr("Delete save ?"), 400,400,300,200);
+        SDLCamera* sdl_camera = static_cast<SDLCamera*>(SDLCamera::cur_camera);
+        sdl_camera->addView(dialog);
         std::cout << "delete " << image_attr->value() << std::endl;
         std::cout << "delete " << filename << std::endl;
         //std::remove(image_attr->value().c_str());
@@ -1240,7 +1243,9 @@ bool SDLCamera::handleEvent() {
         // put dialog on top !!
         removeView(cur_dialog);
         addView(cur_dialog);
-        onMouseMove(-1,-1);
+        if( map_view_ != nullptr ) {
+            onMouseMove(-1,-1);
+        }
         return true;
     }
 
@@ -1274,7 +1279,7 @@ bool SDLCamera::handleEvent() {
                     std::string filename = Session::instance()->getString("*save*filename", "save01.arc");
                     ArchiveConverter::save(GameBoard::cur_board, filename);
                 }
-            } else if( event_.key.keysym.sym == SDLK_c ) {
+            } else if( event_.key.keysym.sym == SDLK_c && map_view_ != nullptr ) {
                 // center view to next robot
                 PeopleGroup* g = map_view_->group();
                 if( g->group().size() > 0 ) {
@@ -1300,7 +1305,7 @@ bool SDLCamera::handleEvent() {
                 speed_time_ = 16;
             } else if( event_.key.keysym.sym == SDLK_6 ) {
                 speed_time_ = 32;
-            } else if( event_.key.keysym.sym == SDLK_F11 ) {
+            } else if( event_.key.keysym.sym == SDLK_F11 && map_view_ != nullptr ) {
                 int camera_width = Session::instance()->getInteger("*camera*width", 1000);
                 int camera_height = Session::instance()->getInteger("*camera*height", 800);
                 int cur_w = camera_width;

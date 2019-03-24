@@ -11,7 +11,7 @@
 
 /***********************************/
 
-Dialog::Dialog(int x, int y, int width, int height) : View(), x_(x), y_(y), width_(width), height_(height) {
+Dialog::Dialog(int x, int y, int width, int height, bool modal) : View(), x_(x), y_(y), width_(width), height_(height), modal_(modal) {
     surface_ = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
     SDL_Color bgcolor = {211,211,211,255};
     setBackgroundColor(bgcolor);
@@ -63,13 +63,15 @@ void Dialog::setBackgroundColor(const SDL_Color& bgcolor) {
     SDL_Rect kill_rect = getKillRect();
     SDL_FillRect(surface_, &kill_rect, SDL_MapRGBA(surface_->format, 255, 100, 100, background_color_.a));
 
-    SDL_Rect minimize_rect = getMinimizeRect();
-    SDL_FillRect(surface_, &minimize_rect, SDL_MapRGBA(surface_->format, 100, 100, 255, background_color_.a));
-    minimize_rect = getMinimizeRect(-5);
-    SDL_FillRect(surface_, &minimize_rect, SDL_MapRGBA(surface_->format, 200, 200, 200, background_color_.a));
+    if( !modal_ ) {
+        SDL_Rect minimize_rect = getMinimizeRect();
+        SDL_FillRect(surface_, &minimize_rect, SDL_MapRGBA(surface_->format, 100, 100, 255, background_color_.a));
+        minimize_rect = getMinimizeRect(-5);
+        SDL_FillRect(surface_, &minimize_rect, SDL_MapRGBA(surface_->format, 200, 200, 200, background_color_.a));
 
-    SDL_Rect center_rect = getCenterRect();
-    SDL_FillRect(surface_, &center_rect, SDL_MapRGBA(surface_->format, 100, 255, 100, background_color_.a));
+        SDL_Rect center_rect = getCenterRect();
+        SDL_FillRect(surface_, &center_rect, SDL_MapRGBA(surface_->format, 100, 255, 100, background_color_.a));
+    }
 }
 
 void Dialog::drawTitle(SDLCamera* sdl_camera, const std::string& title_str) {
@@ -139,12 +141,14 @@ bool Dialog::handleEvent(Camera* camera) {
                 if( Utility::contains(kill_rect, rel_mouse_x, rel_mouse_y) ) {
                     // kill this dialog !!
                     kill_me_ = true;
-                } else if( Utility::contains(minimize_rect, rel_mouse_x, rel_mouse_y) ) {
+                } else if( !modal_ && Utility::contains(minimize_rect, rel_mouse_x, rel_mouse_y) ) {
                     minimized_ = ! minimized_;
-                } else if( Utility::contains(center_rect, rel_mouse_x, rel_mouse_y) ) {
+                } else if( !modal_ && Utility::contains(center_rect, rel_mouse_x, rel_mouse_y) ) {
                     // get tile and center it
                     Position position = tilePosition();
-                    sdl_camera->mapView()->restoreCenterTile( position );
+                    if( sdl_camera->mapView() != nullptr ) {
+                        sdl_camera->mapView()->restoreCenterTile( position );
+                    }
                 } else if( Utility::contains(title_rect, rel_mouse_x, rel_mouse_y) ) {
                     grabbing_ = true;
                     rel_grab_x_ = rel_mouse_x;
@@ -174,6 +178,29 @@ bool Dialog::buttonClicked(SDLButton* button, Position mouse_position) {
     if( button == nullptr ) return false;
     const SDL_Rect& button_rect = button->rect();
     return Utility::contains(button_rect, mouse_position.x, mouse_position.y);
+}
+
+/**************************************/
+
+ModalDialog::ModalDialog(
+    const std::string& title,
+    int x, int y, int width, int height
+) : Dialog(x,y,width,height,true), title_(title) {
+}
+
+ModalDialog::~ModalDialog() {
+}
+
+void ModalDialog::do_render(Camera* camera, double delay_in_ms) {
+    Dialog::do_render(camera, delay_in_ms);
+    SDLCamera* sdl_camera = dynamic_cast<SDLCamera*>(camera);
+
+    drawTitle(sdl_camera, title_);
+}
+
+bool ModalDialog::handleEvent(Camera* camera) {
+    Dialog::handleEvent(camera);
+    return true;
 }
 
 /**************************************/

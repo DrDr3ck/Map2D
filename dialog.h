@@ -15,7 +15,7 @@ class Craft;
 
 class Dialog : public View {
 public:
-    Dialog(int x, int y, int width, int height);
+    Dialog(int x, int y, int width, int height, bool modal=false);
     virtual ~Dialog();
 
     void setBackgroundColor(const SDL_Color& bgcolor);
@@ -44,6 +44,7 @@ protected:
     int y_;
     int width_;
     int height_;
+    bool modal_;
     SDL_Color background_color_;
     SDL_Surface* surface_;
     bool kill_me_ = false;
@@ -51,6 +52,24 @@ protected:
     int rel_grab_x_ = 0;
     int rel_grab_y_ = 0;
     bool minimized_ = false;
+};
+
+/********************************************************************/
+
+class ModalDialog : public Dialog {
+public:
+    ModalDialog(const std::string& title, int x, int y, int width, int height);
+    virtual ~ModalDialog();
+
+    virtual Position tilePosition() const override {
+        return Position{-1,-1};
+    }
+
+    virtual void do_render(Camera* camera, double delay_in_ms) override;
+    virtual bool handleEvent(Camera* camera) override;
+
+protected:
+    std::string title_;
 };
 
 /********************************************************************/
