@@ -600,6 +600,12 @@ bool MapView::handleEvent(Camera* camera) {
             }
         }
         break;
+    case SDL_MOUSEMOTION:
+        sdl_camera->onMouseMove(e.motion.x, e.motion.y);
+        break;
+    case SDL_MOUSEWHEEL:
+        sdl_camera->onMouseWheelScroll(e.wheel.x, e.wheel.y);
+        break;
     default:
         return false;
     }
@@ -1185,12 +1191,6 @@ bool SDLCamera::handleEvent() {
                 resetButtons(cur_w,cur_h);
             }
             break;
-        case SDL_MOUSEMOTION:
-            onMouseMove(event_.motion.x, event_.motion.y);
-            break;
-        case SDL_MOUSEWHEEL:
-            onMouseWheelScroll(event_.wheel.x, event_.wheel.y);
-            break;
         case SDL_MOUSEBUTTONDOWN:
             if( event_.button.button == SDL_BUTTON_RIGHT ) {
                 setTool(nullptr);
@@ -1220,7 +1220,11 @@ void SDLCamera::onMouseMove(int mouse_x, int mouse_y) {
     Camera::onMouseMove(mouse_x,mouse_y);
     // check on which 'tile' we are
     Position tile_pos = map_view_->onTile(mouse_x,mouse_y);
-    map_view_->setTile(tile_pos.x, tile_pos.y);
+    if( mouse_x == -1 ) {
+        map_view_->setTile(-1,-1);
+    } else {
+        map_view_->setTile(tile_pos.x, tile_pos.y);
+    }
 }
 
 void SDLCamera::onMouseWheelScroll(int wheel_x, int wheel_y) {
