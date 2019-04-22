@@ -35,6 +35,8 @@
 		</Compiler>
 		<Unit filename="action.cpp" />
 		<Unit filename="action.h" />
+		<Unit filename="animal.cpp" />
+		<Unit filename="animal.h" />
 		<Unit filename="archive.cpp" />
 		<Unit filename="archive.h" />
 		<Unit filename="button.cpp" />
