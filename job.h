@@ -70,6 +70,15 @@ public:
     }
 };
 
+class BuildFieldJob : public Job {
+public:
+    BuildFieldJob(
+        Position tile_position, int build_time_ms
+    ) : Job(BUILDFIELD, tile_position, "buttons/plow_tool", build_time_ms)
+    {
+    }
+};
+
 class BuildDoorJob : public Job {
 public:
     BuildDoorJob(

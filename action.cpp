@@ -221,6 +221,8 @@ void BuildAction::postAction() {
             if( data->removeItemFromChest(position, BasicItem("floor")) ) {
                 data->addFloor(position.x,position.y);
             }
+        } else if( job_->name() == BUILDFIELD ) {
+            data->addField(position.x,position.y);
         } else if( job_->name() == DEMOLISHFOUNDATION ) {
             // demolish WALL or DOOR or FLOOR
             const Tile& cur_tile = data->tile(position.x, position.y);

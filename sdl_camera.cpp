@@ -281,6 +281,15 @@ void MapView::addWallJob(int x, int y) {
 }
 
 /*!
+ * Adds a field in the queue of the job manager at (x,y) if possible.
+ */
+void MapView::addFieldJob(int x, int y) {
+    Position tile_position = {x,y};
+    Job* job = new BuildFieldJob(tile_position, 3500);
+    job_manager_->addJob(job);
+}
+
+/*!
  * Adds a foundation destruction in the queue of the job manager at (x,y) if possible.
  */
 void MapView::removeFoundationJob(int x, int y) {
@@ -303,6 +312,7 @@ void MapView::extractItemJob(int x, int y, int nb) {
     if( cur_tile.occurrences() == 0 ) {
         return;
     }
+    Logger::debug() << "extractItemJob" << Logger::endl;
     Job* job = nullptr;
     switch(cur_tile.background_type()) {
         case Tile::ROCK:
@@ -313,6 +323,9 @@ void MapView::extractItemJob(int x, int y, int nb) {
             break;
         case Tile::SAND:
             job = new ExtractJob(tile_position, "buttons/dig_tool", 5000, nb);
+            break;
+        case Tile::GRASS:
+            job = new ExtractJob(tile_position, "buttons/plow_tool", 5000, nb);
             break;
         default:
             break;
@@ -749,7 +762,7 @@ bool MapView::handleEvent(Camera* camera) {
  * param[out] tile_y current y tile if valid
  * \return True if current tile is valid, false otherwise
  */
-bool MapView::getCurTile(int& tile_x, int& tile_y) {
+bool MapView::getCurTilePosition(int& tile_x, int& tile_y) {
     tile_x = tile_x_;
     tile_y = tile_y_;
     return tile_x_ >= 0;
@@ -960,6 +973,29 @@ void SDLCamera::initManager() {
     extract_tool = new SDLExtractTool(this, "buttons/dig_tool_10.png", 10);
     extract_button_tool = new SDLToolButton(extract_tool, "buttons/dig_tool_10.png", 0, 0);
     extract_button_tool->setText( tr("Dig%x 10") );
+    extract_button_tool->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
+    manager_->addButton(extract_button_tool);
+    excavation_menu->addButton(extract_button_tool);
+
+    SDLTransformTool* transform_tool = new SDLTransformTool(this, "buttons/plow_tool.png", FIELDTOOL);
+    SDLButton* plow_button_tool = new SDLTransformToolButton(BasicItem("field"), transform_tool, "buttons/plow_tool.png", 0, 0);
+    plow_button_tool->setText( tr("Plow") ); // labourer
+    plow_button_tool->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
+    manager_->addButton(plow_button_tool);
+    excavation_menu->addButton(plow_button_tool);
+
+    /*
+    SDLFillTool* fill_tool = new SDLFillTool(this, "buttons/sow_tool.png", 1);
+    extract_button_tool = new SDLToolButton(BasicItem("seed"), fill_tool, "buttons/sow_tool.png", 0, 0);
+    extract_button_tool->setText( tr("Sow") ); // semer
+    extract_button_tool->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
+    manager_->addButton(extract_button_tool);
+    excavation_menu->addButton(extract_button_tool);
+    */
+
+    extract_tool = new SDLExtractTool(this, "buttons/harvest_tool.png", 1);
+    extract_button_tool = new SDLToolButton(extract_tool, "buttons/harvest_tool.png", 0, 0);
+    extract_button_tool->setText( tr("Harvest") ); // recolter
     extract_button_tool->setTooltipPosition(SDLButton::TooltipPosition::BOTTOM);
     manager_->addButton(extract_button_tool);
     excavation_menu->addButton(extract_button_tool);

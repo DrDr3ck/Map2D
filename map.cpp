@@ -199,6 +199,17 @@ const std::string& MapData::getMapImageName() const {
     return map_image_name_;
 }
 
+void MapData::addField(int x, int y) { // TODO
+    Tile& cur = tile(x,y);
+    // check that tile is grass or dirt
+    if( cur.background_type() != Tile::GRASS || cur.background_type() != Tile::DIRT ) {
+        return;
+    }
+}
+
+void MapData::removeField(int x, int y) { // TODO
+}
+
 void MapData::addWall(int x, int y) {
     // take a look to the tile around the position
     // Tile(int id=0, Type type=EMPTY);

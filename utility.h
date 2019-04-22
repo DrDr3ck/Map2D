@@ -22,12 +22,14 @@
 #define BUILDDOOR "build_door"
 #define BUILDOBJECT "build_object"
 #define DEMOLISHOBJECT "demolish_object"
+#define BUILDFIELD "build_field"
 
 #define WALLTOOL 0
 #define FLOORTOOL 1
 #define DOORTOOL 2
 #define FOUNDATIONTOOL 3
 #define OBJECTTOOL 4
+#define FIELDTOOL 5
 
 /********************************************************************/
 

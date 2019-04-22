@@ -563,6 +563,8 @@ void JobsConverter::load(const std::string& str) {
                 job = new CleanJob(pos, build_time);
             } else if( name == BUILDWALL ) {
                 job = new BuildWallJob(pos, build_time);
+            } else if( name == BUILDFIELD ) {
+                job = new BuildFieldJob(pos, build_time);
             } else if( name == BUILDFLOOR ) {
                 job = new BuildFloorJob(pos, build_time);
             } else if( name == BUILDDOOR ) {

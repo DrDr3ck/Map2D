@@ -98,6 +98,9 @@ public:
     void addGround(int x, int y);
     void removeGround(int x, int y);
 
+    void addField(int x, int y);
+    void removeField(int x, int y);
+
     void extractItemFromTile(int x,int y);
     void cleanItemFromTile(int x,int y,Character* people);
 

@@ -63,6 +63,7 @@ public:
     void removeFoundationJob(int x, int y);
     void addFloorJob(int x, int y);
     void addDoorJob(int x, int y);
+    void addFieldJob(int x, int y);
     void extractItemJob(int x, int y, int nb=1);
     void cleanItemJob(int x, int y);
     void addObjectJob(const std::string& object_name, int x, int y);
@@ -74,7 +75,7 @@ public:
     void setTile(int tile_x, int tile_y);
     const SDL_Rect& onTileRect() const { return ontile_rect_; }
 
-    bool getCurTile(int& tile_x, int& tile_y);
+    bool getCurTilePosition(int& tile_x, int& tile_y);
     void resetCenters(int width, int height);
 
     Position getCenterTile() const;

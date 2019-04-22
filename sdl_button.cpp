@@ -301,3 +301,16 @@ void SDLItemToolButton::activate() {
 }
 
 /********************************************************************/
+
+SDLTransformToolButton::SDLTransformToolButton(
+    const BasicItem& item, SDLTool* tool,
+    std::string icon_name, int x, int y
+) : SDLItemToolButton(item, tool, icon_name, x, y) {
+    setTooltipPosition(TooltipPosition::OVER);
+}
+
+const std::string& SDLTransformToolButton::text() const {
+    return SDLToolButton::text();
+}
+
+/********************************************************************/

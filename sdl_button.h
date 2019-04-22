@@ -136,8 +136,16 @@ public:
     virtual const std::string& text() const override;
     virtual void activate() override;
 
-private:
+protected:
     BasicItem item_;
+};
+
+class SDLTransformToolButton : public SDLItemToolButton {
+public:
+    SDLTransformToolButton(const BasicItem& item, SDLTool* tool, std::string icon_name, int x, int y);
+    virtual ~SDLTransformToolButton() = default;
+
+    virtual const std::string& text() const override;
 };
 
 /********************************************************************/

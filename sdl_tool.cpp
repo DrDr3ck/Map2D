@@ -98,7 +98,7 @@ SDL_Texture* SDLBuildTool::getTexture(SDL_Renderer* renderer) {
 void SDLBuildTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
-    if( camera()->mapView()->getCurTile(x,y) ) {
+    if( camera()->mapView()->getCurTilePosition(x,y) ) {
         Position position = {x,y};
         const Tile& cur = camera()->mapView()->data()->tile(x,y);
         if( type_ == WALLTOOL ) {
@@ -169,7 +169,7 @@ void SDLBuildObjectTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
     MapView* map_view = camera()->mapView();
-    if( map_view->getCurTile(x,y) ) {
+    if( map_view->getCurTilePosition(x,y) ) {
         // check that an object is not already here !!
         if( map_view->getObject(x,y) == nullptr ) {
             map_view->addObjectJob(object_name_,x,y);
@@ -209,7 +209,7 @@ void SDLUnbuildObjectTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
     MapView* map_view = camera()->mapView();
-    if( map_view->getCurTile(x,y) ) {
+    if( map_view->getCurTilePosition(x,y) ) {
         // check that an object is already here !!
         if( map_view->getObject(x,y) != nullptr ) {
             map_view->removeObjectJob(x,y);
@@ -224,27 +224,27 @@ SDLExtractTool::SDLExtractTool(
     const std::string& icon_name,
     int nb
 ) : SDLTool(camera) {
-    surface_ = Utility::IMGLoad(icon_name.c_str());
-    Uint32 key = SDL_MapRGB(surface_->format, 0, 255, 0);
-    SDL_SetColorKey(surface_ , SDL_TRUE, key);
+    icon_surface_ = Utility::IMGLoad(icon_name.c_str());
+    Uint32 key = SDL_MapRGB(icon_surface_->format, 0, 255, 0);
+    SDL_SetColorKey(icon_surface_ , SDL_TRUE, key);
     nb_ = nb;
 }
 
 SDLExtractTool::~SDLExtractTool() {
-    if( surface_ != nullptr ) {
-        SDL_FreeSurface(surface_);
+    if( icon_surface_ != nullptr ) {
+        SDL_FreeSurface(icon_surface_);
     }
 }
 
 SDL_Texture* SDLExtractTool::getTexture(SDL_Renderer* renderer) {
     if( texture_ == nullptr ) {
-        texture_ = SDL_CreateTextureFromSurface(renderer, surface_);
+        texture_ = SDL_CreateTextureFromSurface(renderer, icon_surface_);
         if( texture_ == nullptr ) {
             Logger::error() << "CreateRGBSurface failed: " << SDL_GetError() << Logger::endl;
         }
         SDL_SetTextureAlphaMod( texture_, 192 );
-        SDL_FreeSurface(surface_);
-        surface_ = nullptr;
+        SDL_FreeSurface(icon_surface_);
+        icon_surface_ = nullptr;
     }
     return texture_;
 }
@@ -252,11 +252,39 @@ SDL_Texture* SDLExtractTool::getTexture(SDL_Renderer* renderer) {
 void SDLExtractTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
-    if( camera()->mapView()->getCurTile(x,y) ) {
+    if( camera()->mapView()->getCurTilePosition(x,y) ) {
         camera()->mapView()->extractItemJob(x,y,nb_);
     }
 }
 
+/********************************************************************/
+
+SDLTransformTool::SDLTransformTool(
+    SDLCamera* camera,
+    const std::string& icon_name,
+    int type
+) : SDLBuildTool(camera, icon_name, type) {
+}
+
+void SDLTransformTool::mousePressed(int button) {
+    SDLTool::mousePressed(button);
+    int x,y;
+    if( camera()->mapView()->getCurTilePosition(x,y) ) {
+        Position position = {x,y};
+        const Tile& cur = camera()->mapView()->data()->tile(x,y);
+        Logger::debug() << "SDLTransformTool " << type() << Logger::endl;
+        if( type() == FIELDTOOL ) {
+            // check that tile is grass or dirt
+            if( cur.background_type() != Tile::GRASS && cur.background_type() != Tile::DIRT ) {
+                return;
+            }
+            if( Tile::isWall(cur) || Tile::isFloor(cur) || camera()->mapView()->data()->getObject(position) != nullptr ) {
+                return;
+            }
+            camera()->mapView()->addFieldJob(x,y);
+        }
+    }
+}
 /********************************************************************/
 
 SDLCleanTool::SDLCleanTool(
@@ -291,7 +319,7 @@ void SDLCleanTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
     MapView* mv = camera()->mapView();
-    if( mv->getCurTile(x,y) ) {
+    if( mv->getCurTilePosition(x,y) ) {
         const Tile& cur_tile = mv->data()->tile(x,y);
         if( cur_tile.counted_items().size() > 0 ) {
             mv->cleanItemJob(x,y);
@@ -307,7 +335,7 @@ SDLUnbuildTool::SDLUnbuildTool(SDLCamera* camera, const std::string& icon_name, 
 void SDLUnbuildTool::mousePressed(int button) {
     SDLTool::mousePressed(button);
     int x,y;
-    if( camera()->mapView()->getCurTile(x,y) ) {
+    if( camera()->mapView()->getCurTilePosition(x,y) ) {
         if( type() == FOUNDATIONTOOL ) {
             camera()->mapView()->removeFoundationJob(x,y);
         }

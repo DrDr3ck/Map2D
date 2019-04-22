@@ -248,6 +248,12 @@ protected:
     int power_;
 };
 
+class Field : public Object {
+public:
+    Field();
+    virtual ~Field() {}
+};
+
 /********************************************************************/
 
 #endif // chest_h

@@ -77,9 +77,15 @@ public:
         return action_description_;
     }
 
+    Direction direction() const {
+        return direction_;
+    }
+    void setDirection(int x, int y);
+
 protected:
     Position pixel_position_;
     double time_spent_ = 0;
+    Direction direction_;
 
     ActionBase* action_ = nullptr;
     std::string action_description_;
@@ -93,11 +99,6 @@ public:
     virtual ~Character() {}
 
     virtual void render(SDLCamera* camera, const SDL_Rect& rect) override;
-
-    Direction direction() const {
-        return direction_;
-    }
-    void setDirection(int x, int y);
 
     int activityPercent() const {
         return activity_percent_;
@@ -114,7 +115,6 @@ public:
     void releaseItems();
 
 protected:
-    Direction direction_;
     int activity_percent_ = 0; // 0 to 100
     int max_carry_ = 5;
     std::vector<BasicItem> carried_items_;

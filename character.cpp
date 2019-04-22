@@ -58,6 +58,11 @@ void DynamicItem::cancelAction() {
     setAction(nullptr, "");
 }
 
+void DynamicItem::setDirection(int x, int y) {
+    direction_.x = x;
+    direction_.y = y;
+}
+
 /********************************************************************/
 
 Character::Character(
@@ -90,11 +95,6 @@ void Character::render(SDLCamera* camera, const SDL_Rect& rect) {
         activity_rect.h = 9;
         SDL_RenderDrawRect( camera->main_renderer(), &activity_rect );
     }
-}
-
-void Character::setDirection(int x, int y) {
-    direction_.x = x;
-    direction_.y = y;
 }
 
 int Character::maxCarry() const {
@@ -246,6 +246,10 @@ void PeopleGroup::animate(GameBoard* board, double delta_ms) {
                 } else if( job->name() == BUILDFLOOR ) {
                     job->takeJob(people);
                     people->setAction( new BuildAction(board, people, job), "building a foundation" );
+                    people->action()->preAction();
+                } else if( job->name() == BUILDFIELD ) {
+                    job->takeJob(people);
+                    people->setAction( new BuildAction(board, people, job), "building a field" );
                     people->action()->preAction();
                 } else if( job->name() == BUILDDOOR ) {
                     job->takeJob(people);

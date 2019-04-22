@@ -121,6 +121,8 @@ Object* Object::getObjectFromName(const std::string& name) {
         object = new StoneFurnace();
     } else if( name == "assembler" ) {
         object = new Assembler();
+    } else if( name == "field" ) {
+        object = new Field();
     } else if( name == "command_center" ) {
         object = new CommandCenter();
     } else if( name == "electric_furnace" ) {
@@ -613,6 +615,9 @@ Assembler::Assembler() : Object("objects/assembler.png", tr("Assembler"), "assem
 }
 
 ElectricFurnace::ElectricFurnace() : Furnace("objects/electric_furnace.png", tr("ElectricFurnace"), "electric_furnace") {
+}
+
+Field::Field() : Object("objects/field.png", tr("Field"), "field") {
 }
 
 /********************************************************************/

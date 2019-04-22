@@ -110,8 +110,18 @@ public:
     int nb() const { return nb_; }
 
 private:
-    SDL_Surface* surface_;
+    SDL_Surface* icon_surface_;
     int nb_;
+};
+
+/********************************************************************/
+
+class SDLTransformTool : public SDLBuildTool {
+public:
+    SDLTransformTool(SDLCamera* camera, const std::string& icon_name, int type);
+    virtual ~SDLTransformTool() = default;
+
+    virtual void mousePressed(int button) override;
 };
 
 /********************************************************************/
